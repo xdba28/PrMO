@@ -7,3 +7,4 @@
 <link href="../../assets/css/style.css" rel="stylesheet">
 <link href="../../assets/css/plugins/steps/jquery.steps.css" rel="stylesheet">
 <link href="../../assets/my_style.css" rel="stylesheet">
+<link href="../../assets/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
