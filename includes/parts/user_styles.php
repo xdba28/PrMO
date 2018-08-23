@@ -7,9 +7,6 @@
 <link href="../../assets/css/style.css" rel="stylesheet">
 <link href="../../assets/css/plugins/steps/jquery.steps.css" rel="stylesheet">
 <link href="../../assets/my_style.css" rel="stylesheet">
-<<<<<<< HEAD
-<link href="../../assets/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
-=======
 <link href="../../assets/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
@@ -75,4 +72,3 @@ $(document).ready(function(){
     });
 });
 </script>
->>>>>>> nico
