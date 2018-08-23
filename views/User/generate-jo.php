@@ -117,7 +117,7 @@
 										<fieldset>
 											<h2>Project Information</h2>
 											<div class="row" id="wf-stp-2">
-												
+												<!-- step 2 -->
 											</div>
 										</fieldset>
 

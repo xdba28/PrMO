@@ -71,6 +71,28 @@
 			document.getElementById('rq-mdl-name').value = name;
 			document.getElementById('rq-hid').value = id;	
 		}
+
+		function approve(id)
+		{
+			$.ajax(
+			{
+				type: 'post',
+				url: '',
+				data: id,
+				success: function(data)
+				{
+					toastr.success("Message here");
+				},
+				error: function(jqXHR, textStatus, errorThrown)
+				{
+					console.log(`
+						jqXHR: ${jqXHR}
+						textStatus: ${textStatus}
+						errorThrown: ${errorThrown}
+					`);
+				}
+			})
+		}
 	</script>
 
 
@@ -207,7 +229,7 @@
 												<td><b>'.$request->employee_id.'</b></td>
 												<td><a class="'.$color1.'">'.$request->remarks.'</a></td>
 												<td>
-													<a href="#"><i class="fa fa-check text-navy"></i></a> 
+													<a onclick="approve(\''.$request->ID.'\')"><i class="fa fa-check text-navy"></i></a> 
 													
 													<a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d(\''.$fullname.'\', \''.$request->ID.'\')">
 														<i class="fa fa-close text-danger" style="margin-left:20px"></i>
