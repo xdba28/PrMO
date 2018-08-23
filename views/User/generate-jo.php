@@ -94,7 +94,11 @@
 														<input id="title" name="title" type="text" class="form-control">
 													</div>
 													<div class="form-group">
+<<<<<<< HEAD
 														<label>Estimated Cost *</label>
+=======
+														<label>Overall Cost *</label>
+>>>>>>> nico
 														<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
 													</div>
 													<div class="form-group">
@@ -116,7 +120,11 @@
 										<h1>Particulars</h1>
 										<fieldset>
 											<h2>Project Information</h2>
+<<<<<<< HEAD
 											<div class="row" id="wf-stp-2">
+=======
+											<div class="row" id="wf-stp-2" style="overflow-y: auto; height: 450px">
+>>>>>>> nico
 												<!-- step 2 -->
 											</div>
 										</fieldset>
@@ -267,11 +275,19 @@
 							</div>
 							<div class="ibox-content">
 								<div id="lot.${i}">
+<<<<<<< HEAD
 									<p class="font-bold">List Name: </p>
 									<input type="text" name="lot${i}[list-name][]" class="form-control">
 									<br>
 									<p class="font-bold">Tags:</p>
 									<input class="tagsinput form-control" name="lot${i}[list][]">
+=======
+									<p class="font-bold">Header Name: </p>
+									<input type="text" name="lot${i}[list-name][]" class="form-control">
+									<br>
+									<p class="font-bold">Tags:</p>
+									<input class="form-control" name="lot${i}[list][]" id="tag-${i}" data-role="tagsinput">
+>>>>>>> nico
 									<br>
 								</div>
 							<button type="button" onclick="addList('lot.${i}')">Click</button>
@@ -280,6 +296,7 @@
 						</div>
 					</div>`;
 					wf_lot.innerHTML += tmp_lot;
+<<<<<<< HEAD
 				}
 
 				$('.tagsinput').tagsinput({
@@ -288,10 +305,20 @@
 			})
 
        });
+=======
+					$('input[name="lot'+i+'[list][]"]').tagsinput();
+				}
+
+			})
+
+	   });
+	   
+>>>>>>> nico
 
 	   function addList(lot)
 	   {
 		   var num = lot.split(".");
+<<<<<<< HEAD
 		   document.getElementById(lot).innerHTML += `
 		   <div id="lot.${num}">
 				<p class="font-bold">List Name: </p>
@@ -306,6 +333,20 @@
 		   	$('.tagsinput').tagsinput({
 					tagClass: 'label label-primary'
 			});
+=======
+		   var list_tmp = `
+		   <div id="lot.${num[1]}">
+				<p class="font-bold">Header Name: </p>
+				<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
+				<br>
+				<p class="font-bold">Tags:</p>
+				<input class="form-control" name="lot${num[1]}[list][]" data-role="tagsinput">
+				<br>
+			</div>`;
+
+		   document.getElementById(lot).innerHTML += list_tmp;
+		   $('input[name="lot'+num[1]+'[list][]"]').tagsinput();
+>>>>>>> nico
 	   }
     </script>
 

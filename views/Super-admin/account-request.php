@@ -38,7 +38,7 @@
                     $sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
                     
                     Session::flash('toust', 'Request for Account Denied');
-                    // Redirect::To('account-request');
+                    //Redirect::To('account-request');
 
                 }catch(Exception $e){
                     die($e->getMessage());
@@ -182,8 +182,7 @@
               
                             </div>
                         </div>
-                        <div class="ibox-content">
-
+                        <div id="request-table-div" class="ibox-content">
                             <table class="footable table table-stripped toggle-arrow-tiny">
                                 <thead>
                                 <tr>
@@ -191,15 +190,16 @@
                                     <th data-toggle="true">Requestor</th>
                                     <th>Unit</th>
                                     <th>Status</th>
-									<th data-hide="all">Phone</th>
+                                    <th data-hide="all">Phone</th>
                                     <th data-hide="all">Email</th>                                                        
                                     <th data-hide="all">Requested</th>
-									<th data-hide="all">Employee Id</th>
-									<th data-hide="all">Remarks</th>
+                                    <th data-hide="all">Employee Id</th>
+                                    <th data-hide="all">Remarks</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+<<<<<<< HEAD
 								
 								<?php														
 									
@@ -240,6 +240,48 @@
 									}
 								?>
 								
+=======
+                                
+                                <?php														
+                                    
+                                    foreach($requests as $request){
+                                        if($request->ext_name == "none"){
+                                            $fullname = $request->fname." ".$request->last_name;
+                                        }else{
+                                            $fullname = $request->fname." ".$request->last_name." ".$request->ext_name;
+                                        }
+                                        
+                                        $color = ($request->status == "pending") ? "text-navy" : "text-danger";
+                                        $color1 = ($request->remarks == "none") ? "" : "text-danger";
+                                        
+                                        
+                                        $time = strtotime($request->submitted);
+                                        $final = date("l F j, Y g:i:sa", $time); 
+                                        
+                                    //<td><span class="pie">90/100</span></td>	
+                                        echo '
+                                            <tr>
+                                                <td>'.$fullname.'</td>
+                                                <td>'.$request->office_name.'</td>
+                                                <td><a class="'.$color.'">'.$request->status.'</a></td>
+                                                <td>'.$request->contact.'</td>
+                                                <td>'.$request->email.'</td>																					
+                                                <td>'.$final.'</td>
+                                                <td><b>'.$request->employee_id.'</b></td>
+                                                <td><a class="'.$color1.'">'.$request->remarks.'</a></td>
+                                                <td>
+                                                <a onclick="approve(\''.$request->ID.'\')"><i class="fa fa-check text-navy"></i></a> 
+                                                    
+                                                    <a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d(\''.$fullname.'\', \''.$request->ID.'\')">
+                                                        <i class="fa fa-close text-danger" style="margin-left:20px"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>																				
+                                        ';
+                                    }
+                                ?>
+                                
+>>>>>>> nico
 
                                 </tbody>
                                 <tfoot>
@@ -250,6 +292,7 @@
                                 </tr>
                                 </tfoot>
                             </table>
+
 
                         </div>
                     </div>
@@ -416,85 +459,8 @@
         </div>
     </div>
 	<?php include_once '../../includes/parts/modals.php'; ?>
-    <!-- Mainly scripts -->
-	<script src="../../assets/js/jquery-3.1.1.min.js"></script>
-    <script src="../../assets/js/popper.min.js"></script>
-    <script src="../../assets/js/bootstrap.js"></script>
-    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <?php include_once '../../includes/parts/admin_scripts.php'; ?>
 
 
-
-    <!-- Peity -->
-
-    <script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
-    <script src="../../assets/js/demo/peity-demo.js"></script>
-	
-	
-    <!-- Custom and plugin javascript -->
-    <script src="../../assets/js/inspinia.js"></script>
-    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
-	<script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
-
-	
-    <!-- FooTable -->
-    <script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-
-            var lineData = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Example dataset",
-                        backgroundColor: "rgba(26,179,148,0.5)",
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                        label: "Example dataset",
-                        backgroundColor: "rgba(220,220,220,0.5)",
-                        borderColor: "rgba(220,220,220,1)",
-                        pointBackgroundColor: "rgba(220,220,220,1)",
-                        pointBorderColor: "#fff",
-                        data: [65, 59, 80, 81, 56, 55, 40]
-                    }
-                ]
-            };
-
-            var lineOptions = {
-                responsive: true
-            };
-
-
-            var ctx = document.getElementById("lineChart").getContext("2d");
-            new Chart(ctx, {type: 'line', data: lineData, options:lineOptions});
-
-
-
-        });
-    </script>
-	
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function() {
-
-            $('.footable').footable();
-            $('.footable2').footable();
-
-			var tst_rdy = '<?php 
-				if(Session::exists('toust')) echo Session::flash('toust');
-				else echo "0";
-			?>';
-			
-			if(tst_rdy !== "0")
-			toastr.success(tst_rdy);
-
-        });
-
-    </script>
 </body>
 </html>
