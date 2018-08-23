@@ -38,7 +38,7 @@
                     $sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
                     
                     Session::flash('toust', 'Request for Account Denied');
-                    // Redirect::To('account-request');
+                    //Redirect::To('account-request');
 
                 }catch(Exception $e){
                     die($e->getMessage());
