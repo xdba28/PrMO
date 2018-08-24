@@ -26,8 +26,7 @@
     <title>PrMO OPPTS | Empty Page</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
-	
-	<?php include_once '../../includes/parts/user_scripts.php'; ?>
+		
 
 </head>
 
@@ -72,132 +71,58 @@
 
 				<div class="wrapper wrapper-content animated fadeInRight">
 					<div class="row">
-						<div class="col-lg-12">
-							<div class="ibox">
-								<div class="ibox-title">
-									<h5>Wizard with Validation</h5>
-								</div>
-								<div class="ibox-content">
-									<h2>
-										Purchase Order Specification Requirements
-									</h2>
-									<p>
-										Specify the required fields for your need to generate the Purchase Order Form that suits your need.
-									</p>
+                <div class="col-lg-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-3">Project &nbsp&nbsp<i class="ti-folder" style="font-size:18px"></i></a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Particulars &nbsp&nbsp<i class="ti-ruler-pencil" style="font-size:18px"></i></a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-5">Something &nbsp&nbsp<i class="ti-bookmark" style="font-size:18px"></i></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-3" class="tab-pane active">
+                                <div class="panel-body">
+                                   <h2>Project Information</h2>
 
-									<form id="form" action="#" class="wizard-big">
-										<h1>Project</h1>
-										<fieldset>
-											<h2>Project Information</h2>
-											<div class="row">
-												<div class="col-lg-8">
-												<br><br>
-													<div class="form-group">
-														<label>Project title *</label>
-														<input id="title" name="title" type="text" class="form-control">
-													</div>
-													<div class="form-group">
-														<label>Overall Estimated Cost *</label>
-														<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
-													</div>
-													<div class="form-group">
-														<label>Number of Lots</label>
-														<input id="items" name="items" type="number" min="1" class="form-control">
-													</div>
+                                    <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of
+                                        existence in this spot, which was created for the bliss of souls like mine.</p>
 
-												</div>
-												<div class="col-lg-4">
-													<div class="text-center">
-														<div style="margin-top: 20px">
-															<i class="ti-layout-tab" style="font-size: 180px;color: #FFD700 "></i>
-														</div>
-													</div>
-												</div>
-											</div>
+                                    <p>I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at
+                                        the present moment; and yet I feel that I never was a greater artist than now. When.</p>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+                                    <strong>Donec quam felis</strong>
 
-										</fieldset>
-										<h1>Particulars</h1>
-										<fieldset>
-											<h2>Project Information</h2>
-											<div class="row" id="wf-stp-2">
-												<!-- step 2 -->
+                                    <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
+                                        and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
 
+                                    <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
+                                        sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
+                                </div>
+                            </div>
+                            <div id="tab-5" class="tab-pane">
+                                <div class="panel-body">
+                                    <strong>Donec quam felis</strong>
 
+                                    <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
+                                        and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
 
-											</div>
-										</fieldset>
-
-										<h1>Warning</h1>
-										<fieldset>
-											<div class="text-center" style="margin-top: 120px">
-												<h2>You did it Man :-)</h2>
-											</div>
-										</fieldset>
-
-										<h1>Finish</h1>
-										<fieldset>
-											<h2>Terms and Conditions</h2>
-											<input id="acceptTerms" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
-										</fieldset>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                                    <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
+                                        sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Phone</th>
-						<th>Something</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>Administration</td>
-                        <td>(171) 555-2222</td>
-						<td>something</td>
-                        <td>
-							<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
-                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Peter Parker</td>
-                        <td>Customer Service</td>
-                        <td>(313) 555-5735</td>
-						<td>something</td>
-                        <td>
-							<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
-                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Fran Wilson</td>
-                        <td>Human Resources</td>
-                        <td>(503) 555-9931</td>
-						<td>something</td>
-                        <td>
-							<a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
-                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                        </td>
-                    </tr>      
-                </tbody>
-            </table>
+					
+					</div>
+				</div>
+				
+											
+				
+
+ 
 
 					
 			
@@ -211,7 +136,7 @@
         </div>
     </div>
 
-	
+	<?php include_once '../../includes/parts/user_scripts.php'; ?>
 
 
 </body>

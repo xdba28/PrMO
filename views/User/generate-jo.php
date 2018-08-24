@@ -13,8 +13,6 @@
    
 
 ?>
-
-
 <!DOCTYPE html>
 <html>
 
@@ -99,7 +97,7 @@
 													</div>
 													<div class="form-group">
 														<label>Number of Lots</label>
-														<input id="lot" name="lot" type="number" min="0" class="form-control">
+														<input id="lot" name="lot" type="number" min="1" class="form-control">
 													</div>
 
 												</div>
@@ -151,112 +149,15 @@
         </div>
     </div>
 
-    <!-- Mainly scripts -->
-    <script src="../../assets/js/jquery-3.1.1.min.js"></script>
-    <script src="../../assets/js/popper.min.js"></script>
-    <script src="../../assets/js/bootstrap.js"></script>
-    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-    <!-- Custom and plugin javascript -->
-    <script src="../../assets/js/inspinia.js"></script>
-    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
-
-    <!-- Steps -->
-    <script src="../../assets/js/plugins/steps/jquery.steps.min.js"></script>
-
-    <!-- Jquery Validate -->
-	<script src="../../assets/js/plugins/validate/jquery.validate.min.js"></script>
-	
-	<script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
-
+	<?php include '../../includes/parts/user_scripts.php'; ?>
 
     <script>
         $(document).ready(function(){
-            $("#wizard").steps();
-            $("#form").steps({
-                bodyTag: "fieldset",
-                onStepChanging: function (event, currentIndex, newIndex)
-                {
-                    // Always allow going backward even if the current step contains invalid fields!
-                    if (currentIndex > newIndex)
-                    {
-                        return true;
-                    }
 
-                    // Forbid suppressing "Warning" step if the user is to young
-                    if (newIndex === 3 && Number($("#age").val()) < 18)
-                    {
-                        return false;
-                    }
-
-                    var form = $(this);
-
-                    // Clean up if user went backward before
-                    if (currentIndex < newIndex)
-                    {
-                        // To remove error styles
-                        $(".body:eq(" + newIndex + ") label.error", form).remove();
-                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                    }
-
-                    // Disable validation on fields that are disabled or hidden.
-                    form.validate().settings.ignore = ":disabled,:hidden";
-
-                    // Start validation; Prevent going forward if false
-                    return form.valid();
-                },
-                onStepChanged: function (event, currentIndex, priorIndex)
-                {
-                    // Suppress (skip) "Warning" step if the user is old enough.
-                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                    {
-                        $(this).steps("next");
-                    }
-
-                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
-                    if (currentIndex === 2 && priorIndex === 3)
-                    {
-                        $(this).steps("previous");
-                    }
-                },
-                onFinishing: function (event, currentIndex)
-                {
-                    var form = $(this);
-
-                    // Disable validation on fields that are disabled.
-                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
-                    form.validate().settings.ignore = ":disabled";
-
-                    // Start validation; Prevent form submission if false
-                    return form.valid();
-                },
-                onFinished: function (event, currentIndex)
-                {
-                    var form = $(this);
-
-                    // Submit form input
-                    form.submit();
-                }
-            }).validate({
-                        errorPlacement: function (error, element)
-                        {
-                            element.before(error);
-                        },
-                        rules: {
-                            confirm: {
-                                equalTo: "#password"
-                            }
-                        }
-                    });
-
-			
 			document.getElementById('lot').addEventListener('change', function()
 			{
-				
-				var wf_lot = document.getElementById('wf-stp-2');
 				var lots = this.value;
-				wf_lot.innerHTML = '';
+				$('#wf-stp-2').html('');
 				for(let i = 1 ; i <= lots ; i++)
 				{
 					var tmp_lot = `
@@ -265,22 +166,22 @@
 							<div class="ibox-title">
 								<h5>Lot Number ${i}</h5>
 							</div>
-							<div class="ibox-content">
-								<div id="lot.${i}">
+							<div class="ibox-content" id="lot.${i}">
+								<div>
 									<p class="font-bold">Header Name: </p>
 									<input type="text" name="lot${i}[list-name][]" class="form-control">
 									<br>
 									<p class="font-bold">Tags:</p>
-									<input class="form-control" name="lot${i}[list][]" id="tag-${i}" data-role="tagsinput">
+									<input class="form-control" name="lot${i}[list][]" id="lot.${i}-tag-${i}" data-role="tagsinput">
 									<br>
 								</div>
-							<button type="button" onclick="addList('lot.${i}')">Click</button>
 							</div>
+							<button type="button" onclick="addList('lot.${i}')">Click</button>
 							
 						</div>
 					</div>`;
-					wf_lot.innerHTML += tmp_lot;
-					$('input[name="lot'+i+'[list][]"]').tagsinput();
+					$(`#wf-stp-2`).append(tmp_lot);
+					$(`[data-role="tagsinput"]:last`).tagsinput();
 				}
 
 			})
@@ -288,22 +189,22 @@
 	   });
 	   
 
-	   function addList(lot)
-	   {
-		   var num = lot.split(".");
-		   var list_tmp = `
-		   <div id="lot.${num[1]}">
+		function addList(lot)
+		{
+			var num = lot.split(".");
+			var list_tmp = `
+			<div>
 				<p class="font-bold">Header Name: </p>
 				<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
 				<br>
 				<p class="font-bold">Tags:</p>
 				<input class="form-control" name="lot${num[1]}[list][]" data-role="tagsinput">
 				<br>
-			</div>`;
-
-		   document.getElementById(lot).innerHTML += list_tmp;
-		   $('input[name="lot'+num[1]+'[list][]"]').tagsinput();
-	   }
+			<div>`;
+			$(`#${lot}`).append(list_tmp);
+			// document.getElementById(lot).innerHTML += list_tmp;
+			// $('[data-role="tagsinput"]:last').tagsinput();
+		}
     </script>
 
 
