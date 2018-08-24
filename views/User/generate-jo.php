@@ -99,7 +99,7 @@
 													</div>
 													<div class="form-group">
 														<label>Number of Lots</label>
-														<input id="lot" name="lot" type="number" min="0" class="form-control">
+														<input id="lot" name="lot" type="number" min="1" class="form-control">
 													</div>
 
 												</div>
@@ -253,10 +253,8 @@
 			
 			document.getElementById('lot').addEventListener('change', function()
 			{
-				
-				var wf_lot = document.getElementById('wf-stp-2');
 				var lots = this.value;
-				wf_lot.innerHTML = '';
+				$('#wf-stp-2').html('');
 				for(let i = 1 ; i <= lots ; i++)
 				{
 					var tmp_lot = `
@@ -265,13 +263,13 @@
 							<div class="ibox-title">
 								<h5>Lot Number ${i}</h5>
 							</div>
-							<div class="ibox-content">
-								<div id="lot.${i}">
+							<div class="ibox-content" id="lot.${i}">
+								<div>
 									<p class="font-bold">Header Name: </p>
 									<input type="text" name="lot${i}[list-name][]" class="form-control">
 									<br>
 									<p class="font-bold">Tags:</p>
-									<input class="form-control" name="lot${i}[list][]" id="tag-${i}" data-role="tagsinput">
+									<input class="form-control" name="lot${i}[list][]" data-role="tagsinput">
 									<br>
 								</div>
 							<button type="button" onclick="addList('lot.${i}')">Click</button>
@@ -279,8 +277,8 @@
 							
 						</div>
 					</div>`;
-					wf_lot.innerHTML += tmp_lot;
-					$('input[name="lot'+i+'[list][]"]').tagsinput();
+					$('#wf-stp-2').append(tmp_lot);
+					$('[data-role]:last').tagsinput();
 				}
 
 			})
@@ -288,11 +286,12 @@
 	   });
 	   
 
-	   function addList(lot)
-	   {
-		   var num = lot.split(".");
-		   var list_tmp = `
-		   <div id="lot.${num[1]}">
+		function addList(lot)
+		{
+			// var parent = document.getElementById(lot);
+			var num = lot.split(".");
+			var list_tmp = `
+			<div id="lot.${num[1]}">
 				<p class="font-bold">Header Name: </p>
 				<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
 				<br>
@@ -300,10 +299,9 @@
 				<input class="form-control" name="lot${num[1]}[list][]" data-role="tagsinput">
 				<br>
 			</div>`;
-
-		   document.getElementById(lot).innerHTML += list_tmp;
-		   $('input[name="lot'+num[1]+'[list][]"]').tagsinput();
-	   }
+			$('#lot.1').append(list_tmp)
+			$('[data-role]:last').tagsinput();
+		}
     </script>
 
 
