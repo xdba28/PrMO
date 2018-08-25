@@ -39,6 +39,9 @@
 <link href="../../assets/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
 <!--Dual ListBox CSS-->
 <link href="../../assets/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+<!--JQ Grid Table CSS-->
+<link href="../../assets/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+<link href="../../assets/css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet">
 
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
