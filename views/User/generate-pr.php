@@ -223,6 +223,7 @@
 	{
 		var arry = [];
 		var newCat = [];
+		var lotCount = 0;
 		var chk = false;
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
 		{
@@ -262,22 +263,24 @@
 									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
 									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" disabled form="pr_form" required></td>																
+									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
 								</tr>
 							</tbody>
 								<tr>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
+									<td>Row count per Lot</td>
+									<td><input type="number" class="form-control" readonly form="pr_form"></td>
 									<td>Total Lot Cost: </td>
-									<td><input type="number" class="form-control" name="L${index}-TLC" disabled form="pr_form" required></td>
+									<td><input type="number" class="form-control" name="L${index}-TLC" readonly form="pr_form" required></td>
 								</tr>
 						</table>
 					</div>
 				</div>`;
 				$('#stp-2').append(lst_tmp);
+				lotCount++;
 			});
+			// $('#').val(lotCount);  this is the count of all lots; create a hidden input type named lotcount
 
 
 			$('[data="qty"]').on('change', function()
@@ -317,7 +320,7 @@
 					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
 					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" disabled form="pr_form" required></td>																
+					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" readonly form="pr_form" required></td>																
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
 
@@ -345,7 +348,7 @@
 						if($(this).val() !== "") TC += parseFloat($(this).val());
 					});
 					$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
-				});
+				});			
 			});
 		});
 	});
