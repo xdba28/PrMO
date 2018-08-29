@@ -60,6 +60,11 @@
                         </li>
                     </ol>
                 </div>
+                <div class="col-sm-8">
+                    <div class="title-action">
+                        <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                    </div>
+                </div>				
             </div>
 			
 			<!-- Main Content -->

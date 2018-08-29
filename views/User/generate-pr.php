@@ -9,7 +9,15 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
+	
+	if(Input::exists()){
+
+		//echo '<pre>'.print_r($_POST).'</pre>';
+		echo Input::get('L0-stk-0');
+		die();
+
+	}
  
 
 
@@ -63,6 +71,11 @@
                         </li>
                     </ol>
                 </div>
+                <div class="col-sm-8">
+                    <div class="title-action">
+                        <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                    </div>
+                </div>				
             </div>
 			
 			<!-- Main Content -->
@@ -79,7 +92,12 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
+<<<<<<< HEAD
 								<div><form id="1"></form></div>
+=======
+								<div><form id="pr_form"></div>
+								
+>>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
@@ -89,16 +107,20 @@
 											<div class="col-lg-7">
 												<div class="form-group">
 													<label>Project title *</label>
-													<input id="title" name="title" type="text" class="form-control">
+													<input id="title" name="title" type="text" class="form-control" form="pr_form" required>
 												</div>
 												<div class="form-group">
 													<label>Overall Estimated Cost *</label>
-													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
+													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="pr_form" required>
 												</div>
 												<div class="form-group">
 													<label class="font-normal"></label>
 													<div>
+<<<<<<< HEAD
 														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category">															
+=======
+														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form" required>															
+>>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 															<option value="Common Office Supplies">Common Office Supplies</option>
 															<option value="Paper Materials & Products">Paper Materials & Products</option>          
 															<option value="Hardware Supplies">Hardware Supplies</option>
@@ -145,6 +167,7 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
+<<<<<<< HEAD
 														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled>
 													</div>
 													<div class="form-group">
@@ -158,6 +181,21 @@
 													<div class="form-group">
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text"  class="form-control">
+=======
+														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" readonly form="pr_form" required>
+													</div>
+													<div class="form-group">
+														<label>Noted By *</label>
+														<input id="noted" name="noted" type="text"  class="form-control" form="pr_form" required>
+													</div>
+													<div class="form-group">
+														<label>Verified By *</label>
+														<input id="verified" name="verified" type="text"  class="form-control" form="pr_form" required>
+													</div>
+													<div class="form-group">
+														<label>Aproved By *</label>
+														<input id="approved" name="approved" type="text"  class="form-control" form="pr_form" required>
+>>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -168,11 +206,19 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
+<<<<<<< HEAD
 													<button class="btn btn-primary btn-outline pull-right">Finish</button>
 													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
 												</div>
 											</div>	
 																		
+=======
+													<input type="text" value="<?php echo Token::generate();?>" hidden form="pr_form">
+													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
+													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
+												</div>
+											</div>											
+>>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 									</div>
 								</div>
 								
@@ -209,6 +255,7 @@
 	{
 		var arry = [];
 		var newCat = [];
+		var lotCount = 0;
 		var chk = false;
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
 		{
@@ -217,7 +264,7 @@
 			$('#stp-2').html('');
 			arry = $(this).val();
 			arry.forEach((element, index) =>
-			{
+			{								
 				obj.push({lst: 0});
 				var lst_tmp = `
 				<div class="ibox">
@@ -243,45 +290,30 @@
 							</thead>
 							<tbody id="pr-tbl-${index}">
 								<tr>
-									<td><input type="text" form="1" name="pr-${index}-[stk][]" data-cnt="pr-${index}-lst-0" class="form-control"></td>
-									<td class="center"><input form="1" type="text" name="pr-${index}-[unit][]" data-cnt="pr-${index}-lst-0" class="form-control"></td>
-									<td><textarea rows="1" form="1" cols="30" name="pr-${index}-[desc][]" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000"></textarea></td>
-									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="pr-${index}-[qty][]" class="form-control" min="1"></td>
-									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="pr-${index}-[Ucst][]" class="form-control" min="1"></td>
-									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="pr-${index}-[Tcst][]" class="form-control" min="1" disabled></td>																
+									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form"></td>
+									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required></td>
+									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
+									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
+									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
 								</tr>
 							</tbody>
 								<tr>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
+									<td>Row count per Lot</td>
+									<td><input type="number" class="form-control" readonly form="pr_form"></td>
 									<td>Total Lot Cost: </td>
-									<td><input type="number" class="form-control" name="pr-${index}-LstTtl" disabled></td>
+									<td><input type="number" class="form-control" name="L${index}-TLC" readonly form="pr_form" required></td>
 								</tr>
 						</table>
 					</div>
 				</div>`;
 				$('#stp-2').append(lst_tmp);
+				lotCount++;
 			});
+			// $('#').val(lotCount);  this is the count of all lots; create a hidden input type named lotcount
 
-			// if(chk === false)
-			// {
-			// 	chk = true;
-			// }
-			// else if(chk === true)
-			// {
-			// 	newCat = $(this).val();
-			// 	if(newCat && newCat.constructor === Array && newCat.length !== 0)
-			// 	{   
-			// 		// not an empty array
-			// 	}
-			// 	else
-			// 	{
-			// 		// strictly an empty array
-			// 	}
-			// 	arry = newCat;
-			// }
 
 			$('[data="qty"]').on('change', function()
 			{
@@ -293,9 +325,7 @@
 				$(`[data-cnt|="pr-${Q_el_data[1]}-Tsct-lst"]`).each(function(){
 					if($(this).val() !== "") TC += parseFloat($(this).val());
 				});
-				$(`[name="pr-${Q_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
-				var form = $('form').serialize();
-				console.log(form);
+				$(`[name="L${Q_el_data[1]}-TLC"]`).val((TC).toFixed(2));					
 			});
 
 			$('[data="Ucst"]').on('change', function()
@@ -308,7 +338,7 @@
 				$(`[data-cnt|="pr-${U_el_data[1]}-Tsct-lst"]`).each(function(){
 					if($(this).val() !== "") TC += parseFloat($(this).val());
 				});
-				$(`[name="pr-${U_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+				$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
 			});
 
 			$('[data-type="lst-add"]').on('click', function()
@@ -317,12 +347,12 @@
 				obj[pr_num[1]].lst++;
 				var tr_tmp = `
 				<tr>
-					<td><input type="text" name="pr-${pr_num[1]}-[stk][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control"></td>
-					<td class="center"><input type="text" name="pr-${pr_num[1]}-[unit][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control"></td>
-					<td><textarea rows="1" cols="30" name="pr-${pr_num[1]}-[desc][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000"></textarea></td>
-					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[qty][]" class="form-control" min="1"</td>
-					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[Ucst][]" class="form-control" min="1"></td>
-					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[Tcst][]" class="form-control" min="1" disabled></td>																
+					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
+					<td class="center"><input type="text" name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required></td>
+					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
+					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
+					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" readonly form="pr_form" required></td>																
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
 
@@ -336,7 +366,7 @@
 					$(`[data-cnt|="pr-${Q_el_data[1]}-Tsct-lst"]`).each(function(){
 						if($(this).val() !== "") TC += parseFloat($(this).val());
 					});
-					$(`[name="pr-${Q_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+					$(`[name="L${Q_el_data[1]}-TLC"]`).val((TC).toFixed(2));
 				});
 
 				$('[data="Ucst"]').on('change', function()
@@ -349,8 +379,8 @@
 					$(`[data-cnt|="pr-${U_el_data[1]}-Tsct-lst"]`).each(function(){
 						if($(this).val() !== "") TC += parseFloat($(this).val());
 					});
-					$(`[name="pr-${U_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
-				});
+					$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
+				});			
 			});
 		});
 	});
