@@ -63,29 +63,29 @@
                     switch($type){
 
                         case 'super_admin':
-                            header('Location: ../views/Super-admin/Dashboard.php'); 
+                            header('Location: ../views/Super-admin/Dashboard'); 
                             exit();
                         break;
 
                         case 'director':
-                            header('Location: ../views/Admin/Dashboard.php'); 
+                            header('Location: ../views/Admin/Dashboard'); 
                             exit();
                         break;
                         
                         case 'aid':
-                            header('Location: ../views/Aid/Dashboard.php'); 
+                            header('Location: ../views/Aid/Dashboard'); 
                             exit();
                         break;
 
                         case 'staff':
-                            header('Location: ../views/Staff/Dashboard.php'); 
+                            header('Location: ../views/Staff/Dashboard'); 
                             exit();
                         break;
 
                     }
 
                 }else{
-                    header('Location:' . $location . '.php');
+                    header('Location:' . $location);
                 }
   
 
