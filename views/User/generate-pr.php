@@ -92,12 +92,8 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-<<<<<<< HEAD
-								<div><form id="1"></form></div>
-=======
 								<div><form id="pr_form"></div>
 								
->>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
@@ -116,11 +112,7 @@
 												<div class="form-group">
 													<label class="font-normal"></label>
 													<div>
-<<<<<<< HEAD
-														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category">															
-=======
 														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form" required>															
->>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 															<option value="Common Office Supplies">Common Office Supplies</option>
 															<option value="Paper Materials & Products">Paper Materials & Products</option>          
 															<option value="Hardware Supplies">Hardware Supplies</option>
@@ -167,21 +159,6 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-<<<<<<< HEAD
-														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled>
-													</div>
-													<div class="form-group">
-														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control">
-													</div>
-													<div class="form-group">
-														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control">
-													</div>
-													<div class="form-group">
-														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control">
-=======
 														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" readonly form="pr_form" required>
 													</div>
 													<div class="form-group">
@@ -195,7 +172,6 @@
 													<div class="form-group">
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text"  class="form-control" form="pr_form" required>
->>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -206,19 +182,11 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-<<<<<<< HEAD
-													<button class="btn btn-primary btn-outline pull-right">Finish</button>
-													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
-												</div>
-											</div>	
-																		
-=======
 													<input type="text" value="<?php echo Token::generate();?>" hidden form="pr_form">
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
 													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
 												</div>
 											</div>											
->>>>>>> 1ff94dd7468d4a831eb296137225f36633f98587
 									</div>
 								</div>
 								
@@ -255,7 +223,6 @@
 	{
 		var arry = [];
 		var newCat = [];
-		var lotCount = 0;
 		var chk = false;
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
 		{
@@ -310,10 +277,8 @@
 					</div>
 				</div>`;
 				$('#stp-2').append(lst_tmp);
-				lotCount++;
 			});
-			// $('#').val(lotCount);  this is the count of all lots; create a hidden input type named lotcount
-
+			// $('#').val(arry.length);  this is the count of all lots; create a hidden input type named lotcount
 
 			$('[data="qty"]').on('change', function()
 			{
@@ -325,7 +290,7 @@
 				$(`[data-cnt|="pr-${Q_el_data[1]}-Tsct-lst"]`).each(function(){
 					if($(this).val() !== "") TC += parseFloat($(this).val());
 				});
-				$(`[name="L${Q_el_data[1]}-TLC"]`).val((TC).toFixed(2));					
+				$(`[name="L${Q_el_data[1]}-TLC"]`).val((TC).toFixed(2));				
 			});
 
 			$('[data="Ucst"]').on('change', function()
@@ -345,6 +310,7 @@
 			{
 				var pr_num = $(this).attr("data-list").split("-");
 				obj[pr_num[1]].lst++;
+				$('#').val(JSON.stringify(obj));
 				var tr_tmp = `
 				<tr>
 					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
