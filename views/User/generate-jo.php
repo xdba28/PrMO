@@ -60,6 +60,11 @@
                         </li>
                     </ol>
                 </div>
+                <div class="col-sm-8">
+                    <div class="title-action">
+                       <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                    </div>
+                </div>				
             </div>
 			
 			<!-- Main Content -->
@@ -69,13 +74,13 @@
 					<div class="col-lg-12">
 						<div class="tabs-container">
 							<ul class="nav nav-tabs">
-								<li><a class="nav-link active" data-toggle="tab" href="#tab-3">Project &nbsp&nbsp<i class="ti-folder" style="font-size:18px"></i></a></li>
-								<li><a class="nav-link" data-toggle="tab" href="#tab-4">Particulars &nbsp&nbsp<i class="ti-pencil-alt" style="font-size:18px"></i></a></li>
-								<li><a class="nav-link" data-toggle="tab" href="#tab-5">Something &nbsp&nbsp<i class="ti-bookmark" style="font-size:18px"></i></a></li>
+								<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Project &nbsp&nbsp<i class="ti-folder" style="font-size:18px"></i></a></li>
+								<li><a class="nav-link" data-toggle="tab" href="#tab-2">Particulars &nbsp&nbsp<i class="ti-pencil-alt" style="font-size:18px"></i></a></li>
+								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-								<form id="agik" action="" method="POST"></form>
-								<div id="tab-3" class="tab-pane active">
+								
+								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
 
@@ -84,7 +89,7 @@
 											<div class="col-lg-7">
 												<div class="form-group">
 													<label>Project title *</label>
-													<input form="agik" id="title" name="title" type="text" class="form-control">
+													<input id="title" name="title" type="text" class="form-control">
 												</div>
 												<div class="form-group">
 													<label>Overall Estimated Cost *</label>
@@ -106,50 +111,59 @@
 
 									</div>	
 								</div>
-								<div id="tab-4" class="tab-pane">
+								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
 
-										<p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
-											and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
+										<p>Some shitty explaination what the hell is going on</p>
 
 										<div class="row">
-											<div class="col-lg-7">
-												<div class="form-group">
-													<label>fields</label>
-													<input id="title" name="title" type="text" class="form-control">
-												</div>
-												<div class="form-group">
-													<label>fields</label>
-													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
-												</div>
-												<div class="form-group">
-													<label>Number of Lots</label>
-													<input id="lot" name="lot" type="number" min="1" class="form-control">
-												</div>
+											<div class="col-lg-12"><!-- edit the size of this class Den 6 7 or 8 bahala ka -->
+												<button class="btn btn-warning btn-outline btn-block" >Dito mo ilalagay par yung pamatay nating logic</button> <!--Erase this buttton, place the repetitive -->
 											</div>
-											<div class="col-lg-3">
-												<div class="text-center">
-													<div style="margin-left: 100px">
-														<i class="ti-pencil-alt" style="font-size: 180px;color: #FFD700 "></i>
-													</div>
-												</div>
-											</div>	
+		
 										</div>
 									</div>
 								</div>
-								<div id="tab-5" class="tab-pane">
+								<div id="tab-3" class="tab-pane">
 									<div class="panel-body">
-										<strong>Donec quam felis</strong>
+										   <h2>Project Signatories</h2>
 
-										<p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
-											and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
-
-										<p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-											sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
+											<p>Specify all signatories to finalized this form.</p>
+											
+											<div class="row">
+												<div class="col-lg-7">
+													<div class="form-group">
+														<label>End User *</label>
+														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled>
+													</div>
+													<div class="form-group">
+														<label>Noted By *</label>
+														<input id="noted" name="noted" type="text"  class="form-control">
+													</div>
+													<div class="form-group">
+														<label>Verified By *</label>
+														<input id="verified" name="verified" type="text"  class="form-control">
+													</div>
+													<div class="form-group">
+														<label>Aproved By *</label>
+														<input id="approved" name="approved" type="text"  class="form-control">
+													</div>													
+												</div>
+												<div class="col-lg-3">
+													<div class="text-center">
+														<div style="margin-left: 100px;  margin-top:20px">
+															<i class="ti-user" style="font-size: 180px;color: #FFD700;"></i>
+														</div>
+													</div>
+												</div>	
+												<div class="col-md-7">
+													<button class="btn btn-primary btn-outline pull-right">Finish</button>
+													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
+												</div>
+											</div>											
 									</div>
-								</div>
-								<input form="agik" type="submit">
+								</div>							
 							</div>
 						</div>
 					</div>
