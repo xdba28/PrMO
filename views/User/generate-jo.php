@@ -9,7 +9,10 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
+	
+
+	
    
 
 ?>
@@ -186,57 +189,58 @@
     <script>
         $(document).ready(function(){
 
-			document.getElementById('lot').addEventListener('change', function()
+			$('#lot').on('change', function()
 			{
 				var lots = this.value;
+				var obj = []
 				$('#wf-stp-2').html('');
-				for(let i = 1 ; i <= lots ; i++)
+				for(let i = 0 ; i < lots ; i++)
 				{
+					obj.push({tag: 0});
 					var tmp_lot = `
 					<div class="col-lg-6">
 						<div class="ibox">
 							<div class="ibox-title">
-								<h5>Lot Number ${i}</h5>
+								<h5>Lot Number ${i + 1}</h5>
 							</div>
-							<div class="ibox-content" id="lot.${i}">
+							<div class="ibox-content" id="lot-${i}">
 								<div>
 									<p class="font-bold">Header Name: </p>
 									<input type="text" name="lot${i}[list-name][]" class="form-control">
 									<br>
 									<p class="font-bold">Tags:</p>
-									<input class="form-control" name="lot${i}[list][]" id="lot.${i}-tag-${i}" data-role="tagsinput">
+									<input class="form-control" name="lot${i}[list][]" id="lot-${i}-tag-0" data-role="tagsinput">
 									<br>
 								</div>
 							</div>
-							<button type="button" onclick="addList('lot.${i}')">Click</button>
+							<button type="button" data-type="btn" data-tag="lot-${i}">Click</button>
 							
 						</div>
 					</div>`;
 					$(`#wf-stp-2`).append(tmp_lot);
-					$(`[data-role="tagsinput"]:last`).tagsinput();
+					$(`#lot-${i}-tag-0`).tagsinput();
 				}
 
-			})
+				$('[data-type="btn"]').on('click', function()
+				{
+					var num = $(this).attr("data-tag").split("-");
+					obj[num[1]].tag++;
+					var tg_num = obj[num[1]].tag;
+					var list_tmp = `
+					<div>
+						<p class="font-bold">Header Name: </p>
+						<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
+						<br>
+						<p class="font-bold">Tags:</p>
+						<input class="form-control" name="lot${num[1]}[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput">
+						<br>
+					<div>`;
+					$(`#${num[0]}-${num[1]}`).append(list_tmp);
+					$(`#lot-${num[1]}-tag-${tg_num}`).tagsinput();
+				});
+			});
+		});
 
-	   });
-	   
-
-		function addList(lot)
-		{
-			var num = lot.split(".");
-			var list_tmp = `
-			<div>
-				<p class="font-bold">Header Name: </p>
-				<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
-				<br>
-				<p class="font-bold">Tags:</p>
-				<input class="form-control" name="lot${num[1]}[list][]" data-role="tagsinput">
-				<br>
-			<div>`;
-			$(`#${lot}`).append(list_tmp);
-			// document.getElementById(lot).innerHTML += list_tmp;
-			// $('[data-role="tagsinput"]:last').tagsinput();
-		}
     </script>
 
 
