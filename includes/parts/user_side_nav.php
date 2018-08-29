@@ -41,8 +41,8 @@
                 <li>
                     <a href="index.html"><i class="ti-clipboard side"></i> <span class="nav-label">Request Forms</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="generate-pr.php">Purchase Request</a></li>
-						<li><a href="generate-jo.php">Job Order</a></li>				
+                        <li><a href="generate-pr">Purchase Request</a></li>
+						<li><a href="generate-jo">Job Order</a></li>				
                     </ul>
                 </li>
 

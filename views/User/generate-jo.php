@@ -9,10 +9,7 @@
     }else{
        Redirect::To('../../index');
         die();
-	}
-	
-
-	
+    }
    
 
 ?>
@@ -65,7 +62,7 @@
                 </div>
                 <div class="col-sm-8">
                     <div class="title-action">
-                       <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                        <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
                 </div>				
             </div>
@@ -100,7 +97,7 @@
 												</div>
 												<div class="form-group">
 													<label>Number of Lots *</label>
-													<input id="lots" name="lots" type="number" min=1 class="form-control">
+													<input id="lot" name="lot" type="number" min=1 class="form-control">
 												</div>
 											</div>
 											<div class="col-lg-3">
@@ -117,14 +114,11 @@
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
-
 										<p>Some shitty explaination what the hell is going on</p>
-
-										<div class="row">
-											<div class="col-lg-12"><!-- edit the size of this class Den 6 7 or 8 bahala ka -->
-												<button class="btn btn-warning btn-outline btn-block" >Dito mo ilalagay par yung pamatay nating logic</button> <!--Erase this buttton, place the repetitive -->
+										<div class="row" id="wf-stp-2" style="overflow-y: auto; height: 450px">
+											<div class="col-lg-12">
+												<h1>No Lots Set.</h1>
 											</div>
-		
 										</div>
 									</div>
 								</div>
@@ -192,7 +186,7 @@
 			$('#lot').on('change', function()
 			{
 				var lots = this.value;
-				var obj = []
+				var obj = [];
 				$('#wf-stp-2').html('');
 				for(let i = 0 ; i < lots ; i++)
 				{
@@ -204,12 +198,15 @@
 								<h5>Lot Number ${i + 1}</h5>
 							</div>
 							<div class="ibox-content" id="lot-${i}">
+								<p class="font-bold">Lot Name: </p>
+								<input type="text" class="form-control" name="lot-${i}-title">
 								<div>
-									<p class="font-bold">Header Name: </p>
-									<input type="text" name="lot${i}[list-name][]" class="form-control">
 									<br>
-									<p class="font-bold">Tags:</p>
-									<input class="form-control" name="lot${i}[list][]" id="lot-${i}-tag-0" data-role="tagsinput">
+									<p class="font-bold">List Name: </p>
+									<input type="text" name="lot-${i}-[list-name][]" class="form-control">
+									<br>
+									<p class="font-bold">&#128204; Tags:</p>
+									<input class="form-control" name="lot-${i}-[list][]" id="lot-${i}-tag-0" data-role="tagsinput">
 									<br>
 								</div>
 							</div>
@@ -228,11 +225,12 @@
 					var tg_num = obj[num[1]].tag;
 					var list_tmp = `
 					<div>
-						<p class="font-bold">Header Name: </p>
-						<input type="text" name="lot${num[1]}[list-name][]" class="form-control">
 						<br>
-						<p class="font-bold">Tags:</p>
-						<input class="form-control" name="lot${num[1]}[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput">
+						<p class="font-bold">List Name: </p>
+						<input type="text" name="lot-${num[1]}-[list-name][]" class="form-control">
+						<br>
+						<p class="font-bold">&#128204; Tags:</p>
+						<input class="form-control" name="lot-${num[1]}-[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput">
 						<br>
 					<div>`;
 					$(`#${num[0]}-${num[1]}`).append(list_tmp);
@@ -242,6 +240,7 @@
 		});
 
     </script>
+
 
 
 </body>

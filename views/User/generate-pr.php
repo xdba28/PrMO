@@ -9,14 +9,20 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
+	
+	if(Input::exists()){
+
+		//echo '<pre>'.print_r($_POST).'</pre>';
+		echo Input::get('L0-stk-0');
+		die();
+
+	}
  
 
 
 					
 ?>
-
-
 <!DOCTYPE html>
 <html>
 
@@ -28,7 +34,7 @@
     <title>PrMO OPPTS | Empty Page</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
-		
+
 
 </head>
 
@@ -67,7 +73,7 @@
                 </div>
                 <div class="col-sm-8">
                     <div class="title-action">
-                       <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                        <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
                 </div>				
             </div>
@@ -86,6 +92,7 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
+								<div id="form_div"><form id="pr_form" action="sample.php" method="POST"></form></div>
 								
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
@@ -96,24 +103,24 @@
 											<div class="col-lg-7">
 												<div class="form-group">
 													<label>Project title *</label>
-													<input id="title" name="title" type="text" class="form-control">
+													<input id="title" name="title" type="text" class="form-control" form="pr_form" required>
 												</div>
 												<div class="form-group">
 													<label>Overall Estimated Cost *</label>
-													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
+													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="pr_form" required>
 												</div>
 												<div class="form-group">
 													<label class="font-normal"></label>
 													<div>
-														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category">															
-															<option value="1">Common Office Supplies</option>
-															<option value="2">Paper Materials & Products</option>          
-															<option value="3">Hardware Supplies</option>
-															<option value="4">Sporting Supplies</option>
-															<option value="5">Common Janitorial/Cleaning Supplies</option>
-															<option value="6">IT Supplies</option>
-															<option value="7">Laboratory Supplies</option>
-															<option value="8">Computer Supplies</option>
+														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form" required>															
+															<option value="Common Office Supplies">Common Office Supplies</option>
+															<option value="Paper Materials & Products">Paper Materials & Products</option>          
+															<option value="Hardware Supplies">Hardware Supplies</option>
+															<option value="Sporting Supplies">Sporting Supplies</option>
+															<option value="Common Janitorial/Cleaning Supplies">Common Janitorial/Cleaning Supplies</option>
+															<option value="IT Supplies">IT Supplies</option>
+															<option value="Laboratory Supplies">Laboratory Supplies</option>
+															<option value="Computer Supplies">Computer Supplies</option>
 														</select>
 													</div>
 												</div>
@@ -136,123 +143,9 @@
 										<p>Some shitty explaination what the hell is going on</p>
 
 										<div class="row">
-											<div class="col-lg-12">	 
-												<div class="ibox">
-													<div class="ibox-title">
-														<div class="project-alert alert-warning">
-															<h5>Below is the Item List for Lot 1 - Common Office Supplies</h5>
-														</div>
-													
-														<div class="add-project">
-															<button class="btn btn-success btn-rounded btn-outline" href="#">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
-														</div>
-													</div>
-													<div class="ibox-content">
-
-
-
-														<table class="table table-bordered">
-															<thead>
-															<tr>
-																<th class="center">Stock No.</th>
-																<th class="center">Unit</th>
-																<th class="center">Item Description</th>
-																<th class="center">Quantity</th>
-																<th class="center">Unit Cost</th>
-																<th class="center">Total Cost</th>
-															</tr>
-															</thead>
-															<tbody>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, black 50s/box</td>
-																<td class="center">1</td>
-																<td class="right">450.00</td>
-																<td class="right">450.00</td>																
-															</tr>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, blue 50s/box</td>
-																<td class="center">4</td>
-																<td class="right">450.00</td>
-																<td class="right">1800.00</td>	
-															</tr>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, red 50s/box</td>
-																<td class="center">1</td>
-																<td class="right">450.00</td>
-																<td class="right">450.00</td>
-															</tr>
-															</tbody>
-														</table>
-
-
-													
-													</div>
-												</div>
-												
-												<div class="ibox">
-													<div class="ibox-title">
-														<div class="project-alert alert-warning">
-															<h5>Below is the Item List for Lot 2 - Common Janitorial Supplies</h5>
-														</div>
-													
-														<div class="add-project">
-															<button class="btn btn-success btn-rounded btn-outline" href="#">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
-														</div>
-													</div>
-													<div class="ibox-content">
-
-
-										
-														<table class="table table-bordered">
-															<thead>
-															<tr>
-																<th class="center">Stock No.</th>
-																<th class="center">Unit</th>
-																<th class="center">Item Description</th>
-																<th class="center">Quantity</th>
-																<th class="center">Unit Cost</th>
-																<th class="center">Total Cost</th>
-															</tr>
-															</thead>
-															<tbody>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, black 50s/box</td>
-																<td class="center">1</td>
-																<td class="right">450.00</td>
-																<td class="right">450.00</td>																
-															</tr>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, blue 50s/box</td>
-																<td class="center">4</td>
-																<td class="right">450.00</td>
-																<td class="right">1800.00</td>	
-															</tr>
-															<tr>
-																<td></td>
-																<td class="center">box</td>
-																<td>Ballpen, red 50s/box</td>
-																<td class="center">1</td>
-																<td class="right">450.00</td>
-																<td class="right">450.00</td>
-															</tr>
-															</tbody>
-														</table>
-
-
-													</div>
-												</div>					
+											<div class="col-lg-12" id="stp-2">
+												<h1>No Categories Set.</h1>
 											</div>		
-											
 										</div>
 									</div>
 								</div>
@@ -266,19 +159,19 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled>
+														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" readonly form="pr_form" required>
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control">
+														<input id="noted" name="noted" type="text"  class="form-control" form="pr_form" required>
 													</div>
 													<div class="form-group">
 														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control">
+														<input id="verified" name="verified" type="text"  class="form-control" form="pr_form" required>
 													</div>
 													<div class="form-group">
 														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control">
+														<input id="approved" name="approved" type="text"  class="form-control" form="pr_form" required>
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -289,7 +182,8 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-													<button class="btn btn-primary btn-outline pull-right">Finish</button>
+													<input type="text" value="<?php echo Token::generate();?>" hidden form="pr_fom">
+													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
 													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
 												</div>
 											</div>											
@@ -324,5 +218,136 @@
 
 
 </body>
+<script>
+	$(function()
+	{
+		var arry = [];
+		var newCat = [];
+		var chk = false;
+		$('.chosen-select').chosen({width: "100%"}).on('change', function()
+		{
+			var TC = 0;
+			var obj = [];
+			$('#stp-2').html('');
+			arry = $(this).val();
+			arry.forEach((element, index) =>
+			{								
+				obj.push({lst: 0});
+				var lst_tmp = `
+				<div class="ibox">
+					<div class="ibox-title">
+						<div class="project-alert alert-warning">
+							<h5>Below is the Item List for Lot ${index + 1} - ${element}</h5>
+						</div>
+						<div class="add-project">
+							<button data-type="lst-add" data-list="pr-${index}" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
+						</div>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered">
+							<thead>
+							<tr>
+								<th class="center">Stock No.</th>
+								<th class="center">Unit</th>
+								<th class="center">Item Description</th>
+								<th class="center">Quantity</th>
+								<th class="center">Unit Cost</th>
+								<th class="center">Total Cost</th>
+							</tr>
+							</thead>
+							<tbody id="pr-tbl-${index}">
+								<tr>
+									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_fom"></td>
+									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_fom" required></td>
+									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_fom" required></textarea></td>
+									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_fom" required></td>
+									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_fom" required></td>
+									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" disabled form="pr_fom" required></td>																
+								</tr>
+							</tbody>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td>Total Lot Cost: </td>
+									<td><input type="number" class="form-control" name="pr-${index}-LstTtl" disabled form="pr_fom" required></td>
+								</tr>
+						</table>
+					</div>
+				</div>`;
+				$('#stp-2').append(lst_tmp);
+			});
 
+
+			$('[data="qty"]').on('change', function()
+			{
+				var TC = 0;
+				var Q_qty = $(this).val();
+				var Q_el_data = $(this).attr("data-cnt").split("-");
+				var Q_Ucst = $(`[data-cnt="pr-${Q_el_data[1]}-Ucst-lst-${Q_el_data[4]}"]`).val();
+				$(`[data-cnt="pr-${Q_el_data[1]}-Tsct-lst-${Q_el_data[4]}"]`).val((Q_qty * Q_Ucst).toFixed(2));
+				$(`[data-cnt|="pr-${Q_el_data[1]}-Tsct-lst"]`).each(function(){
+					if($(this).val() !== "") TC += parseFloat($(this).val());
+				});
+				$(`[name="pr-${Q_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+			});
+
+			$('[data="Ucst"]').on('change', function()
+			{
+				var TC = 0;
+				var U_Ucst = $(this).val();
+				var U_el_data = $(this).attr("data-cnt").split("-");
+				var U_qty = $(`[data-cnt="pr-${U_el_data[1]}-qty-lst-${U_el_data[4]}"]`).val();
+				$(`[data-cnt="pr-${U_el_data[1]}-Tsct-lst-${U_el_data[4]}"]`).val((U_qty * U_Ucst).toFixed(2));
+				$(`[data-cnt|="pr-${U_el_data[1]}-Tsct-lst"]`).each(function(){
+					if($(this).val() !== "") TC += parseFloat($(this).val());
+				});
+				$(`[name="pr-${U_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+			});
+
+			$('[data-type="lst-add"]').on('click', function()
+			{
+				var pr_num = $(this).attr("data-list").split("-");
+				obj[pr_num[1]].lst++;
+				var tr_tmp = `
+				<tr>
+					<td><input type="text" name="pr-${pr_num[1]}-[stk][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_fom"></td>
+					<td class="center"><input type="text" name="pr-${pr_num[1]}-[unit][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_fom" required></td>
+					<td><textarea rows="1" cols="30" name="pr-${pr_num[1]}-[desc][]" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_fom" required></textarea></td>
+					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[qty][]" class="form-control" min="1" form="pr_fom" required></td>
+					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[Ucst][]" class="form-control" min="1" form="pr_fom" required></td>
+					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="pr-${pr_num[1]}-[Tcst][]" class="form-control" min="1" disabled form="pr_fom" required></td>																
+				</tr>`;
+				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
+
+				$('[data="qty"]').on('change', function()
+				{
+					var TC = 0;
+					var Q_qty = $(this).val();
+					var Q_el_data = $(this).attr("data-cnt").split("-");
+					var Q_Ucst = $(`[data-cnt="pr-${Q_el_data[1]}-Ucst-lst-${Q_el_data[4]}"]`).val();
+					$(`[data-cnt="pr-${Q_el_data[1]}-Tsct-lst-${Q_el_data[4]}"]`).val((Q_qty * Q_Ucst).toFixed(2));
+					$(`[data-cnt|="pr-${Q_el_data[1]}-Tsct-lst"]`).each(function(){
+						if($(this).val() !== "") TC += parseFloat($(this).val());
+					});
+					$(`[name="pr-${Q_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+				});
+
+				$('[data="Ucst"]').on('change', function()
+				{
+					var TC = 0;
+					var U_Ucst = $(this).val();
+					var U_el_data = $(this).attr("data-cnt").split("-");
+					var U_qty = $(`[data-cnt="pr-${U_el_data[1]}-qty-lst-${U_el_data[4]}"]`).val();
+					$(`[data-cnt="pr-${U_el_data[1]}-Tsct-lst-${U_el_data[4]}"]`).val((U_qty * U_Ucst).toFixed(2));
+					$(`[data-cnt|="pr-${U_el_data[1]}-Tsct-lst"]`).each(function(){
+						if($(this).val() !== "") TC += parseFloat($(this).val());
+					});
+					$(`[name="pr-${U_el_data[1]}-LstTtl"]`).val((TC).toFixed(2));
+				});
+			});
+		});
+	});
+</script>
 </html>
