@@ -109,8 +109,6 @@
     <title>PrMO OPPTS | Empty Page</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
-
-
 </head>
 
 <body class="">
@@ -331,16 +329,18 @@
 								<th class="center">Quantity</th>
 								<th class="center">Unit Cost</th>
 								<th class="center">Total Cost</th>
+								<th></th>
 							</tr>
 							</thead>
 							<tbody id="pr-tbl-${index}">
-								<tr>
+								<tr id="pr-${index}-tr-0">
 									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form"></td>
 									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required></td>
 									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
 									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>
+									<td><a rowRem="pr-${index}-tr-0"><i class="fa fa-times text-danger"></i></a></td>
 								</tr>
 							</tbody>
 								<tr>
@@ -350,6 +350,7 @@
 									<td></td>
 									<td>Total Lot Cost: </td>
 									<td><input type="number" class="form-control" name="L${index}-TLC" readonly form="pr_form" required></td>
+									<td></td>
 								</tr>
 						</table>
 					</div>
@@ -385,6 +386,7 @@
 				});
 				$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
 			});
+			$('[rowRem]').on('click', function(){$(`#${$(this).attr("rowRem")}`).remove();})
 
 			$('[data-type="lst-add"]').on('click', function()
 			{
@@ -392,13 +394,14 @@
 				obj[pr_num[1]].lst++;
 				$('#row_count').val(JSON.stringify(obj));
 				var tr_tmp = `
-				<tr>
+				<tr id="pr-${pr_num[1]}-tr-${obj[pr_num[1]].lst}">
 					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
 					<td class="center"><input type="text" name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required></td>
 					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
 					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" readonly form="pr_form" required></td>																
+					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" readonly form="pr_form" required></td>
+					<td><a rowRem="pr-${pr_num[1]}-tr-${obj[pr_num[1]].lst}"><i class="fa fa-times text-danger"></i></a></td>
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
 
@@ -427,6 +430,7 @@
 					});
 					$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
 				});			
+				$('[rowRem]').on('click', function(){$(`#${$(this).attr("rowRem")}`).remove();})
 			});
 		});
 	});
