@@ -85,7 +85,8 @@
 					));
 				}	
 			}
-
+			
+			Session::flash('Request', 'PR');
 			//proceed to printing the actual form Redire
 			
 		}catch(Exception $e){

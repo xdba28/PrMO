@@ -1,8 +1,17 @@
 <?php
-require_once "../vendor/autoload.php";
-$phpWord = new \PhpOffice\PhpWord\PhpWord();
+require_once "../../core/init.php";
+require_once "../../vendor/autoload.php";
 
-$REQUEST = "JO";
+$phpWord = new \PhpOffice\PhpWord\PhpWord();
+$user = new User();
+
+// $REQUEST = Session::flash('Request');
+$data = $user->pr_data("PR2018-64IE0H");
+
+die($data);
+
+$REQUEST = "PR";
+
 $UNIT = htmlspecialchars("General Administration, Support and Services");
 $OFFICE = htmlspecialchars("Procurement Management Office");
 

@@ -142,7 +142,22 @@
         
         public function isLoggedIn(){
             return $this->isLoggedIn;
-        }
+		}
+		
+		public function pr_data($pr_num){
+			if(!$this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, 
+							lot_no, lot_title, lot_cost, stock_no, unit, item_description, quantity, 
+								unit_cost, total_cost
+			
+			FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+			
+			WHERE project_request_forms.form_ref_no = lots.request_origin 
+			AND lots.lot_id = lot_content_for_pr.lot_id_origin 
+			AND form_ref_no = '$pr_num'")){
+                throw new Exception('There was a problem registering fields');
+           }       
+
+		}
 
     }
 
