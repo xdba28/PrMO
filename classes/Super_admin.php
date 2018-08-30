@@ -74,6 +74,19 @@
                 return $this->db->results();
             }
         }
+
+        public function personnels(){
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
+            FROM `personnel`, `units`, `prnl_account`, `group`
+            
+            WHERE
+            personnel.prnl_designated_office = units.ID AND
+            personnel.prnl_id = prnl_account.account_id AND
+            prnl_account.group = group.group_id
+            ")) {
+                return $this->db->results();
+            }
+        }
 		
         public function registered_users(){
             if ($this->db->query_builder("SELECT * FROM `edr_account` WHERE 1")) {
@@ -90,6 +103,9 @@
 
 
 
+        public function data(){
+            return $this->data;
+        }
 
 
     }

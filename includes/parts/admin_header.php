@@ -55,8 +55,8 @@
 							</ul>
 						</li>
 						<li>
-							<a href="../logout.php">
-								<i class="fa fa-sign-out"></i> Log out
+							<a href="../logout">
+								<i class="fa fa-sign-out-alt"></i> Log out
 							</a>
 						</li>
 						<li>

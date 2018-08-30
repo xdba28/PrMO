@@ -272,30 +272,6 @@
                                 <h1>Account</h1>
                                 <fieldset>
                                     <h2>Account Information</h2>
-									<!--
-									<div class="row" id="pwd-container4">
-										<div class="col-lg-6">
-											<div class="form-group">
-												<label for="year">Year of birth</label>
-												<input type="text" class="form-control" id="year" value="2016">
-											</div>
-											<div class="form-group">
-												<label for="familyname">Family Name</label>
-												<input type="text" class="form-control" id="familyname" placeholder="Name" value="Tokugawa">
-											</div>
-											<div class="form-group">
-												<label for="password4">Password</label>
-												<input type="password" class="form-control example4" id="password4" placeholder="Password">
-											</div>
-											<div class="form-group">
-												<span class="font-bold pwstrength_viewport_verdict4"></span>
-												<span class="pwstrength_viewport_progress4"></span>
-
-												<p>The content of the form inputs and the words <em>samurai, shogun, bushido, daisho</em> and <em>seppuku</em> are disrecommended in the password, and the score will adjust properly.</p>
-											</div>
-										</div>
-									</div>  
-									-->		
                                     <div class="row">
                                         <div class="col-lg-8">
                                             <div class="form-group">

@@ -2,7 +2,7 @@
 
     require_once('../../core/init.php');
 
-	$user = new Admin(); 
+    $user = new Admin(); 
 
     if($user->isLoggedIn()){
      //do nothing
@@ -11,49 +11,11 @@
         die();
     }
 
-    // $user = $user->profile(Session::get(Config::get('session/session_name')));
 
-	$sa = new Super_admin();
-	$requests = $sa->requests();
-	$registered = $sa->registered_users();
+    $user = $user->profile(Session::get(Config::get('session/session_name')));
 
+   
 
-	if (Input::exists()){
-        if(Token::check(Input::get('token'))){
-			//allow to submit the form
-			
-            $validate = new Validate();
-            $validation = $validate->check($_POST, array(
-                'rq-hid' => [
-                    'required' => true
-                ],
-                'rq-rsn' => [
-                    'min' => '4',
-                    'required' => true
-                ]
-            ));
-    
-            if($validation->passed()){
-                try{
-                    $sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
-                    
-                    Session::flash('toust', 'Request for Account Denied');
-                    //Redirect::To('account-request');
-
-                }catch(Exception $e){
-                    die($e->getMessage());
-                }
-
-            }else{        
-              foreach($validation->errors() as $error){
-                  echo $error,'<br>';
-              }
-        
-            }               
-        }
-            
-	}
-	
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,36 +27,6 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
-
-	<script>
-		function ps_mdl_d(name, id){
-			document.getElementById('rq-mdl-name').value = name;
-			document.getElementById('rq-hid').value = id;	
-		}
-
-		function approve(id)
-		{
-			$.ajax(
-			{
-				type: 'post',
-				url: '',
-				data: id,
-				success: function(data)
-				{
-					toastr.success("Message here");
-				},
-				error: function(jqXHR, textStatus, errorThrown)
-				{
-					console.log(`
-						jqXHR: ${jqXHR}
-						textStatus: ${textStatus}
-						errorThrown: ${errorThrown}
-					`);
-				}
-			})
-		}
-	</script>
-
 
 </head>
 
@@ -118,145 +50,26 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>Account Requests</h2>
+                    <h2>User Registration</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Requests</a>
+                            <a href="#">Employees</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Account</strong>
+                            <strong>Register User</strong>
                         </li>
                     </ol>
                 </div>
                 <div class="col-sm-8">
                     <div class="title-action">
-                       <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
+                        <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
                 </div>
             </div>
 
             <div class="wrapper wrapper-content">
-
-
-
-                <div class="row">
-
-                    <div class="col-lg-6">
-                        <div class="ibox ">
-                            <div class="ibox-title">
-								<h5>Registered End Users</h5>
-                                <span class="label label-info float-right pull-right">Today</span>
-                            </div>
-                            <div class="ibox-content">
-                                <h1 class="no-margins"><?php echo count($registered);?></h1>                               
-                                <small>Active</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="ibox ">
-                            <div class="ibox-title">
-								<h5>Pending / Uncleared Requests</h5>
-                                <span class="label label-info float-right pull-right">Today</span>           
-                            </div>
-                            <div class="ibox-content">
-                                <h1 class="no-margins"><?php echo count($requests);?></h1>
-                                <small>Issues may be incorrect data</small>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-				
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox ">
-                        <div class="ibox-title">
-                            <h5>All Pending Requests from End-Users</h5>
-
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-            
-              
-                            </div>
-                        </div>
-                        <div id="request-table-div" class="ibox-content">
-                            <table class="footable table table-stripped toggle-arrow-tiny">
-                                <thead>
-                                <tr>
-
-                                    <th data-toggle="true">Requestor</th>
-                                    <th>Unit</th>
-                                    <th>Status</th>
-                                    <th data-hide="all">Phone</th>
-                                    <th data-hide="all">Email</th>                                                        
-                                    <th data-hide="all">Requested</th>
-                                    <th data-hide="all">Employee Id</th>
-                                    <th data-hide="all">Remarks</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                
-                                <?php														
-                                    
-                                    foreach($requests as $request){
-                                        if($request->ext_name == "none"){
-                                            $fullname = $request->fname." ".$request->last_name;
-                                        }else{
-                                            $fullname = $request->fname." ".$request->last_name." ".$request->ext_name;
-                                        }
-                                        
-                                        $color = ($request->status == "pending") ? "text-navy" : "text-danger";
-                                        $color1 = ($request->remarks == "none") ? "" : "text-danger";
-                                        
-                                        
-                                        $time = strtotime($request->submitted);
-                                        $final = date("l F j, Y g:i:sa", $time); 
-                                        
-                                    //<td><span class="pie">90/100</span></td>	
-                                        echo '
-                                            <tr>
-                                                <td>'.$fullname.'</td>
-                                                <td>'.$request->office_name.'</td>
-                                                <td><a class="'.$color.'">'.$request->status.'</a></td>
-                                                <td>'.$request->contact.'</td>
-                                                <td>'.$request->email.'</td>																					
-                                                <td>'.$final.'</td>
-                                                <td><b>'.$request->employee_id.'</b></td>
-                                                <td><a class="'.$color1.'">'.$request->remarks.'</a></td>
-                                                <td>
-                                                <a onclick="approve(\''.$request->ID.'\')"><i class="fa fa-check text-navy"></i></a> 
-                                                    
-                                                    <a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d(\''.$fullname.'\', \''.$request->ID.'\')">
-                                                        <i class="fa fa-close text-danger" style="margin-left:20px"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>																				
-                                        ';
-                                    }
-                                ?>
-                                
-
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        <ul class="pagination float-right"></ul>
-                                    </td>
-                                </tr>
-                                </tfoot>
-                            </table>
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+					
+					<!--content-->
 
             </div>
 			<div class="footer">
@@ -415,9 +228,81 @@
 
         </div>
     </div>
-	<?php include_once '../../includes/parts/modals.php'; ?>
-    <?php include_once '../../includes/parts/admin_scripts.php'; ?>
+
+    <!-- Mainly scripts -->
+    <script src="../../assets/js/jquery-3.1.1.min.js"></script>
+    <script src="../../assets/js/popper.min.js"></script>
+    <script src="../../assets/js/bootstrap.js"></script>
+    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Flot -->
+    <script src="../../assets/js/plugins/flot/jquery.flot.js"></script>
+    <script src="../../assets/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="../../assets/js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="../../assets/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="../../assets/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="../../assets/js/plugins/flot/jquery.flot.symbol.js"></script>
+    <script src="../../assets/js/plugins/flot/curvedLines.js"></script>
+
+    <!-- Peity -->
+    <script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="../../assets/js/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="../../assets/js/inspinia.js"></script>
+    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="../../assets/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- Jvectormap -->
+    <script src="../../assets/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="../../assets/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <!-- Sparkline -->
+    <script src="../../assets/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="../../assets/js/demo/sparkline-demo.js"></script>
+
+    <!-- ChartJS-->
+    <script src="../../assets/js/plugins/chartJs/Chart.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            var lineData = {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [
+                    {
+                        label: "Example dataset",
+                        backgroundColor: "rgba(26,179,148,0.5)",
+                        borderColor: "rgba(26,179,148,0.7)",
+                        pointBackgroundColor: "rgba(26,179,148,1)",
+                        pointBorderColor: "#fff",
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    },
+                    {
+                        label: "Example dataset",
+                        backgroundColor: "rgba(220,220,220,0.5)",
+                        borderColor: "rgba(220,220,220,1)",
+                        pointBackgroundColor: "rgba(220,220,220,1)",
+                        pointBorderColor: "#fff",
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    }
+                ]
+            };
+
+            var lineOptions = {
+                responsive: true
+            };
 
 
+            var ctx = document.getElementById("lineChart").getContext("2d");
+            new Chart(ctx, {type: 'line', data: lineData, options:lineOptions});
+
+        });
+    </script>
 </body>
 </html>

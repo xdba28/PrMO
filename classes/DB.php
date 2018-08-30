@@ -121,7 +121,7 @@
                     }
                 $x++;
 			}
-			die($column);
+		
 
         $sql = "UPDATE {$table} SET {$column} WHERE {$particular} = '{$identifier}'";
 
