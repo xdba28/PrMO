@@ -9,7 +9,8 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
+	
    
 
 ?>
@@ -79,7 +80,7 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-								
+								<div><form method="POST" id="jo_form"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
@@ -89,15 +90,15 @@
 											<div class="col-lg-7">
 												<div class="form-group">
 													<label>Project title *</label>
-													<input id="title" name="title" type="text" class="form-control">
+													<input id="title" name="title" type="text" class="form-control" form="jo_form">
 												</div>
 												<div class="form-group">
 													<label>Overall Estimated Cost *</label>
-													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control">
+													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="jo_form">
 												</div>
 												<div class="form-group">
 													<label>Number of Lots *</label>
-													<input id="lot" name="lot" type="number" min=1 class="form-control">
+													<input id="lot" name="lot" type="number" min=1 class="form-control" form="jo_form">
 												</div>
 											</div>
 											<div class="col-lg-3">
@@ -132,19 +133,20 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled>
+														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled form="jo_form">
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control">
+														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form">
 													</div>
 													<div class="form-group">
 														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control">
+														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form">
 													</div>
 													<div class="form-group">
 														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control">
+														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
+														<input type="text" name="rowCount" readonly form="jo_form">
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -155,7 +157,7 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-													<button class="btn btn-primary btn-outline pull-right">Finish</button>
+													<button class="btn btn-primary btn-outline pull-right" type="submit" form="jo_form">Finish</button>
 													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
 												</div>
 											</div>											
@@ -199,14 +201,14 @@
 							</div>
 							<div class="ibox-content" id="lot-${i}">
 								<p class="font-bold">Lot Name: </p>
-								<input type="text" class="form-control" name="lot-${i}-title">
+								<input type="text" class="form-control" name="lot-${i}-title" form="jo_form">
 								<div>
 									<br>
 									<p class="font-bold">List Name: </p>
-									<input type="text" name="lot-${i}-[list-name][]" class="form-control">
+									<input type="text" name="lot-${i}-[list-name][]" class="form-control" form="jo_form">
 									<br>
 									<p class="font-bold">&#128204; Tags:</p>
-									<input class="form-control" name="lot-${i}-[list][]" id="lot-${i}-tag-0" data-role="tagsinput">
+									<input class="form-control" name="lot-${i}-[list][]" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
 									<br>
 								</div>
 							</div>
@@ -217,6 +219,7 @@
 					$(`#wf-stp-2`).append(tmp_lot);
 					$(`#lot-${i}-tag-0`).tagsinput();
 				}
+				$('[name="rowCount"]').val(JSON.stringify(obj));
 
 				$('[data-type="btn"]').on('click', function()
 				{
@@ -227,14 +230,15 @@
 					<div>
 						<br>
 						<p class="font-bold">List Name: </p>
-						<input type="text" name="lot-${num[1]}-[list-name][]" class="form-control">
+						<input type="text" name="lot-${num[1]}-[list-name][]" class="form-control" form="jo_form">
 						<br>
 						<p class="font-bold">&#128204; Tags:</p>
-						<input class="form-control" name="lot-${num[1]}-[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput">
+						<input class="form-control" name="lot-${num[1]}-[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
 						<br>
 					<div>`;
 					$(`#${num[0]}-${num[1]}`).append(list_tmp);
 					$(`#lot-${num[1]}-tag-${tg_num}`).tagsinput();
+					$('[name="rowCount"]').val(JSON.stringify(obj));
 				});
 			});
 		});
