@@ -110,6 +110,19 @@
             return false;
         }
 
+        public function register($table, $fields = array()){
+            if(!$this->db->insert($table, $fields)){
+                throw new Exception('There was a problem registering fields');
+           }       
+        
+        }
+        
+        public function ro_ln_composite($request_origin, $lot_no){//ro = "request origin", ln = "lot number"
+            if($this->db->query_builder("SELECT lot_id FROM `lots` WHERE request_origin='$request_origin' AND lot_no=$lot_no")){
+                 return $this->db->first();
+            }
+        }
+
 
         public function exist(){
             return  (!empty($this->data)) ? true : false;

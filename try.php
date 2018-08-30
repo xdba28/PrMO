@@ -24,13 +24,13 @@
 
 <table  class="table table-hover small-text" id="tb">
 	<tr class="tr-header">
-	<th>Full Name</th>
-	<th>Designation</th>
-	<th>Mobile No.</th>
-	<th>Email Id</th>
+		<th>Full Name</th>
+		<th>Designation</th>
+		<th>Mobile No.</th>
+		<th>Email Id</th>
 	
-	<th><a href="javascript:void(0);" style="font-size:18px;" id="addMore" title="Add More Person"><span class="glyphicon glyphicon-plus"></span></a></th>
-		<tr>
+		<th><a href="javascript:void(0);" style="font-size:18px;" id="addMore" title="Add More Person"><span class="glyphicon glyphicon-plus"></span></a></th>
+	<tr>
 			<td><input type="text" name="fullname[]" class="form-control"></td>
 			<td>
 				<select name="designation[]" class="form-control">
