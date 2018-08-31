@@ -6,18 +6,21 @@ $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
 
 // $REQUEST = explode(":", Session::flash('Request'));
-$ProjectData = $user->pr_data("PR2018-64IE0H");
-
+$ProjectData = $user->pr_doc_projData("PR2018-64IE0H");
+$UserData = $user->user_data(Session::get(Config::get('session/session_name')));
 // print_r($ProjectData);
-print_r($_SESSION);
+// print_r($UserData);
 	
 $REQUEST = "PR";
 
-$UNIT = htmlspecialchars("General Administration, Support and Services");
-$OFFICE = htmlspecialchars("Procurement Management Office");
+// $UNIT = htmlspecialchars("General Administration, Support and Services");
+$OFFICE = htmlspecialchars($UserData->office_name);
 
 if($REQUEST === 'PR')
 {
+
+
+
 	$items[0] = [
 		'stk' => 'PR-150',
 		'qty' => 15,
@@ -68,7 +71,7 @@ $header = $section->addHeader();
 $hPragr =  ['alignment' => 'center'];
 $header->addText("Republic of the Philippines", ['name' => 'Arial', 'size' => 10], $hPragr);
 $header->addText("BICOL UNIVERSITY", ['name' => 'Arial', 'size' => 10, 'bold' => true], $hPragr);
-$header->addText($UNIT, ['name' => 'Arial', 'size' => 9], $hPragr);
+// $header->addText($UNIT, ['name' => 'Arial', 'size' => 9], $hPragr);
 $header->addText($OFFICE, ['name' => 'Arial', 'size' => 9], $hPragr);
 
 $section->addTextBreak(1);
