@@ -288,7 +288,6 @@
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
-
 										<p>Some shitty explaination what the hell is going on</p>
 
 										<div class="row">
