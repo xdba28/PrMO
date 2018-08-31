@@ -529,3 +529,12 @@
 
 
     </script>
+	
+    <script>
+		$(document).ready(function () {
+			$('#popOver').popover();
+			$('#popOver1').popover();
+			$('#popOver2').popover();
+		});
+
+	</script>	

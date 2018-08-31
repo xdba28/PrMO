@@ -184,10 +184,10 @@
 													<label>Overall Estimated Cost *</label>
 													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="pr_form" required>
 												</div>
-												<div class="form-group">
+												<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="bottom" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
 													<label class="font-normal"></label>
 													<div>
-														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form" required>															
+														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form">															
 															<option value="Common Office Supplies">Common Office Supplies</option>
 															<option value="Paper Materials & Products">Paper Materials & Products</option>          
 															<option value="Hardware Supplies">Hardware Supplies</option>
@@ -219,7 +219,48 @@
 
 										<div class="row">
 											<div class="col-lg-12" id="stp-2">
-												<h1>No Categories Set.</h1>
+											<div class="ibox">
+												<div class="ibox-title">
+													<div class="project-alert alert-warning">
+														<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L${index}-title" form="pr_form" readonly value = "${element}"></h5>
+													</div>
+													<div class="add-project">
+														<button type="button" data-type="lst-add" data-list="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
+													</div>
+												</div>
+												<div class="ibox-content">
+													<table class="table table-bordered">
+														<thead>
+														<tr>
+															<th class="center">Stock No.</th>
+															<th class="center">Unit</th>
+															<th class="center">Item Description</th>
+															<th class="center">Quantity</th>
+															<th class="center">Unit Cost</th>
+															<th class="center">Total Cost</th>
+														</tr>
+														</thead>
+														<tbody id="pr-tbl-static">
+															<tr>
+																<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
+																<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+																<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+																<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
+																<td class="right"><input type="number" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
+																<td class="right"><input type="number" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+															</tr>
+														</tbody>
+															<tr>
+																<td></td>
+																<td></td>
+																<td></td>
+																<td></td>
+																<td>Total Lot Cost: </td>
+																<td><input type="number" class="form-control" name="L0-TLC" readonly form="pr_form" required></td>
+															</tr>
+													</table>
+												</div>
+											</div>
 											</div>		
 										</div>
 									</div>
@@ -299,6 +340,76 @@
 <script>
 	$(function()
 	{
+		var objStat = {lst: 0};
+		$('[data-list="pr-static"]').on('click', function()
+		{
+			objStat.lst++;
+			var tmp_static = `
+			<tr>
+				<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
+				<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+				<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+				<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
+				<td class="right"><input type="number" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
+				<td class="right"><input type="number" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="1" readonly form="pr_form" required></td>
+			</tr>`;
+			$('#pr-tbl-static').append(tmp_static);
+
+			$('[data="qty"]').on('change', function()
+			{
+				var TC = 0;
+				var Q_qty = $(this).val();
+				var Q_el_data = $(this).attr("data-cnt").split("-");
+				var Q_Ucst = $(`[data-cnt="pr-0-Ucst-lst-${Q_el_data[4]}"]`).val();
+				$(`[data-cnt="pr-0-Tsct-lst-${Q_el_data[4]}"]`).val((Q_qty * Q_Ucst).toFixed(2));
+				$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+					if($(this).val() !== "") TC += parseFloat($(this).val());
+				});
+				$(`[name="L0-TLC"]`).val((TC).toFixed(2));				
+			});
+
+			$('[data="Ucst"]').on('change', function()
+			{
+				var TC = 0;
+				var U_Ucst = $(this).val();
+				var U_el_data = $(this).attr("data-cnt").split("-");
+				var U_qty = $(`[data-cnt="pr-0-qty-lst-${U_el_data[4]}"]`).val();
+				$(`[data-cnt="pr-0-Tsct-lst-${U_el_data[4]}"]`).val((U_qty * U_Ucst).toFixed(2));
+				$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+					if($(this).val() !== "") TC += parseFloat($(this).val());
+				});
+				$(`[name="L0-TLC"]`).val((TC).toFixed(2));
+			});
+
+		});
+
+		$('[data="qty"]').on('change', function()
+		{
+			var TC = 0;
+			var Q_qty = $(this).val();
+			var Q_el_data = $(this).attr("data-cnt").split("-");
+			var Q_Ucst = $(`[data-cnt="pr-0-Ucst-lst-${Q_el_data[4]}"]`).val();
+			$(`[data-cnt="pr-0-Tsct-lst-${Q_el_data[4]}"]`).val((Q_qty * Q_Ucst).toFixed(2));
+			$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+				if($(this).val() !== "") TC += parseFloat($(this).val());
+			});
+			$(`[name="L0-TLC"]`).val((TC).toFixed(2));				
+		});
+
+		$('[data="Ucst"]').on('change', function()
+		{
+			var TC = 0;
+			var U_Ucst = $(this).val();
+			var U_el_data = $(this).attr("data-cnt").split("-");
+			var U_qty = $(`[data-cnt="pr-0-qty-lst-${U_el_data[4]}"]`).val();
+			$(`[data-cnt="pr-0-Tsct-lst-${U_el_data[4]}"]`).val((U_qty * U_Ucst).toFixed(2));
+			$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+				if($(this).val() !== "") TC += parseFloat($(this).val());
+			});
+			$(`[name="L0-TLC"]`).val((TC).toFixed(2));
+		});
+
+
 		var arry = [];
 		var newCat = [];
 		var chk = false;
@@ -318,7 +429,7 @@
 							<h5>Below is the Item List for Lot ${index + 1} - ${element} <input type="text" hidden name="L${index}-title" form="pr_form" readonly value = "${element}"></h5>
 						</div>
 						<div class="add-project">
-							<button data-type="lst-add" data-list="pr-${index}" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
+							<button type="button" data-type="lst-add" data-list="pr-${index}" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
 						</div>
 					</div>
 					<div class="ibox-content">
