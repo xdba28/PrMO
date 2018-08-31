@@ -5,11 +5,12 @@ require_once "../../vendor/autoload.php";
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
 
-// $REQUEST = Session::flash('Request');
-$data = $user->pr_data("PR2018-64IE0H");
+// $REQUEST = explode(":", Session::flash('Request'));
+$ProjectData = $user->pr_data("PR2018-64IE0H");
 
-die($data);
-
+// print_r($ProjectData);
+print_r($_SESSION);
+	
 $REQUEST = "PR";
 
 $UNIT = htmlspecialchars("General Administration, Support and Services");
@@ -18,6 +19,7 @@ $OFFICE = htmlspecialchars("Procurement Management Office");
 if($REQUEST === 'PR')
 {
 	$items[0] = [
+		'stk' => 'PR-150',
 		'qty' => 15,
 		'unit' => 'pcs',
 		'desc' => '3/4" Plastic Molding',
@@ -26,6 +28,7 @@ if($REQUEST === 'PR')
 	];
 	
 	$items[1] = [
+		'stk' => 'PR-151',
 		'qty' => 2,
 		'unit' => 'box',
 		'desc' => '3.5mm2 THHN stranded wire',
@@ -72,7 +75,7 @@ $section->addTextBreak(1);
 if($REQUEST === 'PR') $section->addText("Purchase Request", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
 elseif($REQUEST === 'JO') $section->addText("Job Order", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
 $section->addText("Title:", null, $hPragr);
-$section->addText("Provide catering services during the College Foundation Day on July 10, 2018 at BU College of Nursing", null, $hPragr);
+$section->addText($ProjectData->title, null, $hPragr);
 $section->addTextBreak(1);
 
 $section->addText("Date: " . date('F j, o'), null, ['indentation' => ['left' => 288, 'right' => 0]]);
@@ -86,8 +89,9 @@ $table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'ali
 if($REQUEST === 'PR')
 {
 	$table->addRow(43.2);
-	$table->addCell(1440)->addText("Quantity", $thStyle, $thPragr);
-	$table->addCell(1440)->addText("Unit of Issue", $thStyle, $thPragr);
+	$table->addCell(1152)->addText("Stock No.", $thStyle, $thPragr);
+	$table->addCell(864)->addText("Quantity", $thStyle, $thPragr);
+	$table->addCell(864)->addText("Unit of Issue", $thStyle, $thPragr);
 	$table->addCell(4320)->addText("Item Description", $thStyle, $thPragr);
 	$table->addCell(1800)->addText("Estimated Unit Cost", $thStyle, $thPragr);
 	$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
@@ -95,8 +99,9 @@ if($REQUEST === 'PR')
 	for($r = 0; $r < count($items); $r++)
 	{
 		$table->addRow(43.2);
-		$table->addCell(1440)->addText($items[$r]['qty'], $trStyle, $thPragr);
-		$table->addCell(1440)->addText($items[$r]['unit'], $trStyle, $thPragr);
+		$table->addCell(1152)->addText($items[$r]['stk'], $trStyle, $thPragr);
+		$table->addCell(864)->addText($items[$r]['qty'], $trStyle, $thPragr);
+		$table->addCell(864)->addText($items[$r]['unit'], $trStyle, $thPragr);
 		$table->addCell(4320)->addText($items[$r]['desc'], $trStyle, $thPragr);
 		$table->addCell(1800)->addText("&#8369; ".$items[$r]['eUC'], $trStyle, $thPragr);
 		$table->addCell(1800)->addText("&#8369; ".$items[$r]['UC'], $trStyle, $thPragr);
@@ -124,6 +129,6 @@ elseif($REQUEST === 'JO')
 // $objWriter->save('C:/Users/Denver/Desktop/JO.pdf');
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$objWriter->save('C:/Users/Denver/Desktop/JO.docx');
+$objWriter->save('C:/Users/Denver/Desktop/BAC Forms/JO-PR.docx');
 
 ?>

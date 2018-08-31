@@ -86,7 +86,7 @@
 				}	
 			}
 			
-			Session::flash('Request', 'PR');
+			Session::flash('Request', $form_ref_no . ":PR");
 			//proceed to printing the actual form Redire
 			
 		}catch(Exception $e){
