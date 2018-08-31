@@ -12,86 +12,160 @@
 	}
 	
 	if(Input::exists()){
+		
 		if(Token::check(Input::get('token'))){
-		try{
-			//register project details in "project_request_forms"table
-			$current_year = date('Y');
-			$form_ref_no =  'PR'.$current_year.'-'.StringGen::generate(); //this would be the refence number of the form
-			$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
-			$number_of_lots = Input::get('lot_count'); // number of lots for this request form
 
-			$rows_per_lot = json_decode(Input::get('row_count'), true); //decode th row counter per lot
-			$counter = 0;
-			foreach($rows_per_lot as $element){
-				$myArray[$counter] = $element["lst"] + 1;
-				$counter++;
-			}
-
-			$user->register('project_request_forms', array(
-
-				'form_ref_no' => $form_ref_no,
-				'title' => Input::get('title'),
-				'requested_by' => Session::get(Config::get('session/session_name')),
-				'title' => Input::get('title'),
-				'title' => Input::get('title'),
-				'title' => Input::get('title'),
-				'type' => 'PR',
-				'date_created' => $date_created
-
-			));
-
-			//register lot general details in "lots" table
-			for($x=0; $x<$number_of_lots; $x++){  //$x is lot level
+			if(Input::get('lot_count') == ''){
+					
+					try{
+						//register project details in "project_request_forms"table
+						$current_year = date('Y');
+						$form_ref_no =  'PR'.$current_year.'-'.StringGen::generate(); //this would be the refence number of the form
+						$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
+						$number_of_lots = Input::get('lot_count'); // number of lots for this request form
 			
+						$rows_per_lot = json_decode(Input::get('row_count'), true); //decode th row counter per lot
+						$myArray[0] = $rows_per_lot["lst"] + 1;
+					
+						$user->register('project_request_forms', array(
+			
+							'form_ref_no' => $form_ref_no,
+							'title' => Input::get('title'),
+							'requested_by' => Session::get(Config::get('session/session_name')),
+							'noted_by' => Input::get('noted'),
+							'verified_by' => Input::get('verified'),
+							'approved_by' => Input::get('approved'),
+							'type' => 'PR',
+							'date_created' => $date_created
+			
+						));
 
-				$lot_title = 'L'.$x.'-title'; //L${index}-title				
-				$lot_cost = 'L'.$x.'-TLC';
-				$lot_no = $x + 1;
+						//register static lot details in "lots" table
+						$user->register('lots', array(
+		
+							'request_origin' => $form_ref_no,
+							'lot_no' => 101,
+							'lot_title' => 'static lot',
+							'lot_cost' => Input::get('L0-TLC'),
+							'note' => 'none'
+		
+						));
 
-				$user->register('lots', array(
+						//register all item rows related to the static lot in "lot_content_for_pr" table		
+						$temp = $user->ro_ln_composite($form_ref_no, 101);
+						$lot_id = $temp->lot_id;
 
-					'request_origin' => $form_ref_no,
-					'lot_no' => $lot_no,
-					'lot_title' => Input::get($lot_title),
-					'lot_cost' => Input::get($lot_cost),
-					'note' => 'none'
+						for($y=0; $y<$myArray[0]; $y++){ //$y is item per lot level					
+		
+							$stock_no = 'L0-stk-'.$y;    			//L0-stk-0
+							$unit = 'L0-unit-'.$y;		 			//L0-unit-0
+							$item_description = 'L0-desc-'.$y;		//L0-desc-0
+							$quantity = 'L0-qty-'.$y;				//L0-qty-0
+							$unit_cost = 'L0-Ucst-'.$y;		 		//L0-Ucst-0
+							$total_cost = 'L0-Tcst-'.$y;		 	//L0-Tcst-0
+		
+							$user->register('lot_content_for_pr', array(
+		
+								'lot_id_origin' => $lot_id,
+								'stock_no' => Input::get($stock_no),
+								'unit' => Input::get($unit),
+								'item_description' => Input::get($item_description),
+								'quantity' => Input::get($quantity),
+								'unit_cost' => Input::get($unit_cost),
+								'total_cost' => Input::get($total_cost)
+		
+							));
 
-				));
+						}
+						die('end of loop');	
+						
+						//proceed to printing the actual form
 
-	
-				//register all item rows per lot in "lot_content_for_pr" table		
-				$temp = $user->ro_ln_composite($form_ref_no, $lot_no);
-				$lot_id = $temp->lot_id;
-				
-				for($y=0; $y<$myArray[$x]; $y++){ //$y is item per lot level					
-
-					$stock_no = 'L'.$x.'-stk-'.$y;    			//L${index}-stk-0
-					$unit = 'L'.$x.'-unit-'.$y;		 			//L${index}-unit-0
-					$item_description = 'L'.$x.'-desc-'.$y;		//L${index}-desc-0
-					$quantity = 'L'.$x.'-qty-'.$y;				//L${index}-qty-0
-					$unit_cost = 'L'.$x.'-Ucst-'.$y;		 	//L${index}-Ucst-0
-					$total_cost = 'L'.$x.'-Tcst-'.$y;		 	//L${index}-Tcst-0
-
-					$user->register('lot_content_for_pr', array(
-
-						'lot_id_origin' => $lot_id,
-						'stock_no' => Input::get($stock_no),
-						'unit' => Input::get($unit),
-						'item_description' => Input::get($item_description),
-						'quantity' => Input::get($quantity),
-						'unit_cost' => Input::get($unit_cost),
-						'total_cost' => Input::get($total_cost)
-
+					}catch(Exception $e){
+						die($e->getMessage());
+					}
+			}else{
+					
+				try{
+					//register project details in "project_request_forms"table
+					$current_year = date('Y');
+					$form_ref_no =  'PR'.$current_year.'-'.StringGen::generate(); //this would be the refence number of the form
+					$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
+					$number_of_lots = Input::get('lot_count'); // number of lots for this request form
+		
+					$rows_per_lot = json_decode(Input::get('row_count'), true); //decode th row counter per lot
+					$counter = 0;
+					foreach($rows_per_lot as $element){
+						$myArray[$counter] = $element["lst"] + 1;
+						$counter++;
+					}
+		
+					$user->register('project_request_forms', array(
+		
+						'form_ref_no' => $form_ref_no,
+						'title' => Input::get('title'),
+						'requested_by' => Session::get(Config::get('session/session_name')),
+						'noted_by' => Input::get('noted'),
+						'verified_by' => Input::get('verified'),
+						'approved_by' => Input::get('approved'),
+						'type' => 'PR',
+						'date_created' => $date_created
+		
 					));
-				}	
-			}
-
-			//proceed to printing the actual form Redire
+		
+					//register lot general details in "lots" table
+					for($x=0; $x<$number_of_lots; $x++){  //$x is lot level
+					
+		
+						$lot_title = 'L'.$x.'-title'; //L${index}-title				
+						$lot_cost = 'L'.$x.'-TLC';
+						$lot_no = $x + 1;
+		
+						$user->register('lots', array(
+		
+							'request_origin' => $form_ref_no,
+							'lot_no' => $lot_no,
+							'lot_title' => Input::get($lot_title),
+							'lot_cost' => Input::get($lot_cost),
+							'note' => 'none'
+		
+						));
+		
 			
-		}catch(Exception $e){
-			die($e->getMessage());
-		}
-	  }
+						//register all item rows per lot in "lot_content_for_pr" table		
+						$temp = $user->ro_ln_composite($form_ref_no, $lot_no);
+						$lot_id = $temp->lot_id;
+						
+						for($y=0; $y<$myArray[$x]; $y++){ //$y is item per lot level					
+		
+							$stock_no = 'L'.$x.'-stk-'.$y;    			//L${index}-stk-0
+							$unit = 'L'.$x.'-unit-'.$y;		 			//L${index}-unit-0
+							$item_description = 'L'.$x.'-desc-'.$y;		//L${index}-desc-0
+							$quantity = 'L'.$x.'-qty-'.$y;				//L${index}-qty-0
+							$unit_cost = 'L'.$x.'-Ucst-'.$y;		 	//L${index}-Ucst-0
+							$total_cost = 'L'.$x.'-Tcst-'.$y;		 	//L${index}-Tcst-0
+		
+							$user->register('lot_content_for_pr', array(
+		
+								'lot_id_origin' => $lot_id,
+								'stock_no' => Input::get($stock_no),
+								'unit' => Input::get($unit),
+								'item_description' => Input::get($item_description),
+								'quantity' => Input::get($quantity),
+								'unit_cost' => Input::get($unit_cost),
+								'total_cost' => Input::get($total_cost)
+		
+							));
+						}	
+					}
+		
+					//proceed to printing the actual form
+					
+				}catch(Exception $e){
+					die($e->getMessage());
+				}				
+			}
+	  	}
 	}
  
 
@@ -184,7 +258,7 @@
 													<label>Overall Estimated Cost *</label>
 													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="pr_form" required>
 												</div>
-												<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="bottom" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
+												<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="right" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
 													<label class="font-normal"></label>
 													<div>
 														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form">															
@@ -225,6 +299,12 @@
 														<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L${index}-title" form="pr_form" readonly value = "${element}"></h5>
 													</div>
 													<div class="add-project">
+													<div class="btn-group">
+														<button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-rounded btn-outline">Add Specific no. of rows</button>
+														<ul class="dropdown-menu">
+															<li><input type="number" data="qty" data-cnt="" class="form-control" min="1"></li>
+														</ul>
+													</div>													
 														<button type="button" data-type="lst-add" data-list="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
 													</div>
 												</div>
@@ -298,9 +378,9 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-													<input type="text" value="<?php echo Token::generate();?>" hidden form="pr_form">
-													<input type="text" hidden id="row_count" name="row_count" class="form-control" readonly form="pr_form">
-													<input type="text" hidden id="lot_count" name="lot_count" class="form-control" readonly form="pr_form">	
+													<input type="text" name="token" value="<?php echo Token::generate();?>" hidden form="pr_form">
+													<input type="text"  id="row_count" name="row_count" class="form-control" readonly form="pr_form">
+													<input type="text"  id="lot_count" name="lot_count" class="form-control" readonly form="pr_form">	
 
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
 													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
@@ -341,6 +421,7 @@
 	$(function()
 	{
 		var objStat = {lst: 0};
+		$('#row_count').val(JSON.stringify(objStat));
 		$('[data-list="pr-static"]').on('click', function()
 		{
 			objStat.lst++;
@@ -354,6 +435,7 @@
 				<td class="right"><input type="number" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="1" readonly form="pr_form" required></td>
 			</tr>`;
 			$('#pr-tbl-static').append(tmp_static);
+			$('#row_count').val(JSON.stringify(objStat));
 
 			$('[data="qty"]').on('change', function()
 			{

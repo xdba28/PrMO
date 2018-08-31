@@ -123,9 +123,21 @@
             }
         }
 
+        public function user_data($ID){
+            if($this->db->query_builder("SELECT 
+            edr_id, edr_fname, edr_mname, edr_lname, edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
+            FROM
+            `enduser`, `units`
+            
+            WHERE
+            enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
+                return $this->db->first();
+            }
+        }
+
 
         public function exist(){
-            return  (!empty($this->data)) ? true : false;
+            return (!empty($this->data)) ? true : false;
         }
 
         public function data(){
