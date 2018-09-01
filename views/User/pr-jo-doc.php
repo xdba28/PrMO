@@ -5,20 +5,24 @@ require_once "../../vendor/autoload.php";
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
 
+if($user->isLoggedIn()){
+	
+}
+else{
+	Redirect::To('../../index');
+	die();
+}
+
+print_r($_SESSION);
+
 $REQUEST = explode(":", Session::flash('Request'));
-$ProjectData = $user->PRdoc_projData($REQUEST[1]);
+$ProjectData = $user->PRdoc_projData($REQUEST[0]);
 $UserData = $user->user_data(Session::get(Config::get('session/session_name')));
-$NumLots = $user->PR_num_lots($REQUEST[1]);
+$NumLots = $user->PR_num_lots($REQUEST[0]);
 
-$file = $REQUEST[1].".docx";
-header("Content-Description: File Transfer");
-header('Content-Disposition: attachment; filename="'.$file.'"');
+$file = $REQUEST[0].".docx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-header('Content-Transfer-Encoding: binary');
-header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-header('Expires: 0');
-
-$REQUEST = "PR";
+header('Content-Disposition: attachment; filename="'.$file.'"');
 
 $OFFICE = htmlspecialchars($UserData->office_name);
 
@@ -39,24 +43,22 @@ $header->addText("Republic of the Philippines", ['name' => 'Arial', 'size' => 10
 $header->addText("BICOL UNIVERSITY", ['name' => 'Arial', 'size' => 10, 'bold' => true], $hPragr);
 $header->addText($OFFICE, ['name' => 'Arial', 'size' => 9], $hPragr);
 $section->addTextBreak(1);
-if($REQUEST === 'PR') $section->addText("Purchase Request", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
-elseif($REQUEST === 'JO') $section->addText("Job Order", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
+if($REQUEST[1] === 'PR') $section->addText("Purchase Request", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
+elseif($REQUEST[1] === 'JO') $section->addText("Job Order", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
 $section->addText("Title:", null, $hPragr);
 $section->addText($ProjectData->title, null, $hPragr);
 $section->addTextBreak(1);
-$section->addText("Date: Requested " . date('F j, o', strtotime($ProjectData->date_created)), null, ['indentation' => ['left' => 288, 'right' => 0]]);
+$section->addText("Date Requested: " . date('F j, o', strtotime($ProjectData->date_created)), null, ['indentation' => ['left' => 288, 'right' => 0]]);
 
 $thStyle = ['bold' => true, 'size' => 9];
 $thPragr = ['alignment' => 'center'];
 $trStyle = ['size' => 9];
 
-if($REQUEST === 'PR')
+if($REQUEST[1] === 'PR')
 {
-	for($x = 1 ; $x <= $NumLots->lots ; $x++)
+	if($NumLots->lot_no == '101' && $NumLots->lot_title == 'static lot')
 	{
 		$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
-		$table->addRow(43.2);
-		$table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$x, $thStyle, $thPragr);
 		$table->addRow(43.2);
 		$table->addCell(1152)->addText("Stock No.", $thStyle, $thPragr);
 		$table->addCell(864)->addText("Unit of Issue", $thStyle, $thPragr);
@@ -65,7 +67,7 @@ if($REQUEST === 'PR')
 		$table->addCell(1800)->addText("Estimated Unit Cost", $thStyle, $thPragr);
 		$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
 
-		$LOT_ITEMS = $user->PR_itemsPerLot($NumLots->form_ref_no, $x);
+		$LOT_ITEMS = $user->PR_itemsPerLot($NumLots->form_ref_no, $NumLots->lot_no);
 		foreach($LOT_ITEMS as $ITEM)
 		{
 			$table->addRow(43.2);
@@ -78,8 +80,37 @@ if($REQUEST === 'PR')
 		}
 		$section->addTextBreak(2);
 	}
+	else
+	{
+		for($x = 1 ; $x <= $NumLots->lots ; $x++)
+		{
+			$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
+			$table->addRow(43.2);
+			$table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$x, $thStyle, $thPragr);
+			$table->addRow(43.2);
+			$table->addCell(1152)->addText("Stock No.", $thStyle, $thPragr);
+			$table->addCell(864)->addText("Unit of Issue", $thStyle, $thPragr);
+			$table->addCell(4320)->addText("Item Description", $thStyle, $thPragr);
+			$table->addCell(864)->addText("Quantity", $thStyle, $thPragr);
+			$table->addCell(1800)->addText("Estimated Unit Cost", $thStyle, $thPragr);
+			$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
+	
+			$LOT_ITEMS = $user->PR_itemsPerLot($NumLots->form_ref_no, $x);
+			foreach($LOT_ITEMS as $ITEM)
+			{
+				$table->addRow(43.2);
+				$table->addCell(1152)->addText(htmlspecialchars($ITEM->stock_no), $trStyle, $thPragr);
+				$table->addCell(864)->addText(htmlspecialchars($ITEM->unit), $trStyle, $thPragr);
+				$table->addCell(4320)->addText(htmlspecialchars($ITEM->item_description), $trStyle, $thPragr);
+				$table->addCell(864)->addText(htmlspecialchars($ITEM->quantity), $trStyle, $thPragr);
+				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->unit_cost), $trStyle, $thPragr);
+				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->total_cost), $trStyle, $thPragr);
+			}
+			$section->addTextBreak(2);
+		}
+	}
 }
-elseif($REQUEST === 'JO')
+elseif($REQUEST[1] === 'JO')
 {
 
 	$order[0] = [
@@ -110,6 +141,6 @@ elseif($REQUEST === 'JO')
 }
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+ob_clean();
 $objWriter->save("php://output");
-
 ?>

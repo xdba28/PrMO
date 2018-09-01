@@ -147,7 +147,7 @@
 		
 		// pr-jo-doc.php
 		public function PR_num_lots($ID){
-			if($this->db->query_builder("SELECT count(project_request_forms.form_ref_no) as lots, form_ref_no
+			if($this->db->query_builder("SELECT count(project_request_forms.form_ref_no) as lots, form_ref_no, lot_no, lot_title
 			FROM `project_request_forms`, `lots`
 			WHERE project_request_forms.form_ref_no = lots.request_origin
 			AND project_request_forms.form_ref_no = '$ID'")){
