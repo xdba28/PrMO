@@ -123,33 +123,48 @@
             }
 		}
 		
-		// pr-jo.php
-		public function pr_doc_projData($pr_num){
+		// pr-jo-doc.php
+		public function PRdoc_projData($pr_num){
 			if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, 
-							 lot_title, lot_cost, stock_no, unit, item_description, quantity, 
-								unit_cost, total_cost
+			lot_title, lot_cost, stock_no, unit, item_description, quantity, unit_cost, total_cost
 			FROM `project_request_forms`, `lots`, `lot_content_for_pr`
 			WHERE project_request_forms.form_ref_no = lots.request_origin 
 			AND lots.lot_id = lot_content_for_pr.lot_id_origin 
 			AND form_ref_no = '$pr_num'")){
                 return $this->db->first();
 			}
-
 		}
 
-		// pr-jo.php
+		// pr-jo-doc.php
 		public function user_data($ID){
-            if($this->db->query_builder("SELECT 
-            edr_id, edr_fname, edr_mname, edr_lname, edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
-            FROM `enduser`, `units`
-            WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
+            if($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
+						edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
+           		FROM `enduser`, `units`
+           		WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
                 return $this->db->first();
             }
 		}
 		
-		// pr-jo.php
-		public function pr_num_lots($ID){
-			
+		// pr-jo-doc.php
+		public function PR_num_lots($ID){
+			if($this->db->query_builder("SELECT count(project_request_forms.form_ref_no) as lots, form_ref_no
+			FROM `project_request_forms`, `lots`
+			WHERE project_request_forms.form_ref_no = lots.request_origin
+			AND project_request_forms.form_ref_no = '$ID'")){
+				return $this->db->first();
+			}
+		}
+
+		// pr-jo-doc.php
+		public function PR_itemsPerLot($PR_ID, $LOT_NO){
+			if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
+			FROM `lot_content_for_pr`, `lots`, `project_request_forms`
+			WHERE project_request_forms.form_ref_no = lots.request_origin
+			AND lots.lot_id = lot_content_for_pr.lot_id_origin
+			AND form_ref_no = '$PR_ID'
+			AND lot_no = '$LOT_NO'")){
+				return $this->db->results();
+			}
 		}
 
 

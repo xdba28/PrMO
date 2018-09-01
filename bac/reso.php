@@ -210,7 +210,7 @@ $section->addTextBreak(3, ['size' => 8], $bSpace);
 
 $cSpan = ['gridSpan' => 3];
 $cConSty = ['valign' => 'bottom'];
-$cConti = ['vMerge' => 'continue'];
+// $cConti = ['vMerge' => 'continue'];
 
 $NclStyle = ['size' => 10, 'bold' => true];
 $TXclStyle = ['size' => 10];
@@ -251,6 +251,10 @@ $table->addRow(172);
 $table->addCell(9950.4, $cSpan)->addText(htmlspecialchars(strtoupper($OFF_HEAD['name'])), $NclStyle, $thPragr);
 $table->addRow(172);
 $table->addCell(9950.4, $cSpan)->addText(htmlspecialchars(strtoupper($OFF_HEAD['pos'])), $TXclStyle, $thPragr);
+
+// \PhpOffice\PhpWord\Settings::loadConfig();
+// $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
+// $objWriter->save('C:/Users/Denver/Desktop/JO.pdf');
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 $objWriter->save('C:/Users/Denver/Desktop/BAC RESO.docx');

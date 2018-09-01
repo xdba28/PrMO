@@ -116,8 +116,15 @@
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
 										<p>Some shitty explaination what the hell is going on</p>
-										<div class="row" id="wf-stp-2" style="overflow-y: auto; height: 450px">
-											<div class="col-lg-12">
+
+												<div class="">
+													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're being a little confused here 🤔 that I catch your attention. Cheer up‼ because we're here to guide you. 😉👌 Click on the button to proceed 👉">											
+														<button type="button" class="btn btn-danger btn-rounded btn-outline">New to this <i class="fa fa-question" style="font-weight:900"></i></button>
+													</div>
+												</div>										
+										
+										<div class="row" id="wf-stp-2">
+											<div class="col-lg-12" >
 												<h1>No Lots Set.</h1>
 											</div>
 										</div>
@@ -195,24 +202,33 @@
 					obj.push({tag: 0});
 					var tmp_lot = `
 					<div class="col-lg-6">
-						<div class="ibox">
-							<div class="ibox-title">
-								<h5>Lot Number ${i + 1}</h5>
+						<div class="ibox" style="border: 1px solid rgba(28,110,164,0.63); padding:20px">
+							<div class="alert alert-info">
+								<center><h5>Lot Number ${i + 1}</h5></center>
+								
 							</div>
-							<div class="ibox-content" id="lot-${i}">
-								<p class="font-bold">Lot Name: </p>
-								<input type="text" class="form-control" name="lot-${i}-title" form="jo_form">
+							<div class="ibox-content" id="lot-${i}" style="-webkit-box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);-moz-box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);">
+							
+							<div class="form-group">
+								<label>Lot Title *</label>
+								<input type="text" class="form-control" name="L${i}-title" form="jo_form">
+							</div>
+							<hr style="	height: 10px; border: 0; box-shadow: 0 10px 10px -10px #8c8b8b inset;">
+							
+	
 								<div>
 									<br>
 									<p class="font-bold">List Name: </p>
-									<input type="text" name="lot-${i}-[list-name][]" class="form-control" form="jo_form">
+									<input type="text" name="L${i}-listname-0" class="form-control" form="jo_form">
 									<br>
 									<p class="font-bold">&#128204; Tags:</p>
-									<input class="form-control" name="lot-${i}-[list][]" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
+									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
 									<br>
 								</div>
-							</div>
-							<button type="button" data-type="btn" data-tag="lot-${i}">Click</button>
+							</div><br>
+							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
+
+
 							
 						</div>
 					</div>`;
@@ -228,12 +244,12 @@
 					var tg_num = obj[num[1]].tag;
 					var list_tmp = `
 					<div>
-						<br>
+						<br><hr style="	height: 6px; background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;border: 0;">
 						<p class="font-bold">List Name: </p>
-						<input type="text" name="lot-${num[1]}-[list-name][]" class="form-control" form="jo_form">
+						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form">
 						<br>
 						<p class="font-bold">&#128204; Tags:</p>
-						<input class="form-control" name="lot-${num[1]}-[list][]" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
+						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
 						<br>
 					<div>`;
 					$(`#${num[0]}-${num[1]}`).append(list_tmp);

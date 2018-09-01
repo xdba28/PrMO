@@ -80,6 +80,7 @@
 						
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
+						Redirect::to('pr-jo-doc');
 
 					}catch(Exception $e){
 						die($e->getMessage());
