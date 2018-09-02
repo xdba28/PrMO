@@ -13,8 +13,6 @@ else{
 	die();
 }
 
-print_r($_SESSION);
-
 $REQUEST = explode(":", Session::flash('Request'));
 $ProjectData = $user->PRdoc_projData($REQUEST[0]);
 $UserData = $user->user_data(Session::get(Config::get('session/session_name')));

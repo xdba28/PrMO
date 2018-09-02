@@ -30,6 +30,7 @@
                 }
         }
 
+
         public function find($user = null){//find using username
 
             if($user){
@@ -121,8 +122,8 @@
             if($this->db->query_builder("SELECT lot_id FROM `lots` WHERE request_origin='$request_origin' AND lot_no=$lot_no")){
                  return $this->db->first();
             }
-		}
-		
+        }
+
 		// pr-jo-doc.php
 		public function PRdoc_projData($pr_num){
 			if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, 
@@ -167,10 +168,28 @@
 			}
 		}
 
+        public function fullname(){
+            $user = Session::get($this->sessionName);
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        }
 
         public function exist(){
-            return  (!empty($this->data)) ? true : false;
-        }
+            return (!empty($this->data)) ? true : false;
+        }    
 
         public function data(){
             return $this->data;
@@ -186,8 +205,7 @@
         
         public function isLoggedIn(){
             return $this->isLoggedIn;
-		}
-		
+        }
 
     }
 
