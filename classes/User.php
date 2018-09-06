@@ -125,14 +125,24 @@
         }
 
 		// pr-jo-doc.php
-		public function PRdoc_projData($pr_num){
-			if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, 
-			lot_title, lot_cost, stock_no, unit, item_description, quantity, unit_cost, total_cost
-			FROM `project_request_forms`, `lots`, `lot_content_for_pr`
-			WHERE project_request_forms.form_ref_no = lots.request_origin 
-			AND lots.lot_id = lot_content_for_pr.lot_id_origin 
-			AND form_ref_no = '$pr_num'")){
-                return $this->db->first();
+		public function Doc_projData($REQ){
+			$REQ = explode(":", $REQ);
+			if($REQ[1] === "PR"){
+				if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
+				FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+				WHERE project_request_forms.form_ref_no = lots.request_origin 
+				AND lots.lot_id = lot_content_for_pr.lot_id_origin 
+				AND form_ref_no = '$REQ[0]'")){
+           			return $this->db->first();
+				}
+			}elseif($REQ[1] === "JO"){
+				if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
+				FROM `project_request_forms`, `lots`, `lot_content_for_jo`
+				WHERE project_request_forms.form_ref_no = lots.request_origin 
+				AND lots.lot_id = lot_content_for_jo.lot_id_origin 
+				AND form_ref_no = '$REQ[0]'")){
+					return $this->db->first();
+				}
 			}
 		}
 
@@ -147,24 +157,49 @@
 		}
 		
 		// pr-jo-doc.php
-		public function PR_num_lots($ID){
-			if($this->db->query_builder("SELECT count(project_request_forms.form_ref_no) as lots, form_ref_no, lot_no, lot_title
-			FROM `project_request_forms`, `lots`
-			WHERE project_request_forms.form_ref_no = lots.request_origin
-			AND project_request_forms.form_ref_no = '$ID'")){
-				return $this->db->first();
+		public function PRJO_num_lots($REQ){
+			$REQ = explode(":", $REQ);
+			if($REQ[1] === "PR"){
+				if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost
+				FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+				WHERE project_request_forms.form_ref_no = lots.request_origin
+				AND lots.lot_id = lot_content_for_pr.lot_id_origin
+				AND form_ref_no = '$REQ[0]'
+				GROUP BY lot_id_origin")){
+					return $this->db->results();
+				}
+			}elseif($REQ[1] === "JO"){
+				if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost
+				FROM `project_request_forms`, `lots`, `lot_content_for_jo`
+				WHERE project_request_forms.form_ref_no = lots.request_origin
+				AND lots.lot_id = lot_content_for_jo.lot_id_origin
+				AND form_ref_no = '$REQ[0]'
+				GROUP BY lot_id_origin")){
+					return $this->db->results();
+				}
 			}
 		}
 
 		// pr-jo-doc.php
-		public function PR_itemsPerLot($PR_ID, $LOT_NO){
-			if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
-			FROM `lot_content_for_pr`, `lots`, `project_request_forms`
-			WHERE project_request_forms.form_ref_no = lots.request_origin
-			AND lots.lot_id = lot_content_for_pr.lot_id_origin
-			AND form_ref_no = '$PR_ID'
-			AND lot_no = '$LOT_NO'")){
-				return $this->db->results();
+		public function PRJO_itemsPerLot($ID, $LOT_NO, $REQ){
+			if($REQ === "PR"){
+				if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
+				FROM `lot_content_for_pr`, `lots`, `project_request_forms`
+				WHERE project_request_forms.form_ref_no = lots.request_origin
+				AND lots.lot_id = lot_content_for_pr.lot_id_origin
+				AND form_ref_no = '$ID'
+				AND lot_no = '$LOT_NO'")){
+					return $this->db->results();
+				}
+			}elseif($REQ === "JO"){
+				if($this->db->query_builder("SELECT header, tags
+				FROM `lot_content_for_jo`, `lots`, `project_request_forms`
+				WHERE project_request_forms.form_ref_no = lots.request_origin
+				AND lots.lot_id = lot_content_for_jo.lot_id_origin
+				AND form_ref_no = '$ID'
+				AND lot_no = '$LOT_NO'")){
+					return $this->db->results();
+				}
 			}
 		}
 

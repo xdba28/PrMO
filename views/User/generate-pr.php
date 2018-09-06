@@ -304,7 +304,7 @@
 													<div class="btn-group">
 														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Add Specific No. of Rows</button>
 														<ul class="dropdown-menu">
-															<li><input type="number" data="qty" id="rowCount" class="form-control" min="1"></li>
+															<li><input type="number" id="rowCount" class="form-control" min="1"></li>
 														</ul>
 													</div>													
 														<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
@@ -327,9 +327,9 @@
 																<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 																<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 																<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-																<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
-																<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-																<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+																<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="0.01" form="pr_form" required></td>
+																<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
+																<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 															</tr>
 														</tbody>
 															<tr>
@@ -436,9 +436,9 @@
 				<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 				<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 				<td><textarea rows="1" cols="30" name="L0-desc-${objStat.lst}" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-				<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-				<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-				<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="1" readonly form="pr_form" required></td>
+				<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+				<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+				<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 			</tr>`;
 			$('#pr-tbl-static').append(tmp_static);
 			$('#row_count').val(JSON.stringify(objStat));
@@ -476,18 +476,16 @@
 			$('#pr-tbl-static').html('');
 			for(let i = 0 ; i < $(this).val() ; i++)
 			{
-				objStat.lst++;
 				var tmp_static = `
 				<tr id="pr-0-r-${objStat.lst}">
 					<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 					<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 					<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="1" readonly form="pr_form" required></td>
+					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 				</tr>`;
 				$('#pr-tbl-static').append(tmp_static);
-				$('#row_count').val(JSON.stringify(objStat));
 
 				$('[data="qty"]').on('change', function()
 				{
@@ -514,7 +512,10 @@
 					});
 					$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 				});
+				objStat.lst++;
 			}
+			objStat.lst--;
+			$('#row_count').val(JSON.stringify(objStat));
 		});
 
 		$('[data="qty"]').on('change', function()
@@ -542,7 +543,6 @@
 			});
 			$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 		});
-
 
 		var arry = [];
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
@@ -577,13 +577,13 @@
 							</tr>
 							</thead>
 							<tbody id="pr-tbl-${index}">
-								<tr id="pr-0-r-${index}">
+								<tr id="pr-${index}-r-0">
 									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form"></td>
 									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required></td>
 									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-									<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+									<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="0.01" form="pr_form" required></td>
+									<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
+									<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 								</tr>
 							</tbody>
 								<tr>
@@ -642,9 +642,9 @@
 					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
 					<td class="center"><input type="text" name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required></td>
 					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="" form="pr_form" required></td>
-					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="" readonly form="pr_form" required></td>																
+					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
 
@@ -680,9 +680,11 @@
 				var rowData = $(this).attr("data-list").split("-");
 				var remove = JSON.parse($('#row_count').val());
 				$(`#pr-${rowData[1]}-r-${remove[rowData[1]].lst}`).remove();
-				obj[rowData[1]].lst--;
-				$('#row_count').val(JSON.stringify(obj));
-
+				if(obj[rowData[1]].lst !== -1)
+				{
+					obj[rowData[1]].lst--;
+					$('#row_count').val(JSON.stringify(obj));
+				}
 			});
 		});
 
@@ -691,8 +693,11 @@
 			var rowData = $(this).attr("data-list").split("-");
 			var remove = JSON.parse($('#row_count').val());
 			$(`#pr-${rowData[1]}-r-${remove.lst}`).remove();
-			objStat.lst--;
-			$('#row_count').val(JSON.stringify(obj));
+			if(objStat.lst !== -1)
+			{
+				objStat.lst--;
+				$('#row_count').val(JSON.stringify(objStat));
+			}
 		});
 	});
 </script>
