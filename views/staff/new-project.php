@@ -27,6 +27,20 @@
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
+	<script>
+		var OBJ = 
+		<?php
+			$array = [
+				'ID' => [
+					'fname' => 'Denver',
+					'lname' => 'Arancillo'
+				]
+			];
+			echo json_encode($array);
+		?>;
+		console.log(OBJ.ID.fname);
+	</script>
+
 </head>
 
 <body class="">
@@ -239,7 +253,7 @@
         </div>
     </div>
 
-    <?php include_once'../../includes/parts/admin_scripts.php'; ?>
+    <?php include_once '../../includes/parts/admin_scripts.php'; ?>
 	
 	<script>
 
