@@ -147,7 +147,6 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
 			<div class="wrapper wrapper-content animated fadeInRight">
 				<div class="row">
 					<div class="col-lg-12">
@@ -158,7 +157,7 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-								<div><form method="POST" id="jo_form"></div>
+								<div><form method="POST" id="jo_form"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
@@ -256,7 +255,7 @@
 				</div><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br><br>
 			</div>
 			
-            </div>
+
 			<!-- Main Content End -->
 			
             <div class="footer">
@@ -310,7 +309,7 @@
 
 							<div class="form-group">
 								<label>Note</label>					
-								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form"></textarea>							
+								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form" required></textarea>							
 							</div>							
 							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
 

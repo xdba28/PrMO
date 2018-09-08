@@ -25,7 +25,7 @@
                  if($login){
                      Redirect::To('views/User/Dashboard');
                  }else{
-                     echo "failed";  
+                     Session::flash('incorrect', 'Incorrect Username or Password');
                  }
 
 
@@ -98,6 +98,9 @@
 					<?php
 						if(Session::exists('Loggedout')){		
                             echo '<center><h2>'.Session::flash('Loggedout').'</h2></center>';
+                        }
+						if(Session::exists('incorrect')){		
+                            echo '<center><h4>'.Session::flash('incorrect').'</h4></center>';
                         }
 					?>
                     <form class="m-t" action="" method="POST">

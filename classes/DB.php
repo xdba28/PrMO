@@ -6,6 +6,7 @@
                 $query,
                 $error = false,
                 $results,
+                $error_info,
                 $count = 0;
         
 
@@ -30,7 +31,7 @@
         public function query_builder($sql, $params = array()){       //query builder
             $this->error = false;
 
-            if ($this->query = $this->pdo->prepare("$sql")) {
+            if ($this->query = $this->pdo->prepare("$sql")){
                 $x = 1;
                 if (count($params)) {
                     foreach ($params as $param) {

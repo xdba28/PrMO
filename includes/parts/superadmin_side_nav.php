@@ -34,14 +34,14 @@
                 <li>
                     <a href="#"><i class="fa fa-users side"></i> <span class="nav-label">Users</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="manage-users.php">Manage Users</a></li>
-						<li><a href="new-user.php">Register User</a></li>					
+                        <li><a href="manage-users">Manage Users</a></li>
+						<li><a href="new-user">Register User</a></li>					
                     </ul>
                 </li>		
                 <li>
                     <a href="#"><i class="ti-info-alt side"></i> <span class="nav-label">Requests</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="account-request.php">Account</a></li>					
+                        <li><a href="account-request">Account</a></li>					
                     </ul>
                 </li>				
 

@@ -304,7 +304,7 @@
 													<div class="btn-group">
 														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Add Specific No. of Rows</button>
 														<ul class="dropdown-menu">
-															<li><input type="number" id="rowCount" class="form-control" min="1"></li>
+															<li><input type="number" data="qty" id="rowCount" class="form-control" min="1"></li>
 														</ul>
 													</div>													
 														<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
@@ -476,6 +476,7 @@
 			$('#pr-tbl-static').html('');
 			for(let i = 0 ; i < $(this).val() ; i++)
 			{
+				objStat.lst++;
 				var tmp_static = `
 				<tr id="pr-0-r-${objStat.lst}">
 					<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
@@ -486,6 +487,7 @@
 					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 				</tr>`;
 				$('#pr-tbl-static').append(tmp_static);
+				$('#row_count').val(JSON.stringify(objStat));
 
 				$('[data="qty"]').on('change', function()
 				{
@@ -512,10 +514,7 @@
 					});
 					$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 				});
-				objStat.lst++;
 			}
-			objStat.lst--;
-			$('#row_count').val(JSON.stringify(objStat));
 		});
 
 		$('[data="qty"]').on('change', function()
@@ -543,6 +542,7 @@
 			});
 			$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 		});
+
 
 		var arry = [];
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()

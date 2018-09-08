@@ -7,6 +7,10 @@
 	font-size : 18px;
 }
 
+.my-blue{
+    color: #3399FF;
+}
+
 
 
 .pull-right {
@@ -39,4 +43,71 @@
 
 .right{
 	text-align: right;
+}
+
+.mt-10{
+  margin-top:10px;
+}
+.mt-20{
+  margin-top:20px;
+}
+.mt-30{
+  margin-top:30px;
+}
+.mt-40{
+  margin-top:40px;
+}
+.mt-50{
+  margin-top:50px;
+}
+.mt-60{
+  margin-top:60px;
+}
+.mt-70{
+  margin-top:70px;
+}
+
+
+/*code pen fancy fields*/
+.form-group {
+  position:relative;  
+
+  & + .form-group {
+    margin-top: 30px;
+  }
+}
+
+.form-label {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  color: #999;
+  background-color: #fff;
+  z-index: 10;
+  transition: transform 150ms ease-out, font-size 150ms ease-out;
+  font-size: 1.2em;
+}
+
+.focused .form-label {
+  transform: translateY(-125%);
+  font-size: 1.03em;
+  color: #3399FF;
+}
+
+.form-input {
+  position: relative;
+  padding: 12px 0px 5px 0;
+  width: 100%;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 1px 0 0 #e5e5e5;
+  transition: box-shadow 150ms ease-out;
+  
+  &:focus {
+    box-shadow: 0 2px 0 0 blue;
+  }
+}
+
+.form-input.filled {
+  box-shadow: 0 2px 0 0 lightgreen;
 }

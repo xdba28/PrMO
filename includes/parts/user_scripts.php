@@ -1,3 +1,8 @@
+<?php 
+include_once '../../includes/parts/modals.php'; 
+require_once "../../functions/account-verifier.php";
+?>
+
 <!-- Mainly scripts -->
 <script src="../../assets/js/jquery-3.1.1.min.js"></script>
 <script src="../../assets/js/popper.min.js"></script>
@@ -5,12 +10,26 @@
 <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
+<!-- Peity -->
+<script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="../../assets/js/demo/peity-demo.js"></script>
+
 <!-- Chosen -->
 <script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
+
+
+<!-- Input Mask-->
+<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
 
 <!-- Custom and plugin javascript -->
 <script src="../../assets/js/inspinia.js"></script>
 <script src="../../assets/js/plugins/pace/pace.min.js"></script>
+
+<!-- Toast -->
+<script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
+
+<!-- FooTable -->
+<script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
 
 <!-- Steps -->
 <script src="../../assets/js/plugins/steps/jquery.steps.min.js"></script>
@@ -19,57 +38,54 @@
 <script src="../../assets/js/plugins/validate/jquery.validate.min.js"></script>
 
 
+<!-- Typehead -->
+<script src="../../assets/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
 
-<!-- JSKnob -->
-<script src="../../assets/js/plugins/jsKnob/jquery.knob.js"></script>
-
-<!-- Input Mask-->
-<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
-
-<!-- Data picker -->
-<script src="../../assets/js/plugins/datapicker/bootstrap-datepicker.js"></script>
-
-<!-- NouSlider -->
-<script src="../../assets/js/plugins/nouslider/jquery.nouislider.min.js"></script>
-
-<!-- Switchery -->
-<script src="../../assets/js/plugins/switchery/switchery.js"></script>
-
-<!-- IonRangeSlider -->
-<script src="../../assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
 
 <!-- iCheck -->
 <script src="../../assets/js/plugins/iCheck/icheck.min.js"></script>
 
+<!-- Ladda -->
+<script src="../../assets/js/plugins/ladda/spin.min.js"></script>
+<script src="../../assets/js/plugins/ladda/ladda.min.js"></script>
+<script src="../../assets/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+                 <!-- script below is non existing to admin scripts -->
+
+<!-- JSKnob -->
+<script src="../../assets/js/plugins/jsKnob/jquery.knob.js"></script>
+<!-- Data picker -->
+<script src="../../assets/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- NouSlider -->
+<script src="../../assets/js/plugins/nouslider/jquery.nouislider.min.js"></script>
+<!-- Switchery -->
+<script src="../../assets/js/plugins/switchery/switchery.js"></script>
+<!-- IonRangeSlider -->
+<script src="../../assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
 <!-- MENU -->
 <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-
 <!-- Color picker -->
 <script src="../../assets/js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
-
 <!-- Clock picker -->
 <script src="../../assets/js/plugins/clockpicker/clockpicker.js"></script>
-
 <!-- Image cropper -->
 <script src="../../assets/js/plugins/cropper/cropper.min.js"></script>
-
 <!-- Date range use moment.js same as full calendar plugin -->
 <script src="../../assets/js/plugins/fullcalendar/moment.min.js"></script>
-
 <!-- Date range picker -->
 <script src="../../assets/js/plugins/daterangepicker/daterangepicker.js"></script>
-
 <!-- Select2 -->
 <script src="../../assets/js/plugins/select2/select2.full.min.js"></script>
-
 <!-- TouchSpin -->
 <script src="../../assets/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
-
 <!-- Tags Input -->
 <script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+    <!-- Password meter -->
+    <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+    <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 
 
 <script>
@@ -529,3 +545,71 @@
 
 
     </script>
+	
+    <script>
+		$(document).ready(function () {
+			$('#popOver').popover();
+			$('#popOver1').popover();
+			$('#popOver2').popover();
+
+			if(newuser == true){
+				$('#new-user-modal').modal('show');
+				
+			}     
+            
+            $('input').focus(function(){
+			  $(this).parents('.form-group').addClass('focused');
+			});
+
+			$('input').blur(function(){
+			  var inputValue = $(this).val();
+			  if ( inputValue == "" ) {
+				$(this).removeClass('filled');
+				$(this).parents('.form-group').removeClass('focused');  
+			  } else {
+				$(this).addClass('filled');
+			  }
+			})  
+
+            // Example 4 password meter
+            var options4 = {};
+            options4.ui = {
+                container: "#pwd-container",
+                viewports: {
+                    progress: ".pwstrength_viewport_progress4",
+                    verdict: ".pwstrength_viewport_verdict4"
+                }
+            };
+            options4.common = {
+				
+				<?php
+				
+				?>
+				
+                zxcvbn: true,
+                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku'],
+                userInputs: ['#year', '#new_username']
+            };
+            $('.example4').pwstrength(options4);
+
+			
+			//password valide
+			var password = document.getElementById("new_password")
+			  , confirm_password = document.getElementById("password_again");
+
+			function validatePassword(){
+			  if(password.value != confirm_password.value) {
+				confirm_password.setCustomValidity("Passwords Don't Match");
+			  } else {
+				confirm_password.setCustomValidity('');
+			  }
+			}
+
+			password.onchange = validatePassword;
+			confirm_password.onkeyup = validatePassword;			
+	
+
+			
+		});
+
+	</script>	

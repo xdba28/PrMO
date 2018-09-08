@@ -65,12 +65,10 @@
                  $login = $user->login(Input::get('username'), Input::get('password'));
 
                  if($login){
-                     echo "success";
                      Redirect::To('-dashboard');
                  }else{
-                     Session::flash('incorrect', 'Incorrect username or password'); 
+                     Session::flash('incorrect', 'Incorrect Username or Password');
                  }
-
 
             }else{
                 foreach($validation->errors() as $error){

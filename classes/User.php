@@ -2,17 +2,20 @@
 
     class User{
 
-        private $db,
-                $data, 
-                $sessionName,
-                $cookieName,
-                $isLoggedIn;
+            private $db,
+                    $data, 
+                    $sessionName,
+                    $cookieName,
+                    $accountType,
+                    $userType,
+                    $isLoggedIn = false;
 
-        public function __construct($user = null){
-            $this->db = DB::getInstance();
-            
-            $this->sessionName = Config::get('session/session_name');   //$_SESSION['user'];
-            $this->cookieName = Config::get('remember/cookie_name');   //$_COOKIE['hash'];
+            public function __construct($user = null){
+                $this->db = DB::getInstance();
+                
+                $this->sessionName = Config::get('session/session_name');   //$_SESSION['user'];
+                $this->cookieName = Config::get('remember/cookie_name');    //$_COOKIE['hash'];
+
 
                 if(!$user){                                             //checks if the new User() is defined or not
                     if(Session::exists($this->sessionName)){            //validate if session actually exist and setted   
@@ -67,7 +70,6 @@
 			
 			if(!$username && !$password && $this->exist()){
                 //log the user in by the existing cookie in the browser
-
                 Session::put($this->sessionName, $this->data()->account_id);
 
 			}else{
@@ -78,13 +80,12 @@
 
                     if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
                         Session::put($this->sessionName, $this->data()->account_id);
-                            
-                        if($remember){
+                        $_SESSION['accounttype'] = $this->data()->newAccount;
 
+                        if($remember){
                             
                             $hash = Hash::unique();
                             $hashCheck = $this->db->get('users_session', array('user_id', '=', $this->data()->account_id));
-
 
                             if(!$hashCheck->count()){
                                 $this->db->insert('users_session' ,array(
@@ -123,7 +124,7 @@
                  return $this->db->first();
             }
         }
-
+        
 		// pr-jo-doc.php
 		public function Doc_projData($REQ){
 			$REQ = explode(":", $REQ);
@@ -133,7 +134,7 @@
 				WHERE project_request_forms.form_ref_no = lots.request_origin 
 				AND lots.lot_id = lot_content_for_pr.lot_id_origin 
 				AND form_ref_no = '$REQ[0]'")){
-           			return $this->db->first();
+					return $this->db->first();
 				}
 			}elseif($REQ[1] === "JO"){
 				if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
@@ -145,17 +146,16 @@
 				}
 			}
 		}
-
 		// pr-jo-doc.php
 		public function user_data($ID){
-            if($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
+			if($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
 						edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
-           		FROM `enduser`, `units`
-           		WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
-                return $this->db->first();
-            }
+				FROM `enduser`, `units`
+				WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
+				return $this->db->first();
+			}
 		}
-		
+
 		// pr-jo-doc.php
 		public function PRJO_num_lots($REQ){
 			$REQ = explode(":", $REQ);
@@ -169,7 +169,7 @@
 					return $this->db->results();
 				}
 			}elseif($REQ[1] === "JO"){
-				if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost
+				if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost, note
 				FROM `project_request_forms`, `lots`, `lot_content_for_jo`
 				WHERE project_request_forms.form_ref_no = lots.request_origin
 				AND lots.lot_id = lot_content_for_jo.lot_id_origin
@@ -179,7 +179,6 @@
 				}
 			}
 		}
-
 		// pr-jo-doc.php
 		public function PRJO_itemsPerLot($ID, $LOT_NO, $REQ){
 			if($REQ === "PR"){
@@ -201,7 +200,8 @@
 					return $this->db->results();
 				}
 			}
-		}
+		}         
+
 
         public function fullname(){
             $user = Session::get($this->sessionName);
@@ -235,7 +235,9 @@
             $this->db->delete('users_session', array('user_id', '=', $this->data()->account_id));
 
             Session::delete($this->sessionName);
+            Session::delete("accounttype");
             Cookie::delete($this->cookieName);
+            
         }
         
         public function isLoggedIn(){

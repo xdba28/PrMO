@@ -12,7 +12,7 @@
         ],
         'session'  =>[
             'session_name'  => 'user',
-            'token_name'    => 'token'
+            'token_name' => 'token'
         ],
         'remember' =>[
             'cookie_name' => 'hash',

@@ -14,6 +14,47 @@
 
     $sa = new Super_admin();
     $PersonnelInfo = $sa->personnels();
+	
+	if(Input::exists()){
+		if(Token::check(Input::get('token'))){
+			
+			$sa = new Super_admin();
+            $ID = $_GET['q'];
+            
+			try{
+
+              
+				$sa->update('prnl_account', 'account_id', $ID, array(
+                    
+                    'group_' => Input::get('group')
+
+                ));
+
+
+				//register updates
+				//$table, $particular, $identifier, $fields
+				$sa->update('personnel', 'prnl_id', $ID, array(
+                    
+                    'prnl_fname' => Input::get('firstName'),
+                    'prnl_mname' => Input::get('middleName'),
+                    'prnl_lname' => Input::get('lastName'),
+                    'prnl_ext_name' => Input::get('extName'),
+                    'prnl_job_title' => Input::get('jobTitle'),
+                    'prnl_assigned_phase' => Input::get('phase'),
+                    'prnl_id' => Input::get('employeeId')
+
+                ));
+
+                //create flash "Personnel Info Successfuly Updated"
+                //assign this flash to toust
+				
+				
+			}catch(Exception $e){
+				die($e->getMessage());
+			}
+			
+		}
+	}
 
 
 
@@ -74,10 +115,127 @@
 			
 			<?php
 				if(isset($_GET['q'])){
+
+                $personnel = new Super_admin();
+                $name = $personnel->fullnameOF($_GET['q']);
+                $data = $personnel->personnelData($_GET['q']);
+				
+				//echo '<pre>',print_r($data),'</pre>';
+				//die();
 				
 
 			?>
-				<!--update form-->
+            <div class="row animated fadeInRight">
+                <div class="col-md-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Profile General details</h5>
+                        </div>
+                        <div>
+                            <div class="ibox-content no-padding border-left-right">
+                                <img alt="image" class="img-fluid" src="../../assets/pics/profile-bg.png">
+                            </div>
+                            <div class="ibox-content profile-content">
+                                <h4><strong><?php echo $name;?></strong></h4>
+								<div class="">
+									<p class="inline"><i class="ti-id-badge" style="font-size:18px;"></i> </p>
+									<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo $data->prnl_id;?></p>
+									<br>
+									<p class="inline"><i class="ti-email" style="font-size:18px;"></i> </p>
+									<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo $data->prnl_email;?></p>
+									<br>
+									<p class="inline"><i class="fa fa-phone" style="font-size:18px;"></i> </p>
+									<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo $data->phone;?></p>									
+								</div>								
+
+								
+								
+                                <h5>
+                                    About me
+                                </h5>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
+                                </p>
+                                <div class="row m-t-lg">
+                                    <div class="col-md-4">
+                                        <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
+                                        <h5><strong>169</strong> Posts</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="line">5,3,9,6,5,9,7,3,5,2</span>
+                                        <h5><strong>28</strong> Following</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
+                                        <h5><strong>240</strong> Followers</h5>
+                                    </div>
+                                </div>
+                                <div class="user-button">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-envelope"></i> Send Message</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-default btn-sm btn-block"><i class="fa fa-coffee"></i> Buy a coffee</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+                </div>
+                <div class="col-md-8">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Update Form</h5>
+                        </div>
+                        <div class="ibox-content">
+						    <h2>
+                                Personnel Info
+                            </h2>
+                            <p class="alert alert-info">Take note that not all data here are editable for some data are just for referencing purposes only.</p>						
+							<div class="row">
+								
+									<div class="col-sm-6 b-r"> 
+										<form id="update_personnel_form" role="form" method="POST">								
+											<div class="form-group"><label>First name</label> <input type="text" value="<?php echo $data->prnl_fname;?>" name="firstName" class="form-control"></div>
+											<div class="form-group"><label>Middle name</label> <input type="text" value="<?php echo $data->prnl_mname;?>" name="middleName" class="form-control"></div>
+											<div class="form-group"><label>Last name</label> <input type="text" value="<?php echo $data->prnl_lname;?>" name="lastName" class="form-control"></div>
+											<div class="form-group"><label>Extension name</label> <input type="text" value="<?php echo $data->prnl_ext_name;?>" name="extName" class="form-control"></div>
+											<div class="form-group"><label>Job Title</label> <input type="text" value="<?php echo $data->prnl_job_title;?>" name="jobTitle" class="form-control"></div>
+											<div class="form-group"><label>Phase Assigned</label> <input type="text" value="<?php echo $data->prnl_assigned_phase;?>"name="phase" class="form-control"></div>
+									</div>
+									<div class="col-sm-6">
+											<div class="form-group"><label>Employee ID</label> <input type="text" value="<?php echo $data->prnl_id;?>" name="employeeId" class="form-control"></div>
+											<div class="form-group"><label>Account username</label> <input type="text" value="<?php echo $data->username;?>" disabled class="form-control"></div>
+											<div class="form-group"><label>Original Group</label> <input type="text" value="<?php echo $data->group_name;?>" disabled class="form-control"></div>
+											<div class="form-group">
+												<label>Set Group</label>
+												<select class="form-control m-b required" name="group">
+													<option value="<?php echo $data->group_id;?>"> Select... </option>
+													<?php
+													
+														$groups = $personnel->selectAll('group');
+														foreach($groups as $group){
+															echo "<option value ='{$group->group_id}'>{$group->name}</option>";
+														}
+													?>
+												</select>
+											</div>							
+											<div class="form-group"><label>Account Status</label> <input type="text" value="<?php echo $data->status;?>" disabled class="form-control"></div> 
+											<input type="text" name="token" value="<?php echo Token::generate();?>" hidden readonly>
+										</form>		
+									</div>	
+									<div class="col-lg-12">
+												<button class="btn btn-primary btn-rounded pull-right" type="submit" form="update_personnel_form">Update</button>
+												<a href="manage-users" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>	
+									</div>
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>				
 			<?php
 			}else{
 			?>	
@@ -86,7 +244,7 @@
                 <div class="col-lg-12">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>FooTable with row toggler, sorting and pagination</h5>
+                            <h5>Personnel Accounts</h5>
 
                             <div class="ibox-tools">
                                 <a class="collapse-link">
@@ -149,7 +307,7 @@
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" href="?q='.$data->prnl_id.'">Update Info</a></li>
-                                                            
+                                                            <li><a class="dropdown-item" href="#">Reset Password</a></li>
                                                             <li class="dropdown-divider"></li>
                                                             <li><a class="dropdown-item nicecolor" href="#">'.$option.'</a></li>
                                                         </ul>
@@ -342,19 +500,7 @@
         </div>
     </div>
 
-    <!-- Mainly scripts -->
-    <script src="../../assets/js/jquery-3.1.1.min.js"></script>
-    <script src="../../assets/js/popper.min.js"></script>
-    <script src="../../assets/js/bootstrap.js"></script>
-    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-    <!-- FooTable -->
-    <script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
-
-    <!-- Custom and plugin javascript -->
-    <script src="../../assets/js/inspinia.js"></script>
-    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
+	<?php include "../../includes/parts/admin_scripts.php"?>
 
     <!-- Page-Level Scripts -->
     <script>
