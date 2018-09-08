@@ -42,14 +42,24 @@
 <!--JQ Grid Table CSS-->
 <link href="../../assets/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
 <link href="../../assets/css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet">
-
+<!-- Ladda style -->
+<link href="../../assets/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!--Dropzone-->
+<link href="../../assets/css/plugins/dropzone/basic.css" rel="stylesheet">
+<link href="../../assets/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+<!--jasny-->
+<link href="../../assets/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!--CodeMirror-->
+<link href="../../assets/css/plugins/codemirror/codemirror.css" rel="stylesheet">
 <!-- FooTable -->
 <link href="../../assets/css/plugins/footable/footable.core.css" rel="stylesheet">
-<link href="../../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+<!--External-->
+<link rel="stylesheet" href="../../assets/dropify/css/dropify.min.css">
+
 
 
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
-
-
 

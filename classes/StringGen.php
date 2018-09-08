@@ -16,10 +16,20 @@
             }
             
            return $random_string;
+        }   
+        
+        public static function password(){
+            $temp = 'ABCDEFGHIJKLMNOPQRSTUV12345678901234567890';
+            $length = strlen($temp);
 
+            $string = '';
+
+                for($x=0; $x<8; $x++){
+                    $string .= $temp[rand(0, ($length - 1))];
+                }
+
+           return $string;
         }
-
-    
     }
 
 ?>

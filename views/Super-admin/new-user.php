@@ -12,7 +12,77 @@
     }
 
 
-    $user = $user->profile(Session::get(Config::get('session/session_name')));
+    $sa = new Super_admin();
+
+    if(Input::exists()){
+        if(Token::check(Input::get('token'))){
+            //allow to submit the form
+
+            $validate = new Validate();
+            $validation =  $validate->check($_POST, array(
+                'ID' => [
+                    'required' => true,
+                    'unique_prnl_id'   => 'personnel'
+                ],
+                
+                'email' => [
+                    'required' => true,
+                    'unique_prnl_email'   => 'personnel'
+                ],
+                'username' => [
+                    'required' => true,
+                    'unique' => 'prnl_account'
+                ]
+            ));
+
+            if($validation->passed()){
+
+                $sa =  new Super_admin();
+                $salt = Hash::salt(32);
+
+                try{
+                    
+                    $sa->register('personnel', array(
+                        'prnl_id' => Input::get('ID'),
+                        'prnl_fname' => Input::get('first'),
+                        'prnl_mname' => Input::get('middle'),
+                        'prnl_lname' => Input::get('last'),
+                        'prnl_ext_name' => 'XXXXX',
+                        'prnl_email' => Input::get('email'),
+                        'phone' => Input::get('phone'),
+                        'prnl_designated_office' => Input::get('office'),
+                        'prnl_job_title' => Input::get('jobtitle'),
+                    )); //No profile photo yet
+
+                    $sa->register('prnl_account', array(
+                        'account_id' => Input::get('ID'),
+                        'username' => Input::get('username'),
+                        'group_' => Input::get('account_type'),
+                        'status' => 'ACTIVATED',
+                        'salt' => $salt,
+                        'userpassword' => Hash::make(Input::get('defaultPassword'), $salt)
+                    ));
+
+                    Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
+
+                }catch(Exception $e){
+
+                }
+
+            }else{
+
+                /* DENVER!!!!! Display errors in toust*/
+                foreach($validation->errors() as $error){
+                    echo $error,'<br>';
+                }
+            }
+
+
+
+
+
+        }
+    }
 
    
 
@@ -67,9 +137,134 @@
                 </div>
             </div>
 
-            <div class="wrapper wrapper-content">
+            <div class="wrapper wrapper-content animated fadeInRight">
 					
-					<!--content-->
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="ibox">
+                        <div class="ibox-content">
+							<h2>User Profile</h2>
+                            <p>
+                                Specify all required fields for personal information of new user.
+                            </p>
+							
+							<div class="row">
+								
+									<div class="col-sm-6 b-r"> 
+										<form id="profile" role="form" method="POST" enctype= multipart/form-data>
+									
+											<div class="form-group">	
+												<label class="col-form-label" for="ID">Employee ID</label>
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-address-card my-blue"></i></span><input id="ID" name="ID" type="text" class="form-control" required>
+												</div>
+											</div>
+											<div class="form-group mt-20">
+											  <label class="form-label" for="first">First Name</label>
+											  <input id="first" name="first" class="form-input" type="text" required>
+											</div>
+											<div class="form-group mt-20">
+											  <label class="form-label" for="middle">Middle Name</label>
+											  <input id="middle" name="middle" class="form-input" type="text" required>
+											</div>
+											<div class="form-group mt-20">
+											  <label class="form-label" for="last">Last Name</label>
+											  <input id="last" name="last" class="form-input" type="text" required>
+											</div>
+											<div class="form-group mt-20">
+											  <label class="form-label" for="ext">Extension Name</label>
+											  <input id="ext" name="ext" class="form-input" type="text">
+											</div>											
+											<div class="form-group mt-20">
+												<label class="col-form-label" for="email">Email Address</label>
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-at my-blue"></i></span><input id="email" name="email" type="email" class="form-control" required>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-form-label" for="phone">Phone No.</label>
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-phone my-blue"></i></span><input id="phone" name="phone" data-mask="9999 999 9999" type="text" class="form-control" required>
+												</div>
+											</div>											
+									</div>
+									<div class="col-sm-6"> 												
+											<div class="form-group">
+												<label>Office / Unit</label>
+																							
+													<select class="form-control m-b required chosen-select" name="office" required>
+														<option value="unchanged"> Select... </option>
+														<?php																				
+														
+															$units = $sa->selectAll('units');
+															foreach($units as $unit){
+																echo "<option value ='{$unit->ID}'>{$unit->office_name}</option>";
+															}
+														?>
+													</select>
+												
+											</div>	
+										
+											<div class="form-group">
+												<label class="col-form-label" for="typeahead">Job Title</label>												
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-briefcase my-blue"></i></span><input id="typeahead" name="jobtitle" type="text" class="form-control" required>
+												</div>												
+											</div>                                          
+											<div class="form-group">
+												<label class="col-form-label" for="date_added">Profile Photo</label>	
+												<input type="file" name="profilePhoto" class="dropify" data-allowed-file-extensions="png jpeg jpg">		
+												<input type="text" name="token" hidden required value="<?php echo Token::generate();?>">
+											</div>										
+										</form>							
+									</div>
+									<div class="col-lg-12">
+												<button class="btn btn-primary btn-rounded pull-right" type="submit" form="profile">Submit</button>
+												<a href="#" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>	
+									</div>									
+							</div>
+						</div>
+					</div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="ibox">
+                        <div class="ibox-content">
+							<h2>Account information</h2>
+                            <p class="alert alert-warning"><i class="ti-info-alt"></i>
+                                 Some fields here are pre-defined and cannot be edited such as the default username and password.
+                            </p>
+							<div class="row">
+								<div class="col-sm-12"> 	
+									<div class="form-group">
+										<label class="col-form-label" for="date_added">Account Type</label>												
+											<div class="i-checks"><label> <input type="radio" form="profile" checked="" value="5" name="account_type"> <i></i> Procurement Aid </label></div>
+											<div class="i-checks"><label> <input type="radio" form="profile" value="3" name="account_type"> <i></i> Super Admin </label></div>
+											<div class="i-checks"><label> <input type="radio" form="profile" value="4" name="account_type"> <i></i> Director </label></div>	
+											<div class="i-checks"><label> <input type="radio" form="profile" value="6" name="account_type"> <i></i> Staff </label></div>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label" for="date_added">Username</label>
+										<div class="input-group">
+											<span class="input-group-addon"><i class="ti-user my-blue"></i></span><input value="sample.username" type="text" name="username" form="profile" class="form-control" required>
+										</div>
+									</div>		
+									<div class="form-group">
+										<label class="col-form-label" for="date_added">Password</label>
+										<div class="input-group">
+											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="<?php echo StringGen::password();?>" readonly type="text" name="defaultPassword" form="profile" class="form-control" required>
+										</div>
+									</div>										
+								</div>	
+							</div>
+							
+						</div>
+					</div>
+					
+  				
+
+
+                </div>
+            </div>
 
             </div>
 			<div class="footer">
@@ -229,80 +424,6 @@
         </div>
     </div>
 
-    <!-- Mainly scripts -->
-    <script src="../../assets/js/jquery-3.1.1.min.js"></script>
-    <script src="../../assets/js/popper.min.js"></script>
-    <script src="../../assets/js/bootstrap.js"></script>
-    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-    <!-- Flot -->
-    <script src="../../assets/js/plugins/flot/jquery.flot.js"></script>
-    <script src="../../assets/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="../../assets/js/plugins/flot/jquery.flot.spline.js"></script>
-    <script src="../../assets/js/plugins/flot/jquery.flot.resize.js"></script>
-    <script src="../../assets/js/plugins/flot/jquery.flot.pie.js"></script>
-    <script src="../../assets/js/plugins/flot/jquery.flot.symbol.js"></script>
-    <script src="../../assets/js/plugins/flot/curvedLines.js"></script>
-
-    <!-- Peity -->
-    <script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
-    <script src="../../assets/js/demo/peity-demo.js"></script>
-
-    <!-- Custom and plugin javascript -->
-    <script src="../../assets/js/inspinia.js"></script>
-    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
-
-    <!-- jQuery UI -->
-    <script src="../../assets/js/plugins/jquery-ui/jquery-ui.min.js"></script>
-
-    <!-- Jvectormap -->
-    <script src="../../assets/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="../../assets/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-
-    <!-- Sparkline -->
-    <script src="../../assets/js/plugins/sparkline/jquery.sparkline.min.js"></script>
-
-    <!-- Sparkline demo data  -->
-    <script src="../../assets/js/demo/sparkline-demo.js"></script>
-
-    <!-- ChartJS-->
-    <script src="../../assets/js/plugins/chartJs/Chart.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-
-            var lineData = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Example dataset",
-                        backgroundColor: "rgba(26,179,148,0.5)",
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                        label: "Example dataset",
-                        backgroundColor: "rgba(220,220,220,0.5)",
-                        borderColor: "rgba(220,220,220,1)",
-                        pointBackgroundColor: "rgba(220,220,220,1)",
-                        pointBorderColor: "#fff",
-                        data: [65, 59, 80, 81, 56, 55, 40]
-                    }
-                ]
-            };
-
-            var lineOptions = {
-                responsive: true
-            };
-
-
-            var ctx = document.getElementById("lineChart").getContext("2d");
-            new Chart(ctx, {type: 'line', data: lineData, options:lineOptions});
-
-        });
-    </script>
+    <?php include_once '../../includes/parts/admin_scripts.php'; ?>
 </body>
 </html>

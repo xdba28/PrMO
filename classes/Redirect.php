@@ -62,22 +62,22 @@
 
                     switch($type){
 
-                        case 'super_admin':
+                        case 'Super Admin':
                             header('Location: ../views/Super-admin/Dashboard'); 
                             exit();
                         break;
 
-                        case 'director':
+                        case 'Director':
                             header('Location: ../views/Admin/Dashboard'); 
                             exit();
                         break;
                         
-                        case 'aid':
+                        case 'Procurement Aid':
                             header('Location: ../views/Aid/Dashboard'); 
                             exit();
                         break;
 
-                        case 'staff':
+                        case 'Staff':
                             header('Location: ../views/Staff/Dashboard'); 
                             exit();
                         break;
@@ -97,7 +97,7 @@
         public static function getType($id){
 
             $db = DB::getInstance();
-            $user = $db->query_builder("SELECT name FROM `prnl_account`, `group` WHERE prnl_account.group = group.group_id AND account_id = '{$id}' ");
+            $user = $db->query_builder("SELECT name FROM `prnl_account`, `group` WHERE prnl_account.group_ = group.group_id AND account_id = '{$id}' ");
 
                 if($user->count()){
                     return $user->first()->name;

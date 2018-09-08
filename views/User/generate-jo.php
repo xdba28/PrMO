@@ -2,7 +2,7 @@
 
     require_once('../../core/init.php');
 
-    $user = new User(); 
+	$user = new User(); 
 
     if($user->isLoggedIn()){
      //do nothing
@@ -11,6 +11,84 @@
         die();
 	}
 	
+
+	if(Input::exists()){
+	
+		if(Token::check(Input::get('token'))){
+			
+			try{				
+				//register project details in "project_request_forms"table
+				$current_year = date('Y');
+				$form_ref_no =  'JO'.$current_year.'-'.StringGen::generate(); //this would be the refence number of the form
+				$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
+				$number_of_lots = Input::get('lot'); // number of lots for this request form
+	
+				$rows_per_lot = json_decode(Input::get('rowCount'), true); //decode the row counter per lot
+				$counter = 0;
+				foreach($rows_per_lot as $element){
+					$myArray[$counter] = $element["tag"] + 1;
+					$counter++;
+				}
+				
+				$user->register('project_request_forms', array(
+		
+					'form_ref_no' => $form_ref_no,
+					'title' => Input::get('title'),
+					'requested_by' => Session::get(Config::get('session/session_name')),
+					'noted_by' => Input::get('noted'),
+					'verified_by' => Input::get('verified'),
+					'approved_by' => Input::get('approved'),
+					'type' => 'JO',
+					'date_created' => $date_created
+	
+				));
+						
+					//register lot general details in "lots" table
+					for($x=0; $x<$number_of_lots; $x++){  //$x is lot level
+					
+		
+						$lot_title = 'L'.$x.'-title'; //L${index}-title				
+						$lot_cost = 'L'.$x.'-ELC';
+						$lot_note = 'L'.$x.'-note';
+						$lot_no = $x + 1;
+		
+						$user->register('lots', array(
+		
+							'request_origin' => $form_ref_no,
+							'lot_no' => $lot_no,
+							'lot_title' => Input::get($lot_title),
+							'lot_cost' => Input::get($lot_cost),
+							'note' => Input::get($lot_note)
+		
+						));
+		
+			
+						//register all item rows per lot in "lot_content_for_pr" table		
+						$temp = $user->ro_ln_composite($form_ref_no, $lot_no);
+						$lot_id = $temp->lot_id;
+						
+						for($y=0; $y<$myArray[$x]; $y++){ //$y is item per lot level					
+		
+							$listname = 'L'.$x.'-listname-'.$y;    		//L${i}-listname-0
+							$tags = 'L'.$x.'-tags-'.$y;		 			//L${i}-tags-0
+		
+							$user->register('lot_content_for_jo', array(
+		
+								'lot_id_origin' => $lot_id,
+								'header' => Input::get($listname),
+								'tags' => Input::get($tags)
+		
+							));
+						}	
+					}
+		
+					//proceed to printing the actual form						
+
+			}catch(Exception $e){
+				die($e->getMessage());
+			}
+		}
+	}
    
 
 ?>
@@ -69,7 +147,6 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
 			<div class="wrapper wrapper-content animated fadeInRight">
 				<div class="row">
 					<div class="col-lg-12">
@@ -118,7 +195,7 @@
 										<p>Some shitty explaination what the hell is going on</p>
 
 												<div class="">
-													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're being a little confused here 🤔 that I catch your attention. Cheer up‼ because we're here to guide you. 😉👌 Click on the button to proceed 👉">											
+													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're a bit confused here 🤔 that I catch your attention. Cheer up‼ Cause we're here to guide you. 😉👌 Click on the button to proceed 👉">											
 														<button type="button" class="btn btn-danger btn-rounded btn-outline">New to this <i class="fa fa-question" style="font-weight:900"></i></button>
 													</div>
 												</div>										
@@ -140,20 +217,21 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" disabled form="jo_form">
+														<input id="enduser" name="enduser" type="text" value="<?php echo $user->fullname();?>" class="form-control" disabled form="jo_form" required>
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form">
+														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form" required>
 													</div>
 													<div class="form-group">
 														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form">
+														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form" required>
 													</div>
 													<div class="form-group">
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
-														<input type="text" name="rowCount" readonly form="jo_form">
+														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
+														<input type="text" name="token" readonly hidden value="<?php echo Token::generate();?>" required form="jo_form">
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -177,7 +255,7 @@
 				</div><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br><br>
 			</div>
 			
-            </div>
+
 			<!-- Main Content End -->
 			
             <div class="footer">
@@ -211,7 +289,9 @@
 							
 							<div class="form-group">
 								<label>Lot Title *</label>
-								<input type="text" class="form-control" name="L${i}-title" form="jo_form">
+								<input type="text" class="form-control" name="L${i}-title" form="jo_form" required>
+								<label>Estimated Cost *</label>
+								<input type="number" class="form-control" name="L${i}-ELC" form="jo_form" required>								
 							</div>
 							<hr style="	height: 10px; border: 0; box-shadow: 0 10px 10px -10px #8c8b8b inset;">
 							
@@ -219,13 +299,18 @@
 								<div>
 									<br>
 									<p class="font-bold">List Name: </p>
-									<input type="text" name="L${i}-listname-0" class="form-control" form="jo_form">
+									<input type="text" name="L${i}-listname-0" class="form-control" form="jo_form" required>
 									<br>
 									<p class="font-bold">&#128204; Tags:</p>
-									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
+									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form" required>
 									<br>
 								</div>
 							</div><br>
+
+							<div class="form-group">
+								<label>Note</label>					
+								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form" required></textarea>							
+							</div>							
 							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
 
 
@@ -246,10 +331,10 @@
 					<div>
 						<br><hr style="	height: 6px; background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;border: 0;">
 						<p class="font-bold">List Name: </p>
-						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form">
+						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form" required>
 						<br>
 						<p class="font-bold">&#128204; Tags:</p>
-						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
+						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form" required>
 						<br>
 					<div>`;
 					$(`#${num[0]}-${num[1]}`).append(list_tmp);

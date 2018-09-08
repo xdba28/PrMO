@@ -18,14 +18,16 @@
             'cookie_name' => 'hash',
             'cookie_expiry' => 604800
         ]
-    ];
-
+    ]; 
+    //accounttype is the identifier if the account is new or not
+    //usertype determines if the account is personnel or standard user account
 
 
 
     spl_autoload_register(function($class){
         require_once "../../classes/{$class}.php";
     });
+
 
         require_once "../../functions/sanitize.php";
 

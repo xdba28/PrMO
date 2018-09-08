@@ -77,9 +77,10 @@
 							));
 
 						}
-						die('end of loop');	
 						
 						//proceed to printing the actual form
+						Session::flash('Request', $form_ref_no.":PR");
+						Redirect::To('pr-jo-doc');
 
 					}catch(Exception $e){
 						die($e->getMessage());
@@ -160,6 +161,8 @@
 					}
 		
 					//proceed to printing the actual form
+					Session::flash('Request', $form_ref_no.":PR");
+					Redirect::To('pr-jo-doc');
 					
 				}catch(Exception $e){
 					die($e->getMessage());
@@ -295,16 +298,16 @@
 											<div class="ibox">
 												<div class="ibox-title">
 													<div class="project-alert alert-warning">
-														<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L${index}-title" form="pr_form" readonly value = "${element}"></h5>
+														<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L0-title" form="pr_form" readonly></h5>
 													</div>
 													<div class="add-project">
 													<div class="btn-group">
-														<button data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-rounded btn-outline">Add Specific no. of rows</button>
+														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Add Specific No. of Rows</button>
 														<ul class="dropdown-menu">
-															<li><input type="number" data="qty" data-cnt="" class="form-control" min="1"></li>
+															<li><input type="number" data="qty" id="rowCount" class="form-control" min="1"></li>
 														</ul>
 													</div>													
-														<button type="button" data-type="lst-add" data-list="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
+														<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
 													</div>
 												</div>
 												<div class="ibox-content">
@@ -320,13 +323,13 @@
 														</tr>
 														</thead>
 														<tbody id="pr-tbl-static">
-															<tr>
+															<tr id="pr-0-r-0">
 																<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 																<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 																<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-																<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
-																<td class="right"><input type="number" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-																<td class="right"><input type="number" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+																<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="0.01" form="pr_form" required></td>
+																<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
+																<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 															</tr>
 														</tbody>
 															<tr>
@@ -335,9 +338,12 @@
 																<td></td>
 																<td></td>
 																<td>Total Lot Cost: </td>
-																<td><input type="number" class="form-control" name="L0-TLC" readonly form="pr_form" required></td>
+																<td><input type="number" step=".01" class="form-control" name="L0-TLC" readonly form="pr_form" required></td>
 															</tr>
 													</table>
+													<div style="text-align: right">
+														<button type="button" data="del" data-list="pr-0-r-0" class="btn btn-danger btn-rounded btn-outline">Delete Last Row <i class="ti ti-minus" style="font-weight:900"></i></button>
+													</div>
 												</div>
 											</div>
 											</div>		
@@ -354,7 +360,7 @@
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="Nico Ativo" class="form-control" readonly form="pr_form" required>
+														<input id="enduser" name="enduser" type="text" value="<?php echo $user->fullname();?>" class="form-control" readonly form="pr_form" required>
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
@@ -421,17 +427,18 @@
 	{
 		var objStat = {lst: 0};
 		$('#row_count').val(JSON.stringify(objStat));
-		$('[data-list="pr-static"]').on('click', function()
+		$('#pr-static').on('click', function()
 		{
+			objStat = JSON.parse($('#row_count').val());
 			objStat.lst++;
 			var tmp_static = `
-			<tr>
+			<tr id="pr-0-r-${objStat.lst}">
 				<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 				<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
-				<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-				<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-				<td class="right"><input type="number" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
-				<td class="right"><input type="number" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="1" readonly form="pr_form" required></td>
+				<td><textarea rows="1" cols="30" name="L0-desc-${objStat.lst}" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+				<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+				<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+				<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 			</tr>`;
 			$('#pr-tbl-static').append(tmp_static);
 			$('#row_count').val(JSON.stringify(objStat));
@@ -461,7 +468,53 @@
 				});
 				$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 			});
+		});
 
+		$('#rowCount').on('change', function()
+		{
+			var objStat = {lst: 0};
+			$('#pr-tbl-static').html('');
+			for(let i = 0 ; i < $(this).val() ; i++)
+			{
+				objStat.lst++;
+				var tmp_static = `
+				<tr id="pr-0-r-${objStat.lst}">
+					<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
+					<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+					<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
+				</tr>`;
+				$('#pr-tbl-static').append(tmp_static);
+				$('#row_count').val(JSON.stringify(objStat));
+
+				$('[data="qty"]').on('change', function()
+				{
+					var TC = 0;
+					var Q_qty = $(this).val();
+					var Q_el_data = $(this).attr("data-cnt").split("-");
+					var Q_Ucst = $(`[data-cnt="pr-0-Ucst-lst-${Q_el_data[4]}"]`).val();
+					$(`[data-cnt="pr-0-Tsct-lst-${Q_el_data[4]}"]`).val((Q_qty * Q_Ucst).toFixed(2));
+					$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+						if($(this).val() !== "") TC += parseFloat($(this).val());
+					});
+					$(`[name="L0-TLC"]`).val((TC).toFixed(2));				
+				});
+
+				$('[data="Ucst"]').on('change', function()
+				{
+					var TC = 0;
+					var U_Ucst = $(this).val();
+					var U_el_data = $(this).attr("data-cnt").split("-");
+					var U_qty = $(`[data-cnt="pr-0-qty-lst-${U_el_data[4]}"]`).val();
+					$(`[data-cnt="pr-0-Tsct-lst-${U_el_data[4]}"]`).val((U_qty * U_Ucst).toFixed(2));
+					$(`[data-cnt|="pr-0-Tsct-lst"]`).each(function(){
+						if($(this).val() !== "") TC += parseFloat($(this).val());
+					});
+					$(`[name="L0-TLC"]`).val((TC).toFixed(2));
+				});
+			}
 		});
 
 		$('[data="qty"]').on('change', function()
@@ -492,8 +545,6 @@
 
 
 		var arry = [];
-		var newCat = [];
-		var chk = false;
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
 		{
 			var TC = 0;
@@ -526,13 +577,13 @@
 							</tr>
 							</thead>
 							<tbody id="pr-tbl-${index}">
-								<tr>
+								<tr id="pr-${index}-r-0">
 									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form"></td>
 									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required></td>
 									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="1" form="pr_form" required></td>
-									<td class="right"><input type="number" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="1" readonly form="pr_form" required></td>																
+									<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="0.01" form="pr_form" required></td>
+									<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
+									<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${index}-Tsct-lst-0" name="L${index}-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 								</tr>
 							</tbody>
 								<tr>
@@ -541,9 +592,12 @@
 									<td></td>
 									<td></td>
 									<td>Total Lot Cost: </td>
-									<td><input type="number" class="form-control" name="L${index}-TLC" readonly form="pr_form" required></td>
+									<td><input type="number" step=".01" class="form-control" name="L${index}-TLC" readonly form="pr_form" required></td>
 								</tr>
 						</table>
+						<div style="text-align: right">
+							<button type="button" data="del" data-list="pr-${index}-r-0" class="btn btn-danger btn-rounded btn-outline">Delete Last Row <i class="ti ti-minus" style="font-weight:900"></i></button>
+						</div>
 					</div>
 				</div>`;
 				$('#stp-2').append(lst_tmp);
@@ -584,13 +638,13 @@
 				obj[pr_num[1]].lst++;
 				$('#row_count').val(JSON.stringify(obj));
 				var tr_tmp = `
-				<tr>
+				<tr id="pr-${pr_num[1]}-r-${obj[pr_num[1]].lst}">
 					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
 					<td class="center"><input type="text" name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required></td>
 					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
-					<td class="right"><input type="number" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="1" readonly form="pr_form" required></td>																
+					<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" form="pr_form" required></td>
+					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
 
@@ -620,6 +674,30 @@
 					$(`[name="L${U_el_data[1]}-TLC"]`).val((TC).toFixed(2));
 				});			
 			});
+
+			$('[data="del"]').on('click', function()
+			{
+				var rowData = $(this).attr("data-list").split("-");
+				var remove = JSON.parse($('#row_count').val());
+				$(`#pr-${rowData[1]}-r-${remove[rowData[1]].lst}`).remove();
+				if(obj[rowData[1]].lst !== -1)
+				{
+					obj[rowData[1]].lst--;
+					$('#row_count').val(JSON.stringify(obj));
+				}
+			});
+		});
+
+		$('[data="del"]').on('click', function()
+		{
+			var rowData = $(this).attr("data-list").split("-");
+			var remove = JSON.parse($('#row_count').val());
+			$(`#pr-${rowData[1]}-r-${remove.lst}`).remove();
+			if(objStat.lst !== -1)
+			{
+				objStat.lst--;
+				$('#row_count').val(JSON.stringify(objStat));
+			}
 		});
 	});
 </script>
