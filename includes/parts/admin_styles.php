@@ -58,6 +58,9 @@
 <!--External-->
 <link rel="stylesheet" href="../../assets/dropify/css/dropify.min.css">
 
+<!-- Sweet Alert -->
+<link href="../../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
 
 
 <!--Custom CSS-->

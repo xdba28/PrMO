@@ -52,6 +52,10 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/ladda/ladda.jquery.min.js"></script>
 
 
+<!-- Sweet Alert -->
+<script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
 <!--External-->
 <script src="../../assets/dropify/js/dropify.min.js"></script>
 

@@ -9,7 +9,7 @@
     }else{
        Redirect::To('../../blyte/acc3ss');
         die();
-    }
+	}
 
 
 ?>
@@ -30,17 +30,11 @@
 	<script>
 		var OBJ = 
 		<?php
-			$array = [
-				'ID' => [
-					'fname' => 'Denver',
-					'lname' => 'Arancillo'
-				]
-			];
-			echo json_encode($array);
+			$user = new Staff();
+			echo $user->allPRJO_req_detail();
 		?>;
-		console.log(OBJ.ID.fname);
+		console.log(OBJ);
 	</script>
-
 </head>
 
 <body class="">
@@ -111,38 +105,13 @@
 													<div class="full-height-scroll">
 														<div class="table-responsive">
 															<table class="footable table table-striped table-hover" data-filter=#filter>
-																<tbody>
-
                                                                 <tr>
                                                                     <th>Reference No.</th>
                                                                     <th>End User</th>
                                                                     <th>Date Created</th>
                                                                     <th>Action</th>
                                                                 </tr>
-
-                                                                <?php
-
-                                                                    $user =  new Staff();
-                                                                    $requests = $user->pr_jo_requests();
-
-                                                                    foreach($requests as $request){
-                                                                        $fullname = $user->fullnameOf($request->requested_by);
-                                                                        $date_created = strtotime($request->date_created);
-                                                                
-
-                                                                ?>
-																<tr>																	
-																	<td><a href="#<?php echo $request->form_ref_no;?>" class="client-link"><?php echo $request->form_ref_no;?></a></td>
-																	<td><?php echo $fullname;?></td>
-																	
-																	<td><i class="fa fa-clock"> </i> <?php echo date('F j, Y g:i:s A', $date_created);?></td>
-																	<td><button class="ladda-button btn-rounded btn btn-warning" value="" data-style="zoom-in">Receive</button></td>
-																</tr>
-
-                                                                <?php
-                                                                  }
-                                                                ?>
-
+																<tbody id="nwprj-tbl-data">
 																</tbody>
 															</table>
 														</div>
@@ -168,20 +137,8 @@
 													</div><br><br><br>
 												</div>
 												
-												<?php
-														$user =  new Staff();
-														$requests = $user->pr_jo_requests();
-														$c=0;
-														foreach($requests as $request){
-															
-															//sample counter for popover
-															$c++;
-															
-															$fullname = $user->fullnameOf($request->requested_by);
-															$date_created = strtotime($request->date_created);
-												?>
 												
-												<div id="<?php echo $request->form_ref_no; ?>" class="tab-pane">
+												<div id="" class="tab-pane" data="side-panel">
 													<div class="row m-b-lg">
 														<div class="col-lg-12">
 															<strong>
@@ -189,53 +146,31 @@
 															</strong>
 
 															<p>
-																<h2><?php echo $request->title; ?></h2>
+																<h2> </h2>
 															</p>
-															<strong>Request Summary</strong>
 
-															<ul class="list-group clear-list">
-																<li class="list-group-item fist-item">
-																	<span class="float-right"> 09:00 pm </span>
-																	Something
-																</li>
-																<li class="list-group-item">
-																	<span class="float-right"> 10:16 am </span>
-																	Something
-																</li>
-																<li class="list-group-item">
-																	<span class="float-right"> 10:16 am </span>
-																	Something
-																</li><br>																
-															</ul>
-															<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver<?php echo $c;?>" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
-															<button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-download"></i> Register Now</button>															
+															<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver0" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
+															<!-- <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-download"></i> Register Now</button>															 -->
 														</div>
 													</div>
 												
 														<div class="full-height-scroll">
 
-															<strong>Last activity</strong>
+															<strong>Request Summary</strong>
 
 															<ul class="list-group clear-list">
-																<li class="list-group-item fist-item">
-																	<span class="float-right"> 09:00 pm </span>
-																	place here the latest activity
-																</li>
+																<div id="lot-data">
+																</div>
 																<li class="list-group-item">
-																	<span class="float-right"> <?php echo date('M j, Y g:i a', $date_created);?> </span>
-																	Form Created and Downloaded by the Enduser
+																	Form Created and Downloaded by the Enduser:
+																	<span class="float-center" date="created"> </span>
 																</li>
 															</ul>
 
 															<hr/>
-														</div><br><br><br><br><br><br>
-													
+														</div>
+														<br><br><br><br><br><br>
 												</div>
-												
-												<?php
-														}
-												?>												
-												
 											</div>
 										</div>
 									</div>
@@ -258,60 +193,98 @@
 	<script>
 
 	$(document).ready(function(){
+		OBJ.forEach(function(el, index){
+			var data_tmp = `
+			<tr>																	
+				<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
+				<td>${el.req_by}</td>
+				<td><i class="fa fa-clock"></i> ${el.date_created}</td>
+				<td><button class="ladda-button btn-rounded btn btn-warning" data-style="zoom-in">Receive</button></td>
+			</tr>`;
+			$('#nwprj-tbl-data').append(data_tmp);
+		});
 
 		$(document.body).on("click",".client-link",function(e){
-			e.preventDefault()
-			$(".selected .tab-pane").removeClass('active');
-			$($(this).attr('href')).addClass("active");
+			var ID = $(this).attr('href').split("#");
+			var PROJ = OBJ.find(function(el){
+				return el.id === ID[1];
+			});
+
+			if(typeof PROJ !== "undefined")
+			{
+				$('[data="side-panel"]').attr("id", PROJ.id);
+				$('[data="side-panel"] h2').html(PROJ.title);
+
+				$('#lot-data').html('');
+				PROJ.lot_details.forEach(function(el, index){
+					if(PROJ.type === "PR")
+					{
+						if(el.l_title === 'static lot'){
+							var lot_temp = `
+							<li class="list-group-item fist-item">
+								<span class="float-right"> No. of Items ${el.numReq}</span>
+								Unspecified Lot
+							</li>`;
+						}else{
+							var lot_temp = `
+							<li class="list-group-item fist-item">
+								<span class="float-right"> No. of Items ${el.numReq}</span>
+								${el.l_title}
+							</li>`;						
+						}
+					}
+					else if(PROJ.type === "JO")
+					{
+						var lot_temp = `
+						<li class="list-group-item fist-item">
+							<span class="float-right"></span>
+							${el.l_title}
+						</li>`;	
+					}
+					$('#lot-data').append(lot_temp);
+				});
+				$('span[date="created"]').html(PROJ.date_created);
+
+				e.preventDefault();
+				$(".selected .tab-pane").removeClass('active');
+				$($(this).attr('href')).addClass("active");
+			}
+			else
+			{
+				swal({
+					title: "An Error Occured",
+					text: "Please reload the Page."
+				});
+			}
+		});
+
+        var l = $( '.ladda-button' ).ladda();
+
+		l.click(function(){
+			l.ladda( 'start' );
+			if(window.XMLHttpRequest){
+				xhr = new XMLHttpRequest();
+			}else{
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xhr.open('POST', 'ajax/receive-proj.php', true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send();
+			xhr.onreadystatechange = function()
+			{
+				if(this.readyState == 4 && this.status == 200)
+				{
+					alert(this.responseText);
+				}
+				else
+				{
+					
+				}
+			};
+
 		});
 
 	});
-
-
-	</script>
-	<script>
-
-		$(document).ready(function (){
-
-			// Bind normal buttons
-			Ladda.bind( '.ladda-button',{ timeout: 2000 });
-
-			// Bind progress buttons and simulate loading progress
-			Ladda.bind( '.progress-demo .ladda-button',{
-				callback: function( instance ){
-					var progress = 0;
-					var interval = setInterval( function(){
-						progress = Math.min( progress + Math.random() * 0.1, 1 );
-						instance.setProgress( progress );
-
-						if( progress === 1 ){
-							instance.stop();
-							clearInterval( interval );
-						}
-					}, 200 );
-				}
-			});
-
-
-			var l = $( '.ladda-button-demo' ).ladda();
-
-			l.click(function(){
-				// Start loading
-				l.ladda( 'start' );
-					
-
-					//i cant do php stuffs here like die();
-
-				// Timeout example
-				// Do something in backend and then stop ladda
-				setTimeout(function(){
-					l.ladda('stop');
-				},12000)
-
-
-			});
-
-		});
 
 	</script>
 
