@@ -188,8 +188,7 @@
         </div>
     </div>
 
-    <?php include_once '../../includes/parts/admin_scripts.php'; ?>
-	
+    <?php include_once '../../includes/parts/admin_scripts.php'; ?>	
 	<script>
 
 	$(document).ready(function(){
@@ -199,12 +198,13 @@
 				<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
 				<td>${el.req_by}</td>
 				<td><i class="fa fa-clock"></i> ${el.date_created}</td>
-				<td><button class="ladda-button btn-rounded btn btn-warning" data-style="zoom-in">Receive</button></td>
+				<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
 			</tr>`;
 			$('#nwprj-tbl-data').append(data_tmp);
 		});
 
 		$(document.body).on("click",".client-link",function(e){
+			e.preventDefault();
 			var ID = $(this).attr('href').split("#");
 			var PROJ = OBJ.find(function(el){
 				return el.id === ID[1];
@@ -214,6 +214,7 @@
 			{
 				$('[data="side-panel"]').attr("id", PROJ.id);
 				$('[data="side-panel"] h2').html(PROJ.title);
+				$('#popOver0').attr("proj-comp", PROJ.id);
 
 				$('#lot-data').html('');
 				PROJ.lot_details.forEach(function(el, index){
@@ -237,7 +238,7 @@
 					{
 						var lot_temp = `
 						<li class="list-group-item fist-item">
-							<span class="float-right"></span>
+							<span class="float-right"> No. of List ${el.numReq}</span>
 							${el.l_title}
 						</li>`;	
 					}
@@ -245,43 +246,48 @@
 				});
 				$('span[date="created"]').html(PROJ.date_created);
 
-				e.preventDefault();
 				$(".selected .tab-pane").removeClass('active');
 				$($(this).attr('href')).addClass("active");
 			}
 			else
 			{
 				swal({
-					title: "An Error Occured",
+					title: "An Error Occurred!",
 					text: "Please reload the Page."
 				});
 			}
+
+			$('#popOver0').on('click', function(){
+				window.open(`view-proj?id=${CryptoJS.AES.encrypt($(this).attr("proj-comp"), "PR:JO")}`);
+			});
+			
 		});
 
-        var l = $( '.ladda-button' ).ladda();
+        $('.ladda-button').ladda();
+		$('[proj]').on('click', function(){
+			var SendBtn = $(this);
+			SendBtn.ladda('start');
+			var xhrData = JSON.stringify(OBJ.find(function(el){
+				return el.id === SendBtn.attr("proj");
+			}));
 
-		l.click(function(){
-			l.ladda( 'start' );
-			if(window.XMLHttpRequest){
-				xhr = new XMLHttpRequest();
-			}else{
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xhr.open('POST', 'ajax/receive-proj.php', true);
-			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhr.send();
-			xhr.onreadystatechange = function()
-			{
-				if(this.readyState == 4 && this.status == 200)
-				{
-					alert(this.responseText);
+			$.ajax({
+				type: "POSt",
+				url: "ajax/receive-proj.php",
+				data: {obj: xhrData},
+				timeout: 5000,
+				success: function(){
+					swal('Project Received');
+					SendBtn.ladda('stop');
+				},
+				error: function(){
+					swal({
+						title: "An Error Occurred!",
+						text: "Request Not Processed"
+					});
+					SendBtn.ladda('stop');
 				}
-				else
-				{
-					
-				}
-			};
-
+			});
 		});
 
 	});

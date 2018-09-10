@@ -113,14 +113,14 @@
 			$ProjData = $this->db->results();
 
 			foreach($ProjData as $a){
-				if($a->type === 'PR'){
+				if($a->type === "PR"){
 					$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_pr.ID) as numReq
 					FROM `project_request_forms`, `lots`, `lot_content_for_pr`
 					WHERE lots.lot_id = lot_content_for_pr.lot_id_origin
 					AND project_request_forms.form_ref_no = lots.request_origin
 					AND form_ref_no = '$a->form_ref_no'");
 					$LotData = $this->db->results();
-				}else{
+				}elseif($a->type === "JO"){
 					$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_jo.ID) as numReq
 					FROM `project_request_forms`, `lots`, `lot_content_for_jo`
 					WHERE lots.lot_id = lot_content_for_jo.lot_id_origin
@@ -128,7 +128,8 @@
 					AND form_ref_no = '$a->form_ref_no'");
 					$LotData = $this->db->results();
 				}
-
+				
+				$lot = null;
 				foreach($LotData as $b){
 					$lot[] = [
 						'l_title' => htmlspecialchars_decode($b->lot_title, ENT_QUOTES),

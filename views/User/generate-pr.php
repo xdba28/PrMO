@@ -536,7 +536,7 @@
 			var obj = [];
 			$('#stp-2').html('');
 			arry = $(this).val();
-			arry.forEach((element, index) =>
+			arry.forEach(function(element, index)
 			{								
 				obj.push({lst: 0});
 				var lst_tmp = `

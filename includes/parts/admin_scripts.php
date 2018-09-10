@@ -56,6 +56,10 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
 
 
+<!-- Crypto-js -->
+<script src="../../node_modules/crypto-js/crypto-js.js"></script>
+
+
 <!--External-->
 <script src="../../assets/dropify/js/dropify.min.js"></script>
 

@@ -83,10 +83,13 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
-    <!-- Password meter -->
-    <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-    <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 
+<!-- Password meter -->
+<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+
+<!-- Crypto-js -->
+<script src="../../node_modules/crypto-js/crypto-js.js"></script>
 
 <script>
     $(document).ready(function(){
