@@ -64,9 +64,10 @@
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
-                throw new Exception('There was a problem registering new user', 1);
+				throw new Exception('There was a problem registering new user', 1);
+				return false;
             }
-
+			return true;
         }
 
 
@@ -113,6 +114,12 @@
 			$ProjData = $this->db->results();
 
 			foreach($ProjData as $a){
+
+				$this->db->query_builder("SELECT acronym FROM `units`, `enduser`
+				WHERE units.ID = enduser.edr_designated_office
+				AND enduser.edr_id = '$a->requested_by'");
+				$unit = $this->db->first();	
+
 				if($a->type === "PR"){
 					$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_pr.ID) as numReq
 					FROM `project_request_forms`, `lots`, `lot_content_for_pr`
@@ -142,16 +149,16 @@
 				$data[] = [
 					'id' => htmlspecialchars_decode($a->form_ref_no, ENT_QUOTES),
 					'title' => htmlspecialchars_decode($a->title, ENT_QUOTES),
-					'req_by' => htmlspecialchars_decode($this->fullnameOf($a->requested_by),ENT_QUOTES),
+					'req_by' => $a->requested_by.":".htmlspecialchars_decode($this->fullnameOf($a->requested_by),ENT_QUOTES)." | ".$unit->acronym.":".$unit->acronym,
 					'noted_by' => htmlspecialchars_decode($a->noted_by, ENT_QUOTES),
 					'verified_by' => htmlspecialchars_decode($a->verified_by, ENT_QUOTES),
 					'approved_by' => htmlspecialchars_decode($a->approved_by, ENT_QUOTES),
 					'type' => $a->type,
-					'date_created' => date('F j, Y g:i:s A', strtotime($a->date_created)),
+					'date_created' => date('F j, Y', strtotime($a->date_created)),
 					'lot_details' => $lot
 				];
 			}
-			return json_encode($data);
+			return $data;
         }
 
 
