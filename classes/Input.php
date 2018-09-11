@@ -1,5 +1,4 @@
 <?php
-
     class Input{
         public static function exists($type = 'POST'){
             switch($type){
@@ -14,17 +13,26 @@
                     break;          
             }
         }
-
-        public static function get($item){
+        
+		public static function get($item){
             if(isset($_POST[$item])){
-                return $_POST[$item];
+				if(is_numeric($item)){
+					$filter = filter_input(INPUT_POST, $item, FILTER_SANITIZE_NUMBER_FLOAT);
+				}elseif(is_string($item)){
+					$filter = filter_input(INPUT_POST, $item, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				}
+                return $filter;
             }else if(isset($_GET[$item])){
-                return $_GET[$item];
+				if(is_numeric($item)){
+					$filter = filter_input(INPUT_GET, $item, FILTER_SANITIZE_NUMBER_FLOAT);
+				}elseif(is_string($item)){
+					$filter = filter_input(INPUT_GET, $item, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				}
+                return $filter;
             }else{
                 return ''; 
             }
         }
+        
     }
-
-
 ?>

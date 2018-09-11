@@ -116,6 +116,8 @@
                 <?php
                     if(Session::exists('Loggedout')){
                         echo Session::flash('Loggedout');
+                    }else if(Session::exists('accountUpdated')){
+                        echo Session::flash('accountUpdated');
                     }else if(Session::exists('incorrect')){
                         echo Session::flash('incorrect');
                     }else{

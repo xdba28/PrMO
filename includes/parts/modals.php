@@ -37,20 +37,7 @@
                 <div class="row">
                     <div class="col-sm-12"><h3 class="m-t-none m-b">Finish your account setup by changing your username and password</h3>
 
-                      
-						<!--
-                        <form id="newAccount" role="form" method="POST">
-							<div class="form-group mt-20">
-								<label class="form-label" for="new_username">New Username</label>
-								<input id="new_username" name="new_username" class="form-input" type="text" required>
-							</div>
-							<div class="form-group mt-20">
-								<label class="form-label" for="new_password">New Password</label>
-								<input id="new_password" name="new_password" class="form-input" type="password" required>
-							</div>
-						</form>
-						-->
-                            <form id="newAccount" role="form">
+                            <form id="newAccount" action="Dashboard" method="POST" role="form">
                                 <div class="row" id="pwd-container">
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -59,11 +46,12 @@
                                         </div>
                                         <div class="form-group mt-20">
                                             <label for="new_password" class="form-label">New Password</label>
-                                            <input type="password" class="form-control example4 form-input" id="new_password" required>
+                                            <input type="password" class="form-control example4 form-input" id="new_password" name="new_password" required>
                                         </div>
 										<div class="form-group mt-20">
 											<label for="password_again" class="form-label">Confirm Password</label>
-											<input type="password" id="password_again" class="form-control form-input" required>
+											<input type="password" id="password_again" name="password_again" class="form-control form-input" required>
+                                            <input type="text" name="token" value="<?php echo Token::generate();?>" hidden required>
 										</div>
 										<br>
                                         <div class="form-group">Password Meter
@@ -81,7 +69,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-			<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				<button type="submit" class="btn btn-primary" form="newAccount">Finish</button>
 
 			</div>			

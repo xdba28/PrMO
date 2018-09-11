@@ -11,8 +11,65 @@
         die();
     }
 
+        /* This is for the validator modal admin level */
+        $user = new Admin();
+        $data = $user->userData(Session::get(Config::get('session/session_name')));
+        $myArray = array('default');
+        foreach($data as $element => $val){
+            array_push($myArray, $val);
+        }
+    
+        $commonFields =  "'". implode("', '", $myArray) ."'";
 
-    $user = $user->profile(Session::get(Config::get('session/session_name')));
+    if(Input::exists()){
+        if(Token::check(Input::get('token'))){
+
+            $validate = new Validate();
+
+            $validation = $validate->check($_POST, array(
+                    'new_username' => [
+                        'required' => true,
+                        'unique' => 'edr_account',
+                        'unique' => 'prnl_account'
+                    ],
+                    'new_password' => [
+                        'required' => true
+                    ],
+                    'password_again' => [
+                        'matches' => 'new_password'
+                    ]
+            ));
+
+            if($validation->passed()){
+                $user = new User();
+                $salt = Hash::salt(32);
+                $ID = Session::get(Config::get('session/session_name'));
+
+                try{
+                    if($user->update('prnl_account', 'account_id', $ID, array(
+                        'newAccount' => 0,
+                        'username' => Input::get('new_username'),
+                        'salt' => $salt,
+                        'userpassword' => Hash::make(Input::get('new_password'), $salt)
+                        
+                        ))){
+                        Session::delete("accounttype");
+                        Session::put("accounttype", 0);
+                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+                        $user->logout();
+                        Redirect::To('../../blyte/acc3ss');
+                    }
+                }catch(Exception $e){
+                    die($e->getMessage());
+                }
+                
+            }else{
+                foreach($validation->errors() as $error){
+                    echo $error,"<br>";
+                }
+            }
+        }
+    }
 
    
 
@@ -93,17 +150,50 @@
         </div>
     </div>
 
-    <!-- Mainly scripts -->
-    <script src="../../assets/js/jquery-3.1.1.min.js"></script>
-    <script src="../../assets/js/popper.min.js"></script>
-    <script src="../../assets/js/bootstrap.js"></script>
-    <script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <?php include '../../includes/parts/admin_scripts.php'; ?>
+	<!-- Password meter -->
+<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	<script>	
+		$(document).ready(function(){
+           // Example 4 password meter
+            var options4 = {};
+            options4.ui = {
+                container: "#pwd-container",
+                viewports: {
+                    progress: ".pwstrength_viewport_progress4",
+                    verdict: ".pwstrength_viewport_verdict4"
+                }
+            };
 
-    <!-- Custom and plugin javascript -->
-    <script src="../../assets/js/inspinia.js"></script>
-    <script src="../../assets/js/plugins/pace/pace.min.js"></script>
+            options4.common = {
 
+				
+                zxcvbn: true,
+                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php echo $commonFields;?>],
+                userInputs: ['#year', '#new_username']
+            };
+            $('.example4').pwstrength(options4);
+
+			
+			//password valide
+			var password = document.getElementById("new_password")
+			  , confirm_password = document.getElementById("password_again");
+
+			function validatePassword(){
+			  if(password.value != confirm_password.value) {
+				confirm_password.setCustomValidity("Passwords Don't Match");
+			  } else {
+				confirm_password.setCustomValidity('');
+			  }
+			}
+
+			password.onchange = validatePassword;
+			confirm_password.onkeyup = validatePassword;						
+			
+		})
+	
+	</script>
 
 </body>
 

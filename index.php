@@ -102,6 +102,9 @@
 						if(Session::exists('incorrect')){		
                             echo '<center><h4>'.Session::flash('incorrect').'</h4></center>';
                         }
+                        if(Session::exists('accountUpdated')){		
+                            echo '<center><h4>'.Session::flash('accountUpdated').'</h4></center>';
+                        }
 					?>
                     <form class="m-t" action="" method="POST">
                         <div class="form-group">

@@ -83,9 +83,9 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
-    <!-- Password meter -->
-    <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-    <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+<!-- Password meter -->
+<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 
 
 <script>
@@ -553,8 +553,7 @@ require_once "../../functions/account-verifier.php";
 			$('#popOver2').popover();
 
 			if(newuser == true){
-				$('#new-user-modal').modal('show');
-				
+				$('#new-user-modal').modal('show');	
 			}     
             
             $('input').focus(function(){
@@ -580,14 +579,12 @@ require_once "../../functions/account-verifier.php";
                     verdict: ".pwstrength_viewport_verdict4"
                 }
             };
+
             options4.common = {
-				
-				<?php
-				
-				?>
+
 				
                 zxcvbn: true,
-                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku'],
+                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php echo $commonFields;?>],
                 userInputs: ['#year', '#new_username']
             };
             $('.example4').pwstrength(options4);

@@ -66,7 +66,6 @@
             if(!$this->db->insert($table, $fields)){
                 throw new Exception('There was a problem registering new user', 1);
             }
-
         }
 
         public function requests(){
@@ -88,6 +87,7 @@
             }
         }
 
+        //profile data of the current user logged in as superadmin
         public function personnelData($ID){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`

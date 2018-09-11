@@ -502,15 +502,5 @@
 
 	<?php include "../../includes/parts/admin_scripts.php"?>
 
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function() {
-
-            $('.footable').footable();
-            $('.footable2').footable();
-
-        });
-
-    </script>
 </body>
 </html>

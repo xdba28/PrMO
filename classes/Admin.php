@@ -68,7 +68,6 @@
         }
 
         public function login($username = null, $password = null){
-			
 		
             $user =  $this->find($username);
                 
@@ -82,10 +81,7 @@
                         return true;
                     }
                 }				
-				
-			
-            
-                
+
             return false;
         }
 
@@ -97,6 +93,31 @@
             }
         }
 
+        public function userData($ID){
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, concat(prnl_fname,prnl_lname), concat(prnl_fname,' ' ,prnl_lname), prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, username, group_id, name as 'group_name', permission
+            FROM `personnel`, `units`, `prnl_account`, `group`
+
+            WHERE
+            personnel.prnl_designated_office = units.ID AND
+            personnel.prnl_id = prnl_account.account_id AND
+            prnl_account.group_ = group.group_id AND
+            prnl_id = '{$ID}'
+            ")) {
+                return $this->db->first();
+            }
+        }  
+
+        public function register($table, $fields = array()){
+            if(!$this->db->insert($table, $fields)){
+                throw new Exception('There was a problem registering data', 1);
+            }
+        }
+
+        public function update($table, $particular, $identifier, $fields){
+            if(!$this->db->update($table, $particular, $identifier, $fields)){
+                throw new Exception("Error Updating Request", 1);
+            }
+        }
 
         public function exist(){
             return  (!empty($this->data)) ? true : false;

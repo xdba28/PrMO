@@ -125,50 +125,96 @@
             }
         }
         
-		// pr-jo-doc.php
-		public function PRdoc_projData($pr_num){
-			if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, 
-			lot_title, lot_cost, stock_no, unit, item_description, quantity, unit_cost, total_cost
-			FROM `project_request_forms`, `lots`, `lot_content_for_pr`
-			WHERE project_request_forms.form_ref_no = lots.request_origin 
-			AND lots.lot_id = lot_content_for_pr.lot_id_origin 
-			AND form_ref_no = '$pr_num'")){
-                return $this->db->first();
-			}
-		}
-
-		// pr-jo-doc.php
-		public function user_data($ID){
+        // pr-jo-doc.php
+        public function Doc_projData($REQ){
+            $REQ = explode(":", $REQ);
+            if($REQ[1] === "PR"){
+                if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
+                FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+                WHERE project_request_forms.form_ref_no = lots.request_origin 
+                AND lots.lot_id = lot_content_for_pr.lot_id_origin 
+                AND form_ref_no = '$REQ[0]'")){
+                    return $this->db->first();
+                }
+            }elseif($REQ[1] === "JO"){
+                if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
+                FROM `project_request_forms`, `lots`, `lot_content_for_jo`
+                WHERE project_request_forms.form_ref_no = lots.request_origin 
+                AND lots.lot_id = lot_content_for_jo.lot_id_origin 
+                AND form_ref_no = '$REQ[0]'")){
+                    return $this->db->first();
+                }
+            }
+        }
+        // pr-jo-doc.php
+        public function user_data($ID){
             if($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
-						edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
-           		FROM `enduser`, `units`
-           		WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
+                        edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
+                FROM `enduser`, `units`
+                WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
                 return $this->db->first();
             }
-		}
-		
-		// pr-jo-doc.php
-		public function PR_num_lots($ID){
-			if($this->db->query_builder("SELECT count(project_request_forms.form_ref_no) as lots, form_ref_no, lot_no, lot_title
-			FROM `project_request_forms`, `lots`
-			WHERE project_request_forms.form_ref_no = lots.request_origin
-			AND project_request_forms.form_ref_no = '$ID'")){
-				return $this->db->first();
-			}
-		}
+        }
 
-		// pr-jo-doc.php
-		public function PR_itemsPerLot($PR_ID, $LOT_NO){
-			if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
-			FROM `lot_content_for_pr`, `lots`, `project_request_forms`
-			WHERE project_request_forms.form_ref_no = lots.request_origin
-			AND lots.lot_id = lot_content_for_pr.lot_id_origin
-			AND form_ref_no = '$PR_ID'
-			AND lot_no = '$LOT_NO'")){
-				return $this->db->results();
-			}
-		}        
+        // pr-jo-doc.php
+        public function PRJO_num_lots($REQ){
+            $REQ = explode(":", $REQ);
+            if($REQ[1] === "PR"){
+                if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost
+                FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+                WHERE project_request_forms.form_ref_no = lots.request_origin
+                AND lots.lot_id = lot_content_for_pr.lot_id_origin
+                AND form_ref_no = '$REQ[0]'
+                GROUP BY lot_id_origin")){
+                    return $this->db->results();
+                }
+            }elseif($REQ[1] === "JO"){
+                if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost, note
+                FROM `project_request_forms`, `lots`, `lot_content_for_jo`
+                WHERE project_request_forms.form_ref_no = lots.request_origin
+                AND lots.lot_id = lot_content_for_jo.lot_id_origin
+                AND form_ref_no = '$REQ[0]'
+                GROUP BY lot_id_origin")){
+                    return $this->db->results();
+                }
+            }
+        }
+        // pr-jo-doc.php
+        public function PRJO_itemsPerLot($ID, $LOT_NO, $REQ){
+            if($REQ === "PR"){
+                if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
+                FROM `lot_content_for_pr`, `lots`, `project_request_forms`
+                WHERE project_request_forms.form_ref_no = lots.request_origin
+                AND lots.lot_id = lot_content_for_pr.lot_id_origin
+                AND form_ref_no = '$ID'
+                AND lot_no = '$LOT_NO'")){
+                    return $this->db->results();
+                }
+            }elseif($REQ === "JO"){
+                if($this->db->query_builder("SELECT header, tags
+                FROM `lot_content_for_jo`, `lots`, `project_request_forms`
+                WHERE project_request_forms.form_ref_no = lots.request_origin
+                AND lots.lot_id = lot_content_for_jo.lot_id_origin
+                AND form_ref_no = '$ID'
+                AND lot_no = '$LOT_NO'")){
+                    return $this->db->results();
+                }
+            }
+        }   
 
+        public function userData($ID){
+            if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
+            FROM `enduser`, `units`, `edr_account`, `group`
+
+            WHERE
+            enduser.edr_designated_office = units.ID AND
+            enduser.edr_id = edr_account.account_id AND
+            edr_account.group_ = group.group_id AND
+            edr_id = '{$ID}'
+            ")) {
+                return $this->db->first();
+            }
+        } 
 
         public function fullname(){
             $user = Session::get($this->sessionName);
@@ -188,6 +234,14 @@
 
             return false;
         }
+
+        public function update($table, $particular, $identifier, $fields){
+            if(!$this->db->update($table, $particular, $identifier, $fields)){
+                throw new Exception("Error Updating Request", 1);
+                return false;
+            }
+            return true;
+        }   
 
         public function exist(){
             return (!empty($this->data)) ? true : false;
