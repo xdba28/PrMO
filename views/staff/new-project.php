@@ -32,7 +32,8 @@
 		<?php
 		$user = new Staff();
 		echo json_encode($user->allPRJO_req_detail());		
-		?>
+		?>;
+		console.log(OBJ);
 	</script>
 </head>
 
@@ -83,7 +84,9 @@
 								<div class="col-sm-8">
 									<div class="ibox">
 										<div class="ibox-content">
-											<span class="text-muted small float-right">Last Refresh: <i class="fa fa-clock"></i> <?php echo date('l F j, Y g:i:s A'); ?></span>
+											<!-- <span class="text-muted small float-right">
+													Last Refresh: <i class="fa fa-clock"></i>
+											</span> -->
 											<h2>Unregistered Projects</h2>
 											<p>
 												You can search a Purchase request or Job order by its title or end user's name. But it is adviced to search through its Reference number indicated in the printed hard copy of the actual Purchase request or Job order form.
@@ -149,7 +152,7 @@
 															</p>
 
 															<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver0" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
-															<!-- <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-download"></i> Register Now</button>															 -->
+															<button type="button" class="btn btn-primary btn-sm btn-block" id="registerNow"><i class="fa fa-download"></i> Register Now</button>															
 														</div>
 													</div>
 												
@@ -193,22 +196,29 @@
 	$(document).ready(function(){
 
 		function start(){
-			OBJ.forEach(function(el, index){
+			OBJ.forEach(function(el, index)
+			{
 				var user = el.req_by.split(":");
 				var data_tmp = `
-				<tr>																	
+				<tr>
 					<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
 					<td>${user[1]}</td>
 					<td><i class="fa fa-clock"></i> ${el.date_created}</td>
 					<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
 				</tr>`;
 				$('#nwprj-tbl-data').append(data_tmp);
+				if(el.log_exist === false) $(`[proj="${el.id}"]`).prop('disabled', false);
+				else $(`[proj="${el.id}"]`).prop('disabled', true);
 			});
 
-			$(document.body).on("click",".client-link",function(e){
+			// $('i.fa.fa-clock')[0].after(` ${new Date().toGMTString()}`);
+
+			$(document.body).on("click",".client-link",function(e)
+			{
 				e.preventDefault();
 				var ID = $(this).attr('href').split("#");
-				var PROJ = OBJ.find(function(el){
+				var PROJ = OBJ.find(function(el)
+				{
 					return el.id === ID[1];
 				});
 
@@ -218,8 +228,12 @@
 					$('[data="side-panel"] h2').html(PROJ.title);
 					$('#popOver0').attr("proj-comp", PROJ.id);
 
+					if(PROJ.log_exist === true) $('#registerNow').prop('disabled', false);
+					else $('#registerNow').prop('disabled', true);
+
 					$('#lot-data').html('');
-					PROJ.lot_details.forEach(function(el, index){
+					PROJ.lot_details.forEach(function(el, index)
+					{
 						if(PROJ.type === "PR")
 						{
 							if(el.l_title === 'static lot'){
@@ -263,10 +277,15 @@
 					window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
 				});
 
+				$('#registerNow').on('click', function(){
+
+				});
+
 			});
 
 			$('.ladda-button').ladda();
-			$('[proj]').on('click', function(){
+			$('[proj]').on('click', function()
+			{
 				var SendBtn = $(this);
 				SendBtn.ladda('start');
 				var xhrData = JSON.stringify(OBJ.find(function(el){
@@ -278,13 +297,20 @@
 					url: "xhr-receive-proj.php",
 					data: {obj: xhrData},
 					timeout: 5000,
-					success: function(data){
+					success: function(data)
+					{
 						if(typeof data === "object" && data !== null && !(data.success === false))
 						{
 							OBJ = data;
-							swal('Project Received');
+							swal({
+								title: 'Project Received!',
+								text: `You can now register ${SendBtn.attr("proj")} as a new project.`,
+								type: 'success',
+								timer: 13000
+							});
 						}
-						else if(data.success === false){
+						else if(data.success === false)
+						{
 							swal({
 								title: "An Error Occurred!",
 								text: "Request Not Processed"
@@ -294,7 +320,8 @@
 						$('#nwprj-tbl-data').html('');
 						start();
 					},
-					error: function(){
+					error: function()
+					{
 						swal({
 							title: "An Error Occurred!",
 							text: "Request Not Processed"

@@ -114,6 +114,19 @@
 			$ProjData = $this->db->results();
 
 			foreach($ProjData as $a){
+				$exist = $this->db->query_builder("SELECT form_ref_no
+				FROM `project_request_forms`, `project_logs`
+				WHERE project_request_forms.form_ref_no = project_logs.referencing_to 
+				AND referencing_to = '$a->form_ref_no' 
+				AND EXISTS (SELECT * FROM `project_logs` WHERE
+							remarks = 'START_PROJECT'
+							AND project_logs.type = 'IN')");
+					
+				if($exist->count()){
+					$log_data = true;
+				}else{
+					$log_data = false;
+				}
 
 				$this->db->query_builder("SELECT acronym FROM `units`, `enduser`
 				WHERE units.ID = enduser.edr_designated_office
@@ -155,7 +168,8 @@
 					'approved_by' => htmlspecialchars_decode($a->approved_by, ENT_QUOTES),
 					'type' => $a->type,
 					'date_created' => date('F j, Y', strtotime($a->date_created)),
-					'lot_details' => $lot
+					'lot_details' => $lot,
+					'log_exist' => $log_data
 				];
 			}
 			return $data;

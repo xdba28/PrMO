@@ -16,7 +16,7 @@ $Project = json_decode($_POST['obj'], true);
 try{
 	if($staff->register("project_logs", array(
 		'referencing_to' => $Project['id'],
-		'remarks' => "Received",
+		'remarks' => "START_PROJECT",
 		'logdate' => date('Y-m-d H:i:s'),
 		'type' => "IN"
 	))){
