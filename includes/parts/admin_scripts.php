@@ -25,7 +25,7 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/inspinia.js"></script>
 <script src="../../assets/js/plugins/pace/pace.min.js"></script>
 
-<!-- Toast -->
+<!-- Toastr -->
 <script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
 
 <!-- FooTable -->
@@ -57,7 +57,7 @@ require_once "../../functions/account-verifier.php";
 
 
 <!-- Crypto-js -->
-<script src="../../node_modules/crypto-js/crypto-js.js"></script>
+<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
 
 
 <!--External-->

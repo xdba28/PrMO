@@ -69,10 +69,19 @@
 
         }
 
-        public function requests(){
-            if ($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")) {
-                return $this->db->results();
-            }
+        public function requests($ID = null){
+			if($ID !== null)
+			{
+				if($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted 
+				FROM `account_requests`, `units` 
+				WHERE account_requests.designation = units.ID
+				AND account_requests.ID = '$ID'")){
+					return $this->db->first();
+				}
+			}
+            elseif($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")){
+				return $this->db->results();
+			}
         }
 
         public function personnels(){

@@ -89,7 +89,11 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 
 <!-- Crypto-js -->
-<script src="../../node_modules/crypto-js/crypto-js.js"></script>
+<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+
 
 <script>
     $(document).ready(function(){

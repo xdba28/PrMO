@@ -61,6 +61,8 @@
 <!-- Sweet Alert -->
 <link href="../../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
+<!-- Toastr -->
+<link href="../../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 
 
 <!--Custom CSS-->

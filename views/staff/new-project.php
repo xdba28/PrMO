@@ -211,8 +211,6 @@
 				else $(`[proj="${el.id}"]`).prop('disabled', true);
 			});
 
-			// $('i.fa.fa-clock')[0].after(` ${new Date().toGMTString()}`);
-
 			$(document.body).on("click",".client-link",function(e)
 			{
 				e.preventDefault();
@@ -336,7 +334,6 @@
 
 
 	</script>
-
 </body>
 
 </html>

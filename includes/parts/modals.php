@@ -1,3 +1,4 @@
+<!-- Super-admin/account-request.php -->
 <div id="decline_modal" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,7 +17,7 @@
                             <div class="form-group">
 								<label>Reason</label>
 								<input type="text" name="rq-rsn" placeholder="Eg. Incorrect designation office" id="rq-mdl-rsn" class="form-control">
-								<input type="hidden" name="token" value="<?php echo Token::generate();?>">						
+								<input type="hidden" name="declineToken" value="<?php echo Token::generate("declineToken");?>">						
 							</div>
                     </div>
 				</div>
@@ -30,6 +31,7 @@
     </div>
 </div>
 
+<!-- New Account -->
 <div id="new-user-modal" class="modal fade" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">

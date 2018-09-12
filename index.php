@@ -4,7 +4,7 @@
 
 
 	if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("registerToken", Input::get('registerToken'))){
 
             $validate = new Validate();
             $validation = $validate->check($_POST, array(
@@ -110,7 +110,7 @@
                         <div class="form-group">
                             <input type="password" name="password" class="form-control" placeholder="Password" required autocomple="off">
                         </div>
-						<input type="hidden" name="token" value="<?php echo Token::generate();?>">
+						<input type="hidden" name="registerToken" value="<?php echo Token::generate("registerToken");?>">
                         <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
 						
                                 <div class="form-group row">

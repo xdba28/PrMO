@@ -16,7 +16,7 @@
     $PersonnelInfo = $sa->personnels();
 	
 	if(Input::exists()){
-		if(Token::check(Input::get('token'))){
+		if(Token::check("manageUserToken", Input::get('manageUserToken'))){
 			
 			$sa = new Super_admin();
             $ID = $_GET['q'];
@@ -223,7 +223,7 @@
 												</select>
 											</div>							
 											<div class="form-group"><label>Account Status</label> <input type="text" value="<?php echo $data->status;?>" disabled class="form-control"></div> 
-											<input type="text" name="token" value="<?php echo Token::generate();?>" hidden readonly>
+											<input type="text" name="manageUserToken" value="<?php echo Token::generate("manageUserToken");?>" hidden readonly>
 										</form>		
 									</div>	
 									<div class="col-lg-12">
