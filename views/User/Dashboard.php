@@ -10,7 +10,66 @@
        Redirect::To('../../index');
         die();
     }
-   
+    
+        /* This is for the validator modal standard user */
+        $user = new User();
+        $data = $user->userData(Session::get(Config::get('session/session_name')));
+        $myArray = array('default');
+        foreach($data as $element => $val){
+            array_push($myArray, $val);
+        }
+    
+        $commonFields =  "'". implode("', '", $myArray) ."'";
+
+    if(Input::exists()){
+        if(Token::check("passwordToken", Input::get('passwordToken'))){
+
+            $validate = new Validate();
+
+            $validation = $validate->check($_POST, array(
+                    'new_username' => [
+                        'required' => true,
+                        'unique' => 'edr_account',
+                        'unique' => 'prnl_account'
+                    ],
+                    'new_password' => [
+                        'required' => true
+                    ],
+                    'password_again' => [
+                        'matches' => 'new_password'
+                    ]
+            ));
+
+            if($validation->passed()){
+                $user = new User();
+                $salt = Hash::salt(32);
+                $ID = Session::get(Config::get('session/session_name'));
+
+                try{
+                    if($user->update('edr_account', 'account_id', $ID, array(
+                        'newAccount' => 0,
+                        'username' => Input::get('new_username'),
+                        'salt' => $salt,
+                        'userpassword' => Hash::make(Input::get('new_password'), $salt)
+                        
+                        ))){
+                        Session::delete("accounttype");
+                        Session::put("accounttype", 0);
+                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+                        $user->logout();
+                        Redirect::To('../../index');
+                    }
+                }catch(Exception $e){
+                    die($e->getMessage());
+                }
+                
+            }else{
+                foreach($validation->errors() as $error){
+                    echo $error,"<br>";
+                }
+            }
+        }
+    }
 
 ?>
 
@@ -76,7 +135,7 @@
                     <div class="error-desc">
                         You can create here any grid layout you want. And any variation layout you imagine:) Check out
                         main dashboard and other site. It use many different layout.
-                        <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
+                        <br/><a href="" data-toggle="modal" data-target="#new-user-modal"  class="btn btn-primary m-t">Dashboard</a>
                     </div>
                 </div>
             </div>

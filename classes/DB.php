@@ -39,7 +39,7 @@
                         $x++;
                     }
 				}
-				
+
                 if ($this->query->execute()) {
                     $this->results = $this->query->fetchAll(PDO::FETCH_OBJ);
                     $this->count = $this->query->rowCount();
@@ -140,8 +140,13 @@
 
 
 
+		public function startTrans(){
+			return $this->pdo->beginTransaction();
+		}
 
-
+		public function endTrans(){
+			return $this->pdo->commit();
+		}
 
         public function results(){
             return $this->results;

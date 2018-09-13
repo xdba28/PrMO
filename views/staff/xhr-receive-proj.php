@@ -13,7 +13,8 @@ $staff = new Staff();
 
 $Project = json_decode($_POST['obj'], true);
 
-try{
+try
+{
 	if($staff->register("project_logs", array(
 		'referencing_to' => $Project['id'],
 		'remarks' => "START_PROJECT",

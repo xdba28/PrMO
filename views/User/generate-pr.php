@@ -9,8 +9,7 @@
 	}
 	
 	if(Input::exists()){
-		
-		if(Token::check(Input::get('token'))){
+		if(Token::check("prToken" ,Input::get('prToken'))){
 			if(Input::get('lot_count') == ''){
 					
 					try{
@@ -372,7 +371,7 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-													<input type="text" name="token" value="<?php echo Token::generate();?>" hidden form="pr_form">
+													<input type="text" name="prToken" value="<?php echo Token::generate("prToken");?>" hidden form="pr_form">
 													<input type="text"  id="row_count" name="row_count" class="form-control" readonly form="pr_form">
 													<input type="text"  id="lot_count" name="lot_count" class="form-control" readonly form="pr_form">	
 

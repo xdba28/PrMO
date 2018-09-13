@@ -14,7 +14,7 @@
 
 	if(Input::exists()){
 	
-		if(Token::check(Input::get('token'))){
+		if(Token::check("joToken",Input::get('joToken'))){
 			
 			try{				
 				//register project details in "project_request_forms"table
@@ -232,7 +232,7 @@
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
 														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
-														<input type="text" name="token" readonly hidden value="<?php echo Token::generate();?>" required form="jo_form">
+														<input type="text" name="joToken" readonly hidden value="<?php echo Token::generate("joToken");?>" required form="jo_form">
 													</div>													
 												</div>
 												<div class="col-lg-3">
