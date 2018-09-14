@@ -1,12 +1,13 @@
 <li>
-    <a href="#"><i class="ti-clipboard side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+    <a href="#"><i class="fa fa-desktop side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level collapse">
         <li><a href="#">Logs & References</a></li>
-        <li><a href="new-project">New Project</a></li>					
+        <li><a href="new-project">New Project</a></li>
+		<li><a href="new-consolidated-project">New Consolidated Project</a></li>
     </ul>
 </li>
 <li>
-    <a href="#"><i class="fa fa-th-large side"></i> <span class="nav-label">Menu 2</span> <span class="fa arrow"></span></a>
+    <a href="#"><i class="fa fa-tasks side"></i> <span class="nav-label">Tasks</span> <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level collapse">
         <li><a href="#">Link 1</a></li>
         <li><a href="#">Link 2</a></li>

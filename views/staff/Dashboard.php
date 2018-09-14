@@ -22,7 +22,7 @@
         $commonFields =  "'". implode("', '", $myArray) ."'";
 
     if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("passwordToken", Input::get('passwordToken'))){
 
             $validate = new Validate();
 
@@ -133,7 +133,7 @@
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
                 <div class="middle-box text-center animated fadeInRightBig">
-                    <h3 class="font-bold">This is page content</h3>
+                    <h3 class="font-bold">Staff</h3>
                     <div class="error-desc">
                         You can create here any grid layout you want. And any variation layout you imagine:) Check out
                         main dashboard and other site. It use many different layout.
@@ -151,7 +151,7 @@
     </div>
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
-	<!-- Password meter -->
+<!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 	<script>	

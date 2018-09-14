@@ -22,7 +22,7 @@
         $commonFields =  "'". implode("', '", $myArray) ."'";
 
     if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("passwordToken", Input::get('passwordToken'))){
 
             $validate = new Validate();
 

@@ -1,4 +1,5 @@
 <?php
+
     class Input{
         public static function exists($type = 'POST'){
             switch($type){
@@ -13,7 +14,7 @@
                     break;          
             }
         }
-        
+
 		public static function get($item){
             if(isset($_POST[$item])){
 				if(is_numeric($item)){
@@ -32,7 +33,6 @@
             }else{
                 return ''; 
             }
-        }
-        
-    }
+		}
+	}
 ?>

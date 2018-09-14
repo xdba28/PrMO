@@ -1,3 +1,4 @@
+<!--Superadmin / account-request.php-->
 <div id="decline_modal" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,7 +17,7 @@
                             <div class="form-group">
 								<label>Reason</label>
 								<input type="text" name="rq-rsn" placeholder="Eg. Incorrect designation office" id="rq-mdl-rsn" class="form-control">
-								<input type="hidden" name="token" value="<?php echo Token::generate();?>">						
+								<input type="hidden" name="declineToken" value="<?php echo Token::generate('declineToken');?>">						
 							</div>
                     </div>
 				</div>
@@ -30,6 +31,7 @@
     </div>
 </div>
 
+<!--New account-->
 <div id="new-user-modal" class="modal fade" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -51,7 +53,7 @@
 										<div class="form-group mt-20">
 											<label for="password_again" class="form-label">Confirm Password</label>
 											<input type="password" id="password_again" name="password_again" class="form-control form-input" required>
-                                            <input type="text" name="token" value="<?php echo Token::generate();?>" hidden required>
+                                            <input type="text" name="passwordToken" value="<?php echo Token::generate('passwordToken');?>" hidden required>
 										</div>
 										<br>
                                         <div class="form-group">Password Meter

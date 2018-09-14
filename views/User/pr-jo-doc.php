@@ -5,24 +5,25 @@ require_once "../../vendor/autoload.php";
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
 
-if($user->isLoggedIn()){
-	
-}
+if($user->isLoggedIn());
 else{
 	Redirect::To('../../index');
 	die();
 }
 
-$REQUEST = explode(":", Session::flash('Request'));
-$ProjectData = $user->PRdoc_projData($REQUEST[0]);
+$REQ = Session::flash('Request');
+$REQUEST = explode(":", $REQ);
+// $REQ = "JO2018-D9DFGF:JO";
+// $REQUEST = explode(":", "JO2018-D9DFGF:JO");
+$ProjectData = $user->Doc_projData($REQ);
 $UserData = $user->user_data(Session::get(Config::get('session/session_name')));
-$NumLots = $user->PR_num_lots($REQUEST[0]);
+$NumLots = $user->PRJO_num_lots($REQ);
 
 $file = $REQUEST[0].".docx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
-$OFFICE = htmlspecialchars($UserData->office_name);
+$OFFICE = htmlspecialchars(htmlspecialchars_decode($UserData->office_name, ENT_QUOTES));
 
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 72, 'after' => 72]]);
 $phpWord->setDefaultFontName('Arial');
@@ -36,6 +37,7 @@ $section = $phpWord->addSection([
 	'footerHeight' => 0
 ]);
 $header = $section->addHeader();
+$header->firstPage();
 $hPragr =  ['alignment' => 'center'];
 $header->addText("Republic of the Philippines", ['name' => 'Arial', 'size' => 10], $hPragr);
 $header->addText("BICOL UNIVERSITY", ['name' => 'Arial', 'size' => 10, 'bold' => true], $hPragr);
@@ -43,14 +45,19 @@ $header->addText($OFFICE, ['name' => 'Arial', 'size' => 9], $hPragr);
 $section->addTextBreak(1);
 if($REQUEST[1] === 'PR') $section->addText("Purchase Request", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
 elseif($REQUEST[1] === 'JO') $section->addText("Job Order", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
-$section->addText("Title:", null, $hPragr);
-$section->addText($ProjectData->title, null, $hPragr);
+$section->addText("Title:", ['size' => 11], $hPragr);
+$section->addText($ProjectData->title, ['size' => 11], $hPragr);
 $section->addTextBreak(1);
-$section->addText("Date Requested: " . date('F j, o', strtotime($ProjectData->date_created)), null, ['indentation' => ['left' => 288, 'right' => 0]]);
 
-$thStyle = ['bold' => true, 'size' => 9];
+$textrun = $section->addTextRun(['indentation' => ['left' => 288, 'right' => 0]]);
+$textrun->addText("Reference No. ");
+$textrun->addText($REQUEST[0], ['bold' => true, 'underline' => 'single']);
+
+$section->addText("Date Created: " . date('F j, o', strtotime($ProjectData->date_created)), null, ['indentation' => ['left' => 288, 'right' => 0]]);
+
+$thStyle = ['bold' => true, 'size' => 10];
 $thPragr = ['alignment' => 'center'];
-$trStyle = ['size' => 9];
+$trStyle = ['size' => 10];
 
 if($REQUEST[1] === 'PR')
 {
@@ -65,26 +72,26 @@ if($REQUEST[1] === 'PR')
 		$table->addCell(1800)->addText("Estimated Unit Cost", $thStyle, $thPragr);
 		$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
 
-		$LOT_ITEMS = $user->PR_itemsPerLot($NumLots->form_ref_no, $NumLots->lot_no);
+		$LOT_ITEMS = $user->PRJO_itemsPerLot($NumLots->form_ref_no, $NumLots->lot_no);
 		foreach($LOT_ITEMS as $ITEM)
 		{
 			$table->addRow(43.2);
-			$table->addCell(1152)->addText(htmlspecialchars($ITEM->stock_no), $trStyle, $thPragr);
-			$table->addCell(864)->addText(htmlspecialchars($ITEM->unit), $trStyle, $thPragr);
-			$table->addCell(4320)->addText(htmlspecialchars($ITEM->item_description), $trStyle, $thPragr);
-			$table->addCell(864)->addText(htmlspecialchars($ITEM->quantity), $trStyle, $thPragr);
-			$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->unit_cost), $trStyle, $thPragr);
-			$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->total_cost), $trStyle, $thPragr);
+			$table->addCell(1152)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->stock_no, ENT_QUOTES)), $trStyle, $thPragr);
+			$table->addCell(864)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->unit, ENT_QUOTES)), $trStyle, $thPragr);
+			$table->addCell(4320)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->item_description, ENT_QUOTES)), $trStyle, $thPragr);
+			$table->addCell(864)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->quantity, ENT_QUOTES)), $trStyle, $thPragr);
+			$table->addCell(1800)->addText("&#8369; ".htmlspecialchars(htmlspecialchars_decode($ITEM->unit_cost, ENT_QUOTES)), $trStyle, $thPragr);
+			$table->addCell(1800)->addText("&#8369; ".htmlspecialchars(htmlspecialchars_decode($ITEM->total_cost, ENT_QUOTES)), $trStyle, $thPragr);
 		}
 		$section->addTextBreak(2);
 	}
 	else
 	{
-		for($x = 1 ; $x <= $NumLots->lots ; $x++)
+		foreach($NumLots as $lot)
 		{
 			$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
 			$table->addRow(43.2);
-			$table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$x, $thStyle, $thPragr);
+			$table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$lot->lot_no.": ".$lot->lot_title, ['bold' => true, 'size' => 10], $thPragr);
 			$table->addRow(43.2);
 			$table->addCell(1152)->addText("Stock No.", $thStyle, $thPragr);
 			$table->addCell(864)->addText("Unit of Issue", $thStyle, $thPragr);
@@ -93,52 +100,101 @@ if($REQUEST[1] === 'PR')
 			$table->addCell(1800)->addText("Estimated Unit Cost", $thStyle, $thPragr);
 			$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
 	
-			$LOT_ITEMS = $user->PR_itemsPerLot($NumLots->form_ref_no, $x);
+			$LOT_ITEMS = $user->PRJO_itemsPerLot($lot->form_ref_no, $lot->lot_no, $REQUEST[1]);
 			foreach($LOT_ITEMS as $ITEM)
 			{
 				$table->addRow(43.2);
-				$table->addCell(1152)->addText(htmlspecialchars($ITEM->stock_no), $trStyle, $thPragr);
-				$table->addCell(864)->addText(htmlspecialchars($ITEM->unit), $trStyle, $thPragr);
-				$table->addCell(4320)->addText(htmlspecialchars($ITEM->item_description), $trStyle, $thPragr);
-				$table->addCell(864)->addText(htmlspecialchars($ITEM->quantity), $trStyle, $thPragr);
-				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->unit_cost), $trStyle, $thPragr);
-				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars($ITEM->total_cost), $trStyle, $thPragr);
+				$table->addCell(1152)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->stock_no, ENT_QUOTES)), $trStyle, $thPragr);
+				$table->addCell(864)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->unit, ENT_QUOTES)), $trStyle, $thPragr);
+				$table->addCell(4320)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->item_description, ENT_QUOTES)), $trStyle, $thPragr);
+				$table->addCell(864)->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->quantity, ENT_QUOTES)), $trStyle, $thPragr);
+				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars(htmlspecialchars_decode($ITEM->unit_cost, ENT_QUOTES)), $trStyle, $thPragr);
+				$table->addCell(1800)->addText("&#8369; ".htmlspecialchars(htmlspecialchars_decode($ITEM->total_cost, ENT_QUOTES)), $trStyle, $thPragr);
 			}
+			$table->addRow(43.2);
+			$table->addCell(10800, ['gridSpan' => 6])->addText("Total Lot Cost: &#8369; ".$lot->lot_cost, ['size' => 10, 'bold' => true], ['alignment' => 'right', 'indentation' => ['left' => 0, 'right' => 410]]);
 			$section->addTextBreak(2);
 		}
 	}
 }
 elseif($REQUEST[1] === 'JO')
 {
-
-	$order[0] = [
-		'unit' => 'lot',
-		'desc' => 'SOMETHING THAT INVOLVES EATING ALOT OF FOOD AND DOING NOTHING',
-		'EC' => 15000
-	];
-
-	$order[1] = [
-		'unit' => 'lot',
-		'desc' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim voluptatum, eos velit ex neque, atque porro modi, nulla est veritatis quia similique minus adipisci? Veniam repudiandae repellendus aspernatur omnis eveniet.
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem temporibus laborum voluptatibus sequi aspernatur iste nobis, amet quas eos repellat. htmlspecialchars htmlspecialcharshtmlspecialcharshtmlspecialcharshtmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars htmlspecialchars',
-		'EC' => 60000
-	];
-
+	$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
 	$table->addRow(43.2);
-	$table->addCell(1440)->addText("Unit", $thStyle, $thPragr);
-	$table->addCell(1440)->addText("Particulars", $thStyle, $thPragr);
+	$table->addCell(1800)->addText("Lot No.", $thStyle, $thPragr);
+	$table->addCell(7200)->addText("Lot Description", $thStyle, $thPragr);
 	$table->addCell(1800)->addText("Estimated Cost", $thStyle, $thPragr);
 
-	for($r = 0; $r < count($order); $r++)
+	$cStyle = ['indentation' => ['left' => 200, 'right' => 300]];
+
+	foreach($NumLots as $lot)
 	{
 		$table->addRow(43.2);
-		$table->addCell(1440)->addText($order[$r]['unit'], $trStyle, $thPragr);
-		$table->addCell(7970)->addText($order[$r]['desc'], $trStyle, $thPragr);
-		$table->addCell(1440)->addText("&#8369; ".$order[$r]['EC'], $trStyle, $thPragr);
+		$table->addCell(1800, ['valign' => 'center'])->addText(htmlspecialchars(htmlspecialchars_decode($lot->lot_no, ENT_QUOTES)), $trStyle, $thPragr);
+
+		$tableCell = $table->addCell(7200);
+		$tableCell->addTextBreak(1);
+		$tableCell->addText(htmlspecialchars(htmlspecialchars_decode($lot->lot_title, ENT_QUOTES)), ['size' => 11], $cStyle);
+		$tableCell->addTextBreak(1);
+
+		$LOT_ITEMS = $user->PRJO_itemsPerLot($lot->form_ref_no, $lot->lot_no, $REQUEST[1]);
+		
+		foreach($LOT_ITEMS as $ITEM)
+		{
+			$textrun = $tableCell->addTextRun($cStyle);
+			$textrun->addText(htmlspecialchars(htmlspecialchars_decode($ITEM->header, ENT_QUOTES) . " "), ['size' => 10, 'bold' => true]);
+			
+			$i = 0;
+			$LIST_ITEMS = explode(",", htmlspecialchars(htmlspecialchars_decode($ITEM->tags, ENT_QUOTES)));
+			$TAG_COUNT = count($LIST_ITEMS);
+			
+			foreach($LIST_ITEMS as $tag)
+			{
+				if(++$i === $TAG_COUNT) $textrun->addText(htmlspecialchars(htmlspecialchars_decode($tag, ENT_QUOTES)));
+				else $textrun->addText(htmlspecialchars(htmlspecialchars_decode($tag.", ", ENT_QUOTES)));
+			}
+			$tableCell->addTextBreak(1);
+		}
+		if($lot->note !== "")
+		{
+			$tableCell->addText("Note:", $trStyle, $cStyle);
+			$tableCell->addText(htmlspecialchars(htmlspecialchars_decode($lot->note, ENT_QUOTES)), $trStyle, ['indentation' => ['left' => 300, 'right' => 300]]);
+			$tableCell->addTextBreak(1);
+		}
+		$table->addCell(1800, ['valign' => 'center'])->addText("&#8369; ".htmlspecialchars(htmlspecialchars_decode($lot->lot_cost, ENT_QUOTES)), $trStyle, $thPragr);
 	}
+	$section->addTextBreak(2);
 }
+
+$section->addTextBreak(1);
+
+$table = $section->addTable(['borderColor' => '#FFFFFF', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
+$table->addRow(43.2);
+$table->addCell(3600)->addText($UserData->edr_fname." ".$UserData->edr_mname." ".$UserData->edr_lname, ['size' => 11, 'bold' => true], $thPragr);
+$table->addCell(3600);
+$table->addCell(3600)->addText($ProjectData->noted_by, ['size' => 11, 'bold' => true], $thPragr);
+
+$table->addRow(43.2);
+$table->addCell(3600)->addText("Requested By", ['size' => 10], $thPragr);
+$table->addCell(3600);
+$table->addCell(3600)->addText("Noted By", ['size' => 10], $thPragr);
+
+$section->addTextBreak(3);
+
+$table = $section->addTable(['borderColor' => '#FFFFFF', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
+$table->addRow(43.2);
+$table->addCell(3600)->addText($ProjectData->verified_by, ['size' => 11, 'bold' => true], $thPragr);
+$table->addCell(3600);
+$table->addCell(3600)->addText($ProjectData->approved_by, ['size' => 11, 'bold' => true], $thPragr);
+
+$table->addRow(43.2);
+$table->addCell(3600)->addText("Verified By", ['size' => 10], $thPragr);
+$table->addCell(3600);
+$table->addCell(3600)->addText("Approved By", ['size' => 10], $thPragr);
+
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 ob_clean();
+// $objWriter->save('C:/Users/Denver/Desktop/PR-JO.docx');
 $objWriter->save("php://output");
 ?>

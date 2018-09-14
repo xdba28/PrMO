@@ -47,7 +47,7 @@
         /* Codes on top are the actual init.php content */
 
 	if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("blyteToken", Input::get('blyteToken'))){
 
             $validate = new Validate();
             $validation = $validate->check($_POST, array(
@@ -114,11 +114,11 @@
 
             <p>
                 <?php
-                    if(Session::exists('Loggedout')){
-                        echo Session::flash('Loggedout');
-                    }else if(Session::exists('accountUpdated')){
-                        echo Session::flash('accountUpdated');
-                    }else if(Session::exists('incorrect')){
+                    if(Session::exists('accountUpdated')){
+						echo Session::flash('accountUpdated');
+                    }else if(Session::exists('Loggedout')){
+						echo Session::flash('Loggedout');
+					}else if(Session::exists('incorrect')){
                         echo Session::flash('incorrect');
                     }else{
                         echo 'Please Login in.';
@@ -132,9 +132,9 @@
                 <div class="form-group">
                     <input type="password" name="password" class="form-control" placeholder="Password" required="">
                 </div>
-				<input type="hidden" name="token" value="<?php echo Token::generate();?>">
+				<input type="hidden" name="blyteToken" value="<?php echo Token::generate("blyteToken");?>">
                 <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-
+				<a href="../index" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
                
             </form>
             <p class="m-t"> <small>Copyright BU-BAC PrMO &copy; 2018-2019</small> </p>

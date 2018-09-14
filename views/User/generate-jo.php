@@ -14,7 +14,7 @@
 
 	if(Input::exists()){
 	
-		if(Token::check(Input::get('token'))){
+		if(Token::check("joToken",Input::get('joToken'))){
 			
 			try{				
 				//register project details in "project_request_forms"table
@@ -83,7 +83,8 @@
 					}
 		
 					//proceed to printing the actual form						
-
+					Session::flash("Request", $form_ref_no.":JO");
+					Redirect::to("pr-jo-doc");
 			}catch(Exception $e){
 				die($e->getMessage());
 			}
@@ -231,7 +232,7 @@
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
 														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
-														<input type="text" name="token" readonly hidden value="<?php echo Token::generate();?>" required form="jo_form">
+														<input type="text" name="joToken" readonly hidden value="<?php echo Token::generate("joToken");?>" required form="jo_form">
 													</div>													
 												</div>
 												<div class="col-lg-3">
@@ -302,14 +303,14 @@
 									<input type="text" name="L${i}-listname-0" class="form-control" form="jo_form" required>
 									<br>
 									<p class="font-bold">&#128204; Tags:</p>
-									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form" required>
+									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
 									<br>
 								</div>
 							</div><br>
 
 							<div class="form-group">
 								<label>Note</label>					
-								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form" required></textarea>							
+								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form"></textarea>							
 							</div>							
 							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
 
@@ -334,7 +335,7 @@
 						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form" required>
 						<br>
 						<p class="font-bold">&#128204; Tags:</p>
-						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form" required>
+						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
 						<br>
 					<div>`;
 					$(`#${num[0]}-${num[1]}`).append(list_tmp);

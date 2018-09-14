@@ -15,7 +15,7 @@
     $sa = new Super_admin();
 
     if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("newUserToken", Input::get('newUserToken'))){
             //allow to submit the form
 
             $validate = new Validate();
@@ -214,7 +214,7 @@
 											<div class="form-group">
 												<label class="col-form-label" for="date_added">Profile Photo</label>	
 												<input type="file" name="profilePhoto" class="dropify" data-allowed-file-extensions="png jpeg jpg">		
-												<input type="text" name="token" hidden required value="<?php echo Token::generate();?>">
+												<input type="text" name="newUserToken" hidden required value="<?php echo Token::generate("newUserToken");?>">
 											</div>										
 										</form>							
 									</div>

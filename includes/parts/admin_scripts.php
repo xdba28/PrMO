@@ -14,6 +14,10 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
 <script src="../../assets/js/demo/peity-demo.js"></script>
 
+<!-- Chosen -->
+<script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
+
+
 <!-- Input Mask-->
 <script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
 
@@ -21,7 +25,7 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/inspinia.js"></script>
 <script src="../../assets/js/plugins/pace/pace.min.js"></script>
 
-<!-- Toast -->
+<!-- Toastr -->
 <script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
 
 <!-- FooTable -->
@@ -33,19 +37,29 @@ require_once "../../functions/account-verifier.php";
 <!-- Jquery Validate -->
 <script src="../../assets/js/plugins/validate/jquery.validate.min.js"></script>
 
+
 <!-- Typehead -->
 <script src="../../assets/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
-
-<!-- Chosen -->
-<script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
 
 
 <!-- iCheck -->
 <script src="../../assets/js/plugins/iCheck/icheck.min.js"></script>
+
+
 <!-- Ladda -->
 <script src="../../assets/js/plugins/ladda/spin.min.js"></script>
 <script src="../../assets/js/plugins/ladda/ladda.min.js"></script>
 <script src="../../assets/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+<!-- Tags Input -->
+<script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+<!-- Crypto-js -->
+<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
 
 
 <!--External-->
@@ -91,34 +105,7 @@ require_once "../../functions/account-verifier.php";
     </script>
 
 <!-- Page-Level Scripts -->
-<script>
-    $(document).ready(function() {
 
-        $('.footable').footable();
-        $('.footable2').footable();
-		$("#typeahead").typeahead({
-			source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
-		});
-        
-        //this is to trigger the update account details modal for newly created accounts
-        if(newuser == true){
-            $('#new-user-modal').modal('show');	
-        }          
-		
-        var tst_rdy = '<?php 
-            if(Session::exists('toust')) echo Session::flash('toust');
-            else echo "0";
-        ?>';
-        
-        if(tst_rdy !== "0")
-        toastr.success(tst_rdy);
-
-        $('.chosen-select').chosen({width: "100%"});
-        
-
-    });
-
-</script>
 
     <script>
         $(document).ready(function(){
@@ -226,30 +213,6 @@ require_once "../../functions/account-verifier.php";
 	</script>
 	
 	<script>
-		$(document).ready(function () {
-			$('.i-checks').iCheck({
-				checkboxClass: 'icheckbox_square-green',
-				radioClass: 'iradio_square-green',
-			});
-					
-			$('input').focus(function(){
-			  $(this).parents('.form-group').addClass('focused');
-			});
-
-			$('input').blur(function(){
-			  var inputValue = $(this).val();
-			  if ( inputValue == "" ) {
-				$(this).removeClass('filled');
-				$(this).parents('.form-group').removeClass('focused');  
-			  } else {
-				$(this).addClass('filled');
-			  }
-			})  					
-		});
-		
-
-	</script>
-	<script>
 		function refreshPage(){
 			window.location.reload();
 		} 
@@ -273,12 +236,50 @@ require_once "../../functions/account-verifier.php";
 			$('#popOver13').popover();
 			$('#popOver14').popover();
 			
-			
 			if(newuser == true){
-				$('#new-user-modsal').modal('show');
+				$('#new-user-modal').modal('show');
 				
 			}
-			
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+        $('.footable').footable();
+        $('.footable2').footable();
+		$("#typeahead").typeahead({
+			source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
+		});
+		
+        var tst_rdy = '<?php 
+            if(Session::exists('toust')) echo Session::flash('toust');
+            else echo "0";
+        ?>';
+        
+        if(tst_rdy !== "0")
+        toastr.success(tst_rdy);
+
+        $('.chosen-select').chosen({width: "100%"});
+
+			$('.i-checks').iCheck({
+				checkboxClass: 'icheckbox_square-green',
+				radioClass: 'iradio_square-green',
+			});
+					
+			$('input').focus(function(){
+			  $(this).parents('.form-group').addClass('focused');
+			});
+
+			$('input').blur(function(){
+			  var inputValue = $(this).val();
+			  if ( inputValue == "" ) {
+				$(this).removeClass('filled');
+				$(this).parents('.form-group').removeClass('focused');  
+			  } else {
+				$(this).addClass('filled');
+			  }
+			})          
+
 		});
 
 	</script>

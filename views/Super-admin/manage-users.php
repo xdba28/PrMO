@@ -16,7 +16,7 @@
     $PersonnelInfo = $sa->personnels();
 	
 	if(Input::exists()){
-		if(Token::check(Input::get('token'))){
+		if(Token::check('updateInfoToken', Input::get('updateInfoToken'))){
 			
 			$sa = new Super_admin();
             $ID = $_GET['q'];
@@ -125,7 +125,7 @@
 				
 
 			?>
-            <div class="row animated fadeInRight">
+            <div class="row">
                 <div class="col-md-4">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -223,7 +223,7 @@
 												</select>
 											</div>							
 											<div class="form-group"><label>Account Status</label> <input type="text" value="<?php echo $data->status;?>" disabled class="form-control"></div> 
-											<input type="text" name="token" value="<?php echo Token::generate();?>" hidden readonly>
+											<input type="text" name="updateInfoToken" value="<?php echo Token::generate('updateInfoToken');?>" hidden readonly>
 										</form>		
 									</div>	
 									<div class="col-lg-12">

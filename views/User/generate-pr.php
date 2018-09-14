@@ -1,9 +1,6 @@
 <?php 
-
     require_once('../../core/init.php');
-
     $user = new User(); 
-
     if($user->isLoggedIn()){
      //do nothing
     }else{
@@ -12,9 +9,7 @@
 	}
 	
 	if(Input::exists()){
-		
-		if(Token::check(Input::get('token'))){
-
+		if(Token::check("prToken" ,Input::get('prToken'))){
 			if(Input::get('lot_count') == ''){
 					
 					try{
@@ -39,7 +34,6 @@
 							'date_created' => $date_created
 			
 						));
-
 						//register static lot details in "lots" table
 						$user->register('lots', array(
 		
@@ -50,11 +44,9 @@
 							'note' => 'none'
 		
 						));
-
 						//register all item rows related to the static lot in "lot_content_for_pr" table		
 						$temp = $user->ro_ln_composite($form_ref_no, 101);
 						$lot_id = $temp->lot_id;
-
 						for($y=0; $y<$myArray[0]; $y++){ //$y is item per lot level					
 		
 							$stock_no = 'L0-stk-'.$y;    			//L0-stk-0
@@ -75,13 +67,11 @@
 								'total_cost' => Input::get($total_cost)
 		
 							));
-
 						}
 						
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
 						Redirect::To('pr-jo-doc');
-
 					}catch(Exception $e){
 						die($e->getMessage());
 					}
@@ -171,8 +161,6 @@
 	  	}
 	}
  
-
-
 					
 ?>
 <!DOCTYPE html>
@@ -304,7 +292,7 @@
 													<div class="btn-group">
 														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Add Specific No. of Rows</button>
 														<ul class="dropdown-menu">
-															<li><input type="number" data="qty" id="rowCount" class="form-control" min="1"></li>
+															<li><input type="number" id="rowCount" class="form-control" min="1"></li>
 														</ul>
 													</div>													
 														<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
@@ -383,7 +371,7 @@
 													</div>
 												</div>	
 												<div class="col-md-7">
-													<input type="text" name="token" value="<?php echo Token::generate();?>" hidden form="pr_form">
+													<input type="text" name="prToken" value="<?php echo Token::generate("prToken");?>" hidden form="pr_form">
 													<input type="text"  id="row_count" name="row_count" class="form-control" readonly form="pr_form">
 													<input type="text"  id="lot_count" name="lot_count" class="form-control" readonly form="pr_form">	
 
@@ -442,7 +430,6 @@
 			</tr>`;
 			$('#pr-tbl-static').append(tmp_static);
 			$('#row_count').val(JSON.stringify(objStat));
-
 			$('[data="qty"]').on('change', function()
 			{
 				var TC = 0;
@@ -455,7 +442,6 @@
 				});
 				$(`[name="L0-TLC"]`).val((TC).toFixed(2));				
 			});
-
 			$('[data="Ucst"]').on('change', function()
 			{
 				var TC = 0;
@@ -476,7 +462,6 @@
 			$('#pr-tbl-static').html('');
 			for(let i = 0 ; i < $(this).val() ; i++)
 			{
-				objStat.lst++;
 				var tmp_static = `
 				<tr id="pr-0-r-${objStat.lst}">
 					<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
@@ -487,8 +472,6 @@
 					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 				</tr>`;
 				$('#pr-tbl-static').append(tmp_static);
-				$('#row_count').val(JSON.stringify(objStat));
-
 				$('[data="qty"]').on('change', function()
 				{
 					var TC = 0;
@@ -501,7 +484,6 @@
 					});
 					$(`[name="L0-TLC"]`).val((TC).toFixed(2));				
 				});
-
 				$('[data="Ucst"]').on('change', function()
 				{
 					var TC = 0;
@@ -514,7 +496,10 @@
 					});
 					$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 				});
+				objStat.lst++;
 			}
+			objStat.lst--;
+			$('#row_count').val(JSON.stringify(objStat));
 		});
 
 		$('[data="qty"]').on('change', function()
@@ -543,7 +528,6 @@
 			$(`[name="L0-TLC"]`).val((TC).toFixed(2));
 		});
 
-
 		var arry = [];
 		$('.chosen-select').chosen({width: "100%"}).on('change', function()
 		{
@@ -551,7 +535,7 @@
 			var obj = [];
 			$('#stp-2').html('');
 			arry = $(this).val();
-			arry.forEach((element, index) =>
+			arry.forEach(function(element, index)
 			{								
 				obj.push({lst: 0});
 				var lst_tmp = `
@@ -602,10 +586,9 @@
 				</div>`;
 				$('#stp-2').append(lst_tmp);
 				$('#row_count').val(JSON.stringify(obj));
-
 			});
-			 $('#lot_count').val(arry.length);
 
+			$('#lot_count').val(arry.length);
 			$('[data="qty"]').on('change', function()
 			{
 				var TC = 0;
@@ -647,7 +630,6 @@
 					<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-${pr_num[1]}-Tsct-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Tcst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 				</tr>`;
 				$(`#pr-tbl-${pr_num[1]}`).append(tr_tmp);
-
 				$('[data="qty"]').on('change', function()
 				{
 					var TC = 0;
@@ -687,7 +669,7 @@
 				}
 			});
 		});
-
+		
 		$('[data="del"]').on('click', function()
 		{
 			var rowData = $(this).attr("data-list").split("-");
