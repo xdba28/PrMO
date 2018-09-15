@@ -33,7 +33,6 @@
 		$user = new Staff();
 		echo json_encode($user->allPRJO_req_detail());		
 		?>;
-		console.log(OBJ);
 	</script>
 </head>
 
@@ -152,7 +151,7 @@
 															</p>
 
 															<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver0" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
-															<button type="button" class="btn btn-primary btn-sm btn-block" id="registerNow"><i class="fa fa-download"></i> Register Now</button>															
+															<a class="btn btn-primary btn-sm btn-block" id="registerNow"><i class="fa fa-download"></i> Register Now</a>															
 														</div>
 													</div>
 												
@@ -196,138 +195,148 @@
 	$(document).ready(function(){
 
 		function start(){
-			OBJ.forEach(function(el, index)
+			if(OBJ === null)
 			{
-				var user = el.req_by.split(":");
 				var data_tmp = `
 				<tr>
-					<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
-					<td>${user[1]}</td>
-					<td><i class="fa fa-clock"></i> ${el.date_created}</td>
-					<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
+					<td colspan="4"><h3 style="text-align:center">No Request Available</h3></td>
 				</tr>`;
 				$('#nwprj-tbl-data').append(data_tmp);
-				if(el.log_exist === false) $(`[proj="${el.id}"]`).prop('disabled', false);
-				else $(`[proj="${el.id}"]`).prop('disabled', true);
-			});
-
-			$(document.body).on("click",".client-link",function(e)
+			}
+			else
 			{
-				e.preventDefault();
-				var ID = $(this).attr('href').split("#");
-				var PROJ = OBJ.find(function(el)
+				OBJ.forEach(function(el, index)
 				{
-					return el.id === ID[1];
+					var user = el.req_by.split(":");
+					var data_tmp = `
+					<tr>
+						<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
+						<td>${user[1]}</td>
+						<td><i class="fa fa-clock"></i> ${el.date_created}</td>
+						<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
+					</tr>`;
+					$('#nwprj-tbl-data').append(data_tmp);
+					if(el.log_exist === false) $(`[proj="${el.id}"]`).prop('disabled', false);
+					else $(`[proj="${el.id}"]`).prop('disabled', true);
 				});
 
-				if(typeof PROJ !== "undefined")
+				$(document.body).on("click",".client-link",function(e)
 				{
-					$('[data="side-panel"]').attr("id", PROJ.id);
-					$('[data="side-panel"] h2').html(PROJ.title);
-					$('#popOver0').attr("proj-comp", PROJ.id);
-
-					if(PROJ.log_exist === true) $('#registerNow').prop('disabled', false);
-					else $('#registerNow').prop('disabled', true);
-
-					$('#lot-data').html('');
-					PROJ.lot_details.forEach(function(el, index)
+					e.preventDefault();
+					var ID = $(this).attr('href').split("#");
+					var PROJ = OBJ.find(function(el)
 					{
-						if(PROJ.type === "PR")
+						return el.id === ID[1];
+					});
+
+					if(typeof PROJ !== "undefined")
+					{
+						$('[data="side-panel"]').attr("id", PROJ.id);
+						$('[data="side-panel"] h2').html(PROJ.title);
+						$('#popOver0').attr("proj-comp", PROJ.id);
+						$('#registerNow').attr("href", `?q=${PROJ.id}`);
+
+						if(PROJ.log_exist === true) $('#registerNow').prop('disabled', false);
+						else $('#registerNow').prop('disabled', true);
+
+						$('#lot-data').html('');
+						PROJ.lot_details.forEach(function(el, index)
 						{
-							if(el.l_title === 'static lot'){
-								var lot_temp = `
-								<li class="list-group-item fist-item">
-									<span class="float-right"> No. of Items ${el.numReq}</span>
-									Unspecified Lot
-								</li>`;
-							}else{
-								var lot_temp = `
-								<li class="list-group-item fist-item">
-									<span class="float-right"> No. of Items ${el.numReq}</span>
-									${el.l_title}
-								</li>`;						
+							if(PROJ.type === "PR")
+							{
+								if(el.l_title === 'static lot'){
+									var lot_temp = `
+									<li class="list-group-item fist-item">
+										<span class="float-right"> No. of Items ${el.numReq}</span>
+										Unspecified Lot
+									</li>`;
+								}else{
+									var lot_temp = `
+									<li class="list-group-item fist-item">
+										<span class="float-right"> No. of Items ${el.numReq}</span>
+										${el.l_title}
+									</li>`;						
+								}
 							}
-						}
-						else if(PROJ.type === "JO")
-						{
-							var lot_temp = `
-							<li class="list-group-item fist-item">
-								<span class="float-right"> No. of List ${el.numReq}</span>
-								${el.l_title}
-							</li>`;	
-						}
-						$('#lot-data').append(lot_temp);
-					});
-					$('span[date="created"]').html(PROJ.date_created);
+							else if(PROJ.type === "JO")
+							{
+								var lot_temp = `
+								<li class="list-group-item fist-item">
+									<span class="float-right"> No. of List ${el.numReq}</span>
+									${el.l_title}
+								</li>`;	
+							}
+							$('#lot-data').append(lot_temp);
+						});
+						$('span[date="created"]').html(PROJ.date_created);
 
-					$(".selected .tab-pane").removeClass('active');
-					$($(this).attr('href')).addClass("active");
-				}
-				else
-				{
-					swal({
-						title: "An Error Occurred!",
-						text: "Please reload the Page."
-					});
-				}
-
-				$('#popOver0').on('click', function(){
-					window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
-				});
-
-				$('#registerNow').on('click', function(){
-
-				});
-
-			});
-
-			$('.ladda-button').ladda();
-			$('[proj]').on('click', function()
-			{
-				var SendBtn = $(this);
-				SendBtn.ladda('start');
-				var xhrData = JSON.stringify(OBJ.find(function(el){
-					return el.id === SendBtn.attr("proj");
-				}));
-
-				$.ajax({
-					type: "POSt",
-					url: "xhr-receive-proj.php",
-					data: {obj: xhrData},
-					timeout: 5000,
-					success: function(data)
+						$(".selected .tab-pane").removeClass('active');
+						$($(this).attr('href')).addClass("active");
+					}
+					else
 					{
-						if(typeof data === "object" && data !== null && !(data.success === false))
+						swal({
+							title: "An Error Occurred!",
+							text: "Please reload the Page."
+						});
+					}
+
+					$('#popOver0').on('click', function(){
+						window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
+					});
+
+				});
+
+				$('.ladda-button').ladda();
+				$('[proj]').on('click', function()
+				{
+					var SendBtn = $(this);
+					SendBtn.ladda('start');
+					var xhrData = JSON.stringify(OBJ.find(function(el){
+						return el.id === SendBtn.attr("proj");
+					}));
+
+					$.ajax({
+						type: "POSt",
+						url: "xhr-receive-proj.php",
+						data: {obj: xhrData},
+						timeout: 5000,
+						success: function(data)
 						{
-							OBJ = data;
-							swal({
-								title: 'Project Received!',
-								text: `You can now register ${SendBtn.attr("proj")} as a new project.`,
-								type: 'success',
-								timer: 13000
-							});
-						}
-						else if(data.success === false)
+							if(typeof data === "object" && data !== null && !(data.success === false))
+							{
+								OBJ = data;
+								swal({
+									title: 'Project Received!',
+									text: `You can now register ${SendBtn.attr("proj")} as a new project.`,
+									confirmButtonColor: "#000000",
+									type: 'success',
+									timer: 13000
+
+								});
+							}
+							else if(data.success === false)
+							{
+								swal({
+									title: "An Error Occurred!",
+									text: "Request Not Processed"
+								});
+							}
+							SendBtn.ladda('stop');
+							$('#nwprj-tbl-data').html('');
+							start();
+						},
+						error: function()
 						{
 							swal({
 								title: "An Error Occurred!",
 								text: "Request Not Processed"
 							});
+							SendBtn.ladda('stop');
 						}
-						SendBtn.ladda('stop');
-						$('#nwprj-tbl-data').html('');
-						start();
-					},
-					error: function()
-					{
-						swal({
-							title: "An Error Occurred!",
-							text: "Request Not Processed"
-						});
-						SendBtn.ladda('stop');
-					}
+					});
 				});
-			});
+			}
 		}
 		start();
 	});

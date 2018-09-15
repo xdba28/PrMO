@@ -174,8 +174,10 @@
 						'log_exist' => $log_data
 					];
 				}
-
-				$data = ['data' => 'empty'];
+			}
+			else
+			{
+				$data = NULL;
 			}
 
 			return $data;

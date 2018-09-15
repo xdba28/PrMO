@@ -12,7 +12,9 @@
     }
 
 
-    $sa = new Super_admin();
+	$sa = new Super_admin();
+	
+	$er_data = null;
 
     if(Input::exists()){
         if(Token::check("newUserToken", Input::get('newUserToken'))){
@@ -63,7 +65,7 @@
                         'userpassword' => Hash::make(Input::get('defaultPassword'), $salt)
                     ));
 
-                    Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
+					Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
 
                 }catch(Exception $e){
 
@@ -73,18 +75,12 @@
 
                 /* DENVER!!!!! Display errors in toust*/
                 foreach($validation->errors() as $error){
-                    echo $error,'<br>';
+                    $er_data .= $error.'<br>';
                 }
             }
 
-
-
-
-
         }
     }
-
-   
 
 ?>
 <!DOCTYPE html>
@@ -97,6 +93,9 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
+	<script>
+		var err = '<?php echo $er_data?>';
+	</script>
 
 </head>
 
@@ -425,5 +424,20 @@
     </div>
 
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>
+	<script>
+		$(function()
+		{
+			if(err === '')
+			{
+				swal({
+					title: "hello",
+					text: "hello",
+					type: "error"
+				});
+				toastr.success("Hello");
+			}
+		});
+	</script>
+
 </body>
 </html>

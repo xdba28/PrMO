@@ -45,7 +45,6 @@ try
 		'userpassword' => Hash::make($r->userpassword, $salt),
 		'group' => 1
 	));
-	
 	$sa->endTrans();
 }
 catch(Exception $e)

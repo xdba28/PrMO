@@ -46,7 +46,9 @@
                 ));
 
                 //create flash "Personnel Info Successfuly Updated"
-                //assign this flash to toust
+				//assign this flash to toust
+				
+				Session::flash("PersonnelInfo", "Successfully updated personnel information");
 				
 				
 			}catch(Exception $e){
@@ -71,6 +73,9 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
+	<script>
+		var personnelUpdate = '<?php if(Session::exists("PersonnelInfo")) Session::flash("PersonnelInfo");?>';
+	</script>
 
 </head>
 
@@ -508,6 +513,17 @@
 
             $('.footable').footable();
             $('.footable2').footable();
+
+			if(personnelUpdate !== '')
+			{
+				swal({
+					title: personnelUpdate,
+					text: "",
+					type: "success",
+					timeout : 13000
+				});
+				toastr.success("Hello")
+			}
 
         });
 
