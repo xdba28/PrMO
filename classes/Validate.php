@@ -43,18 +43,30 @@
                                          $this->addError("username already exist.");
                                     }
                                 break;
-                           case 'unique_edr_id': //edr_id from endusers
-                                $check = $this->db->get($rule_value, array('edr_id', '=', $value));//the 'username' is the field in the $rul "edr_account" table in the database, also $rule_value here = "edr_account"
+                           case 'unique_prnl_id': // check the uniqueness of the employee ID of personnel
+                                $check = $this->db->get($rule_value, array('prnl_id', '=', $value));
                                     if($check->count()){
-                                         $this->addError("employee no already exist.");
+                                         $this->addError("Employee Id already exist.");
+                                    }
+                                break;                                
+                           case 'unique_edr_id': //edr_id from endusers
+                                $check = $this->db->get($rule_value, array('edr_id', '=', $value));
+                                    if($check->count()){
+                                         $this->addError("Employee Id already exist.");
                                     }
                                 break;
                            case 'unique_edr_email': //edr_email from endusers
-                                $check = $this->db->get($rule_value, array('edr_email', '=', $value));//the 'username' is the field in the $rul "edr_account" table in the database, also $rule_value here = "edr_account"
+                                $check = $this->db->get($rule_value, array('edr_email', '=', $value));
                                     if($check->count()){
-                                         $this->addError("email already exist.");
+                                         $this->addError("Email already exist.");
                                     }
-                                break;                                                                   
+                                break;
+                           case 'unique_prnl_email': //prnl_email from personnel
+                                $check = $this->db->get($rule_value, array('prnl_email', '=', $value));
+                                    if($check->count()){
+                                         $this->addError("Email already exist.");
+                                    }
+                                break;                                                                                                    
                        }
                    }
 

@@ -26,18 +26,22 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-pie-chart"></i> <span class="nav-label">Major Link</span>  </a>
+                    <a href="#"><i class="fa fa-gem side"></i> <span class="nav-label">Major Link</span>  </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Major Link</span></a>
+                    <a href="#"><i class="ti-panel side"></i> <span class="nav-label">System</span></a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-diamond"></i> <span class="nav-label">Major Link</span></a>
+                    <a href="#"><i class="fa fa-users side"></i> <span class="nav-label">Users</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="manage-users">Manage Users</a></li>
+						<li><a href="new-user">Register User</a></li>					
+                    </ul>
                 </li>		
                 <li>
-                    <a href="#"><i class="fa fa-file-text-o"></i> <span class="nav-label">Requests</span> <span class="fa arrow"></span></a>
+                    <a href="#"><i class="ti-info-alt side"></i> <span class="nav-label">Requests</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="account-request.php">Account</a></li>					
+                        <li><a href="account-request">Account</a></li>					
                     </ul>
                 </li>				
 

@@ -64,32 +64,136 @@
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
-                throw new Exception('There was a problem registering new user');
+				throw new Exception('There was a problem registering new user', 1);
+				return false;
             }
+			return true;
+		}
 
-        }
+		// account-request.php , xhr-req-approve.php
+        public function requests($ID = null){
+			if($ID !== null)
+			{
+				if($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted 
+				FROM `account_requests`, `units` 
+				WHERE account_requests.designation = units.ID
+				AND account_requests.ID = '$ID'")){
+					return $this->db->first();
+				}
+			}
+            elseif($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")){
+				return $this->db->results();
+			}
+		}
 
-        public function requests(){
-            if ($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")) {
+		//xhr-req-approve.php
+		public function get($name, $fields = array()){
+			if($this->db->get($name, $fields)){
+				return $this->db->first();
+			}else return false;
+		}
+
+        public function personnels(){
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
+            FROM `personnel`, `units`, `prnl_account`, `group`
+            
+            WHERE
+            personnel.prnl_designated_office = units.ID AND
+            personnel.prnl_id = prnl_account.account_id AND
+            prnl_account.group_ = group.group_id
+            ")) {
                 return $this->db->results();
             }
         }
+
+        public function personnelData($ID){
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status
+            FROM `personnel`, `units`, `prnl_account`, `group`
+
+            WHERE
+            personnel.prnl_designated_office = units.ID AND
+            personnel.prnl_id = prnl_account.account_id AND
+            prnl_account.group_ = group.group_id AND
+            prnl_id = '{$ID}'
+            ")) {
+                return $this->db->first();
+            }
+        }        
 		
         public function registered_users(){
-            if ($this->db->query_builder("SELECT * FROM `edr_account` WHERE 1")) {
+            if($this->db->query_builder("SELECT * FROM `edr_account` WHERE 1")) {
                 return $this->db->results();
             }
         }	
 
+        public function selectAll($table){
+            if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
+                return $this->db->results();
+            }
+        }
+
 
 		public function update_request($remarks, $ID){
 			if(!$this->db->query_builder("UPDATE account_requests SET remarks = '$remarks', `status` = 'reviewed' WHERE ID ='$ID'")){
-				throw new Exception('There was a problem updating request');
+				throw new Exception('There was a problem updating request', 1);
 			}
+        }
+        
+        public function fullname(){
+            $user = Session::get($this->sessionName);
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        }
+        
+        public function fullnameOf($ID){
+            $user = $ID;
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        } 
+        
+        public function update($table, $particular, $identifier, $fields){
+            if(!$this->db->update($table, $particular, $identifier, $fields)){
+                throw new Exception("Error Updating Request", 1);
+            }
+        }
+
+		public function startTrans(){
+			$this->db->startTrans();
 		}
 
+		public function endTrans(){
+			$this->db->endTrans();
+		}
 
-
+        public function data(){
+            return $this->data;
+        }
 
 
     }

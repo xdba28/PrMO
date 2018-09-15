@@ -47,7 +47,7 @@
         /* Codes on top are the actual init.php content */
 
 	if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("blyteToken", Input::get('blyteToken'))){
 
             $validate = new Validate();
             $validation = $validate->check($_POST, array(
@@ -65,12 +65,10 @@
                  $login = $user->login(Input::get('username'), Input::get('password'));
 
                  if($login){
-                     echo "success";
                      Redirect::To('-dashboard');
                  }else{
-                     Session::flash('incorrect', 'Incorrect username or password'); 
+                     Session::flash('incorrect', 'Incorrect Username or Password');
                  }
-
 
             }else{
                 foreach($validation->errors() as $error){
@@ -116,7 +114,9 @@
 
             <p>
                 <?php
-                    if(Session::exists('Loggedout')){
+					if(Session::exists('accountUpdated')){
+						echo Session::flash('accountUpdated');
+					}else if(Session::exists('Loggedout')){
                         echo Session::flash('Loggedout');
                     }else if(Session::exists('incorrect')){
                         echo Session::flash('incorrect');
@@ -132,8 +132,9 @@
                 <div class="form-group">
                     <input type="password" name="password" class="form-control" placeholder="Password" required="">
                 </div>
-				<input type="hidden" name="token" value="<?php echo Token::generate();?>">
+				<input type="hidden" name="blyteToken" value="<?php echo Token::generate("blyteToken");?>">
                 <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+				<a href="../index" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
 
                
             </form>

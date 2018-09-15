@@ -6,6 +6,7 @@
                 $query,
                 $error = false,
                 $results,
+                $error_info,
                 $count = 0;
         
 
@@ -30,7 +31,7 @@
         public function query_builder($sql, $params = array()){       //query builder
             $this->error = false;
 
-            if ($this->query = $this->pdo->prepare("$sql")) {
+            if ($this->query = $this->pdo->prepare("$sql")){
                 $x = 1;
                 if (count($params)) {
                     foreach ($params as $param) {
@@ -38,7 +39,7 @@
                         $x++;
                     }
 				}
-				
+
                 if ($this->query->execute()) {
                     $this->results = $this->query->fetchAll(PDO::FETCH_OBJ);
                     $this->count = $this->query->rowCount();
@@ -121,7 +122,7 @@
                     }
                 $x++;
 			}
-			die($column);
+		
 
         $sql = "UPDATE {$table} SET {$column} WHERE {$particular} = '{$identifier}'";
 
@@ -139,8 +140,13 @@
 
 
 
+		public function startTrans(){
+			return $this->pdo->beginTransaction();
+		}
 
-
+		public function endTrans(){
+			return $this->pdo->commit();
+		}
 
         public function results(){
             return $this->results;

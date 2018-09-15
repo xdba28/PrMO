@@ -1,10 +1,10 @@
 <?php
 
-    require_once 'core/outer-init.php';
+	require_once 'core/outer-init.php';
 
 
 	if(Input::exists()){
-        if(Token::check(Input::get('token'))){
+        if(Token::check("registerToken", Input::get('registerToken'))){
 
             $validate = new Validate();
             $validation = $validate->check($_POST, array(
@@ -25,7 +25,7 @@
                  if($login){
                      Redirect::To('views/User/Dashboard');
                  }else{
-                     echo "failed";  
+                     Session::flash('incorrect', 'Incorrect Username or Password');
                  }
 
 
@@ -99,6 +99,9 @@
 						if(Session::exists('Loggedout')){		
                             echo '<center><h2>'.Session::flash('Loggedout').'</h2></center>';
                         }
+						if(Session::exists('incorrect')){		
+                            echo '<center><h4>'.Session::flash('incorrect').'</h4></center>';
+                        }
 					?>
                     <form class="m-t" action="" method="POST">
                         <div class="form-group">
@@ -107,7 +110,7 @@
                         <div class="form-group">
                             <input type="password" name="password" class="form-control" placeholder="Password" required autocomple="off">
                         </div>
-						<input type="hidden" name="token" value="<?php echo Token::generate();?>">
+						<input type="hidden" name="registerToken" value="<?php echo Token::generate("registerToken");?>">
                         <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
 						
                                 <div class="form-group row">
@@ -134,6 +137,7 @@
                     <p class="m-t">
                         <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small>
                     </p>
+					<!-- <button type="button" id="req">Send Request</button> -->
                 </div>
             </div>
         </div>
@@ -167,6 +171,21 @@
 				checkboxClass: 'icheckbox_square-green',
 				radioClass: 'iradio_square-green',
 			});
+
+			// var conn = new WebSocket('ws://localhost:8080');
+			// conn.onopen = function(e) {
+			// 	console.log("Connection established!");
+			// 	conn.send('Hello');
+			// };
+
+			// conn.onmessage = function(e) {
+			// 	console.log(e.data);
+			// };
+
+			// document.getElementById('req').addEventListener('click', function()
+			// {
+			// 	conn.send("Hello!!!");
+			// });
 		});
 	</script>
 

@@ -6,4 +6,5 @@
     $user->logout();
     Session::flash('Loggedout', 'You logged out successfuly.');
     Redirect::To('../../index');
+
 ?>
