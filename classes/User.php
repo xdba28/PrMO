@@ -97,6 +97,7 @@
                             }else{
                                 $hash = $hashCheck->first()->hash;
                             }
+
                                 Cookie::put($this->cookieName, $hash, Config::get('remember/cookie_expiry'));
                         }
             

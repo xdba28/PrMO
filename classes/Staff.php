@@ -6,7 +6,7 @@
                 $data,
                 $sessionName,
                 $cookieName,
-				$isLoggedIn;
+                $isLoggedIn;
 
         public function __construct($user = null){
             $this->db = DB::getInstance();
@@ -64,7 +64,7 @@
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
-				throw new Exception('There was a problem registering new user', 1);
+				throw new Exception('There was a problem registering new user');
 				return false;
             }
 			return true;
@@ -112,76 +112,69 @@
 			WHERE project_request_forms.form_ref_no = lots.request_origin");
 
 			$ProjData = $this->db->results();
-			$ProjCount = $this->db->count();
-			if($ProjCount !== 0)
-			{
-				foreach($ProjData as $a){
-					$exist = $this->db->query_builder("SELECT form_ref_no
-					FROM `project_request_forms`, `project_logs`
-					WHERE project_request_forms.form_ref_no = project_logs.referencing_to 
-					AND referencing_to = '$a->form_ref_no' 
-					AND EXISTS (SELECT * FROM `project_logs` WHERE
-								remarks = 'START_PROJECT'
-								AND project_logs.type = 'IN')");
-						
-					if($exist->count()){
-						$log_data = true;
-					}else{
-						$log_data = false;
-					}
-	
-					$this->db->query_builder("SELECT acronym FROM `units`, `enduser`
-					WHERE units.ID = enduser.edr_designated_office
-					AND enduser.edr_id = '$a->requested_by'");
-					$unit = $this->db->first();	
-	
-					if($a->type === "PR"){
-						$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_pr.ID) as numReq
-						FROM `project_request_forms`, `lots`, `lot_content_for_pr`
-						WHERE lots.lot_id = lot_content_for_pr.lot_id_origin
-						AND project_request_forms.form_ref_no = lots.request_origin
-						AND form_ref_no = '$a->form_ref_no'");
-						$LotData = $this->db->results();
-					}elseif($a->type === "JO"){
-						$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_jo.ID) as numReq
-						FROM `project_request_forms`, `lots`, `lot_content_for_jo`
-						WHERE lots.lot_id = lot_content_for_jo.lot_id_origin
-						AND project_request_forms.form_ref_no = lots.request_origin
-						AND form_ref_no = '$a->form_ref_no'");
-						$LotData = $this->db->results();
-					}
+
+			foreach($ProjData as $a){
+				$exist = $this->db->query_builder("SELECT form_ref_no
+				FROM `project_request_forms`, `project_logs`
+				WHERE project_request_forms.form_ref_no = project_logs.referencing_to 
+				AND referencing_to = '$a->form_ref_no' 
+				AND EXISTS (SELECT * FROM `project_logs` WHERE
+							remarks = 'START_PROJECT'
+							AND project_logs.type = 'IN')");
 					
-					$lot = null;
-					foreach($LotData as $b){
-						$lot[] = [
-							'l_title' => htmlspecialchars_decode($b->lot_title, ENT_QUOTES),
-							'l_cost' => htmlspecialchars_decode($b->lot_cost, ENT_QUOTES),
-							'note' => htmlspecialchars_decode($b->note, ENT_QUOTES),
-							'numReq' => $b->numReq
-						];
-					}
-	
-					$data[] = [
-						'id' => htmlspecialchars_decode($a->form_ref_no, ENT_QUOTES),
-						'title' => htmlspecialchars_decode($a->title, ENT_QUOTES),
-						'req_by' => $a->requested_by.":".htmlspecialchars_decode($this->fullnameOf($a->requested_by),ENT_QUOTES)." | ".$unit->acronym.":".$unit->acronym,
-						'noted_by' => htmlspecialchars_decode($a->noted_by, ENT_QUOTES),
-						'verified_by' => htmlspecialchars_decode($a->verified_by, ENT_QUOTES),
-						'approved_by' => htmlspecialchars_decode($a->approved_by, ENT_QUOTES),
-						'type' => $a->type,
-						'date_created' => date('F j, Y', strtotime($a->date_created)),
-						'lot_details' => $lot,
-						'log_exist' => $log_data
+				if($exist->count()){
+					$log_data = true;
+				}else{
+					$log_data = false;
+				}
+
+				$this->db->query_builder("SELECT acronym FROM `units`, `enduser`
+				WHERE units.ID = enduser.edr_designated_office
+				AND enduser.edr_id = '$a->requested_by'");
+				$unit = $this->db->first();	
+
+				if($a->type === "PR"){
+					$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_pr.ID) as numReq
+					FROM `project_request_forms`, `lots`, `lot_content_for_pr`
+					WHERE lots.lot_id = lot_content_for_pr.lot_id_origin
+					AND project_request_forms.form_ref_no = lots.request_origin
+					AND form_ref_no = '$a->form_ref_no'");
+					$LotData = $this->db->results();
+				}elseif($a->type === "JO"){
+					$this->db->query_builder("SELECT lot_title, lot_cost, note, count(lot_content_for_jo.ID) as numReq
+					FROM `project_request_forms`, `lots`, `lot_content_for_jo`
+					WHERE lots.lot_id = lot_content_for_jo.lot_id_origin
+					AND project_request_forms.form_ref_no = lots.request_origin
+					AND form_ref_no = '$a->form_ref_no'");
+					$LotData = $this->db->results();
+				}
+				
+				$lot = null;
+				foreach($LotData as $b){
+					$lot[] = [
+						'l_title' => htmlspecialchars_decode($b->lot_title, ENT_QUOTES),
+						'l_cost' => htmlspecialchars_decode($b->lot_cost, ENT_QUOTES),
+						'note' => htmlspecialchars_decode($b->note, ENT_QUOTES),
+						'numReq' => $b->numReq
 					];
 				}
-			}
-			else
-			{
-				$data = NULL;
-			}
 
+				$data[] = [
+					'id' => htmlspecialchars_decode($a->form_ref_no, ENT_QUOTES),
+					'title' => htmlspecialchars_decode($a->title, ENT_QUOTES),
+					'req_by' => $a->requested_by.":".htmlspecialchars_decode($this->fullnameOf($a->requested_by),ENT_QUOTES)." | ".$unit->acronym.":".$unit->acronym,
+					'noted_by' => htmlspecialchars_decode($a->noted_by, ENT_QUOTES),
+					'verified_by' => htmlspecialchars_decode($a->verified_by, ENT_QUOTES),
+					'approved_by' => htmlspecialchars_decode($a->approved_by, ENT_QUOTES),
+					'type' => $a->type,
+					'date_created' => date('F j, Y', strtotime($a->date_created)),
+					'lot_details' => $lot,
+					'log_exist' => $log_data
+				];
+			}
 			return $data;
         }
+
 
 
         public function data(){

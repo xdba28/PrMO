@@ -9,9 +9,9 @@
     }else{
        Redirect::To('../../blyte/acc3ss');
         die();
-	}
+    }
 
-    $user = $user->profile(Session::get(Config::get('session/session_name')));
+    // $user = $user->profile(Session::get(Config::get('session/session_name')));
 
 	$sa = new Super_admin();
 	$requests = $sa->requests();
@@ -19,7 +19,7 @@
 
 
 	if (Input::exists()){
-        if(Token::check("declineToken", Input::get('declineToken'))){
+        if(Token::check(Input::get('token'))){
 			//allow to submit the form
 			
             $validate = new Validate();
@@ -49,7 +49,7 @@
                   echo $error,'<br>';
               }
         
-            }
+            }               
         }
             
 	}
@@ -76,25 +76,20 @@
 		{
 			$.ajax(
 			{
-				type: 'POST',
-				url: 'xhr-req-approve.php',
-				data: {id: id},
-				timeout: 5000,
+				type: 'post',
+				url: '',
+				data: id,
 				success: function(data)
 				{
-					swal({
-						title: data,
-						text: "",
-						timer: 13000,
-						type: "success"
-					});
+					toastr.success("Message here");
 				},
 				error: function(jqXHR, textStatus, errorThrown)
 				{
-					swal({
-						title: "An Error Occurred!",
-						text: "Request Not Processed"
-					});
+					console.log(`
+						jqXHR: ${jqXHR}
+						textStatus: ${textStatus}
+						errorThrown: ${errorThrown}
+					`);
 				}
 			})
 		}

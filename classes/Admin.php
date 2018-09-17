@@ -103,22 +103,77 @@
             ")) {
                 return $this->db->first();
             }
-        }  
+		}  
+		
+        public function fullnameOf($ID){ //for personnel use
+            $user = $ID;
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+		}
+		
+        public function fullnameOfEnduser($ID){ //for enduser use
+            $user = $ID;
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        }		
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
-                throw new Exception('There was a problem registering data', 1);
-            }
+				throw new Exception('There was a problem registering data', 1);
+				return true;
+			}
+			return false;
         }
 
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
-                throw new Exception("Error Updating Request", 1);
-            }
-        }
+				throw new Exception("Error Updating Request", 1);
+				return true;
+			}
+			return false;
+		}
+		
+		public function get($table, $where){	
+			if($this->db->get($table, $where)){
+				return $this->db->first();
+			}
+			return false;
+		}	
 
         public function exist(){
             return  (!empty($this->data)) ? true : false;
+		}
+		
+		public function selectAll($table){
+            if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
+                return $this->db->results();
+            }
         }
 
         public function data(){
@@ -127,10 +182,8 @@
 
         public function logout(){
 
-            $this->db->delete('users_session', array('user_id', '=', $this->data()->account_id));
-
             Session::delete($this->sessionName);
-            Session::delete("accounttype");            
+            Session::delete("accounttype");
             Cookie::delete($this->cookieName);
         }
         

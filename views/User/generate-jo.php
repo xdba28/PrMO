@@ -84,7 +84,7 @@
 		
 					//proceed to printing the actual form						
 					Session::flash("Request", $form_ref_no.":JO");
-					Redirect::to("pr-jo-doc");
+					Redirect::To('../../bac/forms/pr-jo-doc');
 			}catch(Exception $e){
 				die($e->getMessage());
 			}

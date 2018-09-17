@@ -2,6 +2,12 @@
 
     class StringGen{
 
+		private db;
+
+		public function __construct(){
+			$this->db =  DB::getInstance();
+		}
+
         public static function generate(){
 
             $string = 'ABCDEFGHIJ1234567890';
@@ -29,7 +35,16 @@
                 }
 
            return $string;
-        }
+		}
+		
+		public static function GDSrefno(){
+			if($this->db->query_builder("SELECT COUNT(*) AS 'series' FROM `projects`")){
+				$series = $this->db->first()->series;
+			}
+
+			
+		}
+
     }
 
 ?>

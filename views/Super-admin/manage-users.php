@@ -16,7 +16,7 @@
     $PersonnelInfo = $sa->personnels();
 	
 	if(Input::exists()){
-		if(Token::check("manageUserToken", Input::get('manageUserToken'))){
+		if(Token::check('updateInfoToken', Input::get('updateInfoToken'))){
 			
 			$sa = new Super_admin();
             $ID = $_GET['q'];
@@ -46,9 +46,7 @@
                 ));
 
                 //create flash "Personnel Info Successfuly Updated"
-				//assign this flash to toust
-				
-				Session::flash("PersonnelInfo", "Successfully updated personnel information");
+                //assign this flash to toust
 				
 				
 			}catch(Exception $e){
@@ -73,9 +71,6 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
-	<script>
-		var personnelUpdate = '<?php if(Session::exists("PersonnelInfo")) Session::flash("PersonnelInfo");?>';
-	</script>
 
 </head>
 
@@ -130,7 +125,7 @@
 				
 
 			?>
-            <div class="row animated fadeInRight">
+            <div class="row">
                 <div class="col-md-4">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -228,7 +223,7 @@
 												</select>
 											</div>							
 											<div class="form-group"><label>Account Status</label> <input type="text" value="<?php echo $data->status;?>" disabled class="form-control"></div> 
-											<input type="text" name="manageUserToken" value="<?php echo Token::generate("manageUserToken");?>" hidden readonly>
+											<input type="text" name="updateInfoToken" value="<?php echo Token::generate('updateInfoToken');?>" hidden readonly>
 										</form>		
 									</div>	
 									<div class="col-lg-12">
@@ -507,26 +502,5 @@
 
 	<?php include "../../includes/parts/admin_scripts.php"?>
 
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function() {
-
-            $('.footable').footable();
-            $('.footable2').footable();
-
-			if(personnelUpdate !== '')
-			{
-				swal({
-					title: personnelUpdate,
-					text: "",
-					type: "success",
-					timeout : 13000
-				});
-				toastr.success("Hello")
-			}
-
-        });
-
-    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-	require_once 'core/outer-init.php';
+    require_once 'core/outer-init.php';
 
 
 	if(Input::exists()){
@@ -137,7 +137,6 @@
                     <p class="m-t">
                         <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small>
                     </p>
-					<!-- <button type="button" id="req">Send Request</button> -->
                 </div>
             </div>
         </div>
@@ -171,21 +170,6 @@
 				checkboxClass: 'icheckbox_square-green',
 				radioClass: 'iradio_square-green',
 			});
-
-			// var conn = new WebSocket('ws://localhost:8080');
-			// conn.onopen = function(e) {
-			// 	console.log("Connection established!");
-			// 	conn.send('Hello');
-			// };
-
-			// conn.onmessage = function(e) {
-			// 	console.log(e.data);
-			// };
-
-			// document.getElementById('req').addEventListener('click', function()
-			// {
-			// 	conn.send("Hello!!!");
-			// });
 		});
 	</script>
 
@@ -193,4 +177,3 @@
 </body>
 
 </html>
-

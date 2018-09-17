@@ -32,7 +32,7 @@
                     <a href="#"><i class="fa fa-chart-pie side"></i> <span class="nav-label">Major Link</span>  </a>
                 </li>
                 <li>
-                    <a href="index.html"><i class="ti-bookmark-alt side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                    <a href="index.html"><i class="fa fa-desktop side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="#">Current Projects</a></li>
 						<li><a href="#">PR/JO Created</a></li>					

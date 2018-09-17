@@ -39,8 +39,6 @@
             $hash = Cookie::get($cookie_name);
             $hashCheck =  DB::getInstance()->get('users_session', array('hash', '=', $hash));
 
-            // echo $hashCheck->first()->hash, "<br>";   //check if the current hash in the database matches the cookie in the browser
-            // echo $hash;
 
             if($hashCheck->count()){    //chech if there is a result from the hashCheck execution
                  $user = new User($hashCheck->first()->user_id);

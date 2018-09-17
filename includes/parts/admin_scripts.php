@@ -51,6 +51,8 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/ladda/ladda.min.js"></script>
 <script src="../../assets/js/plugins/ladda/ladda.jquery.min.js"></script>
 
+<!-- Tags Input -->
+<script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 
 <!-- Sweet Alert -->
 <script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
@@ -238,6 +240,10 @@ require_once "../../functions/account-verifier.php";
 				$('#new-user-modal').modal('show');
 				
 			}
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
 
         $('.footable').footable();
         $('.footable2').footable();

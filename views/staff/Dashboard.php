@@ -151,7 +151,7 @@
     </div>
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
-	<!-- Password meter -->
+<!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 	<script>	
