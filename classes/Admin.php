@@ -174,7 +174,15 @@
             if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
                 return $this->db->results();
             }
-        }
+		}
+		
+		public function startTrans(){
+			$this->db->startTrans();
+		}
+
+		public function endTrans(){
+			$this->db->endTrans();
+		}		
 
         public function data(){
             return $this->data;

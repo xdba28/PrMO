@@ -245,7 +245,15 @@
 
         public function exist(){
             return (!empty($this->data)) ? true : false;
-        }    
+		}    
+		
+		public function startTrans(){
+			$this->db->startTrans();
+		}
+
+		public function endTrans(){
+			$this->db->endTrans();
+		}		
 
         public function data(){
             return $this->data;

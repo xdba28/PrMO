@@ -153,12 +153,15 @@
 
 
 
+		public function startTrans(){
+			return $this->pdo->beginTransaction();
+		}
 
+		public function endTrans(){
+			return $this->pdo->commit();
+		}
 
         public function results(){
-			// foreach ($this->results as $result => $dec) {
-			// 	$dec = htmlspecialchars_decode($dec, ENT_QUOTES);
-			// } I'll leave it here for denver to figure this out
             return $this->results;
         }
         public function error(){

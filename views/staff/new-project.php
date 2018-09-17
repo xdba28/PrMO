@@ -2,7 +2,7 @@
 
     require_once('../../core/init.php');
 
-    $user = new Admin(); 
+	$user = new Admin(); 
 
     if($user->isLoggedIn()){
      //do nothing
@@ -24,9 +24,9 @@
 
 			try{
 
-			$project_ref_no = "GDS". date('Y') . "-123"; //this is for demo purposes only, I need to create a logic here for the incrementing number of projects per year
+			$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
 
-			//start transaction
+			$staff->startTrans(); //start transaction
 
 			$staff->register('projects', array(
 				'request_origin' => $form_ref_no,
@@ -47,7 +47,7 @@
 				'type' =>  'IN'
 			));
 
-			//commit
+			$staff->endTrans(); //commit
 
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
 			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
@@ -291,7 +291,7 @@
 								You can search a Purchase request or Job order by its title or end user's name. But it is adviced to search through its Reference number indicated in the printed hard copy of the actual Purchase request or Job order form.
 							</p>
 							<div class="input-group">
-								<input type="text" placeholder="Search client " class="input form-control" id="filter">
+								<input type="text" placeholder="Search Reference No." class="input form-control" id="filter">
 								<span class="input-group-append">
 										<button type="button" class="btn btn btn-primary"> <i class="fa fa-search"></i> Search</button>
 								</span>

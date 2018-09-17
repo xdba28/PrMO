@@ -1,6 +1,6 @@
 <?php
 
-    class StringGen{
+    class StringGen{	
 
         public static function generate(){
 
@@ -29,7 +29,24 @@
                 }
 
            return $string;
-        }
+		}
+		
+		public static function projectRefno($type){
+
+			$db = DB::getInstance();
+			$currentYear = date('Y');
+
+			if($db->query_builder("SELECT COUNT(*) AS 'series' FROM `projects` WHERE project_ref_no LIKE '%{$currentYear}%' AND project_ref_no LIKE '%{$type}%'")){
+				$series = $db->first()->series;
+			}
+
+			$finalSeries = $series + 1;
+
+			$refno =  $type.$currentYear."-".$finalSeries;
+			return $refno;
+			
+		}
+
     }
 
 ?>

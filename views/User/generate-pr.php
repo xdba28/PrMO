@@ -71,7 +71,10 @@
 						
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
-						Redirect::To('pr-jo-doc');
+						Redirect::To('../../bac/forms/pr-jo-doc');
+
+						//pop sweet alert "Your request has been registered and ready to download";
+						//after some seconds? redirect to pr/jo created
 					}catch(Exception $e){
 						die($e->getMessage());
 					}
@@ -152,7 +155,7 @@
 		
 					//proceed to printing the actual form
 					Session::flash('Request', $form_ref_no.":PR");
-					Redirect::To('pr-jo-doc');
+					Redirect::To('../../bac/forms/pr-jo-doc');
 					
 				}catch(Exception $e){
 					die($e->getMessage());

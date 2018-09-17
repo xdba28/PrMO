@@ -24,12 +24,14 @@
 				$number_of_lots = Input::get('lot'); // number of lots for this request form
 	
 				$rows_per_lot = json_decode(Input::get('rowCount'), true); //decode the row counter per lot
-				$counter = 0;
-				foreach($rows_per_lot as $element){
-					$myArray[$counter] = $element["tag"] + 1;
-					$counter++;
-				}
-				
+				//$counter = 0;
+				// echo "<pre>", var_dump($rows_per_lot),"</pre>";
+				// foreach($rows_per_lot as $element){
+				// 	$myArray[$counter] = $element["tag"] + 1;
+				// 	$counter++;
+				//}
+				$myArray[0] = $rows_per_lot["lst"] + 1;
+
 				$user->register('project_request_forms', array(
 		
 					'form_ref_no' => $form_ref_no,
@@ -67,7 +69,7 @@
 						$temp = $user->ro_ln_composite($form_ref_no, $lot_no);
 						$lot_id = $temp->lot_id;
 						
-						for($y=0; $y<$myArray[$x]; $y++){ //$y is item per lot level					
+						for($y=0; $y<$myArray[0]; $y++){ //$y is item per lot level					
 		
 							$listname = 'L'.$x.'-listname-'.$y;    		//L${i}-listname-0
 							$tags = 'L'.$x.'-tags-'.$y;		 			//L${i}-tags-0
@@ -84,7 +86,10 @@
 		
 					//proceed to printing the actual form						
 					Session::flash("Request", $form_ref_no.":JO");
-					Redirect::to("pr-jo-doc");
+					Redirect::To('../../bac/forms/pr-jo-doc');
+
+					//pop sweet alert "Your request has been registered and ready to download";
+					//after some seconds? redirect to pr/jo created					
 			}catch(Exception $e){
 				die($e->getMessage());
 			}

@@ -30,7 +30,7 @@
                 }            
         }
 
-        public function find($user = null, $table, $field_name){//dinamic find for super admin
+        public function find($user = null, $table, $field_name){ //dinamic find for super admin
 
             if($user){
                 $data = $this->db->get($table , array($field_name, '=', $user));
@@ -175,7 +175,13 @@
 			return $data;
         }
 
+		public function startTrans(){
+			$this->db->startTrans();
+		}
 
+		public function endTrans(){
+			$this->db->endTrans();
+		}
 
         public function data(){
             return $this->data;
