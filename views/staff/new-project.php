@@ -2,7 +2,7 @@
 
     require_once('../../core/init.php');
 
-    $user = new Admin(); 
+	$user = new Admin(); 
 
     if($user->isLoggedIn()){
      //do nothing
@@ -21,12 +21,15 @@
 			$staff = new Staff();
 			$form_ref_no = Input::get('q');
 
+			$enduser = ["0" => $_POST['enduser']];
+			$enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
+
 
 			try{
 
-			$project_ref_no = "GDS". date('Y') . "-123"; //this is for demo purposes only, I need to create a logic here for the incrementing number of projects per year
+			$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
 
-			//start transaction
+			$staff->startTrans(); //start transaction
 
 			$staff->register('projects', array(
 				'request_origin' => $form_ref_no,
@@ -34,7 +37,8 @@
 				'project_title' => Input::get('title'),
 				'ABC' => Input::get('ABC'),
 				'MOP' => 'TBE',
-				'end_user' => Input::get('enduser'),
+				'type' => 'single',
+				'end_user' => $enduser_encoded,
 				'project_status' => 'PROCESSING',
 				'workflow'	=> 'For evaluation of technical working group',
 				'date_registered' => date('Y-m-d H:i:s')
@@ -47,7 +51,7 @@
 				'type' =>  'IN'
 			));
 
-			//commit
+			$staff->endTrans(); //commit
 
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
 			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
@@ -245,22 +249,11 @@
 										</div>																			
 									</div>
 									<div class="col-sm-6">
-											<!-- <div class="form-group" id="popOver4" data-trigger="hover" title="Instructions" data-placement="top" data-content="You can add more than one enduser to a project for some cases that a project is chosen to be consolidated which requires to have a multiple endusers signatories for BAC Resolution, etc..">
-												<label for="tags">Endusers</label><br>											
-													<div class="input-group m-b">
-														<div class="input-group-prepend">
-															<span class="input-group-addon"> //consolidated
-															<input type="checkbox">
-																</span>
-														</div>
-														<input type="text" class="form-control tagsinput">
-													</div>													
-											</div>	 -->
 										<div class="form-group">
 											<label for="title" class="my-blue">Project title</label> <textarea name="title" id="title" class="form-control" rows="10" required><?php echo $request->title;?></textarea>
 										</div>	
-											<input type="text" name="newProject" value="<?php echo Token::generate('newProject');?>" readonly>
-											<input type="text" name="enduser" value="<?php echo $request->requested_by;?>" readonly>
+											<input type="text" name="newProject" value="<?php echo Token::generate('newProject');?>" hidden readonly>
+											<input type="text" name="enduser" value="<?php echo $request->requested_by;?>" hidden readonly>
 										</form>		
 									</div>	
 									<div class="col-lg-12">

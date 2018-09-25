@@ -19,7 +19,7 @@
 						$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
 						$number_of_lots = Input::get('lot_count'); // number of lots for this request form
 			
-						$rows_per_lot = json_decode(Input::get('row_count'), true); //decode th row counter per lot
+						$rows_per_lot = json_decode($_POST['row_count'], true); //decode th row counter per lot
 						$myArray[0] = $rows_per_lot["lst"] + 1;
 					
 						$user->register('project_request_forms', array(
@@ -72,6 +72,9 @@
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
 						Redirect::To('../../bac/forms/pr-jo-doc');
+
+						//pop sweet alert "Your request has been registered and ready to download";
+						//after some seconds? redirect to pr/jo created
 					}catch(Exception $e){
 						die($e->getMessage());
 					}
@@ -84,7 +87,7 @@
 					$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
 					$number_of_lots = Input::get('lot_count'); // number of lots for this request form
 		
-					$rows_per_lot = json_decode(Input::get('row_count'), true); //decode th row counter per lot
+					$rows_per_lot = json_decode($_POST['row_count'], true); //decode th row counter per lot
 					$counter = 0;
 					foreach($rows_per_lot as $element){
 						$myArray[$counter] = $element["lst"] + 1;
@@ -271,7 +274,10 @@
 														<i class="ti-layout-tab" style="font-size: 180px;color: #FFD700 "></i>
 													</div>
 												</div>
-											</div>	
+											</div>
+											<div class="col-lg-7">
+												<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>				
+											</div>												
 										</div>
 
 									</div>	
@@ -279,7 +285,7 @@
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
-										<p>Some shitty explaination what the hell is going on</p>
+										<p>List all your item needed to the corresponding fields.</p>
 
 										<div class="row">
 											<div class="col-lg-12" id="stp-2">
@@ -290,7 +296,7 @@
 													</div>
 													<div class="add-project">
 													<div class="btn-group">
-														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Add Specific No. of Rows</button>
+														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Specify specific No. of Rows</button>
 														<ul class="dropdown-menu">
 															<li><input type="number" id="rowCount" class="form-control" min="1"></li>
 														</ul>
@@ -315,7 +321,7 @@
 																<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 																<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 																<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-																<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="0.01" form="pr_form" required></td>
+																<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
 																<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
 																<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
 															</tr>
@@ -335,8 +341,14 @@
 												</div>
 											</div>
 											</div>		
+											<div class="col-lg-12">
+												<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
+											</div>											
 										</div>
 									</div>
+									
+									
+									
 								</div>
 								<div id="tab-3" class="tab-pane">
 									<div class="panel-body">
@@ -372,11 +384,11 @@
 												</div>	
 												<div class="col-md-7">
 													<input type="text" name="prToken" value="<?php echo Token::generate("prToken");?>" hidden form="pr_form">
-													<input type="text"  id="row_count" name="row_count" class="form-control" readonly form="pr_form">
-													<input type="text"  id="lot_count" name="lot_count" class="form-control" readonly form="pr_form">	
+													<input type="text"  id="row_count" name="row_count" class="form-control" hidden readonly form="pr_form">
+													<input type="text"  id="lot_count" name="lot_count" class="form-control" hidden readonly form="pr_form">	
 
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
-													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
+													<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
 												</div>
 											</div>											
 									</div>
@@ -388,17 +400,11 @@
 				
 				</div><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br><br>
 			</div>
-				
-											
-				
 
- 
-
-					
 			
             </div>
 			<!-- Main Content End -->
-			
+			<button class="back-to-top" type="button"></button>
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
@@ -413,6 +419,15 @@
 <script>
 	$(function()
 	{
+		$('[data="tab"]').on('click', function(){
+			var tab = $(this).attr("id").split("-");
+			$(`a[href="${tab[0]}-${tab[1]}"]`).removeClass('active show');
+			$(`#tab-${tab[1]}`).removeClass('active show');
+			tab[1]++;
+			$(`a[href="${tab[0]}-${tab[1]}"]`).addClass('active show');
+			$(`#tab-${tab[1]}`).addClass('active show');
+		});
+
 		var objStat = {lst: 0};
 		$('#row_count').val(JSON.stringify(objStat));
 		$('#pr-static').on('click', function()
@@ -424,7 +439,7 @@
 				<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
 				<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
 				<td><textarea rows="1" cols="30" name="L0-desc-${objStat.lst}" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-				<td class="center"><input type="number" step=".01" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
+				<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
 				<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
 				<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-${objStat.lst}" name="L0-Tcst-${objStat.lst}" class="form-control" min="0.01" readonly form="pr_form" required></td>
 			</tr>`;
@@ -683,4 +698,5 @@
 		});
 	});
 </script>
+
 </html>

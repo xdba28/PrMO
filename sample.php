@@ -36,11 +36,11 @@
     // }
 
 
-    //$time = strtotime("2018-08-17 08:30:51");
+   //$time = strtotime("2018-08-17 08:30:51");
     
     //echo date('l F j, Y g:i:sa'); 
     //echo date("h:i:sa");
-	//echo date("l F j, Y g m:i:s A", $time);
+	//echo date("l F j, Y / m:i:s A", $time);
 	$max = 5;
 
 	for($x=1; $x<=$max; $x++){

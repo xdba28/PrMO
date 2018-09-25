@@ -23,13 +23,14 @@
 				$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
 				$number_of_lots = Input::get('lot'); // number of lots for this request form
 	
-				$rows_per_lot = json_decode(Input::get('rowCount'), true); //decode the row counter per lot
+				$rows_per_lot = json_decode($_POST['rowCount'], true); //decode the row counter per lot
 				$counter = 0;
 				foreach($rows_per_lot as $element){
 					$myArray[$counter] = $element["tag"] + 1;
 					$counter++;
 				}
-				
+				// $myArray[0] = $rows_per_lot["lst"] + 1;
+
 				$user->register('project_request_forms', array(
 		
 					'form_ref_no' => $form_ref_no,
@@ -85,6 +86,9 @@
 					//proceed to printing the actual form						
 					Session::flash("Request", $form_ref_no.":JO");
 					Redirect::To('../../bac/forms/pr-jo-doc');
+
+					//pop sweet alert "Your request has been registered and ready to download";
+					//after some seconds? redirect to pr/jo created					
 			}catch(Exception $e){
 				die($e->getMessage());
 			}
@@ -186,6 +190,9 @@
 													</div>
 												</div>
 											</div>	
+											<div class="col-lg-7">
+												<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>								
+											</div>											
 										</div>
 
 									</div>	
@@ -193,7 +200,7 @@
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
-										<p>Some shitty explaination what the hell is going on</p>
+										<p>List all your item needed to the corresponding fields.</p>
 
 												<div class="">
 													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're a bit confused here 🤔 that I catch your attention. Cheer up‼ Cause we're here to guide you. 😉👌 Click on the button to proceed 👉">											
@@ -205,6 +212,9 @@
 											<div class="col-lg-12" >
 												<h1>No Lots Set.</h1>
 											</div>
+											<div class="col-lg-12">
+												<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
+											</div>											
 										</div>
 									</div>
 								</div>
@@ -244,7 +254,7 @@
 												</div>	
 												<div class="col-md-7">
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="jo_form">Finish</button>
-													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
+													<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
 												</div>
 											</div>											
 									</div>
@@ -258,7 +268,7 @@
 			
 
 			<!-- Main Content End -->
-			
+			<button class="back-to-top" type="button"></button>		
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
@@ -270,6 +280,15 @@
 
     <script>
         $(document).ready(function(){
+
+			$('[data="tab"]').on('click', function(){
+				var tab = $(this).attr("id").split("-");
+				$(`a[href="${tab[0]}-${tab[1]}"]`).removeClass('active show');
+				$(`#tab-${tab[1]}`).removeClass('active show');
+				tab[1]++;
+				$(`a[href="${tab[0]}-${tab[1]}"]`).addClass('active show');
+				$(`#tab-${tab[1]}`).addClass('active show');
+			});
 
 			$('#lot').on('change', function()
 			{

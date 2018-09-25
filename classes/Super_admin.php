@@ -64,15 +64,34 @@
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
-                throw new Exception('There was a problem registering new user', 1);
+				throw new Exception('There was a problem registering new user', 1);
+				return false;
             }
-        }
+			return true;
+		}
 
-        public function requests(){
-            if ($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")) {
-                return $this->db->results();
-            }
-        }
+		// account-request.php , xhr-req-approve.php
+        public function requests($ID = null){
+			if($ID !== null)
+			{
+				if($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted 
+				FROM `account_requests`, `units` 
+				WHERE account_requests.designation = units.ID
+				AND account_requests.ID = '$ID'")){
+					return $this->db->first();
+				}
+			}
+            elseif($this->db->query_builder("SELECT account_requests.ID, fname, midle_name, last_name, ext_name, email, employee_id, `status`, remarks, contact, office_name, submitted FROM `account_requests`, `units` WHERE account_requests.designation = units.ID")){
+				return $this->db->results();
+			}
+		}
+
+		//xhr-req-approve.php
+		public function get($name, $fields = array()){
+			if($this->db->get($name, $fields)){
+				return $this->db->first();
+			}else return false;
+		}
 
         public function personnels(){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
@@ -87,7 +106,6 @@
             }
         }
 
-        //profile data of the current user logged in as superadmin
         public function personnelData($ID){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`
@@ -165,7 +183,13 @@
             }
         }
 
+		public function startTrans(){
+			$this->db->startTrans();
+		}
 
+		public function endTrans(){
+			$this->db->endTrans();
+		}
 
         public function data(){
             return $this->data;

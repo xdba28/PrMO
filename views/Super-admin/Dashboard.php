@@ -165,9 +165,13 @@
 
             options4.common = {
 
-				
                 zxcvbn: true,
-                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php echo $commonFields;?>],
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
+					if(isset($commonFields)) echo $commonFields;
+					else{
+						echo  $commonFields = '';
+					}
+				?>],
                 userInputs: ['#year', '#new_username']
             };
             $('.example4').pwstrength(options4);

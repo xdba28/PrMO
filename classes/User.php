@@ -233,7 +233,92 @@
                 }
 
             return false;
-        }
+		}
+		
+        public function fullnameOfEnduser($ID){ //for enduser use
+            $user = $ID;
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+		}
+
+		public function projectHistory($originRefno, $currentRefno){
+			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
+			FROM `projects`, `project_logs`
+			WHERE referencing_to = '{$originRefno}' OR
+			referencing_to = '{$currentRefno}' GROUP BY ID
+			")){
+				return $this->db->results();
+			}
+
+			return false;
+		}
+
+		public function numberOfLots($refno, $type){
+			if($type == "PR"){
+				if($this->db->query_builder("SELECT COUNT(lot_id) as 'numberOfLots' FROM
+				`lots` WHERE request_origin = '{$refno}'
+				GROUP BY request_origin")){
+					return $this->db->first();
+				}
+
+			}else{
+
+			}
+		}
+
+		public function myRequests($user, $registered = false){
+
+			if($registered){
+				if($this->db->query_builder("SELECT form_ref_no, title, type, date_created, COUNT(lots.lot_id) as 'number_of_lots'
+				FROM project_request_forms, lots
+				WHERE 
+				project_request_forms.form_ref_no = lots.request_origin AND
+				EXISTS
+				(SELECT * FROM `project_logs` WHERE project_request_forms.form_ref_no = project_logs.referencing_to AND remarks = 'START_PROJECT') AND requested_by ='{$user}'
+				
+				GROUP BY request_origin")){
+					return $this->db->results();
+				}
+			}else{
+				if($this->db->query_builder("SELECT form_ref_no, title, type, date_created, COUNT(lots.lot_id) as 'number_of_lots'
+				FROM project_request_forms, lots
+				WHERE 
+				project_request_forms.form_ref_no = lots.request_origin AND
+				NOT EXISTS
+				(SELECT * FROM `project_logs` WHERE project_request_forms.form_ref_no = project_logs.referencing_to AND remarks = 'START_PROJECT') AND requested_by ='{$user}'
+				
+				GROUP BY request_origin")){
+					return $this->db->results();
+				}
+			}
+
+
+		}
+
+		public function logLastUpdated($ID){ //to get the data when the last update of the project
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' ORDER BY logdate DESC LIMIT 1")){
+				return $this->db->first();
+			}
+		}
+		
+		public function like($table, $column, $particular){
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE $column LIKE '{$particular}'")){
+				return $this->db->results();
+			}
+		}
 
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
@@ -241,11 +326,39 @@
                 return false;
             }
             return true;
-        }   
+		}
+
+		public function selectAll($table){
+            if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
+                return $this->db->results();
+            }
+		}		
+
+		public function get($table, $where){	
+			if($this->db->get($table, $where)){
+				return $this->db->first();
+			}
+			return false;
+		}		
+		
+		public function getAll($table, $where){	
+			if($this->db->get($table, $where)){
+				return $this->db->results();
+			}
+			return false;
+		}
 
         public function exist(){
             return (!empty($this->data)) ? true : false;
-        }    
+		}    
+		
+		public function startTrans(){
+			$this->db->startTrans();
+		}
+
+		public function endTrans(){
+			$this->db->endTrans();
+		}		
 
         public function data(){
             return $this->data;

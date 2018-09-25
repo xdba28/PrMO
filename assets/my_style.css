@@ -3,7 +3,7 @@
 }
 
 .side {
-	color : #FFFFFF;
+	/* color : #FFFFFF; */
 	font-size : 18px;
 }
 
@@ -110,4 +110,113 @@
 
 .form-input.filled {
   box-shadow: 0 2px 0 0 lightgreen;
+}
+
+/*back to top button css*/
+
+button.back-to-top{
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #fff;
+	height: 0px;
+  width: 0px;
+  overflow: hidden;
+	border-radius: 50px;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+  color: transparent;
+	clear: both;
+  visibility: hidden;
+  position: fixed;
+  cursor: pointer;
+  display: block;
+  border: none;
+  right: 50px;
+	bottom: 75px;
+  font-size: 0px;
+  outline: 0 !important;
+  z-index: 99;
+  transition: all .3s ease-in-out;
+}
+button.back-to-top:hover,
+button.back-to-top:active,
+button.back-to-top:focus,{
+  outline: 0 !important;
+}
+button.back-to-top::before {
+  content: "\f077";
+  font-family: "FontAwesome";
+  display: block;
+  vertical-align: middle;
+  margin: -5px 0 auto;
+}
+button.back-to-top.show {
+  display: block;
+  background: #fff;
+  color: #00ab6c;
+  font-size: 25px;
+  right: 25px;
+	bottom: 50px;
+  height: 50px;
+  width: 50px;
+  visibility: visible;
+	box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.25);
+}
+button.back-to-top.show:active {
+  box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+}
+
+
+
+.navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus {
+    /* background-color: #293846; */
+	/* color: #3dffff; */
+	
+	    background-color:#202020; 
+    	 color: #00ffbf;
+}
+
+.navbar-default .nav > li.active > a, .navbar-default .nav > li.active > a {
+	
+	    background-color:#202020; 
+    	 color: #00ffbf;
+}
+
+.nav-header {
+    padding: 33px 25px;
+    background-color: #2f4050;
+	background-image: url(pics/test1.jpg);
+	
+    background-color: hsla(0, 0%, 6%,0.3);
+    background-blend-mode: overlay;
+}
+
+.rem{
+	color: #FFFFFF;
+	overflow: hidden;
+	background: rgb(76, 76, 76);
+ 	 box-shadow: 0 0 20px 0px rgb(47, 47, 47),
+				 0 0 20px 0px rgba(107, 104, 104, 0);
+}
+
+
+.gradbutton {
+	width: 25%;
+	color: #000;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	transition: all 0.3s linear;
+	background: linear-gradient(to left, rgb(11, 191, 160), rgb(108, 196, 115));
+	margin-bottom: 12px;
+	opacity: 1;
+}
+
+.gradbutton:hover{
+	background: linear-gradient(to right, rgb(11, 191, 160), rgb(108, 196, 115));
+	opacity: 0.9;
 }

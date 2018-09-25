@@ -1,12 +1,6 @@
 <?php
 
-    class StringGen{
-
-		private db;
-
-		public function __construct(){
-			$this->db =  DB::getInstance();
-		}
+    class StringGen{	
 
         public static function generate(){
 
@@ -37,11 +31,19 @@
            return $string;
 		}
 		
-		public static function GDSrefno(){
-			if($this->db->query_builder("SELECT COUNT(*) AS 'series' FROM `projects`")){
-				$series = $this->db->first()->series;
+		public static function projectRefno($type){
+
+			$db = DB::getInstance();
+			$currentYear = date('Y');
+
+			if($db->query_builder("SELECT COUNT(*) AS 'series' FROM `projects` WHERE project_ref_no LIKE '%{$currentYear}%' AND project_ref_no LIKE '%{$type}%'")){
+				$series = $db->first()->series;
 			}
 
+			$finalSeries = $series + 1;
+
+			$refno =  $type.$currentYear."-".$finalSeries;
+			return $refno;
 			
 		}
 
