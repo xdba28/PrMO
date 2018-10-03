@@ -1,6 +1,6 @@
 <?php
-require_once "../../core/init.php";
 require_once "../../vendor/autoload.php";
+require_once "../../core/init.php";
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
@@ -197,4 +197,5 @@ $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 ob_clean();
 // $objWriter->save('C:/Users/Denver/Desktop/PR-JO.docx');
 $objWriter->save("php://output");
+// Redirect::To('../../views/User/my-forms');
 ?>

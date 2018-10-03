@@ -52,6 +52,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+	<link rel="shortcut icon" href="assets/pics/flaticons/men.png" type="image/x-icon">
     <title>PrMO OPPTS | Login</title>
 
 
@@ -96,10 +97,12 @@
                 <div class="ibox-content">
 					
 					<?php
-						if(Session::exists('Loggedout')){		
+						if(Session::exists('accountUpdated')){
+							echo '<center><h2>'.Session::flash('accountUpdated').'</h2></center>';
+						}else if(Session::exists('Loggedout')){		
                             echo '<center><h2>'.Session::flash('Loggedout').'</h2></center>';
                         }
-						if(Session::exists('incorrect')){		
+						else if(Session::exists('incorrect')){		
                             echo '<center><h4>'.Session::flash('incorrect').'</h4></center>';
                         }
 					?>

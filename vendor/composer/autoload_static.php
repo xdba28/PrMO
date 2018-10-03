@@ -4,9 +4,16 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91
+class ComposerStaticInit3e650b2408658a7b12fcf64a992275e8
 {
     public static $files = array (
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '6b06ce8ccf69c43a60a1e48495a034c9' => __DIR__ . '/..' . '/react/promise-timer/src/functions.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
         '21a5860fbef5be28db5ddfbc3cca67c4' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acos.php',
         '1546e3f9d127f2a9bb2d1b6c31c26ef1' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acosh.php',
@@ -56,16 +63,64 @@ class ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91
         array (
             'Zend\\Escaper\\' => 13,
         ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
+        ),
+        'R' => 
+        array (
+            'React\\Stream\\' => 13,
+            'React\\Socket\\' => 13,
+            'React\\Promise\\Timer\\' => 20,
+            'React\\Promise\\' => 14,
+            'React\\EventLoop\\' => 16,
+            'React\\Dns\\' => 10,
+            'React\\Cache\\' => 12,
+            'Ratchet\\RFC6455\\' => 16,
+            'Ratchet\\' => 8,
+        ),
         'P' => 
         array (
+            'Pusher\\' => 7,
             'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'PhpOffice\\PhpWord\\' => 18,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PhpOffice\\Common\\' => 17,
         ),
+        'M' => 
+        array (
+            'MyApp\\' => 6,
+            'Minishlink\\WebPush\\' => 19,
+        ),
+        'J' => 
+        array (
+            'Jose\\Component\\Signature\\Algorithm\\' => 35,
+            'Jose\\Component\\Signature\\' => 25,
+            'Jose\\Component\\KeyManagement\\' => 29,
+            'Jose\\Component\\Core\\Util\\Ecc\\' => 29,
+            'Jose\\Component\\Core\\' => 20,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+        ),
+        'F' => 
+        array (
+            'FG\\' => 3,
+        ),
         'C' => 
         array (
             'Complex\\' => 8,
+        ),
+        'B' => 
+        array (
+            'Base64Url\\' => 10,
         ),
     );
 
@@ -74,9 +129,69 @@ class ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
         ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\Routing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/routing',
+        ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'React\\Stream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/stream/src',
+        ),
+        'React\\Socket\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/socket/src',
+        ),
+        'React\\Promise\\Timer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise-timer/src',
+        ),
+        'React\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
+        'React\\EventLoop\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/event-loop/src',
+        ),
+        'React\\Dns\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/dns/src',
+        ),
+        'React\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/cache/src',
+        ),
+        'Ratchet\\RFC6455\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ratchet/rfc6455/src',
+        ),
+        'Ratchet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cboden/ratchet/src/Ratchet',
+        ),
+        'Pusher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pusher/pusher-php-server/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'PhpOffice\\PhpWord\\' => 
         array (
@@ -90,22 +205,100 @@ class ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
+        'MyApp\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Minishlink\\WebPush\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/minishlink/web-push/src',
+        ),
+        'Jose\\Component\\Signature\\Algorithm\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-ecdsa',
+            1 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-eddsa',
+            2 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-hmac',
+            3 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-none',
+            4 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-rsa',
+        ),
+        'Jose\\Component\\Signature\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature',
+        ),
+        'Jose\\Component\\KeyManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-key-mgmt',
+        ),
+        'Jose\\Component\\Core\\Util\\Ecc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-util-ecc',
+        ),
+        'Jose\\Component\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-core',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'FG\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+        ),
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
+        'Base64Url\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/base64url/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'E' => 
+        array (
+            'Evenement' => 
+            array (
+                0 => __DIR__ . '/..' . '/evenement/evenement/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
+        'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
+        'FPDF' => __DIR__ . '/..' . '/setasign/fpdf/fpdf.php',
+        'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
         'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
+        'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
+        'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
+        'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
+        'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
+        'TCPDF_COLORS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_colors.php',
+        'TCPDF_FILTERS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_filters.php',
+        'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
+        'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
+        'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
+        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
+        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
+        'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitde30b221ea92c228afb10aa07a3cbf91::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3e650b2408658a7b12fcf64a992275e8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3e650b2408658a7b12fcf64a992275e8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3e650b2408658a7b12fcf64a992275e8::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3e650b2408658a7b12fcf64a992275e8::$classMap;
 
         }, null, ClassLoader::class);
     }

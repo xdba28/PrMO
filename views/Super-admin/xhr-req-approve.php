@@ -25,6 +25,7 @@ $office = $sa->get("units", array("ID", "=", $r->designation));
 try
 {
 	$sa->startTrans();
+
 	$sa->register("enduser", array(
 		'edr_id' => $r->employee_id,
 		'edr_fname' => $r->fname,
@@ -43,14 +44,19 @@ try
 		'username' => $r->username,
 		'salt' => $salt,
 		'userpassword' => Hash::make($r->userpassword, $salt),
-		'group' => 1
+		'group_' => 1
 	));
+
+	$sa->delPersn("account_requests", array("employee_id", "=", $r->employee_id));
+	
 	$sa->endTrans();
 }
 catch(Exception $e)
 {
-	echo $e;
+	$data = [
+		'success' => false
+	];
+	header("Content-type:application/json");
+	echo json_encode($data);
 }
-
-
 ?>

@@ -10,7 +10,6 @@
        Redirect::To('../../index');
         die();
 	}
-	
 
 	if(Input::exists()){
 	
@@ -23,14 +22,13 @@
 				$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
 				$number_of_lots = Input::get('lot'); // number of lots for this request form
 	
-				$rows_per_lot = json_decode(Input::get('rowCount'), true); //decode the row counter per lot
-				//$counter = 0;
-				// echo "<pre>", var_dump($rows_per_lot),"</pre>";
-				// foreach($rows_per_lot as $element){
-				// 	$myArray[$counter] = $element["tag"] + 1;
-				// 	$counter++;
-				//}
-				$myArray[0] = $rows_per_lot["lst"] + 1;
+				$rows_per_lot = json_decode($_POST['rowCount'], true); //decode the row counter per lot
+				$counter = 0;
+				foreach($rows_per_lot as $element){
+					$myArray[$counter] = $element["tag"] + 1;
+					$counter++;
+				}
+				// $myArray[0] = $rows_per_lot["lst"] + 1;
 
 				$user->register('project_request_forms', array(
 		
@@ -69,7 +67,7 @@
 						$temp = $user->ro_ln_composite($form_ref_no, $lot_no);
 						$lot_id = $temp->lot_id;
 						
-						for($y=0; $y<$myArray[0]; $y++){ //$y is item per lot level					
+						for($y=0; $y<$myArray[$x]; $y++){ //$y is item per lot level					
 		
 							$listname = 'L'.$x.'-listname-'.$y;    		//L${i}-listname-0
 							$tags = 'L'.$x.'-tags-'.$y;		 			//L${i}-tags-0
@@ -109,6 +107,12 @@
 
 
 	<?php include_once '../../includes/parts/user_styles.php'; ?>
+
+	<script>
+		function form(){
+			$('div.row.ibox-content').toggleClass('sk-loading');
+		}
+	</script>
 
 </head>
 
@@ -154,7 +158,11 @@
 			
 			<!-- Main Content -->
 			<div class="wrapper wrapper-content animated fadeInRight">
-				<div class="row">
+				<div class="row ibox-content">
+					<div class="sk-spinner sk-spinner-double-bounce">
+							<div class="sk-double-bounce1"></div>
+							<div class="sk-double-bounce2"></div>
+					</div>
 					<div class="col-lg-12">
 						<div class="tabs-container">
 							<ul class="nav nav-tabs">
@@ -163,12 +171,13 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-								<div><form method="POST" id="jo_form"></form></div>
+								<div><form method="POST" id="jo_form" onsubmit="form()"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
 
 										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
+
 										<div class="row">
 											<div class="col-lg-7">
 												<div class="form-group">
@@ -191,6 +200,9 @@
 													</div>
 												</div>
 											</div>	
+											<div class="col-lg-7">
+												<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>								
+											</div>											
 										</div>
 
 									</div>	
@@ -198,7 +210,7 @@
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
 										<h2>Particulars Setting</h2>
-										<p>Some shitty explaination what the hell is going on</p>
+										<p>List all your item needed to the corresponding fields.</p>
 
 												<div class="">
 													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're a bit confused here 🤔 that I catch your attention. Cheer up‼ Cause we're here to guide you. 😉👌 Click on the button to proceed 👉">											
@@ -210,6 +222,9 @@
 											<div class="col-lg-12" >
 												<h1>No Lots Set.</h1>
 											</div>
+											<div class="col-lg-12">
+												<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
+											</div>											
 										</div>
 									</div>
 								</div>
@@ -249,7 +264,7 @@
 												</div>	
 												<div class="col-md-7">
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="jo_form">Finish</button>
-													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
+													<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
 												</div>
 											</div>											
 									</div>
@@ -263,7 +278,7 @@
 			
 
 			<!-- Main Content End -->
-			
+			<button class="back-to-top" type="button"></button>		
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
@@ -275,6 +290,15 @@
 
     <script>
         $(document).ready(function(){
+
+			$('[data="tab"]').on('click', function(){
+				var tab = $(this).attr("id").split("-");
+				$(`a[href="${tab[0]}-${tab[1]}"]`).removeClass('active show');
+				$(`#tab-${tab[1]}`).removeClass('active show');
+				tab[1]++;
+				$(`a[href="${tab[0]}-${tab[1]}"]`).addClass('active show');
+				$(`#tab-${tab[1]}`).addClass('active show');
+			});
 
 			$('#lot').on('change', function()
 			{
@@ -335,7 +359,7 @@
 					var tg_num = obj[num[1]].tag;
 					var list_tmp = `
 					<div>
-						<br><hr style="	height: 6px; background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;border: 0;">
+						<br><hr style="	height: 6px; background: url(../../assets/pics/hr-12.png) repeat-x 0 0;border: 0;">
 						<p class="font-bold">List Name: </p>
 						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form" required>
 						<br>

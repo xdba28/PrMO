@@ -79,7 +79,7 @@ $phpWord->setDefaultFontSize(8);
 
 $section = $phpWord->addSection($Setting[$Docs]);
 $header = $section->addHeader();
-$header->addImage('../Office logo.jpg', [
+$header->addImage('../assets/pics//Office logo.jpg', [
 	'width' => 57.6,
 	'height' => 55.44,	
 	'wrappingStyle' => 'square',
@@ -250,9 +250,9 @@ $table->addCell(3316.8)->addText("", $TXclStyle, $thPragr);
 $table->addRow(172);
 $table->addCell(9950.4, $cSpan)->addText(htmlspecialchars(strtoupper($OFF_HEAD['name'])), $NclStyle, $thPragr);
 $table->addRow(172);
-$table->addCell(9950.4, $cSpan)->addText(htmlspecialchars(strtoupper($OFF_HEAD['pos'])), $TXclStyle, $thPragr);
+$table->addCell(9950.4, ['gridSpan' => 3])->addText(htmlspecialchars(strtoupper($OFF_HEAD['pos'])), $TXclStyle, $thPragr);
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$objWriter->save('C:/Users/Denver/Desktop/BAC RESO.docx');
+$objWriter->save('C:/Users/Denver/Desktop/BAC Forms/System Generated/BAC RESO.docx');
 // $objWriter->save("php://output");
 ?>

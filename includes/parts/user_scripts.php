@@ -86,10 +86,52 @@ require_once "../../functions/account-verifier.php";
 <!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+<!-- dataTables -->
+<script src="../../assets/js/plugins/dataTables/datatables.min.js"></script>
+<script src="../../assets/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Notification -->
+<script src="../../assets/js/pusher.min.js"></script>
+<script>
+
+// // Enable pusher logging - don't include this in production
+// Pusher.logToConsole = true;
+
+// var pusher = new Pusher('6afb55a56f2b4a235c4b', {
+// 	cluster: 'ap1',
+// 	forceTLS: true
+// });
+
+// var channel = pusher.subscribe('client');
+// channel.bind('client', function(data) {
+// 	alert(JSON.stringify(data));
+// });
+</script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
 
 <script>
     $(document).ready(function(){
+		var path = window.location.pathname.split("/");
+		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+		var sLink = ['Dashboard'];
+		switch (path[path.length - 1]){
+			case sLink.find(function(){
+				return path[path.length - 1] === path[path.length - 1]
+			}):
+				link.parentNode.setAttribute("class", "active");
+				break;
+			default:
+				link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+				link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+				link.parentNode.setAttribute("class", "active");
+				break;
+		}
+
+
+
         $("#wizard").steps();
         $("#form").steps({
             bodyTag: "fieldset",
@@ -551,6 +593,9 @@ require_once "../../functions/account-verifier.php";
 			$('#popOver').popover();
 			$('#popOver1').popover();
 			$('#popOver2').popover();
+			$('.footable').footable();
+            $('.footable2').footable();
+
 
 			if(newuser == true){
 				$('#new-user-modal').modal('show');	
@@ -584,7 +629,7 @@ require_once "../../functions/account-verifier.php";
 
 				
                 zxcvbn: true,
-				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php 
 					if(isset($commonFields)) echo $commonFields;
 					else{
 						echo  $commonFields = '';
@@ -615,3 +660,35 @@ require_once "../../functions/account-verifier.php";
 		});
 
 	</script>	
+
+	<script>
+// Back to top
+var amountScrolled = 200;
+var amountScrolledNav = 25;
+
+$(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+    $('button.back-to-top').addClass('show');
+  } else {
+    $('button.back-to-top').removeClass('show');
+  }
+});
+
+$('button.back-to-top').click(function() {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+// Ignore this
+// This is just for content manipulation
+var skeleton = '<div class="skeleton"><div class="skeleton-wrapper"><div class="skeleton-wrapper-inner"><div class="skeleton-wrapper-body"><div class="skeleton-avatar"></div><div class="skeleton-author"></div><div class="skeleton-label"></div><div class="skeleton-content-1"></div><div class="skeleton-content-2"></div><div class="skeleton-content-3"></div></div></div></div></div>';
+for(var i=0;i<10;i++){
+  $('#content').append(skeleton); 
+}
+
+// Add waves effect
+Waves.attach('button.back-to-top', 'waves-effect');
+Waves.init();
+</script>

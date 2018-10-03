@@ -78,3 +78,123 @@
         </div>
     </div>
 </div>
+
+
+
+
+<!-- test modal -->
+
+<div id="returning" class="modal fade bd-example-modal-lg" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+	
+		<div class="modal-header">
+			<h3 class="modal-title">Update Released Documents</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>			
+		</div>		
+		
+		<div class="modal-body">
+
+		<?php 
+			$admin = new Admin();
+			$released = $admin->selectAll('outgoing_register');
+		?>
+		
+		<div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<thead>
+							<tr>
+								<th><input btn-t="updOutChk" type="checkbox" class="i-checks"> Select all</th>
+								<th>Title</th>
+								<th>Transmitting</th>
+								<th>Office</th>
+								<th>Date/time Released</th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php 
+								foreach($released as $document){
+									$project = $admin->get('projects', array('project_ref_no', '=', $document->project));
+							?>
+							<tr class="">
+								<td class="tdcheck"><input data="upLog" type="checkbox" class="i-checks" name="updOutLog[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
+								<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
+								<td class="center">TWG</td>
+								<td class="center">TWG</td>
+								<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
+							</tr>
+							<?php
+								}
+							?>
+							</tbody>
+							<tfoot>
+							<tr>
+								<th class="tdcheck"><input btn-t="updOutChk" type="checkbox" class="i-checks"> Select all</th>
+								<th>Title</th>
+								<th>Transmitting</th>
+								<th>Office</th>
+								<th>Date/time Released</th>
+							</tr>
+							</tfoot>
+							</table>
+							
+							<div class="btn-group pull-right" style="margin-right:15px">
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="far fa-edit"></i> <span>Update Selected documents to</span>&nbsp;&nbsp;</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-check green side"></i> Successfuly Received</a></li>
+									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-exchange-alt blue side" ></i> Received & Immidiately Returned<br></a></li>
+									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-reply orange side" ></i> Return Document to Outgoing Queue<br></a></li>
+									<li class="dropdown-divider"></li>
+									<li><a type="demo3" class="dropdown-item demo3" log="upd" href="#"><i class="far fa-times-circle red side" ></i> Failed to Receive</a></li>
+								</ul>
+							</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+			
+		</div>
+		<!-- <div class="modal-footer">
+			<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+			<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>			 -->
+			
+    </div>
+  </div>
+</div>
+
+
+<!-- Search Modal -->
+<div id="search-reference" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalCenterTitle">Search Logs of a specific Project</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+<!-- asdasdsa -->
+<form class="search"><span id="RefSearch"></span>
+  <input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
+  <button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="Smiley face" height="42" width="42"></button>
+</form><br>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

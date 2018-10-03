@@ -1,6 +1,6 @@
 <li class="nav-header">
 	<div class="dropdown profile-element">
-		<img alt="image" class="rounded-circle" src="img/profile_small.jpg"/>
+		<img alt="image" class="rounded-circle" src="../../assets/pics/flaticons/maze.png" height="42" width="42">
 		<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 			<span class="block m-t-xs font-bold">Current User</span>
 			<span class="text-muted text-xs block">Job Title <b class="caret"></b></span>
@@ -14,6 +14,7 @@
 		</ul>
 	</div>
 	<div class="logo-element">
-		IN+
+	<!-- <i class="fab fa-500px" style="font-size:40px; color:red"></i> -->
+	<img src="../../assets/pics/flaticons/grim.png" alt="Smiley face" height="42" width="42">
 	</div>
 </li>

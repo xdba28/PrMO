@@ -12,7 +12,9 @@
     }
 
 
-    $sa = new Super_admin();
+	$sa = new Super_admin();
+	
+	$e = "";
 
     if(Input::exists()){
         if(Token::check("newUserToken", Input::get('newUserToken'))){
@@ -73,7 +75,7 @@
 
                 /* DENVER!!!!! Display errors in toust*/
                 foreach($validation->errors() as $error){
-                    echo $error,'<br>';
+                    $e .= $error;
                 }
             }
 
@@ -97,6 +99,10 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
+
+	<script>
+		var error = '<?php echo $e?>';
+	</script>
 
 </head>
 
@@ -426,4 +432,15 @@
 
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>
 </body>
+<script>
+	if(error !== ""){
+		swal({
+			title: "An error occurred!",
+			text: error,
+			confirmButtonColor: "#DD6B55",
+			type: 'error',
+			timer: 13000
+		});
+	}
+</script>
 </html>
