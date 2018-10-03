@@ -11,20 +11,26 @@ else{
 
 $staff = new Staff();
 
-$Project = json_decode($_POST['obj'], true);
-
 try
 {
-	if($staff->register("project_logs", array(
-		'referencing_to' => $Project['id'],
-		'remarks' => "START_PROJECT",
-		'logdate' => date('Y-m-d H:i:s'),
-		'type' => "IN"
-	))){
+	if(!empty($_POST))
+	{
+		$Project = json_decode($_POST['obj'], true);
+		if($staff->register("project_logs", array(
+			'referencing_to' => $Project['id'],
+			'remarks' => "START_PROJECT",
+			'logdate' => date('Y-m-d H:i:s'),
+			'type' => "IN"
+		))){
+			header("Content-type:application/json");
+			echo json_encode($staff->allPRJO_req_detail());
+		}
+	}
+	else
+	{
 		header("Content-type:application/json");
 		echo json_encode($staff->allPRJO_req_detail());
-	}
-}
+	}}
 catch(Exception $e)
 {
 	$data = [

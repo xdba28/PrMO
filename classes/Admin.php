@@ -141,7 +141,15 @@
                 }
 
             return false;
-        }		
+		}		
+		
+		//this functions is used for outgoing documents
+		public function transfer($refno, $name){
+			if(!$this->db->query_builder("INSERT INTO `outgoing_register`(`project`, `transmitting_to`, `specific_office`, `remarks`, `transactions`, `date_registered`, `released_by`) SELECT project, transmitting_to, specific_office, remarks, transactions, NOW(), '{$name}' FROM `outgoing` WHERE project = '$refno'")){
+				return true;
+			}
+			return false;
+		}
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
@@ -159,12 +167,19 @@
 			return false;
 		}
 		
-		public function get($table, $where){	
+		public function get($table, $where){
 			if($this->db->get($table, $where)){
 				return $this->db->first();
 			}
 			return false;
 		}	
+
+		public function delete($table, $where){
+			if(!$this->db->delete($table, $where)){
+				return $true;
+			}
+			return false;
+		}
 
         public function exist(){
             return  (!empty($this->data)) ? true : false;

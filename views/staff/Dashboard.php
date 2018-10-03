@@ -104,7 +104,7 @@
 			</div>
 		</nav>
 
-        <div id="page-wrapper" class="gray-bg">
+        <div id="page-wrapper" class="gray-bg" style="background-color:#c2c2ca">
 			<div class="row border-bottom">
 				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/admin_header.php'; ?>
@@ -112,8 +112,8 @@
 			
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>This is main title</h2>
+                <div class="col-sm-12">
+                    <h2>Staff</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
@@ -123,23 +123,109 @@
                         </li>
                     </ol>
                 </div>
-                <div class="col-sm-8">
-                    <div class="title-action">
-                    <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
-                    </div>
-                </div>
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
-                <div class="middle-box text-center animated fadeInRightBig">
-                    <h3 class="font-bold">Staff</h3>
+            <div class="wrapper wrapper-content animated fadeInUpBig">
+                    <!-- <h3 class="font-bold">Staff</h3>
                     <div class="error-desc">
                         You can create here any grid layout you want. And any variation layout you imagine:) Check out
                         main dashboard and other site. It use many different layout.
-                        <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
-                    </div>
-                </div>
+                        <br/><a href="Dashboard" class="btn btn-primary m-t">Dashboard</a>
+                    </div> -->
+					
+
+					<div class="container card-list">
+					  <div class="card blue" style="margin-right:10px">
+							<div class="title">All Projects</div><span class="glyphicon glyphicon-upload"></span>
+							<div class="value">00</div>
+							<div class="stat"><b>13</b>% increase</div>
+					  </div>
+					  <div class="card green" style="margin-right:10px">
+							<div class="title">team members</div><span class="glyphicon glyphicon-upload"></span>
+							<div class="value">5,990</div>
+							<div class="stat"><b>4</b>% increase</div>
+					  </div>
+					  <div class="card orange" style="margin-right:10px">
+							<div class="title">total budget</div><span class="glyphicon glyphicon-download"></span>
+							<div class="value">$80,990</div>
+							<div class="stat"><b>13</b>% decrease</div>
+					  </div>
+					  <div class="card red">
+							<div class="title">new customers</div><span class="glyphicon glyphicon-download"></span>
+							<div class="value">3</div>
+							<div class="stat"><b>13</b>% decrease</div>
+					  </div>
+					</div><br>
+					
+					<div class="container projects">
+					  <div class="projects-inner">
+						<header class="projects-header">
+						  <div class="title">Ongoing Projects</div>
+						  <div class="count">| 00 Projects</div><span class="glyphicon glyphicon-download-alt"></span>
+						</header>
+						<table class="projects-table">
+							 <thead>
+								<tr>
+									<th>Project</th>
+									<th>Deadline</th>
+									<th>Budget</th>
+									<th>Status</th>
+								</tr>
+							 </thead>
+						  <tr>
+							<td>
+							  <p>New Dashboard</p>
+							  <p>Google</p>
+							</td>
+							<td>
+							  <p>17th Oct, 15</p>
+							  <p class="danger-text">Overdue</p>
+							</td>
+							<td>
+							  <p>$4,670</p>
+							  <p>Paid</p>
+							</td>
+							<td class="status"><span class="status-text status-orange">In progress</span>
+							  <form class="form" action="#" method="POST">
+								<select class="action-box">
+								  <option>Actions</option>
+								  <option>Start project</option>
+								  <option>Send for QA</option>
+								  <option>Send invoice</option>
+								</select>
+							  </form>
+							</td>
+						  </tr>
+						  <tr class="danger-item">
+							<td>
+							  <p>New Dashboard</p>
+							  <p>Google</p>
+							</td>
+							<td>
+							  <p>17th Oct, 15</p>
+							  <p class="danger-text">Overdue</p>
+							</td>
+							<td>
+							  <p>$4,670</p>
+							  <p>Paid</p>
+							</td>
+							<td class="status"><span class="status-text status-red">Blocked</span>
+							  <form class="form" action="#" method="POST">
+								<select class="action-box">
+								  <option>Actions</option>
+								  <option>Start project</option>
+								  <option>Send for QA</option>
+								  <option>Send invoice</option>
+								</select>
+							  </form>
+							</td>
+						  </tr>
+
+						</table>
+					  </div>
+					</div><br><br>			
+
             </div>
 			<!-- Main Content End -->
 			
@@ -152,8 +238,9 @@
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
 <!-- Password meter -->
-<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+	<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	
 	<script>	
 		$(document).ready(function(){
            // Example 4 password meter
@@ -194,7 +281,6 @@
 
 			password.onchange = validatePassword;
 			confirm_password.onkeyup = validatePassword;						
-			
 		})
 	
 	</script>

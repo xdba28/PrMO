@@ -11,6 +11,8 @@
         die();
 	}
 
+	$e = "";
+
     $user = $user->profile(Session::get(Config::get('session/session_name')));
 
 	$sa = new Super_admin();
@@ -35,7 +37,11 @@
     
             if($validation->passed()){
                 try{
-                    $sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
+					$sa->startTrans();
+
+					$sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
+					
+					$sa->endTrans();
                     
                     Session::flash('toust', 'Request for Account Denied');
                     //Redirect::To('account-request');
@@ -46,7 +52,7 @@
 
             }else{        
               foreach($validation->errors() as $error){
-                  echo $error,'<br>';
+                  $e .= $error;
               }
         
             }
@@ -67,6 +73,8 @@
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
+		var error = '<?php echo $e; ?>';
+
 		function ps_mdl_d(name, id){
 			document.getElementById('rq-mdl-name').value = name;
 			document.getElementById('rq-hid').value = id;	
@@ -84,7 +92,7 @@
 				{
 					swal({
 						title: data,
-						text: "",
+						text: "Account Request Approved!",
 						timer: 13000,
 						type: "success"
 					});
@@ -425,4 +433,15 @@
 
 
 </body>
+<script>
+	if(error !== ""){
+		swal({
+			title: "An error occurred!",
+			text: error,
+			confirmButtonColor: "#DD6B55",
+			type: 'error',
+			timer: 13000
+		});
+	}
+</script>
 </html>

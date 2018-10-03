@@ -266,18 +266,39 @@
 			return false;
 		}
 
-		public function numberOfLots($refno, $type){
-			if($type == "PR"){
-				if($this->db->query_builder("SELECT COUNT(lot_id) as 'numberOfLots' FROM
-				`lots` WHERE request_origin = '{$refno}'
-				GROUP BY request_origin")){
-					return $this->db->first();
-				}
-
-			}else{
-
+		public function numberOfLots($refno){
+			if($this->db->query_builder("SELECT COUNT(lot_id) as 'numberOfLots', lot_no FROM
+			`lots` WHERE request_origin = '{$refno}'
+			GROUP BY request_origin")){
+				return $this->db->first();
 			}
-		}
+		}//for counting the number of lots
+
+		public function getContent($refno, $type, $lot){
+			if($type == "PR"){
+				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
+				FROM
+				`lots`, `lot_content_for_pr`
+				WHERE
+				lots.lot_id = lot_content_for_pr.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}else{
+				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
+				FROM
+				`lots`, `lot_content_for_jo`
+				WHERE
+				lots.lot_id = lot_content_for_jo.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}
+		}//for fetching lot content
 
 		public function myRequests($user, $registered = false){
 

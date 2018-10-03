@@ -1,10 +1,14 @@
 <!--Bootstrap CSS-->
 <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
 <!--Font-Awesome CSS-->
+
 <link href="../../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <link href="../../assets/font-awesome-52/css/fontawesome.css" rel="stylesheet">
 <link href="../../assets/font-awesome/themify-icons/themify-icons.css" rel="stylesheet">
 <link href="../../assets/font-awesome-52/css/solid.css" rel="stylesheet">
+<link href="../../assets/font-awesome-52/css/regular.css" rel="stylesheet">
+<link href="../../assets/font-awesome-52/css/brands.css" rel="stylesheet">
+
 <!--Default CSS-->
 <link href="../../assets/css/animate.css" rel="stylesheet">
 <link href="../../assets/css/style.css" rel="stylesheet">
@@ -16,11 +20,6 @@
 <link href="../../assets/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
 <!--iCheck CSS-->
 <link href="../../assets/css/plugins/iCheck/custom.css" rel="stylesheet">
-<!--Color picker CSS-->
-<link href="../../assets/css/plugins/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet">
-<link href="../../assets/css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-<!--Image cropper CSS-->
-<link href="../../assets/css/plugins/cropper/cropper.min.css" rel="stylesheet">
 <!--Switch like IOS CSS-->
 <link href="../../assets/css/plugins/switchery/switchery.css" rel="stylesheet">
 <!--Jasny CSS-->
@@ -54,13 +53,10 @@
 <link href="../../assets/css/plugins/codemirror/codemirror.css" rel="stylesheet">
 <!-- FooTable -->
 <link href="../../assets/css/plugins/footable/footable.core.css" rel="stylesheet">
-
-
+<!-- dataTables -->
+<link href="../../assets/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <!--External-->
 <link rel="stylesheet" href="../../assets/dropify/css/dropify.min.css">
-
-<!-- Sweet Alert -->
-<link href="../../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <!-- Toastr -->
 <link href="../../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
@@ -69,3 +65,5 @@
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
 
+<!-- Sweet Alert -->
+<link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">

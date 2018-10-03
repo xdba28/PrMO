@@ -10,7 +10,6 @@
        Redirect::To('../../index');
         die();
 	}
-	
 
 	if(Input::exists()){
 	
@@ -109,6 +108,12 @@
 
 	<?php include_once '../../includes/parts/user_styles.php'; ?>
 
+	<script>
+		function form(){
+			$('div.row.ibox-content').toggleClass('sk-loading');
+		}
+	</script>
+
 </head>
 
 <body class="">
@@ -153,7 +158,11 @@
 			
 			<!-- Main Content -->
 			<div class="wrapper wrapper-content animated fadeInRight">
-				<div class="row">
+				<div class="row ibox-content">
+					<div class="sk-spinner sk-spinner-double-bounce">
+							<div class="sk-double-bounce1"></div>
+							<div class="sk-double-bounce2"></div>
+					</div>
 					<div class="col-lg-12">
 						<div class="tabs-container">
 							<ul class="nav nav-tabs">
@@ -162,12 +171,13 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-								<div><form method="POST" id="jo_form"></form></div>
+								<div><form method="POST" id="jo_form" onsubmit="form()"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
 									   <h2>Project Information</h2>
 
 										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
+
 										<div class="row">
 											<div class="col-lg-7">
 												<div class="form-group">
@@ -349,7 +359,7 @@
 					var tg_num = obj[num[1]].tag;
 					var list_tmp = `
 					<div>
-						<br><hr style="	height: 6px; background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;border: 0;">
+						<br><hr style="	height: 6px; background: url(../../assets/pics/hr-12.png) repeat-x 0 0;border: 0;">
 						<p class="font-bold">List Name: </p>
 						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form" required>
 						<br>

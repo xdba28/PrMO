@@ -153,6 +153,14 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
+                                            <dt>MOP:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php echo $project->MOP;?></dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
                                             <dt>Registered:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
@@ -211,7 +219,8 @@
                                                 <div class="progress m-b-1">
                                                     <div style="width: <?php echo $accomplishment;?>%;" class="progress-bar progress-bar-striped progress-bar-animated"></div>
                                                 </div>
-                                                <small>Project progress is now on <strong><?php echo $accomplishment;?>%</strong>. Next step to this is <?php echo $stepDetails[$project->accomplished+1];?>.</small>
+                                                <small>Project progress is now on <strong><?php echo $accomplishment;?>%</strong>. Next step to this is <?php echo $stepDetails[$project->accomplished+1];?>.</small><br>
+												<small><?php echo $project->accomplished, " Out of ", $project->steps," steps accomplished.";?></small>
                                             </dd>
                                         </div>
                                     </dl>

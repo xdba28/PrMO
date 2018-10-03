@@ -93,6 +93,12 @@
 			}else return false;
 		}
 
+		public function delPersn($table, $where = array()){
+			if($this->db->delete($table, $where)){
+				return true;
+			}else return false;
+		}
+
         public function personnels(){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`

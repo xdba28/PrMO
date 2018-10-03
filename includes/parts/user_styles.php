@@ -51,7 +51,11 @@
 <link href="../../assets/css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet">
 <!-- Ladda style -->
 <link href="../../assets/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<!-- FooTable -->
+<link href="../../assets/css/plugins/footable/footable.core.css" rel="stylesheet">
 
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
 
+<!-- Sweet Alert -->
+<link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">

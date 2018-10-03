@@ -45,6 +45,8 @@
 
                 ));
 
+
+				Session::flash("PersUpdate", "Successfully updated personnel information");
                 //create flash "Personnel Info Successfuly Updated"
                 //assign this flash to toust
 				
@@ -70,7 +72,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>INSPINIA | Dashboard v.3</title>
-	<?php include "../../includes/parts/admin_styles.php"?>
+	<?php include "../../includes/parts/admin_styles.php";?>
+	<script>
+		var PersUpdate = '<?php 
+		if(Session::exists("PersUpdate")) Session::flash("PersUpdate");
+		else echo "";
+		?>';
+	</script>
 
 </head>
 
@@ -503,4 +511,21 @@
 	<?php include "../../includes/parts/admin_scripts.php"?>
 
 </body>
+
+	<script>
+		$(function()
+		{
+			if(PersUpdate !== "")
+			{
+				swal({
+					title: PersUpdate,
+					text: "",
+					confirmButtonColor: "#DD6B55",
+					type: 'success',
+					timer: 13000
+				});
+			}
+		});
+	</script>
+
 </html>

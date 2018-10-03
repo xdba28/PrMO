@@ -7772,7 +7772,7 @@ body.body-small .vote-icon {
 }
 .ibox-content.sk-loading:after {
   content: '';
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(226, 226, 226, 0.7);
   position: absolute;
   top: 0;
   left: 0;

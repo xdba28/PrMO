@@ -51,8 +51,20 @@
 				'type' =>  'IN'
 			));
 
+			$staff->register('outgoing', array(
+
+				'project' =>  $project_ref_no,
+				'transmitting_to' => 'TWG',
+				'specific_office' => 'TWG',
+				'remarks' => 'none',
+				'transactions' => 'EVALUATION',
+				'date_registered' => date('Y-m-d H:i:s')
+
+			));
+
 			$staff->endTrans(); //commit
 
+			Session::flash("ProjReg", "Project successfully registered!");
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
 			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 			//send SMS notifications
@@ -86,6 +98,10 @@
 		$user = new Staff();
 		echo json_encode($user->allPRJO_req_detail());		
 		?>;
+		var ProjReg = '<?php 
+		if(Session::exists("ProjReg")) Session::flash("ProjReg");
+		else echo "";
+		?>';
 		console.log(OBJ);
 	</script>
 </head>
@@ -168,7 +184,11 @@
                                 <img alt="image" class="img-fluid" src="../../assets/pics/profile-bg.png">
                             </div>
                             <div class="ibox-content profile-content">
+								<h5 class="text-navy">
+                                    About the Request
+                                </h5>							
                                 <h3><?php echo $request->title;?></h3>
+								
 								<h5 class="text-navy">
                                     About the Enduser
                                 </h5>
@@ -246,7 +266,12 @@
                                         </div>
 										<div class="form-group mt-20">
 											<label for="ABC" class="form-label">ABC</label> <input type="number" min="0.01" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
-										</div>																			
+										</div>				
+										<label class="font-normal">Nearest Implementation date</label>
+										<div class="input-group date">
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="08/09/2014">
+										</div>
+										
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
@@ -391,46 +416,70 @@
 
 	$(document).ready(function(){
 
+		function poll(){
+			$.ajax({
+				type: "GET",
+				url: "xhr-receive-proj.php",
+				timeout: 5000,
+				success: function(d){
+					OBJ = d
+					$('#nwprj-tbl-data').html('');
+					start();
+					setTimeout(poll, 15000);
+				},
+				error: function(){
+					setTimeout(poll, 15000);
+				}
+			});
+		}
+
+		if(ProjReg !== ""){
+			swal({
+				title: ProjReg,
+				text: "",
+				confirmButtonColor: "#DD6B55",
+				type: 'success',
+				timer: 13000
+			});
+		}
+
 		function start(){
-			OBJ.forEach(function(el, index)
-			{
-				var user = el.req_by.split(":");
-				var data_tmp = `
-				<tr>
-					<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
-					<td>${user[1]}</td>
-					<td><i class="fa fa-clock"></i> ${el.date_created}</td>
-					<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
-				</tr>`;
-				$('#nwprj-tbl-data').append(data_tmp);
-				if(el.log_exist === false) $(`[proj="${el.id}"]`).prop('disabled', false);
-				else $(`[proj="${el.id}"]`).prop('disabled', true);
+			$('#nwprj-tbl-data').html('');
+			OBJ.forEach(function(el, index){
+				if(el.registered === false){
+					var user = el.req_by.split(":");
+					var data_tmp = `
+					<tr>
+						<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
+						<td>${user[1]}</td>
+						<td><i class="fa fa-clock"></i> ${el.date_created}</td>
+						<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
+					</tr>`;
+					$('#nwprj-tbl-data').append(data_tmp);
+					if(el.log_exist === true) $(`[proj="${el.id}"]`).prop('disabled', true);
+					else $(`[proj="${el.id}"]`).prop('disabled', false);
+				}
 			});
 
-			$(document.body).on("click",".client-link",function(e)
-			{
+			$(document.body).on("click",".client-link",function(e){
 				e.preventDefault();
 				var ID = $(this).attr('href').split("#");
-				var PROJ = OBJ.find(function(el)
-				{
+				var PROJ = OBJ.find(function(el){
 					return el.id === ID[1];
 				});
 
-				if(typeof PROJ !== "undefined")
-				{
+				if(typeof PROJ !== "undefined"){
 					$('[data="side-panel"]').attr("id", PROJ.id);
 					$('[data="side-panel"] h2').html(PROJ.title);
 					$('#popOver0').attr("proj-comp", PROJ.id);
 					$('#btnlink').attr("href", `?q=${PROJ.id}`)
 
-					if(PROJ.log_exist === true) $('#registerNow').prop('disabled', false);
+					if(PROJ.log_exist) $('#registerNow').prop('disabled', false);
 					else $('#registerNow').prop('disabled', true);
 
 					$('#lot-data').html('');
-					PROJ.lot_details.forEach(function(el, index)
-					{
-						if(PROJ.type === "PR")
-						{
+					PROJ.lot_details.forEach(function(el, index){
+						if(PROJ.type === "PR"){
 							if(el.l_title === 'static lot'){
 								var lot_temp = `
 								<li class="list-group-item fist-item">
@@ -444,9 +493,7 @@
 									${el.l_title}
 								</li>`;						
 							}
-						}
-						else if(PROJ.type === "JO")
-						{
+						}else if(PROJ.type === "JO"){
 							var lot_temp = `
 							<li class="list-group-item fist-item">
 								<span class="float-right"> No. of List ${el.numReq}</span>
@@ -456,27 +503,21 @@
 						$('#lot-data').append(lot_temp);
 					});
 					$('span[date="created"]').html(PROJ.date_created);
-
 					$(".selected .tab-pane").removeClass('active');
 					$($(this).attr('href')).addClass("active");
-				}
-				else
-				{
+				}else{
 					swal({
 						title: "An Error Occurred!",
 						text: "Please reload the Page."
 					});
 				}
-
 				$('#popOver0').on('click', function(){
 					window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
 				});
-
 			});
 
 			$('.ladda-button').ladda();
-			$('[proj]').on('click', function()
-			{
+			$('[proj]').on('click', function(){
 				var SendBtn = $(this);
 				SendBtn.ladda('start');
 				var xhrData = JSON.stringify(OBJ.find(function(el){
@@ -488,10 +529,8 @@
 					url: "xhr-receive-proj.php",
 					data: {obj: xhrData},
 					timeout: 5000,
-					success: function(data)
-					{
-						if(typeof data === "object" && data !== null && !(data.success === false))
-						{
+					success: function(data){
+						if(typeof data === "object" && data !== null && !(data.success === false)){
 							OBJ = data;
 							swal({
 								title: 'Project Received!',
@@ -500,9 +539,7 @@
 								type: 'success',
 								timer: 13000
 							});
-						}
-						else if(data.success === false)
-						{
+						}else if(data.success === false){
 							swal({
 								title: "An Error Occurred!",
 								text: "Request Not Processed"
@@ -511,10 +548,8 @@
 						SendBtn.ladda('stop');
 						$('#nwprj-tbl-data').html('');
 						start();
-						console.log("asdasd");
 					},
-					error: function()
-					{
+					error: function(){
 						swal({
 							title: "An Error Occurred!",
 							text: "Request Not Processed"
@@ -525,8 +560,8 @@
 			});
 		}
 		start();
+		setTimeout(poll, 15000);
 	});
-
 
 	</script>
 </body>

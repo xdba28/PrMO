@@ -109,24 +109,33 @@
 			$this->db->query_builder("SELECT form_ref_no, title, requested_by, noted_by, verified_by, 
 			approved_by, type, date_created, lot_title, lot_cost, note
 			FROM `project_request_forms`, `lots`
-			WHERE project_request_forms.form_ref_no = lots.request_origin");
+			WHERE project_request_forms.form_ref_no = lots.request_origin GROUP BY form_ref_no");
 
 			$ProjData = $this->db->results();
 
 			foreach($ProjData as $a){
-				$exist = $this->db->query_builder("SELECT form_ref_no
+				$Logexist = $this->db->query_builder("SELECT form_ref_no
 				FROM `project_request_forms`, `project_logs`
 				WHERE project_request_forms.form_ref_no = project_logs.referencing_to 
 				AND referencing_to = '$a->form_ref_no' 
 				AND EXISTS (SELECT * FROM `project_logs` WHERE
 							remarks = 'START_PROJECT'
-							AND project_logs.type = 'IN')");
+							AND project_logs.type = 'IN')
+							LIMIT 1");
 					
-				if($exist->count()){
-					$log_data = true;
-				}else{
-					$log_data = false;
-				}
+				if($Logexist->count()) $log_data = true;
+				else $log_data = false;
+
+				$ProjReg = $this->db->query_builder("SELECT form_ref_no FROM `project_request_forms`, `project_logs`
+				WHERE project_request_forms.form_ref_no = project_logs.referencing_to 
+				AND referencing_to = '$a->form_ref_no' 
+				AND project_logs.type = 'IN'
+				AND remarks = 'START_PROJECT'
+				AND EXISTS (SELECT * FROM `projects` WHERE request_origin = '$a->form_ref_no')
+				LIMIT 1");
+
+				if($ProjReg->count()) $proj_reg = true;
+				else $proj_reg = false;
 
 				$this->db->query_builder("SELECT acronym FROM `units`, `enduser`
 				WHERE units.ID = enduser.edr_designated_office
@@ -169,7 +178,8 @@
 					'type' => $a->type,
 					'date_created' => date('F j, Y', strtotime($a->date_created)),
 					'lot_details' => $lot,
-					'log_exist' => $log_data
+					'log_exist' => $log_data,
+					'registered' => $proj_reg
 				];
 			}
 			return $data;

@@ -86,10 +86,52 @@ require_once "../../functions/account-verifier.php";
 <!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+<!-- dataTables -->
+<script src="../../assets/js/plugins/dataTables/datatables.min.js"></script>
+<script src="../../assets/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Notification -->
+<script src="../../assets/js/pusher.min.js"></script>
+<script>
+
+// // Enable pusher logging - don't include this in production
+// Pusher.logToConsole = true;
+
+// var pusher = new Pusher('6afb55a56f2b4a235c4b', {
+// 	cluster: 'ap1',
+// 	forceTLS: true
+// });
+
+// var channel = pusher.subscribe('client');
+// channel.bind('client', function(data) {
+// 	alert(JSON.stringify(data));
+// });
+</script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
 
 <script>
     $(document).ready(function(){
+		var path = window.location.pathname.split("/");
+		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+		var sLink = ['Dashboard'];
+		switch (path[path.length - 1]){
+			case sLink.find(function(){
+				return path[path.length - 1] === path[path.length - 1]
+			}):
+				link.parentNode.setAttribute("class", "active");
+				break;
+			default:
+				link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+				link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+				link.parentNode.setAttribute("class", "active");
+				break;
+		}
+
+
+
         $("#wizard").steps();
         $("#form").steps({
             bodyTag: "fieldset",
@@ -587,7 +629,7 @@ require_once "../../functions/account-verifier.php";
 
 				
                 zxcvbn: true,
-				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php 
 					if(isset($commonFields)) echo $commonFields;
 					else{
 						echo  $commonFields = '';
