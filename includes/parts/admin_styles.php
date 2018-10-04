@@ -66,4 +66,4 @@
 <link href="../../assets/my_style.css" rel="stylesheet">
 
 <!-- Sweet Alert -->
-<link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- <link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet"> -->

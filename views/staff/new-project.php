@@ -267,10 +267,13 @@
 										<div class="form-group mt-20">
 											<label for="ABC" class="form-label">ABC</label> <input type="number" min="0.01" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
 										</div>				
-										<label class="font-normal">Nearest Implementation date</label>
-										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="08/09/2014">
+										<div class="form-group" id="data_2">
+											<label class="font-normal">One Year view</label>
+											<div class="input-group date">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="08/09/2014">
+											</div>
 										</div>
+
 										
 									</div>
 									<div class="col-sm-6">
@@ -422,7 +425,7 @@
 				url: "xhr-receive-proj.php",
 				timeout: 5000,
 				success: function(d){
-					OBJ = d
+					OBJ = d;
 					$('#nwprj-tbl-data').html('');
 					start();
 					setTimeout(poll, 15000);
@@ -432,6 +435,8 @@
 				}
 			});
 		}
+
+
 
 		if(ProjReg !== ""){
 			swal({
@@ -560,7 +565,15 @@
 			});
 		}
 		start();
-		setTimeout(poll, 15000);
+		setTimeout(function(){
+			SendDoSomething("GET", "xhr-receive-proj.php", null, {
+				do: function(d){
+					OBJ = d;
+					$('#nwprj-tbl-data').html('');
+					start();
+				},
+			}, true)
+		}, 15000);
 	});
 
 	</script>

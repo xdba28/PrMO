@@ -23,3 +23,6 @@
 		<li><a href="#">Overall Logs</a></li>	
 	</ul>
 </li>
+<li>
+	<a href="Calendar"><i class="far fa-calendar-alt side"></i> <span class="nav-label">Dashboard</span></a>
+</li>

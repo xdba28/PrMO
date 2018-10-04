@@ -16,10 +16,10 @@ try
 	if(!empty($_POST))
 	{
 
-		try{
+		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
+		$outgoing = $_POST['outgoing'];
 
-			$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
-			$outgoing = $_POST['outgoing'];
+		try{
 
 			$user->startTrans();
 		
@@ -27,12 +27,11 @@ try
 
 				$project = $user->get('outgoing', array('project', '=', $reference));
 
-
 				/*Transfer the outgoing data to outgoing register*/
 				$user->transfer($reference, $releasedBy);
 
 				/*Delete original data from the outgoing table*/
-				//$user->delete('outgoing', array('project', '=', $reference));
+				$user->delete('outgoing', array('project', '=', $reference));
 
 				switch($project->transactions){
 

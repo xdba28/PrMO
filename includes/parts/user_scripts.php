@@ -92,6 +92,14 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Notification -->
 <script src="../../assets/js/pusher.min.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+<!-- Always Set Last --> 
+<!-- Denver's Custom JS -->
+<script src="../../includes/js/custom.js"></script>
+
 <script>
 
 // // Enable pusher logging - don't include this in production
@@ -107,9 +115,6 @@ require_once "../../functions/account-verifier.php";
 // 	alert(JSON.stringify(data));
 // });
 </script>
-
-<!-- Sweet Alert -->
-<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
 
 <script>

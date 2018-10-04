@@ -293,44 +293,16 @@
 </body>
 <script>
 
-	function send(obj){
-		$.ajax({
-			type: "POST",
-			url: "xhr-out.php",
-			data: {
-				"outgoing": obj
-			},
-			timeout: 5000,
-			success: function(d){
-				if(d.success && d.success !== 'error'){
-					swal({
-						title: "Document(s) successfully logged out",
-						text: "",
-						type: "success"
-					});
-				}else{
-					swal({
-						title: "An error occurred!",
-						text: "Error in data sent.",
-						type: "error"
-					});
-				}
-			},
-			error: function(){
-				swal({
-					title: "An error occurred!",
-					text: "Cannot send data.",
-					type: "error"
-				});
-			}
-		});
-	}
-
 	$('#tOut').on('click', function(e){
 		var data_twg = [];
 		$('[name="twg[]"]:checked').each(function(i, v){
 			data_twg.push($(this).attr("id"));
-			send(data_twg);
+			SendDoNothing("POST", "xhr-out.php", {
+				outgoing: data_twg
+			}, {
+				title: "Document(s) successfully logged out",
+				text: "",
+			})
 		});
 	});
 	

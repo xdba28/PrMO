@@ -148,11 +148,11 @@
 							<div class="btn-group pull-right" style="margin-right:15px">
 								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="far fa-edit"></i> <span>Update Selected documents to</span>&nbsp;&nbsp;</button>
 								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-check green side"></i> Successfuly Received</a></li>
-									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-exchange-alt blue side" ></i> Received & Immidiately Returned<br></a></li>
-									<li><a class="dropdown-item" log="upd" href="#"><i class="fas fa-reply orange side" ></i> Return Document to Outgoing Queue<br></a></li>
+									<li><a class="dropdown-item" log="upd" action="1" href="#"><i class="fas fa-check green side"></i> Successfuly Received</a></li>
+									<li><a class="dropdown-item" log="upd" action="2" href="#" data-toggle="tooltip" data-placement="top" title="Actions Successfully taken and returned immidiately"><i class="fas fa-exchange-alt blue side" ></i> Received & Immidiately Returned<br></a></li>
+									<li><a class="dropdown-item" log="upd" action="3" href="#"><i class="fas fa-reply orange side" ></i> Return Document to Outgoing Queue<br></a></li>
 									<li class="dropdown-divider"></li>
-									<li><a type="demo3" class="dropdown-item demo3" log="upd" href="#"><i class="far fa-times-circle red side" ></i> Failed to Receive</a></li>
+									<li><a type="demo3" class="dropdown-item demo3" log="upd" action="4" href="#"><i class="far fa-times-circle red side" ></i> Failed to Receive</a></li>
 								</ul>
 							</div>
                         </div>
@@ -186,11 +186,11 @@
       </div>
       <div class="modal-body">
 
-<!-- asdasdsa -->
-<form class="search"><span id="RefSearch"></span>
-  <input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
-  <button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="Smiley face" height="42" width="42"></button>
-</form><br>
+		<!-- asdasdsa -->
+		<form class="search"><span id="RefSearch"></span>
+		<input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
+		<button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="search" height="42" width="42"></button>
+		</form><br>
 
 
       </div>

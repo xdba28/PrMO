@@ -3,177 +3,147 @@ include_once '../../includes/parts/modals.php';
 require_once "../../functions/account-verifier.php";
 ?>
 
-<!-- Mainly scripts -->
+
+
+<!-- ***********************************Mainly scripts/Defaults*************************************** -->
 <script src="../../assets/js/jquery-3.1.1.min.js"></script>
 <script src="../../assets/js/popper.min.js"></script>
 <script src="../../assets/js/bootstrap.js"></script>
-<script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-<!-- Peity -->
-<script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
-<script src="../../assets/js/demo/peity-demo.js"></script>
-
-<!-- Chosen -->
-<script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
-
-
-<!-- Input Mask-->
-<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
-
 <!-- Custom and plugin javascript -->
 <script src="../../assets/js/inspinia.js"></script>
 <script src="../../assets/js/plugins/pace/pace.min.js"></script>
-
-<!-- Toastr -->
-<script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
-
-<!-- FooTable -->
-<script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
-
-<!-- Steps -->
-<script src="../../assets/js/plugins/steps/jquery.steps.min.js"></script>
-
-<!-- Jquery Validate -->
-<script src="../../assets/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
 
-<!-- Typehead -->
-<script src="../../assets/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+<!-- ***********************************FROM FORM ADVANCE RESOURCES*************************************** --> 
 
-
+<!-- Menu -->
+<script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<!-- Chosen -->
+<script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- Input Mask-->
+<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script> 
 <!-- iCheck -->
 <script src="../../assets/js/plugins/iCheck/icheck.min.js"></script>
+<!-- Tags Input -->
+<script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<!-- Date range use moment.js same as full calendar plugin --><!-- Date range picker --><!-- Data picker -->
+<script src="../../assets/js/plugins/fullcalendar/moment.min.js"></script>
+<script src="../../assets/js/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../assets/js/plugins/cropper/cropper.min.js"></script>
+<script src="../../assets/js/plugins/datapicker/bootstrap-datepicker.js"></script>
 
+<!-- Dual Listbox -->
+<script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+<!-- Notification -->
+<script src="../../assets/js/pusher.min.js"></script>
+
+
+
+<!-- ***********************************FORM ADVANCE RESOURCES******************************************** --> 
+
+<!-- Color picker -->
+<!-- <script src="js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script> -->
+<!-- Clock picker -->
+<!-- <script src="js/plugins/clockpicker/clockpicker.js"></script -->
+<!--  Data picker -->
+<!-- <script src="js/plugins/datapicker/bootstrap-datepicker.js"></script> -->
+<!-- NouSlider -->
+<!-- <script src="js/plugins/nouslider/jquery.nouislider.min.js"></script> -->
+<!-- Switchery -->
+<!-- <script src="js/plugins/switchery/switchery.js"></script> -->
+<!-- IonRangeSlider -->
+<!-- <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script> -->
+<!-- JSKnob -->
+<!-- <script src="js/plugins/jsKnob/jquery.knob.js"></script> -->
+<!-- Select2 -->
+<!-- <script src="js/plugins/select2/select2.full.min.js"></script> -->
+<!-- TouchSpin -->
+<!-- <script src="js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script> -->
+
+
+
+
+<!-- ***********************WALA SA FORM ADVANCE ******************************** -->
+<!-- dataTables -->
+<script src="../../assets/js/plugins/dataTables/datatables.min.js"></script>
+<script src="../../assets/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<!-- Crypto-js -->
+<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
 <!-- Ladda -->
 <script src="../../assets/js/plugins/ladda/spin.min.js"></script>
 <script src="../../assets/js/plugins/ladda/ladda.min.js"></script>
 <script src="../../assets/js/plugins/ladda/ladda.jquery.min.js"></script>
+<!-- Steps -->
+<script src="../../assets/js/plugins/steps/jquery.steps.min.js"></script>
+<!-- Jquery Validate -->
+<script src="../../assets/js/plugins/validate/jquery.validate.min.js"></script>
+<!-- Typehead -->
+<script src="../../assets/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+<!-- Toastr -->
+<script src="../../assets/js/plugins/toastr/toastr.min.js"></script>
+<!-- FooTable -->
+<script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
+<!-- Peity -->
+<script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="../../assets/js/demo/peity-demo.js"></script>
 
-<!-- Tags Input -->
-<script src="../../assets/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 
-<!-- Crypto-js -->
-<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
 
-<!--External-->
+<!-- **********************************EXTERNAL**********************************-->
 <script src="../../assets/dropify/js/dropify.min.js"></script>
 
-<!-- dataTables -->
-<script src="../../assets/js/plugins/dataTables/datatables.min.js"></script>
-<script src="../../assets/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
 
-<!-- Date range use moment.js same as full calendar plugin --><!-- Date range picker -->
-<script src="../../assets/js/plugins/fullcalendar/moment.min.js"></script>
-<script src="../../assets/js/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Always Set Last --> 
+<!-- Denver's Custom JS -->
+<script src="../../includes/js/custom.js"></script>
 
 
-<!-- Notification -->
-<script src="../../assets/js/pusher.min.js"></script>
-
-<!-- Sweet Alert -->
-<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
-
-<script>
-
-// // Enable pusher logging - don't include this in production
-// Pusher.logToConsole = true;
-
-// var pusher = new Pusher('6afb55a56f2b4a235c4b', {
-// 	cluster: 'ap1',
-// 	forceTLS: true
-// });
-
-// var channel = pusher.subscribe('my-channel');
-// channel.bind('my-event', function(data) {
-// 	alert(JSON.stringify(data));
-// });
 
 
-</script>
+
+
+
     <script>
 
-		function SendDoNothing(type, url, data, swalset){
-			$.ajax({
-				type: type,
-				url: url,
-				data: data,
-				timeout: 5000,
-				success: function(d){
-					if(d.success && d.success !== 'error'){
-						swal({
-							title: swalset.title,
-							text: swalset.text,
-							type: "success"
-						});
-					}else{
-						swal({
-							title: "An error occurred!",
-							text: "Error in data sent.",
-							type: "error"
-						});
-					}
-				},
-				error: function(jqXHR){
-					swal({
-						title: "An error occurred!",
-						text: "Cannot send data.",
-						type: "error"
-					});
-					console.log(jqXHR);
-				}
-			});
-		}
-
-		async function SendDoSomething(type, url, parse, data){
-			try {
-				var a = await fetch(url, {
-					method: type,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(data)
-				});
-				if(a.ok && a.status === 200){
-					switch (parse) {
-						case "json":
-							var res = await a.json();
-							return res;
-							break;
-						case "text":
-							var res = await a.text();
-							return res;
-							break;
-						case "html":
-							var res = await a.html();
-							return res;
-							break;
-						default:
-							break;
-					}
-				}else throw new Error(false);
-			} catch (error) {
-				swal({
-					title: "An error occured!",
-					text: "Cannot send data.",
-					type: "error"
-				});
-			}
-		}
-
+		
 		// modal
 		var updLog = [];
 		$('[log="upd"]').on('click', function(){
 			var updLog = [];
+			var LogType = $(this).attr("action");
+			// switch (LogType) {
+			// 	case 1: var act = ""; break;
+			// 	case 2: break;
+			// 	case 3: break;
+			// 	case 4: break;
+			// 	default: break;
+			// }
+
+			sweet({
+				title: 'Remarks of Log',
+				input: 'text',
+				showCancelButton: true,
+				confirmButtonText: "Submit",
+				allowOutsideClick: false,
+			}, {
+				do: function(res){
+					console.log(res);
+				}
+			});
+	
 			$('[name="updOutLog[]"]:checked').each(function(){
 				updLog.push($(this).attr("id"));
-				SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
-					outgoing: updLog
-				}, {
-					title: "Document(s) successfully logged out",
-					text: ""
-				});
-			})
+				// SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+				// 	outgoing: updLog,
+				// 	action: LogType
+				// }, {
+				// 	title: "Document(s) successfully updated!",
+				// 	text: ""
+				// });
+			});
 		});
 		// modal
 
@@ -233,10 +203,7 @@ require_once "../../functions/account-verifier.php";
        });
     </script>
 
-<!-- Page-Level Scripts -->
-
-
-    <script>
+    <script> //wizard
         $(document).ready(function(){
             $("#wizard").steps();
             $("#form").steps({
@@ -317,7 +284,7 @@ require_once "../../functions/account-verifier.php";
        });
     </script>
 	
-	<script>
+	<script> //dropify
 	$(function() {
 		$('.dropify').dropify();
 
@@ -341,7 +308,7 @@ require_once "../../functions/account-verifier.php";
 	});
 	</script>
 	
-	<script>
+	<script> //search modal animation timer
 		function refreshPage(){
 			window.location.reload();
 		} 
@@ -354,7 +321,7 @@ require_once "../../functions/account-verifier.php";
 		});
 	</script>	
 	
-	<script>
+	<script> //document.ready
 		$(document).ready(function () {
 			$('#popOver0').popover();
 			$('#popOver1').popover();
@@ -524,7 +491,7 @@ require_once "../../functions/account-verifier.php";
 
 	</script>
 
-	<script>
+	<script> //search script
 			$('form').submit(function(e) {
 			  e.preventDefault();
 			  if ($(this).hasClass('active')) 
@@ -550,7 +517,7 @@ require_once "../../functions/account-verifier.php";
 			});
 	</script>
 	
-	    <script>
+    <script> //form advance script
         $(document).ready(function(){
 
             $('.tagsinput').tagsinput({
