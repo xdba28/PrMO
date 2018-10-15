@@ -258,7 +258,7 @@
 			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
 			FROM `projects`, `project_logs`
 			WHERE referencing_to = '{$originRefno}' OR
-			referencing_to = '{$currentRefno}' GROUP BY ID
+			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
 			")){
 				return $this->db->results();
 			}
@@ -276,7 +276,7 @@
 
 		public function getContent($refno, $type, $lot){
 			if($type == "PR"){
-				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
 				FROM
 				`lots`, `lot_content_for_pr`
 				WHERE
@@ -287,7 +287,7 @@
 					return $this->db->results();
 				}
 			}else{
-				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot',  lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
 				FROM
 				`lots`, `lot_content_for_jo`
 				WHERE
@@ -327,6 +327,17 @@
 			}
 
 
+		}
+
+		//this is to determine if a request form is already registered as a project and in the TWG evaluation stage alredy
+		public function isEvaluated($ID){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'isProject' FROM `projects` WHERE request_origin = '{$ID}'")){
+				if(($this->db->first()->isProject > 0) && ($this->db->first()->accomplished > 2)) {
+					//greater than 2 means this project already surpassed the step 2 which is finalization of technical members verdict
+					return true;
+				}
+				return false;
+			}
 		}
 
 		public function logLastUpdated($ID){ //to get the data when the last update of the project

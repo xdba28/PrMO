@@ -15,7 +15,6 @@ try
 
 	if(!empty($_POST))
 	{
-
 		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
 		$outgoing = $_POST['outgoing'];
 
@@ -40,7 +39,8 @@ try
 
 						/*Update the progress of the project*/
 						$user->update('projects', 'project_ref_no', $reference, array(
-							'accomplished' => '1'
+							'accomplished' => '1',
+							'workflow' => 'Pre-procurement Evaluation'
 						));
 
 						break;

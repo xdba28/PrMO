@@ -108,53 +108,14 @@ require_once "../../functions/account-verifier.php";
 
     <script>
 
-		
-		// modal
-		var updLog = [];
-		$('[log="upd"]').on('click', function(){
-			var updLog = [];
-			var LogType = $(this).attr("action");
-			// switch (LogType) {
-			// 	case 1: var act = ""; break;
-			// 	case 2: break;
-			// 	case 3: break;
-			// 	case 4: break;
-			// 	default: break;
-			// }
-
-			sweet({
-				title: 'Remarks of Log',
-				input: 'text',
-				showCancelButton: true,
-				confirmButtonText: "Submit",
-				allowOutsideClick: false,
-			}, {
-				do: function(res){
-					console.log(res);
-				}
-			});
-	
-			$('[name="updOutLog[]"]:checked').each(function(){
-				updLog.push($(this).attr("id"));
-				// SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
-				// 	outgoing: updLog,
-				// 	action: LogType
-				// }, {
-				// 	title: "Document(s) successfully updated!",
-				// 	text: ""
-				// });
-			});
-		});
-		// modal
-
-
 		$(function(){
+			// side nav active
 			var path = window.location.pathname.split("/");
 			var link = document.querySelector(`[href='${path[path.length - 1]}']`);
-			var sLink = ['Dashboard'];
+			var sLink = ['Dashboard', 'Calendar'];
 			switch (path[path.length - 1]){
-				case sLink.find(function(){
-					return "path[path.length - 1]" === "path[path.length - 1]"
+				case sLink.find(function(el){
+					return path[path.length - 1] === el
 				}):
 					link.parentNode.setAttribute("class", "active");
 					break;
@@ -165,6 +126,163 @@ require_once "../../functions/account-verifier.php";
 					break;
 			}
 		});
+
+		// modal
+		$('[log="upd"]').on('click', function(){
+			var updLog = [];
+			var LogType = $(this).attr("action");
+			$('[name="updOutLog[]"]:checked').each(function(){
+				updLog.push($(this).attr("id"));
+			});
+			if(updLog.length !== 0){
+				$('[modal="RelOut"]').trigger('click');
+				switch(LogType){
+					case "4":
+						swal({
+							title: "Delivery Fail",
+							text: "Add remarks to this report for a reliable referencing.",
+							type: "warning",
+							showCancelButton: true,
+							confirmButtonColor: "#DD6B55",
+							confirmButtonText: "Update",
+							allowOutsideClick: false
+						}).then(function(res){
+							if(res.value){
+								sweet({
+									title: 'Remarks of Log',
+									type: "info",
+									showCancelButton: true,
+									confirmButtonText: "Submit",
+									allowOutsideClick: false,
+									html: `
+									<input type="text" name="LogRem" list="reason" placeholder="type of choose your reason">
+									<datalist id="reason">
+										<option value="office unattended">
+									</datalist>
+									`,
+									focusConfirm: false,
+									preConfirm: function(){
+										return document.querySelector('[name="LogRem"]').value
+									}
+								}, {
+									do: function(res){
+										if(res.dismiss === "cancel"){
+											swal({
+												title: "Action dismissed.",
+												text: "",
+												type: "info"
+											});
+										}else if(res.value !== "undefined"){
+											SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+												outgoing: updLog,
+												action: LogType,
+												remarks: res.value
+											}, {
+												title: "Success!",
+												text: "Document(s) successfully updated."
+											});
+										}
+									}
+								});
+							}else{
+								swal({
+									title: "Action dismissed.",
+									text: "",
+									type: "info"
+								});
+							}
+						});
+						break;
+					default:
+						sweet({
+							title: "Action: " + this.innerText,
+							text: "Are you sure with this action?",
+							type: "question",
+							showCancelButton: true,
+							confirmButtonText: "Proceed",
+							allowOutsideClick: false
+						}, {
+							do: function(res){
+								if(res.dismiss === "cancel"){
+									swal({
+										title: "Action dismissed.",
+										text: "",
+										type: "info"
+									});
+								}else if(res.value !== "undefined"){
+									SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+										outgoing: updLog,
+										action: LogType,
+										remarks: res
+									}, {
+										title: "Success!",
+										text: "Document(s) successfully updated."
+									});
+								}
+							}
+						});
+						break;
+				}
+			}else{
+				$('[modal="RelOut"]').trigger('click');
+				swal({
+					title: "No selected document!",
+					text: "Please select a document.",
+					type: "error",
+					confirmButtonColor: "#DD6B55"
+				});
+			}
+		});
+		// modal
+		
+		//available actions modal
+		$('#actionsModal').on('show.bs.modal', function (event) {
+			var OutGoingProjectModalBody = document.getElementById('OutGoingProjectModal');
+			OutGoingProjectModalBody.innerHTML = "";
+			$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var reference = button.data('reference') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+			SendDoSomething("POST", "../xhr-files/xhr-show-actions.php", {
+				ref:reference
+			}, {
+				do:function(res){
+					var availableActions = res.fetchedResult;
+					for(let i of availableActions){
+						OutGoingProjectModalBody.innerHTML += `
+						<div class="widget style1 lazur-bg">
+							<div class="row">
+								<div class="col-4">
+									<i class="fa fa-envelope-o fa-5x"></i>
+								</div>
+								<div class="col-8 text-right">
+									<span>${i}</span>
+									<h2 class="font-bold">260</h2>
+								</div>
+							</div>
+						</div>`;
+					}
+					$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+				}
+			}, false, {
+				f: function(){
+					$('[dataFor="OutGoingProjectModalClose"]').trigger('click');
+					$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+					swal({
+						title: "An error occurred!",
+						text: "Cannot send data.",
+						type: "error"
+					});
+				}
+			});
+			var modal = $(this);
+			modal.find('.modal-title').text('New message to ' + reference);
+			modal.find('.modal-body input').val(reference);
+		});
+
+
 
         Dropzone.options.dropzoneForm = {
             paramName: "file", // The name that will be used to transfer the file
@@ -469,24 +587,7 @@ require_once "../../functions/account-verifier.php";
 					updOut = true;
 				}
 				
-			});		
-	
-
-			$('.demo3').click(function () {
-				swal({
-					title: "Delivery Fail",
-					text: "Add remarks to this report for a reliable referencing.",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Update",
-					closeOnConfirm: false
-				}, function () {
-					swal("Updated!", "Documents returned to Outgoing Que.", "success");
-				});
 			});
-   		
-
 		});
 
 	</script>

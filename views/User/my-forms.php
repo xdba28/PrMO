@@ -11,7 +11,6 @@
         die();
     }
     
-    
 
 ?>
 
@@ -26,8 +25,91 @@
 
     <title>PrMO OPPTS | My Forms</title>
 
-	<?php include_once'../../includes/parts/user_styles.php'; ?>
+	<?php include_once '../../includes/parts/user_styles.php'; ?>
 
+	<script>
+		function prEdit(e){
+			var prData = e.parentNode.parentNode.parentNode.children;
+			document.querySelector('[dataFor="userEdit"]').innerHTML = `<thead><tr>
+			<th>Stock No.</th><th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th></tr>
+			</thead><tbody><tr><form id="EditForm"><input type="text" name="editType" value="PR" hidden form="EditForm">
+				<input type="text" name="projId" hidden form="EditForm">
+					<td><input type="text" name="prUpStk" id="prUpStk" class="form-control" form="EditForm"></td>
+					<td><input type="text" name="prUpUnt" id="prUpUnt" class="form-control" form="EditForm"></td>
+					<td><textarea name="" id="prUpDesc" cols="30" rows="1" maxlength="1000" class="form-control" form="EditForm"></textarea></td>
+					<td><input type="number" name="prUpQty" id="prUpQty" class="form-control" min="1" form="EditForm"></td>
+					<td><input type="number" name="prUpUc" id="prUpUc" class="form-control" step=".01" min="0.01" form="EditForm"></td>
+					<td><input type="number" name="prUpTc" id="prUpTc" class="form-control" readonly step=".01" min="0.01" form="EditForm"></td>
+					</form></tr></tbody>`;
+
+			var btnQ = document.getElementById('prUpQty');
+			var btnUc = document.getElementById('prUpUc');
+			var btnTc = document.getElementById('prUpTc');
+			
+			document.querySelector('[name="projId"]').value = prData[0].innerText;
+			document.getElementById('prUpStk').value = prData[2].innerText;
+			document.getElementById('prUpUnt').value = prData[3].innerText;
+			document.getElementById('prUpDesc').value = prData[4].innerText;
+			btnQ.value = prData[5].innerText;
+			btnUc.value = prData[6].innerText;
+			btnTc.value = prData[7].innerText;
+
+			btnQ.addEventListener('change', function(){
+				btnTc.value = (this.value * btnUc.value).toFixed(2);
+			});
+
+			btnUc.addEventListener('change', function(){
+				btnTc.value = (btnQ.value * this.value).toFixed(2);
+			});
+		}
+
+		function joEdit(e){
+			var joData = e.parentNode.parentNode.parentNode.children;
+			document.querySelector('[dataFor="userEdit"]').innerHTML = `<thead><tr>
+			<th data-toggle="true">List Title</th><th>Lot Estimated Cost</th><th data-hide="all">Tags</th>
+			<th data-hide="all">Notes</th></tr></thead><tbody><tr><form id="EditForm">
+				<input type="text" name="projId" hidden form="EditForm">
+				<input type="text" name="editType" value="JO" hidden form="EditForm">
+				<td><input type="text" name="joList" id="joList" class="form-control" form="EditForm"></td>
+				<td><input type="number" name="joCost" id="joCost" class="form-control" form="EditForm" step=".01" min="0.01"></td>
+				<td><input type="text" name="joTags" id="joTags" class="form-control" form="EditForm" data-role="tagsinput"></td>
+				<td><textarea name="joNotes" id="joNotes" placeholder="Some text" class="form-control" form="EditForm"></textarea></td>		
+				</form></tr></tbody>`;
+			document.querySelector('[name="projId"]').value = joData[0].innerText;
+			document.getElementById('joList').value = joData[1].innerText;
+			document.getElementById('joCost').value = joData[2].innerText;
+			document.getElementById('joTags').value = joData[3].innerText;
+			document.getElementById('joNotes').value = joData[4].innerText;
+			$('#joTags').tagsinput();
+		}
+
+		function del(e){
+			var delData = e.parentNode.parentNode.parentNode.children;
+			SendDoSomething("POST", "xhr-item-update.php", {
+				editType: "DEL",
+				projId: delData[0].innerText
+			}, {
+				do: function(d){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "Success!",
+						text: "Successfully deleted.",
+						type: "success"
+					});
+					// reload table
+				}
+			}, false, {
+				f: function(){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "An error occurred!",
+						text: "Cannot send data.",
+						type: "error"
+					});
+				}
+			});
+		}
+	</script>
 </head>
 
 <body class="">
@@ -46,7 +128,7 @@
 
         <div id="page-wrapper" class="gray-bg">
 			<div class="row border-bottom">
-				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+				<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/header.php'; ?>
 				</nav>
 			
@@ -115,18 +197,26 @@
 							
 							';
 							
-							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true);
+							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true); // requests that are already received
 							
 							foreach($requests as $request){
+
+								if($user->isEvaluated($request->form_ref_no)){
+									$colorClass = "panel-danger";
+								}else{
+									$colorClass = "panel-warning";
+								}
 								
 							?>
 								<div class="col-lg-4">
-									<div class="panel panel-warning rem1">
+									<div class="panel <?php echo $colorClass;?> rem1">
 										<div class="panel-heading" style="color:black">
-											Ref:   <?php echo $request->form_ref_no?>
+											Ref:   <?php echo $request->form_ref_no;?>
 										</div>
 										<div class="panel-body">
-											<h3><?php echo $request->title?></h3>
+											<h3><?php echo $request->title;
+											
+											?></h3>
 											<hr style="background-color:#23c6c8">
 											
 											<div class="">
@@ -215,6 +305,10 @@
 									}
 									
 									$content = $user->getContent($refno, $type, $currentLot);
+
+
+									$limiter = '';
+
 							?>
 											
 							<div class="col-lg-12">
@@ -254,6 +348,7 @@
 												foreach($content as $detail){
 											?>
 											<tr>
+												<td style="display:none;"><?php echo $refno.":".$detail->lot_id.":".$detail->ID?></td>
 												<td><?php echo $line;?></td>
 												<td><?php echo $detail->stock_no; ?></td>
 												<td><?php echo $detail->unit; ?></td>
@@ -263,8 +358,18 @@
 												<td><?php echo $detail->total_cost; ?></td>
 												<td class="text-center">
 													<div class="btn-group">
-														<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
-														<button class="btn-outline btn-danger btn btn-xs">Delete</button>
+
+													<?php
+														if($user->isEvaluated($refno)){
+															echo '<a class="btn btn-danger btn-rounded btn-outline" style="color:red">Disabled</a>';
+														}else{
+															echo '
+															<button class="btn-outline btn-success btn btn-xs" onclick="prEdit(this)" style="" data-toggle="modal" data-target="#userEdit">Edit</button>
+															<button class="btn-outline btn-danger btn btn-xs" onclick="del(this)">Delete</button>
+															';
+														}
+													?>
+
 													</div>
 												</td>
 												
@@ -332,14 +437,15 @@
 										foreach($content as $detail){
 									?>
 										<tr>
+										<td style="display:none;"><?php echo $refno.":".$detail->lot_id.":".$detail->ID?></td>
 											<td><?php echo $detail->header;?></td>
 											<td><?php echo $detail->lot_cost;?></td>
 											<td><?php echo str_replace(",", ", ", $detail->tags);?></td>
 											<td><?php echo $detail->note;?></td>
 											<td class="text-center">
 												<div class="btn-group">
-													<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
-													<button class="btn-outline btn-danger btn btn-xs">Delete</button>
+													<button class="btn-outline btn-success btn btn-xs" style="" onclick="joEdit(this)" data-toggle="modal" data-target="#userEdit">Edit</button>
+													<button class="btn-outline btn-danger btn btn-xs" onclick="del(this)">Delete</button>
 												</div>
 											</td>									
 										</tr>
@@ -383,5 +489,31 @@
 	<?php include_once '../../includes/parts/user_scripts.php'; ?>
 
 </body>
-
+<script>
+	document.addEventListener('DOMContentLoaded', function(){
+		document.querySelector('[dataFor="userEditSubmit"]').addEventListener('click', function(){
+			var EditData = $('#EditForm').serialize();
+			SendDoSomething("POST", "xhr-item-update.php", EditData, {
+				do: function(d){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "Success!",
+						text: "Successfully updated.",
+						type: "success"
+					});
+					// reload table
+				}
+			}, false, {
+				f: function(){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "An error occurred!",
+						text: "Cannot send data.",
+						type: "error"
+					});
+				}
+			});
+		});
+	});
+</script>
 </html>

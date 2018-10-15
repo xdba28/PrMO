@@ -90,7 +90,7 @@
 	
 		<div class="modal-header">
 			<h3 class="modal-title">Update Released Documents</h3>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<button type="button" modal="RelOut" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>			
 		</div>		
@@ -197,4 +197,68 @@
 
     </div>
   </div>
+</div>
+
+
+<!-- Actions modal for admin -->
+
+<div class="modal fade" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content ibox-content" dataFor="OutGoingProjectModal">
+	   <div class="sk-spinner sk-spinner-double-bounce">
+			<div class="sk-double-bounce1"></div>
+			<div class="sk-double-bounce2"></div>
+	  </div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" dataFor="OutGoingProjectModalClose">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="OutGoingProjectModal">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- myforms?q=PROJECT-ID -->
+<div id="userEdit" class="modal fade bd-example-modal-lg" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<h3 class="modal-title">Update Project Details</h3>
+				<button type="button" dataFor="userEditClose" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>			
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox ">
+							<div class="ibox-content">
+		
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover dataTables-example" dataFor="userEdit">
+
+									</table>
+									<div class="btn-group pull-right" style="margin-right:15px">
+										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
+											<i class="far fa-edit"></i>
+											<span>Update</span>&nbsp;
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>				
+		</div>
+	</div>
 </div>

@@ -30,15 +30,16 @@ function SendDoNothing(type = "", url = "", data = {}, swalset = {}){
 }
 
 function SendDoSomething(type = "", url = "", data = {}, code = {
-	do: function(d){},
+	do: function(d){}
+}, poll = false, Err = {
 	f: function(){
 		swal({
-			title: "An error occured!",
+			title: "An error occurred!",
 			text: "Cannot send data.",
 			type: "error"
 		});
 	}
-}, poll = false){
+}){
 	$.ajax({
 		type: type,
 		url: url,
@@ -47,18 +48,24 @@ function SendDoSomething(type = "", url = "", data = {}, code = {
 	}).done(function(d){
 		code.do(d);
 	}).fail(function(){
-		code.f();
+		Err.f();
 	});
 	if(poll){
 		setTimeout(function(){
-			SendDoSomething(type, url, data, code, true)
+			SendDoSomething(type, url, data, code, true, Err);
 		}, 15000);
 	}
 }
 
 async function sweet(param = {}, code = {
 	do: function(res){}
+}, Err = {
+	f: function(res){}
 }){
-	var {value: res} = await swal(param);
-	code.do(res);
+	let res = await swal(param);
+	if(typeof res !== "undefined"){
+		code.do(res);
+	}else{
+		Err.f(res);
+	}
 }

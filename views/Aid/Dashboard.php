@@ -144,7 +144,7 @@
 					  </div>
 					  <div class="card green" style="margin-right:10px">
 					  	<div style="min-height:90px">
-							<div class="">Projects with 75% and up accomplishment</div><span class="glyphicon glyphicon-upload"></span>
+							<div class="">Projects with 75% and up <br>accomplishment</div><span class="glyphicon glyphicon-upload"></span>
 							<div class="value">00</div>
 						</div>
 							<div class="stat"><b>4</b>% increase</div>
@@ -158,7 +158,7 @@
 					  </div>
 					  <div class="card red">
 						<div style="min-height:90px">
-							<div class="">Projects less than a Week before Deadline</div><span class="glyphicon glyphicon-download"></span>
+							<div class="">Projects less than a Week before <br>Deadline</div><span class="glyphicon glyphicon-download"></span>
 							<div class="value">00</div>
 						</div>
 							<div class="stat"><b>13</b>% decrease</div>

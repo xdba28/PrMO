@@ -297,15 +297,26 @@
 		var data_twg = [];
 		$('[name="twg[]"]:checked').each(function(i, v){
 			data_twg.push($(this).attr("id"));
+		});
+		if(data_twg.length !== 0)
+		{
 			SendDoNothing("POST", "xhr-out.php", {
 				outgoing: data_twg
 			}, {
-				title: "Document(s) successfully logged out",
-				text: "",
-			})
-		});
+				title: "Success!",
+				text: "Document(s) successfully logged out.",
+			});
+		}
+		else
+		{
+			swal({
+				title: "No selected document!",
+				text: "Please select a document.",
+				type: "error",
+				confirmButtonColor: "#DD6B55"
+			});
+		}
 	});
-	
 	
 </script>
 </html>

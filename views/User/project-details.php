@@ -348,7 +348,7 @@
 											<?php echo date("F j, Y / m:i:s A", $logdate);?>
                                             </td>
                                             <td>
-                                            <p class="small">
+                                            <p class="">
 											<?php echo $newRemarks;?>
                                             </p>
                                             </td>

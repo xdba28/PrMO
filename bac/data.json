@@ -1,0 +1,10 @@
+{
+	"title": "purchase items",
+	"MOP": {
+		"1": "public bidding",
+		"2": "direct",
+		"3": "SVP"
+	},
+	"noItems": 5,
+	"items": [1, 2, 1, 2, 3]
+}

@@ -30,7 +30,8 @@ try
 	{
 		header("Content-type:application/json");
 		echo json_encode($staff->allPRJO_req_detail());
-	}}
+	}
+}
 catch(Exception $e)
 {
 	$data = [

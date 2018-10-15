@@ -119,12 +119,13 @@ require_once "../../functions/account-verifier.php";
 
 <script>
     $(document).ready(function(){
+		// side nav active		
 		var path = window.location.pathname.split("/");
 		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
 		var sLink = ['Dashboard'];
 		switch (path[path.length - 1]){
-			case sLink.find(function(){
-				return path[path.length - 1] === path[path.length - 1]
+			case sLink.find(function(el){
+				return path[path.length - 1] === el
 			}):
 				link.parentNode.setAttribute("class", "active");
 				break;

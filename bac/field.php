@@ -1,3 +1,6 @@
+<?php
+	require '../classes/Date.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,35 +8,41 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
-	<!-- <link href="../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet"> -->
+	<script src="../includes/js/custom.js"></script>
 	<script src="../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 	<div>
-
+		<input type="text" name="a">
+		<button id="btn">Send</button>
+		<?php
+			echo Date::translate("test", "now");
+		?>
 	</div>
 </body>
 <script>
-
-	async function sweet(param, code = {
-		do: function(res){}
-	}){
-		var {value: res} = await swal(param);
-		code.do(res);
-	}
-
-	sweet({
-		title: 'Remarks of Log',
-		input: 'text',
-		showCancelButton: true,
-		confirmButtonText: "Submit",
-		allowOutsideClick: false,
-	}, {
-		do: function(r){
-			document.querySelector('div').innerHTML = r;
-		}
+	document.querySelector('#btn').addEventListener('click', function(){
+		var a = document.querySelector('[name="a"]').value;
+		alert(a);
 	});
 
+// (async function getFormValues () {
+// const {value: formValues} = await swal({
+//   title: 'Multiple inputs',
+//   html:
+//     '<input id="swal-input1" class="swal2-input">' +
+//     '<input id="swal-input2" class="swal2-input">',
+//   focusConfirm: false,
+//   preConfirm: () => {
+//     return document.getElementById('swal-input1').value    
+//   }
+// })
+
+// if (formValues) {
+//   console.log(formValues);
+// }
+
+// })()
 
 	// (async function getIpAddress () {
 	// const ipAPI = 'https://api.ipify.org?format=json'
@@ -58,7 +67,7 @@
 
 	// })()
 
-
+	// console.log(typeof asd);
 
 	// sweet({
 	// 	title: 'Remarks of Log',
@@ -70,6 +79,9 @@
 	// 	do: function(res){
 	// 		console.log(res);
 	// 	}
+	// 	// f: function(res){
+	// 	// 	console.log(res);
+	// 	// }
 	// });
 
 
