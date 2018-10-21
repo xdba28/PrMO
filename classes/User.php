@@ -255,10 +255,20 @@
 		}
 
 		public function projectHistory($originRefno, $currentRefno){
+
+			$noOfOrigin = count($originRefno);
+
+			if($noOfOrigin > 1){
+					$imploded = implode("' OR referencing_to = '", $originRefno);
+					$filteredSql = "referencing_to ='" .$imploded. "'";
+			}else{
+				$filteredSql = "referencing_to = '{$originRefno[0]}'";
+			}
+
 			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
 			FROM `projects`, `project_logs`
-			WHERE referencing_to = '{$originRefno}' OR
-			referencing_to = '{$currentRefno}' GROUP BY ID
+			WHERE $filteredSql OR
+			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
 			")){
 				return $this->db->results();
 			}
@@ -327,6 +337,17 @@
 			}
 
 
+		}
+
+		//this is to determine if a request form is already registered as a project and in the TWG evaluation stage alredy
+		public function isEvaluated($ID){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'isProject' FROM `projects` WHERE request_origin = '{$ID}'")){
+				if(($this->db->first()->isProject > 0) && ($this->db->first()->accomplished > 2)) {
+					//greater than 2 means this project already surpassed the step 2 which is finalization of technical members verdict
+					return true;
+				}
+				return false;
+			}
 		}
 
 		public function logLastUpdated($ID){ //to get the data when the last update of the project

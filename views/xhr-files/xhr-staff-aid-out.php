@@ -9,8 +9,6 @@ else{
 	die();
 }
 
-try
-{
 	// sample data from post - -> > array('GSD2018-4', GSD2018-5)
 
 	if(!empty($_POST))
@@ -71,27 +69,41 @@ try
 			$user->endTrans();
 
 		}catch(Exception $e){
-			die($e->getMessage()."A Fatal Error Occured");
+			$e->getMessage()."A Fatal Error Occured";
+			$data = ['success' => 'error', 'codeError' => $e];
+			header("Content-type:application/json");
+			echo json_encode($data);
+			// log files
 		}
+		
 
+		$outgoing = $user->selectAll('outgoing');
+		if(!empty($outgoing)){
+			foreach($outgoing as $doc){
+				$outData[] = [
+					'ID' => $doc->ID,
+					'project' => $doc->project,
+					'transmitting_to' => $doc->transmitting_to,
+					'specific_office' => $doc->specific_office,
+					'remarks' => $doc->remarks,
+					'transactions' => $doc->transactions,
+					'date_registered' => Date::translate($doc->date_registered, 1)
+				];
+				echo "a <br>";
+			}
+		}else $outData = NULL;
 
-
-		$data = ['success' => true];
+		
+		$data = ['success' => true, 'outgoing' => $outData];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}
 	else
 	{
-		$data = ['success' => 'error'];
+		$data = ['success' => false];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}
-}
-catch(Exception $e)
-{
-	$data = ['success' => false];
-	header("Content-type:application/json");
-	echo json_encode($data);
-}
+
 
 ?>

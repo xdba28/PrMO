@@ -92,6 +92,14 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Notification -->
 <script src="../../assets/js/pusher.min.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+<!-- Always Set Last --> 
+<!-- Denver's Custom JS -->
+<script src="../../includes/js/custom.js"></script>
+
 <script>
 
 // // Enable pusher logging - don't include this in production
@@ -108,18 +116,16 @@ require_once "../../functions/account-verifier.php";
 // });
 </script>
 
-<!-- Sweet Alert -->
-<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
-
 
 <script>
     $(document).ready(function(){
+		// side nav active		
 		var path = window.location.pathname.split("/");
 		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
 		var sLink = ['Dashboard'];
 		switch (path[path.length - 1]){
-			case sLink.find(function(){
-				return path[path.length - 1] === path[path.length - 1]
+			case sLink.find(function(el){
+				return path[path.length - 1] === el
 			}):
 				link.parentNode.setAttribute("class", "active");
 				break;
@@ -129,7 +135,6 @@ require_once "../../functions/account-verifier.php";
 				link.parentNode.setAttribute("class", "active");
 				break;
 		}
-
 
 
         $("#wizard").steps();

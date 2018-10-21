@@ -15,11 +15,10 @@ try
 
 	if(!empty($_POST))
 	{
+		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
+		$outgoing = $_POST['outgoing'];
 
 		try{
-
-			$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
-			$outgoing = $_POST['outgoing'];
 
 			$user->startTrans();
 		
@@ -27,12 +26,11 @@ try
 
 				$project = $user->get('outgoing', array('project', '=', $reference));
 
-
 				/*Transfer the outgoing data to outgoing register*/
 				$user->transfer($reference, $releasedBy);
 
 				/*Delete original data from the outgoing table*/
-				//$user->delete('outgoing', array('project', '=', $reference));
+				$user->delete('outgoing', array('project', '=', $reference));
 
 				switch($project->transactions){
 
@@ -41,7 +39,8 @@ try
 
 						/*Update the progress of the project*/
 						$user->update('projects', 'project_ref_no', $reference, array(
-							'accomplished' => '1'
+							'accomplished' => '1',
+							'workflow' => 'Pre-procurement Evaluation'
 						));
 
 						break;

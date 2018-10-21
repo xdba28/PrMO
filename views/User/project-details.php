@@ -99,6 +99,8 @@
 						$endusers = json_decode($project->end_user, true);
 						$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1); //computation on progress report
 						$stepDetails = json_decode($project->stepdetails, true);
+						$projectOrigins = json_decode($project->request_origin, true);
+
 
 				?>				
 				
@@ -328,8 +330,9 @@
                                         </thead>
                                         <tbody>
 										<?php 
-											$logdetails = $user->projectHistory($project->request_origin, $project->project_ref_no);
+											$logdetails = $user->projectHistory($projectOrigins, $project->project_ref_no);
 
+										
 											foreach ($logdetails as $detail){
 												$logdate = strtotime($detail->logdate);
 
@@ -348,7 +351,7 @@
 											<?php echo date("F j, Y / m:i:s A", $logdate);?>
                                             </td>
                                             <td>
-                                            <p class="small">
+                                            <p class="">
 											<?php echo $newRemarks;?>
                                             </p>
                                             </td>

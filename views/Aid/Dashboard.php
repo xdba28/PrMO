@@ -85,7 +85,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Procurement Aid</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -105,7 +105,7 @@
 			</div>
 		</nav>
 
-        <div id="page-wrapper" class="gray-bg">
+        <div id="page-wrapper" class="gray-bg" style="background-color:#c2c2ca">
 			<div class="row border-bottom">
 				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/admin_header.php'; ?>
@@ -114,13 +114,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>This is main title</h2>
+                    <h2>Procurement Aid Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Breadcrumb</strong>
+                            <strong>Dashboard</strong>
                         </li>
                     </ol>
                 </div>
@@ -132,15 +132,106 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
-                <div class="middle-box text-center animated fadeInRightBig">
-                    <h3 class="font-bold">Procurement Aid</h3>
-                    <div class="error-desc">
-                        You can create here any grid layout you want. And any variation layout you imagine:) Check out
-                        main dashboard and other site. It use many different layout.
-                        <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
-                    </div>
-                </div>
+            <div class="wrapper wrapper-content animated fadeInUpBig">
+
+					<div class="container card-list">
+					  <div class="card blue" style="margin-right:10px">
+						<div style="min-height:90px">
+							<div class="">All Projects</div><span class="glyphicon glyphicon-upload"></span>
+							<div class="value">00</div>
+						</div>
+							<div class="stat"><b>13</b>% increase</div>
+					  </div>
+					  <div class="card green" style="margin-right:10px">
+					  	<div style="min-height:90px">
+							<div class="">Projects with 75% and up <br>accomplishment</div><span class="glyphicon glyphicon-upload"></span>
+							<div class="value">00</div>
+						</div>
+							<div class="stat"><b>4</b>% increase</div>
+					  </div>
+					  <div class="card orange" style="margin-right:10px">
+					  	<div style="min-height:90px">
+							<div class="">Something</div><span class="glyphicon glyphicon-download"></span>
+							<div class="value">00</div>
+						</div>
+							<div class="stat"><b>13</b>% decrease</div>
+					  </div>
+					  <div class="card red">
+						<div style="min-height:90px">
+							<div class="">Projects less than a Week before <br>Deadline</div><span class="glyphicon glyphicon-download"></span>
+							<div class="value">00</div>
+						</div>
+							<div class="stat"><b>13</b>% decrease</div>
+					  </div>
+					</div><br>
+					
+					<div class="container projects">
+					  <div class="projects-inner">
+						<header class="projects-header">
+						  <div class="title">Ongoing Projects</div>
+						  <div class="count">| 00 Projects</div><span class="glyphicon glyphicon-download-alt"></span>
+						</header>
+						<table class="projects-table">
+							 <thead>
+								<tr>
+									<th>Project</th>
+									<th>Deadline</th>
+									<th>Budget</th>
+									<th>Status</th>
+								</tr>
+							 </thead>
+						  <tr>
+							<td>
+							  <p>New Dashboard</p>
+							  <p>Google</p>
+							</td>
+							<td>
+							  <p>17th Oct, 15</p>
+							  <p class="danger-text">Overdue</p>
+							</td>
+							<td>
+							  <p>$4,670</p>
+							  <p>Paid</p>
+							</td>
+							<td class="status"><span class="status-text status-orange">In progress</span>
+							  <form class="form" action="#" method="POST">
+								<select class="action-box">
+								  <option>Actions</option>
+								  <option>Start project</option>
+								  <option>Send for QA</option>
+								  <option>Send invoice</option>
+								</select>
+							  </form>
+							</td>
+						  </tr>
+						  <tr class="danger-item">
+							<td>
+							  <p>New Dashboard</p>
+							  <p>Google</p>
+							</td>
+							<td>
+							  <p>17th Oct, 15</p>
+							  <p class="danger-text">Overdue</p>
+							</td>
+							<td>
+							  <p>$4,670</p>
+							  <p>Paid</p>
+							</td>
+							<td class="status"><span class="status-text status-red">Blocked</span>
+							  <form class="form" action="#" method="POST">
+								<select class="action-box">
+								  <option>Actions</option>
+								  <option>Start project</option>
+								  <option>Send for QA</option>
+								  <option>Send invoice</option>
+								</select>
+							  </form>
+							</td>
+						  </tr>
+
+						</table>
+					  </div>
+					</div><br><br>			
             </div>
 			<!-- Main Content End -->
 			
@@ -170,7 +261,7 @@
             options4.common = {
 
                 zxcvbn: true,
-				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php 
 					if(isset($commonFields)) echo $commonFields;
 					else{
 						echo  $commonFields = '';
@@ -198,9 +289,6 @@
 			
 		})
 	
-	</script>
-
-	<script>
 	</script>
 
 

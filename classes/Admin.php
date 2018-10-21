@@ -89,7 +89,7 @@
             if($this->db->query_builder("SELECT * FROM `prnl_account`, `personnel`, `units` WHERE prnl_account.account_id = personnel.prnl_id AND personnel.prnl_designated_office = units.ID AND prnl_id = '$id' ")){
                 return $this->db->first();
             }
-        }
+		}
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, concat(prnl_fname,prnl_lname), concat(prnl_fname,' ' ,prnl_lname), prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, username, group_id, name as 'group_name', permission
@@ -143,7 +143,7 @@
             return false;
 		}		
 		
-		//this functions is used for outgoing documents
+		//this functions is used for outgoing documents from outgoing to outgoing register
 		public function transfer($refno, $name){
 			if(!$this->db->query_builder("INSERT INTO `outgoing_register`(`project`, `transmitting_to`, `specific_office`, `remarks`, `transactions`, `date_registered`, `released_by`) SELECT project, transmitting_to, specific_office, remarks, transactions, NOW(), '{$name}' FROM `outgoing` WHERE project = '$refno'")){
 				return true;
@@ -173,6 +173,13 @@
 			}
 			return false;
 		}	
+
+		public function getAll($table, $where){
+			if($this->db->get($table, $where)){
+				return $this->db->results();
+			}
+			return false;
+		}
 
 		public function delete($table, $where){
 			if(!$this->db->delete($table, $where)){

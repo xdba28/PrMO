@@ -25,7 +25,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Procurement Aid</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -292,44 +292,83 @@
 </body>
 <script>
 
-	function send(obj){
-		$.ajax({
-			type: "POST",
-			url: "xhr-out.php",
-			data: {
-				"outgoing": obj
-			},
-			timeout: 5000,
-			success: function(d){
-				if(d.success && d.success !== 'error'){
-					swal({
-						title: "",
-						text: "",
-						type: "success"
-					});
-				}else{
-					swal({
-						title: "An error occurred!",
-						text: "Error in data sent.",
-						type: "error"
-					});
-				}
-			},
-			error: function(){
-				swal({
-					title: "An error occurred!",
-					text: "Cannot send data.",
-					type: "error"
+	$(document).ready(function(){
+		var DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+		});
+
+		var DataTable_Signiture = $('#DataTable_Signiture').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+		});
+
+		var DataTable_GenDoc = $('#DataTable_GenDoc').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+		});
+		
+		$('#tOut').on('click', function(e){
+			var data_twg = [];
+			$('[name="twg[]"]:checked').each(function(i, v){
+				data_twg.push($(this).attr("id"));
+			});
+			if(data_twg.length !== 0)
+			{
+				SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
+					outgoing: data_twg
+				}, {
+					do: function(res){
+						swal({
+							title: "Success!",
+							text: "Document(s) successfully logged out.",
+							type: "success"
+						});
+						if(res.outgoing !== null){
+							res.outgoing.forEach(function(e, i){
+								$('#TwgData').html('');
+								$('#TwgData').append(`<tr class="">
+									<td class="tdcheck"><input data="twg" type="checkbox" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label></td>
+									<td class="td-project-title"><label for="${e.project}">${e.project_title}</label></td>
+									<td class="center">${e.transmitting_to}</td>
+									<td class="center">${e.specific_office}</td>
+									<td class="center">${e.date_registered}</td>
+								</tr>`);
+								// TwgDataTable.draw();
+							});
+						}else{
+							$('#TwgData').html('');
+						}
+					}
 				});
 			}
-		});
-	}
-
-	$('#tOut').on('click', function(e){
-		var data_twg = [];
-		$('[name="twg[]"]:checked').each(function(i, v){
-			data_twg.push($(this).attr("id"));
-			send(data_twg);
+			else
+			{
+				swal({
+					title: "No selected document!",
+					text: "Please select a document.",
+					type: "error",
+					confirmButtonColor: "#DD6B55"
+				});
+			}
 		});
 	});
 

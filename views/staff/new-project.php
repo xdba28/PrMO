@@ -23,16 +23,20 @@
 
 			$enduser = ["0" => $_POST['enduser']];
 			$enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
+			$enduser = ["0" => $form_ref_no];
+			$requestOrigin_encoded=json_encode($asd, JSON_FORCE_OBJECT);
 
 
 			try{
 
 			$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
+			$mydate= explode("/", Input::get('implementation'));
+			$finalDate = $mydate[2]."-".$mydate[1]."-".$mydate[0];
 
 			$staff->startTrans(); //start transaction
 
 			$staff->register('projects', array(
-				'request_origin' => $form_ref_no,
+				'request_origin' => $requestOrigin_encoded,
 				'project_ref_no' => $project_ref_no,
 				'project_title' => Input::get('title'),
 				'ABC' => Input::get('ABC'),
@@ -41,13 +45,14 @@
 				'end_user' => $enduser_encoded,
 				'project_status' => 'PROCESSING',
 				'workflow'	=> 'For evaluation of technical working group',
-				'date_registered' => date('Y-m-d H:i:s')
+				'date_registered' => Date::translate('test', 'now'),
+				'implementation_date' => $finalDate
 			));
 
 			$staff->register('project_logs', array(
 				'referencing_to' => $form_ref_no,
 				'remarks' => "project request {$form_ref_no} registered as a single project with the reference no of {$project_ref_no}.",
-				'logdate' => date('Y-m-d H:i:s'),
+				'logdate' => Date::translate('test', 'now'),
 				'type' =>  'IN'
 			));
 
@@ -58,7 +63,7 @@
 				'specific_office' => 'TWG',
 				'remarks' => 'none',
 				'transactions' => 'EVALUATION',
-				'date_registered' => date('Y-m-d H:i:s')
+				'date_registered' => Date::translate('test', 'now')
 
 			));
 
@@ -267,10 +272,10 @@
 										<div class="form-group mt-20">
 											<label for="ABC" class="form-label">ABC</label> <input type="number" min="0.01" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
 										</div>				
-										<div class="form-group" id="data_2">
-											<label class="font-normal">One Year view</label>
-											<div class="input-group date">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="08/09/2014">
+										<div class="form-group" id="data_2" >
+											<label class="font-normal">Implementation date</label>
+											<div class="input-group date" id="popOver0" data-trigger="hover" title="Instructions" data-placement="top" data-content="If the project has multiple implementation date, register closest date.">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implentation" class="form-control" value="" required>
 											</div>
 										</div>
 
@@ -419,23 +424,6 @@
 
 	$(document).ready(function(){
 
-		function poll(){
-			$.ajax({
-				type: "GET",
-				url: "xhr-receive-proj.php",
-				timeout: 5000,
-				success: function(d){
-					OBJ = d
-					$('#nwprj-tbl-data').html('');
-					start();
-					setTimeout(poll, 15000);
-				},
-				error: function(){
-					setTimeout(poll, 15000);
-				}
-			});
-		}
-
 		if(ProjReg !== ""){
 			swal({
 				title: ProjReg,
@@ -459,7 +447,10 @@
 						<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
 					</tr>`;
 					$('#nwprj-tbl-data').append(data_tmp);
-					if(el.log_exist === true) $(`[proj="${el.id}"]`).prop('disabled', true);
+					if(el.log_exist){
+						$(`[proj="${el.id}"]`).prop('disabled', true);
+						$(`[proj="${el.id}"]`).prop('class', 'ladda-button btn-rounded btn btn-basic');
+					}
 					else $(`[proj="${el.id}"]`).prop('disabled', false);
 				}
 			});
@@ -477,8 +468,14 @@
 					$('#popOver0').attr("proj-comp", PROJ.id);
 					$('#btnlink').attr("href", `?q=${PROJ.id}`)
 
-					if(PROJ.log_exist) $('#registerNow').prop('disabled', false);
-					else $('#registerNow').prop('disabled', true);
+					if(PROJ.log_exist){
+						$('#registerNow').prop('disabled', false);
+						$('#registerNow').prop('class', 'btn btn-primary btn-sm btn-block mt-10');
+					} 
+					else{
+						$('#registerNow').prop('disabled', true);
+						$('#registerNow').prop('class', 'btn btn-basic btn-sm btn-block mt-10');
+					} 
 
 					$('#lot-data').html('');
 					PROJ.lot_details.forEach(function(el, index){
@@ -511,7 +508,8 @@
 				}else{
 					swal({
 						title: "An Error Occurred!",
-						text: "Please reload the Page."
+						text: "Please reload the Webpage.",
+						type: "error"
 					});
 				}
 				$('#popOver0').on('click', function(){
@@ -527,13 +525,11 @@
 					return el.id === SendBtn.attr("proj");
 				}));
 
-				$.ajax({
-					type: "POSt",
-					url: "xhr-receive-proj.php",
-					data: {obj: xhrData},
-					timeout: 5000,
-					success: function(data){
-						if(typeof data === "object" && data !== null && !(data.success === false)){
+				SendDoSomething("POST", "xhr-receive-proj.php", {
+					obj: xhrData
+				}, {
+					do: function(data){
+						if(typeof data === "object" && data !== null){
 							OBJ = data;
 							swal({
 								title: 'Project Received!',
@@ -552,10 +548,11 @@
 						$('#nwprj-tbl-data').html('');
 						start();
 					},
-					error: function(){
+					f: function(){
 						swal({
 							title: "An Error Occurred!",
-							text: "Request Not Processed"
+							text: "Request Not Processed",
+							type: "error"
 						});
 						SendBtn.ladda('stop');
 					}
@@ -563,7 +560,15 @@
 			});
 		}
 		start();
-		setTimeout(poll, 15000);
+		setTimeout(function(){
+			SendDoSomething("GET", "xhr-receive-proj.php", null, {
+				do: function(d){
+					OBJ = d;
+					$('#nwprj-tbl-data').html('');
+					start();
+				},
+			}, true)
+		}, 15000);
 	});
 
 	</script>

@@ -115,18 +115,26 @@
 							
 							';
 							
-							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true);
+							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true); // requests that are already received
 							
 							foreach($requests as $request){
+
+								if($user->isEvaluated($request->form_ref_no)){
+									$colorClass = "panel-danger";
+								}else{
+									$colorClass = "panel-warning";
+								}
 								
 							?>
 								<div class="col-lg-4">
-									<div class="panel panel-warning rem1">
+									<div class="panel <?php echo $colorClass;?> rem1">
 										<div class="panel-heading" style="color:black">
-											Ref:   <?php echo $request->form_ref_no?>
+											Ref:   <?php echo $request->form_ref_no;?>
 										</div>
 										<div class="panel-body">
-											<h3><?php echo $request->title?></h3>
+											<h3><?php echo $request->title;
+											
+											?></h3>
 											<hr style="background-color:#23c6c8">
 											
 											<div class="">
@@ -215,6 +223,10 @@
 									}
 									
 									$content = $user->getContent($refno, $type, $currentLot);
+
+
+									$limiter = '';
+
 							?>
 											
 							<div class="col-lg-12">
@@ -263,8 +275,18 @@
 												<td><?php echo $detail->total_cost; ?></td>
 												<td class="text-center">
 													<div class="btn-group">
-														<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
-														<button class="btn-outline btn-danger btn btn-xs">Delete</button>
+
+													<?php
+														if($user->isEvaluated($refno)){
+															echo '<a class="btn btn-danger btn-rounded btn-outline" style="color:red">Disabled</a>';
+														}else{
+															echo '
+															<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
+															<button class="btn-outline btn-danger btn btn-xs">Delete</button>
+															';
+														}
+													?>
+
 													</div>
 												</td>
 												

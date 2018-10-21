@@ -22,7 +22,7 @@ require_once "../../functions/account-verifier.php";
 <!-- Chosen -->
 <script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
 <!-- Input Mask-->
-<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script> 
+<script src="../../assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
 <!-- iCheck -->
 <script src="../../assets/js/plugins/iCheck/icheck.min.js"></script>
 <!-- Tags Input -->
@@ -46,7 +46,7 @@ require_once "../../functions/account-verifier.php";
 <!-- <script src="js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script> -->
 <!-- Clock picker -->
 <!-- <script src="js/plugins/clockpicker/clockpicker.js"></script -->
-<!-- <!-- Data picker -->
+<!--  Data picker -->
 <!-- <script src="js/plugins/datapicker/bootstrap-datepicker.js"></script> -->
 <!-- NouSlider -->
 <!-- <script src="js/plugins/nouslider/jquery.nouislider.min.js"></script> -->
@@ -96,108 +96,21 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/dropify/js/dropify.min.js"></script>
 
 
+<!-- Always Set Last --> 
+<!-- Denver's Custom JS -->
+<script src="../../includes/js/custom.js"></script>
 
 
-
-
-
-
-
-
-    <script> //denver
-
-		function SendDoNothing(type, url, data, swalset){
-			$.ajax({
-				type: type,
-				url: url,
-				data: data,
-				timeout: 5000,
-				success: function(d){
-					if(d.success && d.success !== 'error'){
-						swal({
-							title: swalset.title,
-							text: swalset.text,
-							type: "success"
-						});
-					}else{
-						swal({
-							title: "An error occurred!",
-							text: "Error in data sent.",
-							type: "error"
-						});
-					}
-				},
-				error: function(jqXHR){
-					swal({
-						title: "An error occurred!",
-						text: "Cannot send data.",
-						type: "error"
-					});
-					console.log(jqXHR);
-				}
-			});
-		}
-
-		async function SendDoSomething(type, url, parse, data){
-			try {
-				var a = await fetch(url, {
-					method: type,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(data)
-				});
-				if(a.ok && a.status === 200){
-					switch (parse) {
-						case "json":
-							var res = await a.json();
-							return res;
-							break;
-						case "text":
-							var res = await a.text();
-							return res;
-							break;
-						case "html":
-							var res = await a.html();
-							return res;
-							break;
-						default:
-							break;
-					}
-				}else throw new Error(false);
-			} catch (error) {
-				swal({
-					title: "An error occured!",
-					text: "Cannot send data.",
-					type: "error"
-				});
-			}
-		}
-
-		// modal
-		var updLog = [];
-		$('[log="upd"]').on('click', function(){
-			var updLog = [];
-			$('[name="updOutLog[]"]:checked').each(function(){
-				updLog.push($(this).attr("id"));
-				SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
-					outgoing: updLog
-				}, {
-					title: "Document(s) successfully logged out",
-					text: ""
-				});
-			})
-		});
-		// modal
-
-
+    <script>
+		// CUSTOM GLOBAL SCRIPTS
 		$(function(){
+			// side nav active
 			var path = window.location.pathname.split("/");
 			var link = document.querySelector(`[href='${path[path.length - 1]}']`);
-			var sLink = ['Dashboard'];
+			var sLink = ['Dashboard', 'Calendar'];
 			switch (path[path.length - 1]){
-				case sLink.find(function(){
-					return "path[path.length - 1]" === "path[path.length - 1]"
+				case sLink.find(function(el){
+					return path[path.length - 1] === el
 				}):
 					link.parentNode.setAttribute("class", "active");
 					break;
@@ -207,16 +120,275 @@ require_once "../../functions/account-verifier.php";
 					link.parentNode.setAttribute("class", "active");
 					break;
 			}
+		
+			// modal
+			$('[log="upd"]').on('click', function(){
+				var updLog = [];
+				var LogType = $(this).attr("action");
+				$('[name="updOutLog[]"]:checked').each(function(){
+					updLog.push($(this).attr("id"));
+				});
+				if(updLog.length !== 0){
+					$('[modal="RelOut"]').trigger('click');
+					switch(LogType){
+						case "4":
+							swal({
+								title: "Delivery Fail",
+								text: "Add remarks to this report for a reliable referencing.",
+								type: "warning",
+								showCancelButton: true,
+								confirmButtonColor: "#DD6B55",
+								confirmButtonText: "Update",
+								allowOutsideClick: false
+							}).then(function(res){
+								if(res.value){
+									sweet({
+										title: 'Remarks of Log',
+										type: "info",
+										showCancelButton: true,
+										confirmButtonText: "Submit",
+										allowOutsideClick: false,
+										html: `
+										<input type="text" name="LogRem" list="reason" placeholder="type of choose your reason">
+										<datalist id="reason">
+											<option value="office unattended">
+										</datalist>
+										`,
+										focusConfirm: false,
+										preConfirm: function(){
+											return document.querySelector('[name="LogRem"]').value
+										}
+									}, {
+										do: function(res){
+											if(res.dismiss === "cancel"){
+												swal({
+													title: "Action dismissed.",
+													text: "",
+													type: "info"
+												});
+											}else if(res.value !== "undefined"){
+												SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+													outgoing: updLog,
+													action: LogType,
+													remarks: res.value
+												}, {
+													title: "Success!",
+													text: "Document(s) successfully updated."
+												});
+											}
+										}
+									});
+								}else{
+									swal({
+										title: "Action dismissed.",
+										text: "",
+										type: "info"
+									});
+								}
+							});
+							break;
+						default:
+							sweet({
+								title: "Action: " + this.innerText,
+								text: "Are you sure with this action?",
+								type: "question",
+								showCancelButton: true,
+								confirmButtonText: "Proceed",
+								allowOutsideClick: false
+							}, {
+								do: function(res){
+									if(res.dismiss === "cancel"){
+										swal({
+											title: "Action dismissed.",
+											text: "",
+											type: "info"
+										});
+									}else if(res.value !== "undefined"){
+										SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+											outgoing: updLog,
+											action: LogType,
+											remarks: res
+										}, {
+											title: "Success!",
+											text: "Document(s) successfully updated."
+										});
+									}
+								}
+							});
+							break;
+					}
+				}else{
+					$('[modal="RelOut"]').trigger('click');
+					swal({
+						title: "No selected document!",
+						text: "Please select a document.",
+						type: "error",
+						confirmButtonColor: "#DD6B55"
+					});
+				}
+			});
+			// modal
+		
+			//available actions modal
+			$('#actionsModal').on('show.bs.modal', function (event) {
+				var OutGoingProjectModalBody = document.getElementById('OutGoingProjectModal');
+				OutGoingProjectModalBody.innerHTML = "";
+				$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var reference = button.data('reference') // Extract info from data-* attributes
+				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+				SendDoSomething("POST", "../xhr-files/xhr-show-actions.php", {
+					ref:reference
+				}, {
+					do:function(res){
+						var availableActions = res.fetchedResult;
+						var classtype = "";
+						var icon = "";
+						var cardAction = "";
+
+						for(let i of availableActions){
+
+							switch (i) {
+								case "Return to Enduser due to incompliance":
+									classtype = "red-bg";
+									icon = "fas fa-exclamation-triangle";
+									//cardAction = `data-toggle="modal" data-target="#pre-proc-evaluation"`;
+									break;
+
+								case "Register Pre-procurement Evaluation result":
+									classtype = "lazur-bg";
+									icon = "fas fa-chess-pawn";
+									cardAction = `data-toggle="modal" data-target="#pre-proc-evaluation" data-dismiss="modal"`;
+									break;
+							
+								default:
+									classtype = "lazur-bg";
+									icon = "fas fa-chess-pawn";
+									break;
+							}
+							
+							OutGoingProjectModalBody.innerHTML += `
+							<a id="actionCard" ${cardAction}>
+								<div class="widget style1 ${classtype}">
+									<div class="row">
+										<div class="col-4">
+											<i class="${icon} fa-5x"></i>
+										</div>
+										<div class="col-8 text-right">
+											<span><h3>${i}</h3></span>
+										</div>
+									</div>
+								</div>
+							</a>`;
+						}
+						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+					}
+				}, false, {
+					f: function(){
+						$('[dataFor="OutGoingProjectModalClose"]').trigger('click');
+						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+						swal({
+							title: "An error occurred!",
+							text: "Cannot send data.",
+							type: "error"
+						});
+					}
+				});
+				var modal = $(this);
+				modal.find('.modal-title').text('Available Actions to Project ' + reference);
+				//modal.find('.modal-body input').val(reference);
+				document.getElementById("projectReference").value = reference;
+			});
+		
+			
+			//outgoing documents table collapse all div
+			setTimeout(function(){
+				$('#t0').trigger('click');
+				$('#t1').trigger('click');
+				$('#t2').trigger('click');
+			},700);
+
+			$('.i-checks').iCheck({
+				checkboxClass: 'icheckbox_square-green',
+				radioClass: 'iradio_square-green'
+			});
+
+			var twg_ck = false;
+			$('[btn-t="twg"]').on('ifChanged', function(event){
+				if(twg_ck){
+					$('[data="twg"]').iCheck('uncheck');
+					$('[btn-t="twg"]').iCheck('uncheck')
+					twg_ck = false;
+				}else{
+					$('[data="twg"]').iCheck('check');
+					$('[btn-t="twg"]').iCheck('check')
+					twg_ck = true;
+				}
+			});
+
+			var out = false
+			$('[btn-t="out"]').on('ifChanged', function(event){
+				if(out){
+					$('[data="out"]').iCheck('uncheck');
+					$('[btn-t="out"]').iCheck('uncheck');
+					out = false;
+				}else{
+					$('[data="out"]').iCheck('check');
+					$('[btn-t="out"]').iCheck('check');
+					out = true;
+				}
+			});
+
+			var gen = false;
+			$('[btn-t="gen"]').on('ifChanged', function(event){
+				if(gen){
+					$('[data="gen"]').iCheck('uncheck');
+					$('[btn-t="gen"]').iCheck('uncheck');
+					gen = false;
+				}else{
+					$('[data="gen"]').iCheck('check');
+					$('[btn-t="gen"]').iCheck('check');
+					gen = true;
+				}
+				
+			});	
+
+			var updOut = false;
+			$('[btn-t="updOutChk"]').on('ifChanged', function(event){
+				if(updOut){
+					$('[data="upLog"]').iCheck('uncheck');
+					$('[btn-t="updOutChk"]').iCheck('uncheck');
+					updOut = false;
+				}else{
+					$('[data="upLog"]').iCheck('check');
+					$('[btn-t="updOutChk"]').iCheck('check');
+					updOut = true;
+				}
+			});
+
+			var tst_rdy = '<?php 
+				if(Session::exists('toust')) echo Session::flash('toust');
+				else echo "0";
+			?>';
+
+			if(tst_rdy !== "0")
+			toastr.success(tst_rdy);
+
 		});
+		// END OF CUSTOM GLOBAL SCRIPTS
+		</script>
 
-        Dropzone.options.dropzoneForm = {
-            paramName: "file", // The name that will be used to transfer the file
-            maxFilesize: 2, // MB
-            dictDefaultMessage: "<strong>Drop files here or click to upload. </strong></br> (This is just a demo dropzone. Selected files are not actually uploaded.)"
-        };
 
+		<script>
         $(document).ready(function(){
 
+			Dropzone.options.dropzoneForm = {
+				paramName: "file", // The name that will be used to transfer the file
+				maxFilesize: 2, // MB
+				dictDefaultMessage: "<strong>Drop files here or click to upload. </strong></br> (This is just a demo dropzone. Selected files are not actually uploaded.)"
+			};
             var editor_one = CodeMirror.fromTextArea(document.getElementById("code1"), {
                 lineNumbers: true,
                 matchBrackets: true
@@ -393,19 +565,15 @@ require_once "../../functions/account-verifier.php";
                 tagClass: 'label label-primary'
             });
 
-        $('.footable').footable();
-        $('.footable2').footable();
-		$("#typeahead").typeahead({
-			source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
-		});
+			$('.footable').footable();
+			$('.footable2').footable();
+			
+			$("#typeahead").typeahead({
+				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
+			});
 		
-        var tst_rdy = '<?php 
-            if(Session::exists('toust')) echo Session::flash('toust');
-            else echo "0";
-        ?>';
+
         
-        if(tst_rdy !== "0")
-        toastr.success(tst_rdy);
 
         $('.chosen-select').chosen({width: "100%"});
 
@@ -418,6 +586,7 @@ require_once "../../functions/account-verifier.php";
 			  $(this).parents('.form-group').addClass('focused');
 			});
 
+			//google like input
 			$('input').blur(function(){
 			  var inputValue = $(this).val();
 			  if ( inputValue == "" ) {
@@ -426,138 +595,55 @@ require_once "../../functions/account-verifier.php";
 			  } else {
 				$(this).addClass('filled');
 			  }
-			})    
-
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-
-		   setTimeout(function(){
-
-			$('#t0').trigger('click');
-			$('#t1').trigger('click');
-			$('#t2').trigger('click');
-
-		   },700);
-
-			var twg_ck = false;
-			$('[btn-t="twg"]').on('ifChanged', function(event){
-				if(twg_ck){
-					$('[data="twg"]').iCheck('uncheck');
-					$('[btn-t="twg"]').iCheck('uncheck')
-					twg_ck = false;
-				}else{
-					$('[data="twg"]').iCheck('check');
-					$('[btn-t="twg"]').iCheck('check')
-					twg_ck = true;
-				}
 			});
 
-			var out = false
-			$('[btn-t="out"]').on('ifChanged', function(event){
-				if(out){
-					$('[data="out"]').iCheck('uncheck');
-					$('[btn-t="out"]').iCheck('uncheck');
-					out = false;
-				}else{
-					$('[data="out"]').iCheck('check');
-					$('[btn-t="out"]').iCheck('check');
-					out = true;
-				}
-			});
 
-			var gen = false;
-			$('[btn-t="gen"]').on('ifChanged', function(event){
-				if(gen){
-					$('[data="gen"]').iCheck('uncheck');
-					$('[btn-t="gen"]').iCheck('uncheck');
-					gen = false;
-				}else{
-					$('[data="gen"]').iCheck('check');
-					$('[btn-t="gen"]').iCheck('check');
-					gen = true;
-				}
-				
-			});	
-
-			var updOut = false;
-			$('[btn-t="updOutChk"]').on('ifChanged', function(event){
-				if(updOut){
-					$('[data="upLog"]').iCheck('uncheck');
-					$('[btn-t="updOutChk"]').iCheck('uncheck');
-					updOut = false;
-				}else{
-					$('[data="upLog"]').iCheck('check');
-					$('[btn-t="updOutChk"]').iCheck('check');
-					updOut = true;
-				}
-				
-			});		
-	
-
-			$('.demo3').click(function () {
-				swal({
-					title: "Delivery Fail",
-					text: "Add remarks to this report for a reliable referencing.",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Update",
-					closeOnConfirm: false
-				}, function () {
-					swal("Updated!", "Documents returned to Outgoing Que.", "success");
-				});
-			});
-   		
 
 		});
 
 	</script>
 
+	<script>
+		$(function(){
+			var DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+			});
+		});
+	</script>
+
 	<script> //search script
+		$(function(){
 			$('form').submit(function(e) {
-			  e.preventDefault();
-			  if ($(this).hasClass('active')) 
+				e.preventDefault();
+				if ($(this).hasClass('active')) 
 				$(this).removeClass('active');
 			});
 
 
 			$('.search span').click(function(e) {
-			  
-			  var $parent = $(this).parent();
+				
+				var $parent = $(this).parent();
 
-			  if (!$parent.hasClass('active')) {
+				if (!$parent.hasClass('active')) {
 				
 				$parent
-				  .addClass('active')
-				  .find('input:first')
-				  .on('blur', function() {
+					.addClass('active')
+					.find('input:first')
+					.on('blur', function() {
 					if (!$(this).val().length) $parent.removeClass('active');
-				  }
+					}
 				);
 				
-			  }
+				}
 			});
+		});
 	</script>
 	
     <script> //form advance script
@@ -673,24 +759,6 @@ require_once "../../functions/account-verifier.php";
                 autoclose: true
             });
 
-            var elem = document.querySelector('.js-switch');
-            var switchery = new Switchery(elem, { color: '#1AB394' });
-
-            var elem_2 = document.querySelector('.js-switch_2');
-            var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
-
-            var elem_3 = document.querySelector('.js-switch_3');
-            var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
-
-            var elem_4 = document.querySelector('.js-switch_4');
-            var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
-                switchery_4.disable();
-
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-
             $('.demo1').colorpicker();
 
             var divStyle = $('.back-change')[0].style;
@@ -784,96 +852,117 @@ require_once "../../functions/account-verifier.php";
 
 
         });
+	</script>
 
-        $('.chosen-select').chosen({width: "100%"});
+	<script>
+		// $(function(){
+		//     var elem = document.querySelector('.js-switch');
+        //     var switchery = new Switchery(elem, { color: '#1AB394' });
 
-        $("#ionrange_1").ionRangeSlider({
-            min: 0,
-            max: 5000,
-            type: 'double',
-            prefix: "$",
-            maxPostfix: "+",
-            prettify: false,
-            hasGrid: true
-        });
+        //     var elem_2 = document.querySelector('.js-switch_2');
+        //     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
-        $("#ionrange_2").ionRangeSlider({
-            min: 0,
-            max: 10,
-            type: 'single',
-            step: 0.1,
-            postfix: " carats",
-            prettify: false,
-            hasGrid: true
-        });
+        //     var elem_3 = document.querySelector('.js-switch_3');
+        //     var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
 
-        $("#ionrange_3").ionRangeSlider({
-            min: -50,
-            max: 50,
-            from: 0,
-            postfix: "°",
-            prettify: false,
-            hasGrid: true
-        });
+        //     var elem_4 = document.querySelector('.js-switch_4');
+        //     var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+        //         switchery_4.disable();
+		// });
+	</script>
+	
+	<script>
+		$(function(){
 
-        $("#ionrange_4").ionRangeSlider({
-            values: [
-                "January", "February", "March",
-                "April", "May", "June",
-                "July", "August", "September",
-                "October", "November", "December"
-            ],
-            type: 'single',
-            hasGrid: true
-        });
+			$('.chosen-select').chosen({width: "100%"});
 
-        $("#ionrange_5").ionRangeSlider({
-            min: 10000,
-            max: 100000,
-            step: 100,
-            postfix: " km",
-            from: 55000,
-            hideMinMax: true,
-            hideFromTo: false
-        });
+			$("#ionrange_1").ionRangeSlider({
+				min: 0,
+				max: 5000,
+				type: 'double',
+				prefix: "$",
+				maxPostfix: "+",
+				prettify: false,
+				hasGrid: true
+			});
 
-        $(".dial").knob();
+			$("#ionrange_2").ionRangeSlider({
+				min: 0,
+				max: 10,
+				type: 'single',
+				step: 0.1,
+				postfix: " carats",
+				prettify: false,
+				hasGrid: true
+			});
 
-        var basic_slider = document.getElementById('basic_slider');
+			$("#ionrange_3").ionRangeSlider({
+				min: -50,
+				max: 50,
+				from: 0,
+				postfix: "°",
+				prettify: false,
+				hasGrid: true
+			});
 
-        noUiSlider.create(basic_slider, {
-            start: 40,
-            behaviour: 'tap',
-            connect: 'upper',
-            range: {
-                'min':  20,
-                'max':  80
-            }
-        });
+			$("#ionrange_4").ionRangeSlider({
+				values: [
+					"January", "February", "March",
+					"April", "May", "June",
+					"July", "August", "September",
+					"October", "November", "December"
+				],
+				type: 'single',
+				hasGrid: true
+			});
 
-        var range_slider = document.getElementById('range_slider');
+			$("#ionrange_5").ionRangeSlider({
+				min: 10000,
+				max: 100000,
+				step: 100,
+				postfix: " km",
+				from: 55000,
+				hideMinMax: true,
+				hideFromTo: false
+			});
 
-        noUiSlider.create(range_slider, {
-            start: [ 40, 60 ],
-            behaviour: 'drag',
-            connect: true,
-            range: {
-                'min':  20,
-                'max':  80
-            }
-        });
+			$(".dial").knob();
 
-        var drag_fixed = document.getElementById('drag-fixed');
+			var basic_slider = document.getElementById('basic_slider');
 
-        noUiSlider.create(drag_fixed, {
-            start: [ 40, 60 ],
-            behaviour: 'drag-fixed',
-            connect: true,
-            range: {
-                'min':  20,
-                'max':  80
-            }
-        });
+			noUiSlider.create(basic_slider, {
+				start: 40,
+				behaviour: 'tap',
+				connect: 'upper',
+				range: {
+					'min':  20,
+					'max':  80
+				}
+			});
 
+			var range_slider = document.getElementById('range_slider');
+
+			noUiSlider.create(range_slider, {
+				start: [ 40, 60 ],
+				behaviour: 'drag',
+				connect: true,
+				range: {
+					'min':  20,
+					'max':  80
+				}
+			});
+
+			var drag_fixed = document.getElementById('drag-fixed');
+
+			noUiSlider.create(drag_fixed, {
+				start: [ 40, 60 ],
+				behaviour: 'drag-fixed',
+				connect: true,
+				range: {
+					'min':  20,
+					'max':  80
+				}
+			});
+		});
 
     </script>
