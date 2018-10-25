@@ -12,7 +12,7 @@
 
 			switch ($option) {
 				case '1':
-					$translated_date = date("F j, Y / m:i:s A", $time);
+					$translated_date = date("F j, Y / g:i A", $time);
 					break;
 
 				case '2':

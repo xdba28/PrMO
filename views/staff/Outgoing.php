@@ -344,19 +344,27 @@
 							type: "success"
 						});
 						if(res.outgoing !== null){
+							// erase table
+							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
+							$('table#DataTable_Twg > tbody').html('');
 							res.outgoing.forEach(function(e, i){
-								$('#TwgData').html('');
-								$('#TwgData').append(`<tr class="">
+								// DataTable_Twg.row.add([
+								// 	e.project_title,
+
+								// ]);
+								$('table#DataTable_Twg > tbody').append(`<tr class="odd">
 									<td class="tdcheck"><input data="twg" type="checkbox" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label></td>
 									<td class="td-project-title"><label for="${e.project}">${e.project_title}</label></td>
 									<td class="center">${e.transmitting_to}</td>
 									<td class="center">${e.specific_office}</td>
 									<td class="center">${e.date_registered}</td>
 								</tr>`);
-								// TwgDataTable.draw();
+								TwgDataTable.draw();
 							});
 						}else{
-							$('#TwgData').html('');
+							// erase tables
+							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
+							// DataTable_Twg.row('tr:has(td:has(div.checked:has(input:checked)))').remove().draw(false);
 						}
 					}
 				});

@@ -167,9 +167,8 @@
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php
-											
-											$timeRegistered = strtotime($project->date_registered);
-											echo date("F j, Y / m:i:s A", $timeRegistered);
+
+											echo Date::translate($project->date_registered, '1');
 											
 											?></dd>
                                         </div>
@@ -184,8 +183,7 @@
 											$logdata = $user->logLastUpdated($refno);
 
 											if($logdata->result != 0){
-												$lastupdate = strtotime($logdata->logdate);
-												echo date("F j, Y / m:i:s A", $lastupdate);
+												echo Date::translate($logdata->logdate, '1');
 											}else{
 												echo "No update yet";
 											}
@@ -234,7 +232,7 @@
                                 <div class="panel-heading">
                                     <div class="panel-options">
                                         <ul class="nav nav-tabs">
-                                            <li><a class="nav-link active" href="#tab-1" data-toggle="tab">Issues Encountered</a></li>
+                                            <li><a class="nav-link active" href="#tab-1" data-toggle="tab">Important Updates</a></li>
                                             <li><a class="nav-link" href="#tab-2" data-toggle="tab">Detailed History</a></li>
                                         </ul>
                                     </div>
@@ -331,24 +329,45 @@
                                         <tbody>
 										<?php 
 											$logdetails = $user->projectHistory($projectOrigins, $project->project_ref_no);
-
+											
 										
-											foreach ($logdetails as $detail){
-												$logdate = strtotime($detail->logdate);
+											foreach ($logdetails as $detail){												
+												
+												// $remark = ($detail->remarks == 'START_PROJECT') ? $newRemarks = "PR/JO was received in the office." : $newRemarks=$detail->remarks;
 
-												$remark = ($detail->remarks == 'START_PROJECT') ? $newRemarks = "PR/JO was received in the office." : $newRemarks=$detail->remarks;
-												$defaultClass = "ti-announcement  text-warning";
-	
+												//check if there is an issue identifier in the remarks
+												$identifier = substr($detail->remarks, 0, 5);
+												switch ($identifier) {
+													case 'ISSUE':
+														$remarksParts =  explode('^', $detail->remarks);
+														$announcementClass = "ti-flag-alt text-danger";
+														$newRemarks = $remarksParts[2];
+														break;
+													case 'START':
+														$announcementClass = "ti-announcement  text-warning";
+														$newRemarks = "PR/JO was received in the office.";
+														break;
+													case 'AWARD':
+														# code...
+														break;
+													
+													default:
+														$announcementClass = "ti-announcement  text-warning";
+														$newRemarks=$detail->remarks;
+														break;
+												}
+
+
 										?>
                                         <tr>
                                             <td>
-                                                <i class="<?php echo $defaultClass;?>" style="font-size: 25px;"></i>
+                                                <i class="<?php echo $announcementClass;?>" style="font-size: 25px;"></i>
                                             </td>
                                             <td>
                                               <?php echo $detail->type;?>
                                             </td>
-                                            <td>
-											<?php echo date("F j, Y / m:i:s A", $logdate);?>
+                                            <td style=" min-width:120px;">
+											<?php echo Date::translate($detail->logdate, '1');?>
                                             </td>
                                             <td>
                                             <p class="">
@@ -414,6 +433,7 @@
 			<!-- Main Content End -->
 			
             <div class="footer">
+				<button class="back-to-top" type="button"></button>
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
 

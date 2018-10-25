@@ -131,7 +131,7 @@
 				AND referencing_to = '$a->form_ref_no' 
 				AND project_logs.type = 'IN'
 				AND remarks = 'START_PROJECT'
-				AND EXISTS (SELECT * FROM `projects` WHERE request_origin = '$a->form_ref_no')
+				AND EXISTS (SELECT * FROM `projects` WHERE request_origin LIKE '%{$a->form_ref_no}%')
 				LIMIT 1");
 
 				if($ProjReg->count()) $proj_reg = true;

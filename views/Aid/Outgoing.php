@@ -105,7 +105,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered table-hover dataTables-example" >
+								<table class="table table-striped table-bordered table-hover" id="DataTable_Twg">
 								<thead>
 								<tr>
 									<th><input btn-t="twg" type="checkbox" class="i-checks"> Select all</th>
@@ -167,7 +167,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_Signiture">
 						<thead>
 						<tr>
 							<th><input btn-t="out" type="checkbox" class="i-checks"> Select all</th>
@@ -189,7 +189,7 @@
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="out[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
-							<td class="center"><?php echo $unit->office_name;?></td>
+							<td class="center"><?php echo $document->transmitting_to;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
 							<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 						</tr>
@@ -227,7 +227,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_GenDoc">
 						<thead>
 						<tr>
 							<th><input btn-t="gen" type="checkbox" class="i-checks"> Select all</th>
@@ -244,12 +244,12 @@
 								
 								if(($document->transactions != "SIGNATURES") && ($document->transactions != "EVALUATION")){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									$unit = $user->get('units', array('ID', '=', $document->transmitting_to));
+
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="gen" class="i-checks" name="gen[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
-							<td class="center"><?php echo $unit->office_name;?></td>
+							<td class="center"><?php echo $document->transmitting_to;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
 							<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 						</tr>
@@ -343,19 +343,27 @@
 							type: "success"
 						});
 						if(res.outgoing !== null){
+							// erase table
+							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
+							$('table#DataTable_Twg > tbody').html('');
 							res.outgoing.forEach(function(e, i){
-								$('#TwgData').html('');
-								$('#TwgData').append(`<tr class="">
+								// DataTable_Twg.row.add([
+								// 	e.project_title,
+
+								// ]);
+								$('table#DataTable_Twg > tbody').append(`<tr class="odd">
 									<td class="tdcheck"><input data="twg" type="checkbox" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label></td>
 									<td class="td-project-title"><label for="${e.project}">${e.project_title}</label></td>
 									<td class="center">${e.transmitting_to}</td>
 									<td class="center">${e.specific_office}</td>
 									<td class="center">${e.date_registered}</td>
 								</tr>`);
-								// TwgDataTable.draw();
+								TwgDataTable.draw();
 							});
 						}else{
-							$('#TwgData').html('');
+							// erase tables
+							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
+							// DataTable_Twg.row('tr:has(td:has(div.checked:has(input:checked)))').remove().draw(false);
 						}
 					}
 				});
@@ -372,5 +380,6 @@
 		});
 	});
 
+	
 </script>
 </html>

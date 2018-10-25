@@ -1,5 +1,4 @@
 <?php
-require_once "../../vendor/autoload.php";
 require_once "../../core/init.php";
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();

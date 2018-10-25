@@ -107,9 +107,9 @@
 											<th>Title </th>
 												
 												<th data-hide="all">Enduser/s</th>
-												<th data-hide="all">ABC</th>
+												<th data-hide="all">Current Work</th>
 											
-											<th>Request Origin </th>
+											<th>ABC</th>
 											<th>Progress </th>
 											<th>Actions </th>
 										</tr>
@@ -123,14 +123,20 @@
 												
 												$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1);
 												if(isset($count)){$count++;}else{$count=1;}
+												
+												//decode the step details
+												$stepDetails = json_decode($project->stepdetails, true);
+												$currentWork = $stepDetails[$project->accomplished];
+
+
 										?>
 										<tr>
 											<td><?php echo $count;?></td>
 											<td><?php echo $project->project_ref_no;?></td>
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
 											<td><?php echo $project->end_user;?></td>
+											<td><?php echo $currentWork;?></td>
 											<td><?php echo $project->ABC;?></td>
-											<td>0800 051213</td>
 											<td class="project-completion">
 												<small>Completion with: <?php echo $accomplishment;?>%</small>
 												<div class="progress progress-mini">
@@ -159,6 +165,7 @@
 					</div>
 					
 				
+					<button data-toggle="modal" data-target="#test-modal">Button</button>
 
 				</div>
 

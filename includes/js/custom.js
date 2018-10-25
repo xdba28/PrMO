@@ -55,7 +55,7 @@ function SendDoSomething(type = "", url = "", data = {}, code = {
 	});
 	if(poll){
 		setTimeout(function(){
-			SendDoSomething(type, url, data, code, true, Err);
+			SendDoSomething(type, url, data, code, true, Err)
 		}, 15000);
 	}
 }

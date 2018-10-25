@@ -11,7 +11,6 @@
         die();
     }
     
-    
 
 ?>
 
@@ -26,8 +25,91 @@
 
     <title>PrMO OPPTS | My Forms</title>
 
-	<?php include_once'../../includes/parts/user_styles.php'; ?>
+	<?php include_once '../../includes/parts/user_styles.php'; ?>
 
+	<script>
+		function prEdit(e){
+			var prData = e.parentNode.parentNode.parentNode.children;
+			document.querySelector('[dataFor="userEdit"]').innerHTML = `<thead><tr>
+			<th>Stock No.</th><th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th></tr>
+			</thead><tbody><tr><form id="EditForm"><input type="text" name="editType" value="PR" hidden form="EditForm">
+				<input type="text" name="projId" hidden form="EditForm">
+					<td><input type="text" name="prUpStk" id="prUpStk" class="form-control" form="EditForm"></td>
+					<td><input type="text" name="prUpUnt" id="prUpUnt" class="form-control" form="EditForm"></td>
+					<td><textarea name="" id="prUpDesc" cols="30" rows="1" maxlength="1000" class="form-control" form="EditForm"></textarea></td>
+					<td><input type="number" name="prUpQty" id="prUpQty" class="form-control" min="1" form="EditForm"></td>
+					<td><input type="number" name="prUpUc" id="prUpUc" class="form-control" step=".01" min="0.01" form="EditForm"></td>
+					<td><input type="number" name="prUpTc" id="prUpTc" class="form-control" readonly step=".01" min="0.01" form="EditForm"></td>
+					</form></tr></tbody>`;
+
+			var btnQ = document.getElementById('prUpQty');
+			var btnUc = document.getElementById('prUpUc');
+			var btnTc = document.getElementById('prUpTc');
+			
+			document.querySelector('[name="projId"]').value = prData[0].innerText;
+			document.getElementById('prUpStk').value = prData[2].innerText;
+			document.getElementById('prUpUnt').value = prData[3].innerText;
+			document.getElementById('prUpDesc').value = prData[4].innerText;
+			btnQ.value = parseFloat(prData[5].innerText);
+			btnUc.value = (parseFloat(prData[6].innerText)).toFixed(2);
+			btnTc.value = (parseFloat(prData[7].innerText)).toFixed(2);
+
+			btnQ.addEventListener('change', function(){
+				btnTc.value = (this.value * btnUc.value).toFixed(2);
+			});
+
+			btnUc.addEventListener('change', function(){
+				btnTc.value = (btnQ.value * this.value).toFixed(2);
+			});
+		}
+
+		function joEdit(e){
+			var joData = e.parentNode.parentNode.parentNode.children;
+			document.querySelector('[dataFor="userEdit"]').innerHTML = `<thead><tr>
+			<th data-toggle="true">List Title</th><th>Lot Estimated Cost</th><th data-hide="all">Tags</th>
+			<th data-hide="all">Notes</th></tr></thead><tbody><tr><form id="EditForm">
+				<input type="text" name="projId" hidden form="EditForm">
+				<input type="text" name="editType" value="JO" hidden form="EditForm">
+				<td><input type="text" name="joList" id="joList" class="form-control" form="EditForm"></td>
+				<td><input type="number" name="joCost" id="joCost" class="form-control" form="EditForm" step=".01" min="0.01"></td>
+				<td><input type="text" name="joTags" id="joTags" class="form-control" form="EditForm" data-role="tagsinput"></td>
+				<td><textarea name="joNotes" id="joNotes" placeholder="Some text" class="form-control" form="EditForm"></textarea></td>		
+				</form></tr></tbody>`;
+			document.querySelector('[name="projId"]').value = joData[0].innerText;
+			document.getElementById('joList').value = joData[1].innerText;
+			document.getElementById('joCost').value = joData[2].innerText;
+			document.getElementById('joTags').value = joData[3].innerText;
+			document.getElementById('joNotes').value = joData[4].innerText;
+			$('#joTags').tagsinput();
+		}
+
+		function del(e){
+			var delData = e.parentNode.parentNode.parentNode.children;
+			SendDoSomething("POST", "xhr-item-update.php", {
+				editType: "DEL",
+				projId: delData[0].innerText
+			}, {
+				do: function(d){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "Success!",
+						text: "Successfully deleted.",
+						type: "success"
+					});
+					// reload table
+				}
+			}, false, {
+				f: function(){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "An error occurred!",
+						text: "Cannot send data.",
+						type: "error"
+					});
+				}
+			});
+		}
+	</script>
 </head>
 
 <body class="">
@@ -46,7 +128,7 @@
 
         <div id="page-wrapper" class="gray-bg">
 			<div class="row border-bottom">
-				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+				<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/header.php'; ?>
 				</nav>
 			
@@ -102,7 +184,7 @@
 													<span class="label label-info">1</span> Cards with the teal header are request forms that are not yet submitted and received by the PrMO, therefore you have the full privilage to update or delete any listing on your request.
 												</li>
 												<li class="list-group-item">
-													<span class="label label-warning">2</span> Cards with the orange header are request forms that are already submitted and received by the PrMO or in the process of Technical Member evaluation, Therefore modifying of listing in this request are strictly monitored by our personnels, also modification on this request requires approval from our personnel for your modification/s to be applied wether it is your personal reason or modification required by the Technical Member.
+													<span class="label label-warning">2</span> Cards with the orange header are request forms that are already submitted and received by the PrMO or in the process of Technical Member evaluation, Therefore modifying of listing in this request are strictly monitored by our personnels, also modification on this request requires approval from our personnel for your modification/s to be applied whether it is your personal reason or modification required by the Technical Member.
 												</li>
 												<li class="list-group-item">
 													<span class="label label-danger">3</span> Cards with the red header are request forms that are already passed the Technical Member evaluation, meaning you cannot manually modify any listing in your request. It is adviced to head to PrMO and state your concern with regards updating your request/s listing.
@@ -228,7 +310,7 @@
 									$limiter = '';
 
 							?>
-											
+
 							<div class="col-lg-12">
 								<div class="ibox ">
 									<div class="ibox-title">
@@ -246,10 +328,10 @@
 										</div>
 									</div>
 									<div class="ibox-content">
-
 										<table class="table table-bordered table-hover">
 											<thead>
 											<tr>
+												<th>Select</th>
 												<th>Line</th>
 												<th>Stock No.</th>
 												<th>Unit</th>
@@ -257,15 +339,30 @@
 												<th>Quantity</th>
 												<th>Unit Cost</th>
 												<th>Total Cost</th>
-												<th>Actions</th>
 											</tr>
 											</thead>
 											<tbody>
 											<?php
 												$line = 1;
 												foreach($content as $detail){
+
+													$item_details = [
+														'refno' => $refno,
+														'lot' => $currentLot,
+														'item_id' => $detail->ID,
+														'stock_no' => $detail->stock_no,
+														'unit' => $detail->unit,
+														'desc' => $detail->item_description,
+														'qty' => $detail->quantity,
+														'uCost' => $detail->unit_cost,
+														'tCost' => $detail->total_cost
+													];
+													
 											?>
 											<tr>
+												<td style="text-align:center;">
+													<input btn-t="out" type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
+												</td>
 												<td><?php echo $line;?></td>
 												<td><?php echo $detail->stock_no; ?></td>
 												<td><?php echo $detail->unit; ?></td>
@@ -273,22 +370,22 @@
 												<td><?php echo $detail->quantity; ?></td>
 												<td><?php echo $detail->unit_cost; ?></td>
 												<td><?php echo $detail->total_cost; ?></td>
-												<td class="text-center">
-													<div class="btn-group">
+												<!-- <td class="text-center">
+													<div class="btn-group"> -->
 
 													<?php
-														if($user->isEvaluated($refno)){
-															echo '<a class="btn btn-danger btn-rounded btn-outline" style="color:red">Disabled</a>';
-														}else{
-															echo '
-															<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
-															<button class="btn-outline btn-danger btn btn-xs">Delete</button>
-															';
-														}
+														// if($user->isEvaluated($refno)){
+														// 	echo '<a class="btn btn-danger btn-rounded btn-outline" style="color:red">Disabled</a>';
+														// }else{
+														// 	echo '
+														// 	<button class="btn-outline btn-success btn btn-xs" onclick="prEdit(this)" style="" data-toggle="modal" data-target="#userEdit">Edit</button>
+														// 	<button class="btn-outline btn-danger btn btn-xs" onclick="del(this)">Delete</button>
+														// 	';
+														// }
 													?>
 
-													</div>
-												</td>
+													<!-- </div>
+												</td> -->
 												
 											</tr>
 
@@ -354,14 +451,15 @@
 										foreach($content as $detail){
 									?>
 										<tr>
+											<td style="display:none;"><?php echo $refno.":".$detail->lot_id.":".$detail->ID;?></td>
 											<td><?php echo $detail->header;?></td>
 											<td><?php echo $detail->lot_cost;?></td>
 											<td><?php echo str_replace(",", ", ", $detail->tags);?></td>
 											<td><?php echo $detail->note;?></td>
 											<td class="text-center">
 												<div class="btn-group">
-													<button class="btn-outline btn-success btn btn-xs" style="">Edit</button>
-													<button class="btn-outline btn-danger btn btn-xs">Delete</button>
+													<button class="btn-outline btn-success btn btn-xs" style="" onclick="joEdit(this)" data-toggle="modal" data-target="#userEdit">Edit</button>
+													<button class="btn-outline btn-danger btn btn-xs" onclick="del(this)">Delete</button>
 												</div>
 											</td>									
 										</tr>
@@ -386,15 +484,21 @@
 							<?php
 									}
 								}
-							}	
+								echo '<br>
+								<div style="margin-left:72%">
+									<button class="btn btn-lg btn-rounded btn-outline btn-primary" id="edit" data-toggle="modal" data-target="#userEdit">Edit Selected</button>
+									<button class="btn btn-lg btn-rounded btn-outline btn-danger">Delete Selected</button>
+								</div>';
+							}
 							?>
+
 						</div>
 					</div>
 				</div>
 			</div><br><br><br><br><br>
 
 			<!-- Main Content End -->
-			<button class="back-to-top" type="button"></button>			
+			<button class="back-to-top" type="button"></button>
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
@@ -405,5 +509,79 @@
 	<?php include_once '../../includes/parts/user_scripts.php'; ?>
 
 </body>
+<script>
+	document.addEventListener('DOMContentLoaded', function(){
 
+		var ProjType = '<?php echo $type;?>';
+		var obj = Object;
+
+		$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green'
+		});
+
+		$('#edit').on('click', function(){
+			$('[dataFor="userEdit"]').html('');
+			if(ProjType === "PR"){
+				$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th><th>Stock No.</th>
+					<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th>
+					<th>Total Cost</th></tr></thead><tbody dataFor="userEditAppend"></tbody>`);
+				$('.i-checks:checked').each(function(i){
+					obj = JSON.parse($(this).attr('details'));
+					$('[dataFor="userEditAppend"]').append(`
+						<tr>
+							<form id="EditForm">
+							<input type="text" name="editType" value="PR" hidden form="EditForm">
+							<input type="text" name="projId" hidden form="EditForm">
+							<td>${obj.lot}</td>
+							<td><input type="text" name="prUpStk" class="form-control" form="EditForm" value="${obj.stock_no}"></td>
+							<td><input type="text" name="prUpUnt" class="form-control" form="EditForm" value="${obj.unit}"></td>
+							<td><textarea name="prUpDesc" cols="30" rows="1" maxlength="1000" class="form-control" form="EditForm">${obj.desc}</textarea></td>
+							<td><input type="number" name="prUpQty-${i}" class="form-control" min="1" form="EditForm" value="${obj.qty}"></td>
+							<td><input type="number" name="prUpUc-${i}" class="form-control" step=".01" min="0.01" form="EditForm" value="${obj.uCost}"></td>
+							<td><input type="number" name="prUpTc-${i}" class="form-control" readonly step=".01" min="0.01" form="EditForm" value="${obj.tCost}"></td>
+							</form>
+						</tr>`);
+
+					// $('[name|="prUpQty"]').on('change', function(){
+					// 	$(`[name="prUpTc-${i}"]`).val(($(this).val() * $(`[name="prUpUc-${i}"]`).val()).toFixed(2));
+					// });
+
+					// $('[name|="prUpUc"]').on('change', function(){
+					// 	$(`[name="prUpTc-${i}"]`).val(($(`[name="prUpUc-${i}"]`).val() * $(this).val()).toFixed(2));
+					// });
+
+				});	
+			}else{
+				$('.i-checks:checked').each(function(){
+					obj = JSON.parse($(this).attr('details'));
+				});
+			}
+		});
+
+		document.querySelector('[dataFor="userEditSubmit"]').addEventListener('click', function(){
+			var EditData = $('#EditForm').serialize();
+			SendDoSomething("POST", "xhr-item-update.php", EditData, {
+				do: function(d){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "Success!",
+						text: "Successfully updated.",
+						type: "success"
+					});
+					// reload table
+				}
+			}, false, {
+				f: function(){
+					$('[dataFor="userEditClose"]').trigger('click');
+					swal({
+						title: "An error occurred!",
+						text: "Cannot send data.",
+						type: "error"
+					});
+				}
+			});
+		});
+	});
+</script>
 </html>

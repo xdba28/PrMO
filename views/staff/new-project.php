@@ -12,8 +12,6 @@
 	}
 
 	
-
-	
 	if(Input::exists()){
 		if(Token::check("newProject", Input::get('newProject'))){
 				
@@ -23,8 +21,8 @@
 
 			$enduser = ["0" => $_POST['enduser']];
 			$enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
-			$enduser = ["0" => $form_ref_no];
-			$requestOrigin_encoded=json_encode($asd, JSON_FORCE_OBJECT);
+			$form = ["0" => $form_ref_no];
+			$requestOrigin_encoded = json_encode($form, JSON_FORCE_OBJECT);
 
 
 			try{
@@ -68,8 +66,9 @@
 			));
 
 			$staff->endTrans(); //commit
-
 			Session::flash("ProjReg", "Project successfully registered!");
+			unset($_GET);
+
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
 			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 			//send SMS notifications
@@ -78,9 +77,10 @@
 				die($e->getMessage());
 			}
 
-			
+
 		}
 	}
+	
 
 ?>
 
@@ -104,7 +104,7 @@
 		echo json_encode($user->allPRJO_req_detail());		
 		?>;
 		var ProjReg = '<?php 
-		if(Session::exists("ProjReg")) Session::flash("ProjReg");
+		if(Session::exists("ProjReg")) echo Session::flash("ProjReg");
 		else echo "";
 		?>';
 		console.log(OBJ);
@@ -250,7 +250,7 @@
 							<div class="row">
 								
 									<div class="col-sm-6 b-r"> 
-										<form id="new-project" role="form" method="POST">								
+										<form id="new-project" method="POST" action="">								
                                         <div class="checkbox checkbox-info checkbox-circle">
                                             <input id="checkbox1" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
                                             <label for="checkbox1">
@@ -275,7 +275,7 @@
 										<div class="form-group" id="data_2" >
 											<label class="font-normal">Implementation date</label>
 											<div class="input-group date" id="popOver0" data-trigger="hover" title="Instructions" data-placement="top" data-content="If the project has multiple implementation date, register closest date.">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implentation" class="form-control" value="" required>
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implementation" class="form-control" value="" required>
 											</div>
 										</div>
 
@@ -287,11 +287,13 @@
 										</div>	
 											<input type="text" name="newProject" value="<?php echo Token::generate('newProject');?>" hidden readonly>
 											<input type="text" name="enduser" value="<?php echo $request->requested_by;?>" hidden readonly>
-										</form>		
+										
 									</div>	
 									<div class="col-lg-12">
-												<button class="btn btn-primary btn-rounded pull-right" type="submit" form="new-project">Submit</button>
-												<a href="new-project" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>	
+									
+										<button class="btn btn-primary btn-rounded pull-right" type="submit" form="new-project">Submit</button>
+										<a href="new-project" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>
+										</form>	
 									</div>
 							</div>
                         </div>
@@ -428,7 +430,6 @@
 			swal({
 				title: ProjReg,
 				text: "",
-				confirmButtonColor: "#DD6B55",
 				type: 'success',
 				timer: 13000
 			});

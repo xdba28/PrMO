@@ -87,8 +87,8 @@ require_once "../../functions/account-verifier.php";
 <!-- FooTable -->
 <script src="../../assets/js/plugins/footable/footable.all.min.js"></script>
 <!-- Peity -->
-<script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
-<script src="../../assets/js/demo/peity-demo.js"></script>
+<!-- <script src="../../assets/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="../../assets/js/demo/peity-demo.js"></script> -->
 
 
 
@@ -99,6 +99,25 @@ require_once "../../functions/account-verifier.php";
 <!-- Always Set Last --> 
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
+
+	<script>
+		$(function(){
+			// Enable pusher logging - don't include this in production
+			// Pusher.logToConsole = true;
+
+			// var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+			// 	cluster: 'ap1',
+			// 	forceTLS: true
+			// });
+
+			// var Notif_channel = Notif.subscribe('notif');
+			// Notif_channel.bind('update', function(data){
+			// 	if(data.receiver === $('meta[name="auth"]').attr('content')){
+			// 		// toust & add noitfication 
+			// 	}
+			// });
+		});
+	</script>
 
 
     <script>
@@ -262,6 +281,11 @@ require_once "../../functions/account-verifier.php";
 									icon = "fas fa-chess-pawn";
 									cardAction = `data-toggle="modal" data-target="#pre-proc-evaluation" data-dismiss="modal"`;
 									break;
+								case "Update Released Document from Technical Member":
+									classtype = "lazur-bg";
+									icon = "fas fa-chess-pawn";
+									cardAction = `data-toggle="modal" data-target="#returning" data-dismiss="modal"`;
+									break;
 							
 								default:
 									classtype = "lazur-bg";
@@ -301,6 +325,11 @@ require_once "../../functions/account-verifier.php";
 				//modal.find('.modal-body input').val(reference);
 				document.getElementById("projectReference").value = reference;
 			});
+
+			function ModalSubmit(id){
+				var DataModal = $(id).serialize();
+				console.log(DataModal);
+			}
 		
 			
 			//outgoing documents table collapse all div
@@ -620,7 +649,7 @@ require_once "../../functions/account-verifier.php";
 
 	<script> //search script
 		$(function(){
-			$('form').submit(function(e) {
+			$('#FormSearchModal').submit(function(e) {
 				e.preventDefault();
 				if ($(this).hasClass('active')) 
 				$(this).removeClass('active');

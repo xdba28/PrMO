@@ -200,7 +200,13 @@
                     return $this->db->results();
                 }
             }
-        }   
+		}
+		
+		public function listNotification(){
+            $user = Session::get($this->sessionName);
+			$this->db->query_builder("SELECT message FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			return $this->db->results();
+		}
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -286,7 +292,7 @@
 
 		public function getContent($refno, $type, $lot){
 			if($type == "PR"){
-				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
 				FROM
 				`lots`, `lot_content_for_pr`
 				WHERE
@@ -297,7 +303,7 @@
 					return $this->db->results();
 				}
 			}else{
-				if($this->db->query_builder("SELECT lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot',  lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
 				FROM
 				`lots`, `lot_content_for_jo`
 				WHERE

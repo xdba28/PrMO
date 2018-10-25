@@ -89,7 +89,6 @@ else{
 					'transactions' => $doc->transactions,
 					'date_registered' => Date::translate($doc->date_registered, 1)
 				];
-				echo "a <br>";
 			}
 		}else $outData = NULL;
 

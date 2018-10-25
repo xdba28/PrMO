@@ -41,8 +41,6 @@
 
     }
 	
-
-	
 ?>
 <!DOCTYPE html>
 <html>
