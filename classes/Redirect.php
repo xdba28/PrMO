@@ -68,7 +68,7 @@
                         break;
 
                         case 'Director':
-                            header('Location: ../views/Admin/Dashboard'); 
+                            header('Location: ../views/Director/Dashboard'); 
                             exit();
                         break;
                         

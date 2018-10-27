@@ -35,17 +35,22 @@ try
 		'edr_email' => $r->email,
 		'phone' => $r->contact,
 		'edr_designated_office' => $office->ID,
+		'current_specific_office' => $r->specific_office,
 		'edr_job_title' => "none",
 		'edr_profile_photo' => NULL
 	));
+
+	$temporaryPassword = StringGen::password();
 
 	$sa->register('edr_account', array(
 		'account_id' => $r->employee_id,
 		'username' => $r->username,
 		'salt' => $salt,
-		'userpassword' => Hash::make($r->userpassword, $salt),
+		'userpassword' => Hash::make($temporaryPassword, $salt),
 		'group_' => 1
 	));
+
+	//send sms to enduser that his/her account is already created with the password $temporaryPassword
 
 	$sa->delPersn("account_requests", array("employee_id", "=", $r->employee_id));
 	

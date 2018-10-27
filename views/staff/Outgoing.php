@@ -11,9 +11,6 @@
         die();
     }
 
-
-   
-
 ?>
 
 
@@ -104,7 +101,7 @@
 						</div>
 						<div class="ibox-content">
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered table-hover dataTables-example" >
+								<table class="table table-striped table-bordered table-hover" id="DataTable_Twg">
 								<thead>
 								<tr>
 									<th><input btn-t="twg" type="checkbox" class="i-checks"> Select all</th>
@@ -166,7 +163,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_Signiture">
 						<thead>
 						<tr>
 							<th><input btn-t="out" type="checkbox" class="i-checks"> Select all</th>
@@ -183,7 +180,7 @@
 								
 								if($document->transactions == "SIGNATURES"){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									$unit = $user->get('units', array('ID', '=', $document->transmitting_to));
+									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
@@ -226,7 +223,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_GenDoc">
 						<thead>
 						<tr>
 							<th><input btn-t="gen" type="checkbox" class="i-checks"> Select all</th>
@@ -243,7 +240,7 @@
 								
 								if(($document->transactions != "SIGNATURES") && ($document->transactions != "EVALUATION")){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									$unit = $user->get('units', array('ID', '=', $document->transmitting_to));
+									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="gen" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
@@ -343,29 +340,67 @@
 							text: "Document(s) successfully logged out.",
 							type: "success"
 						});
-						if(res.outgoing !== null){
-							// erase table
-							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
-							$('table#DataTable_Twg > tbody').html('');
-							res.outgoing.forEach(function(e, i){
-								// DataTable_Twg.row.add([
-								// 	e.project_title,
 
-								// ]);
-								$('table#DataTable_Twg > tbody').append(`<tr class="odd">
-									<td class="tdcheck"><input data="twg" type="checkbox" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label></td>
-									<td class="td-project-title"><label for="${e.project}">${e.project_title}</label></td>
-									<td class="center">${e.transmitting_to}</td>
-									<td class="center">${e.specific_office}</td>
-									<td class="center">${e.date_registered}</td>
-								</tr>`);
-								TwgDataTable.draw();
+						if(res.twg !== null){
+							DataTable_Twg.clear().draw();
+							res.twg.forEach(function(e, i){
+								DataTable_Twg.row.add([
+									`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									'TWG',
+									'TWG',
+									e.date_registered
+								]);
 							});
+							DataTable_Twg.draw();							
 						}else{
-							// erase tables
-							DataTable_Twg.row('table#DataTable_Twg > tbody > tr').remove().draw(false);
-							// DataTable_Twg.row('tr:has(td:has(div.checked:has(input:checked)))').remove().draw(false);
+							DataTable_Twg.clear().draw();
 						}
+
+						if(res.sign !== null){
+							DataTable_Signiture.clear().draw();
+							res.sign.forEach(function(e, i){
+								DataTable_Signiture.row.add([
+									`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									e.transmitting_to,
+									e.specific_office,
+									e.date_registered
+								]);
+							});
+							DataTable_Signiture.draw();
+						}else{
+							DataTable_Signiture.clear().draw();
+						}
+
+
+						if(res.gen !== null){
+							DataTable_GenDoc.clear().draw();
+							res.gen.forEach(function(e, i){
+								DataTable_GenDoc.row.add([
+									`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									e.transmitting_to,
+									e.specific_office,
+									e.date_registered
+								]);
+							});
+							DataTable_GenDoc.draw();
+						}else{
+							DataTable_GenDoc.clear().draw();
+						}
+
+
+						if(res.forEval.bool){
+							res.forEval.data.forEach(function(e, i){
+								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+							});
+						}
+						
+						$('.i-checks').iCheck({
+							checkboxClass: 'icheckbox_square-green',
+							radioClass: 'iradio_square-green'
+						});
 					}
 				});
 			}

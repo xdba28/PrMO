@@ -1,13 +1,13 @@
 <?php
 require_once "../../core/init.php";
 
-// $admin = new Admin();
+$admin = new Admin();
 
-// if($admin->isLoggedIn());
-// else{
-// 	Redirect::To('../../index');
-// 	die();
-// }
+if($admin->isLoggedIn());
+else{
+	Redirect::To('../../index');
+	die();
+}
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
@@ -15,9 +15,14 @@ $documentProtection = $phpWord->getSettings()->getDocumentProtection();
 $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
 $documentProtection->setPassword('PrMO');
 
-// $file = $REQUEST[0].".docx";
-// header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-// header('Content-Disposition: attachment; filename="'.$file.'"');
+
+$REQ = $_GET['g'];
+// $REQ = "GDS2018-6";
+$data = $admin->get("projects", array('project_ref_no', '=', $REQ));
+
+$file = $REQ.".docx";
+header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+header('Content-Disposition: attachment; filename="'.$file.'"');
 
 $c = ['alignment' => 'center'];
 $hPragr = ['indentation' => ['left' => 1296, 'right' => 0]];
@@ -64,7 +69,7 @@ $textbox = $cellBox->addTextBox([
 ]);
 $textbox->addText("Transaction no:", null, $c);
 $textbox->addText("");
-$textbox->addText("GDS-2018-1", ['size' => 11, 'bold' => true], $c);
+$textbox->addText(htmlspecialchars($REQ, ENT_QUOTES), ['size' => 11, 'bold' => true], $c);
 
 $table->addRow();
 $table->addCell(null, ['vMerge' => 'continue']);
@@ -92,7 +97,13 @@ $table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'ali
 
 $table->addRow(300);
 
-$table->addCell(1700, ['vMerge' => 'restart'])->addText("Reference No.");
+$refno = json_decode($data->request_origin, true);
+$p = '';
+foreach($refno as $ref){
+	$p = $p.$ref."\n";
+}
+
+$table->addCell(1700, ['vMerge' => 'restart'])->addText("Reference No.\n\n".$p);
 $table->addCell(3000)->addText("Goods    Civil Words  ", null, $c);
 $table->addCell(1300)->addText("Consultancy");
 $table->addCell(5000, ['gridSpan' => 2])->addText("Mode of Procurement", null, $c);
@@ -111,10 +122,10 @@ $table->addRow(1000);
 
 $ProjName = $table->addCell(5000, ['gridSpan' => 3]);
 $ProjName->addtext(htmlspecialchars("Project Name:", ENT_QUOTES), ['bold' => true]);
-$ProjName->addtext(htmlspecialchars("Provide catering services for the \"the seminar-workshop on interdisciplinary contextualization (icon) for preservice science & mathematics education students\" on September 27-29, 2018, with details as follows:", ENT_QUOTES), null, ['alignment' => 'both', 'indentation' => ['left' => 144, 'right' => 80], 'space' => ['before' => 70, 'after' => 70]]);
+$ProjName->addtext(htmlspecialchars($data->project_title, ENT_QUOTES), null, ['alignment' => 'both', 'indentation' => ['left' => 144, 'right' => 80], 'space' => ['before' => 70, 'after' => 70]]);
 $textrun = $ProjName->addTextRun();
 $textrun->addText("ABC: ", ['bold' => true]);
-$textrun->addText("&#8369; ".htmlspecialchars("82,225.00", ENT_QUOTES));
+$textrun->addText("&#8369; ".htmlspecialchars($data->ABC, ENT_QUOTES));
 $table->addCell();
 $table->addCell()->addText("Alternative Mode, specify:");
 $table->addCell()->addText("Date received:    Date returned:", ['size' => 9]);
@@ -189,6 +200,6 @@ $section->addText("      BU-F-BAC 004 \t\t\t\t\t\t\t\t\t\t\t    Revision: 2", $F
 $section->addText("      Effective: January 29, 2016", $Fnine);
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$objWriter->save('C:/Users/Denver/Desktop/EVAL.docx');
-// $objWriter->save("php://output");
+// $objWriter->save('C:/Users/Denver/Desktop/EVAL.docx');
+$objWriter->save("php://output");
 ?>

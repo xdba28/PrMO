@@ -21,12 +21,21 @@ function SendDoNothing(type = "", url = "", data = {}, swalset = {}){
 			}
 		},
 		error: function(){
-			swal({
-				title: "An error occurred!",
-				text: "Cannot send data.",
-				confirmButtonColor: "#DD6B55",
-				type: "error"
-			});
+			if(navigator.onLine){
+				swal({
+					title: "An error occurred!",
+					text: "Cannot send data.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"
+				});
+			}else{
+				swal({
+					title: "An error occured!",
+					text: "No internet connection detected.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"	
+				});
+			}
 		}
 	});
 }
@@ -35,12 +44,23 @@ function SendDoSomething(type = "", url = "", data = {}, code = {
 	do: function(d){}
 }, poll = false, Err = {
 	f: function(){
-		swal({
-			title: "An error occurred!",
-			text: "Cannot send data.",
-			confirmButtonColor: "#DD6B55",
-			type: "error"
-		});
+		if(!poll){
+			if(window.navigator.onLine){
+				swal({
+					title: "An error occurred!",
+					text: "Cannot send data.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"
+				});
+			}else{
+				swal({
+					title: "An error occured!",
+					text: "No internet connection detected.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"	
+				});
+			}
+		}
 	}
 }){
 	$.ajax({

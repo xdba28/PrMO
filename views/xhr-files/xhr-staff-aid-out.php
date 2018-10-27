@@ -15,6 +15,7 @@ else{
 	{
 		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
 		$outgoing = $_POST['outgoing'];
+		$eval = false;
 
 		try{
 
@@ -40,6 +41,8 @@ else{
 							'accomplished' => '1',
 							'workflow' => 'Pre-procurement Evaluation'
 						));
+
+						$eval = true;
 
 						break;
 					case 'SIGNATURES':
@@ -75,25 +78,68 @@ else{
 			echo json_encode($data);
 			// log files
 		}
-		
+
+		$outData = NULL;
+		$signiture = NULL;
+		$gen = NULL;
 
 		$outgoing = $user->selectAll('outgoing');
 		if(!empty($outgoing)){
-			foreach($outgoing as $doc){
-				$outData[] = [
-					'ID' => $doc->ID,
-					'project' => $doc->project,
-					'transmitting_to' => $doc->transmitting_to,
-					'specific_office' => $doc->specific_office,
-					'remarks' => $doc->remarks,
-					'transactions' => $doc->transactions,
-					'date_registered' => Date::translate($doc->date_registered, 1)
-				];
-			}
-		}else $outData = NULL;
+			foreach($outgoing as $document){
+				switch($document->transactions){
+					case "EVALUATION":
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$outData[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
 
+					case "SIGNATURES":
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+						$signiture[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'transmitting_to' => $unit->office_name,
+							'specific_office' => $document->specific_office,
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
+
+					default:
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+
+						$gen[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'transmitting_to' => $unit->office_name,
+							'specific_office' => $document->specific_office,
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
+				}
+			}
+		}
+
+		// echo "<pre>".print_r($outData)."</pre>";
+		// echo "<hr>";
+		// echo "<pre>".print_r($signiture)."</pre>";
+		// echo "<hr>";
+		// echo "<pre>".print_r($gen)."</pre>";
 		
-		$data = ['success' => true, 'outgoing' => $outData];
+		$data = [
+			'success' => true, 
+			'twg' => $outData,
+			'sign' => $signiture,
+			'gen' => $gen,
+			'forEval' => [
+				'bool' => $eval, 
+				'data' => $_POST['outgoing']
+			]
+		];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}
