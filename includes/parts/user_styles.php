@@ -59,3 +59,5 @@
 
 <!-- Sweet Alert -->
 <link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+
+<meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'))?>">

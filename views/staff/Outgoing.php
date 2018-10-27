@@ -11,9 +11,6 @@
         die();
     }
 
-
-   
-
 ?>
 
 
@@ -104,7 +101,7 @@
 						</div>
 						<div class="ibox-content">
 							<div class="table-responsive">
-								<table class="table table-striped table-bordered table-hover dataTables-example" >
+								<table class="table table-striped table-bordered table-hover" id="DataTable_Twg">
 								<thead>
 								<tr>
 									<th><input btn-t="twg" type="checkbox" class="i-checks"> Select all</th>
@@ -166,7 +163,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_Signiture">
 						<thead>
 						<tr>
 							<th><input btn-t="out" type="checkbox" class="i-checks"> Select all</th>
@@ -183,7 +180,7 @@
 								
 								if($document->transactions == "SIGNATURES"){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									$unit = $user->get('units', array('ID', '=', $document->transmitting_to));
+									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
@@ -226,7 +223,7 @@
 						<div class="ibox-content">
 
 							<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTable_GenDoc">
 						<thead>
 						<tr>
 							<th><input btn-t="gen" type="checkbox" class="i-checks"> Select all</th>
@@ -243,7 +240,7 @@
 								
 								if(($document->transactions != "SIGNATURES") && ($document->transactions != "EVALUATION")){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									$unit = $user->get('units', array('ID', '=', $document->transmitting_to));
+									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="gen" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
@@ -293,30 +290,132 @@
 </body>
 <script>
 
-	$('#tOut').on('click', function(e){
-		var data_twg = [];
-		$('[name="twg[]"]:checked').each(function(i, v){
-			data_twg.push($(this).attr("id"));
+	$(document).ready(function(){
+		var DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
 		});
-		if(data_twg.length !== 0)
-		{
-			SendDoNothing("POST", "xhr-out.php", {
-				outgoing: data_twg
-			}, {
-				title: "Success!",
-				text: "Document(s) successfully logged out.",
+
+		var DataTable_Signiture = $('#DataTable_Signiture').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+		});
+
+		var DataTable_GenDoc = $('#DataTable_GenDoc').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+		});
+		
+		$('#tOut').on('click', function(e){
+			var data_twg = [];
+			$('[name="twg[]"]:checked').each(function(i, v){
+				data_twg.push($(this).attr("id"));
 			});
-		}
-		else
-		{
-			swal({
-				title: "No selected document!",
-				text: "Please select a document.",
-				type: "error",
-				confirmButtonColor: "#DD6B55"
-			});
-		}
+			if(data_twg.length !== 0)
+			{
+				SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
+					outgoing: data_twg
+				}, {
+					do: function(res){
+						swal({
+							title: "Success!",
+							text: "Document(s) successfully logged out.",
+							type: "success"
+						});
+
+						if(res.twg !== null){
+							DataTable_Twg.clear().draw();
+							res.twg.forEach(function(e, i){
+								DataTable_Twg.row.add([
+									`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									'TWG',
+									'TWG',
+									e.date_registered
+								]);
+							});
+							DataTable_Twg.draw();							
+						}else{
+							DataTable_Twg.clear().draw();
+						}
+
+						if(res.sign !== null){
+							DataTable_Signiture.clear().draw();
+							res.sign.forEach(function(e, i){
+								DataTable_Signiture.row.add([
+									`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									e.transmitting_to,
+									e.specific_office,
+									e.date_registered
+								]);
+							});
+							DataTable_Signiture.draw();
+						}else{
+							DataTable_Signiture.clear().draw();
+						}
+						murderous pursuit
+
+						if(res.gen !== null){
+							DataTable_GenDoc.clear().draw();
+							res.gen.forEach(function(e, i){
+								DataTable_GenDoc.row.add([
+									`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									e.title,
+									e.transmitting_to,
+									e.specific_office,
+									e.date_registered
+								]);
+							});
+							DataTable_GenDoc.draw();
+						}else{
+							DataTable_GenDoc.clear().draw();
+						}
+
+
+						if(res.forEval.bool){
+							res.forEval.data.forEach(function(e, i){
+								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+							});
+						}
+						
+						$('.i-checks').iCheck({
+							checkboxClass: 'icheckbox_square-green',
+							radioClass: 'iradio_square-green'
+						});
+					}
+				});
+			}
+			else
+			{
+				swal({
+					title: "No selected document!",
+					text: "Please select a document.",
+					type: "error",
+					confirmButtonColor: "#DD6B55"
+				});
+			}
+		});
 	});
+
 	
 </script>
 </html>

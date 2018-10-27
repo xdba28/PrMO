@@ -251,15 +251,17 @@
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Username</label>
 										<div class="input-group">
-											<span class="input-group-addon"><i class="ti-user my-blue"></i></span><input value="sample.username" type="text" name="username" form="profile" class="form-control" required>
+											<span class="input-group-addon"><i class="ti-user my-blue"></i></span><input value="" type="text" id="username" name="username" form="profile" class="form-control" required>
 										</div>
 									</div>		
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Password</label>
 										<div class="input-group">
-											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="<?php echo StringGen::password();?>" readonly type="text" name="defaultPassword" form="profile" class="form-control" required>
+											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="" readonly type="text" id="defaultPassword" name="defaultPassword" form="profile" class="form-control" required>
 										</div>
-									</div>										
+									</div>	
+
+									<button type="button" id="passwordGen" class="pull-right btn btn-sm btn-default">Generate Password</button>									
 								</div>	
 							</div>
 							
@@ -442,5 +444,31 @@
 			timer: 13000
 		});
 	}
+
+		$('#first').change(function() {
+			var last = $('#last').val();
+			$('#username').val($(this).val()+'.'+last);
+		});
+		$('#last').change(function() {
+			var first = $('#first').val();
+			$('#username').val(first+'.'+$(this).val());
+		});		
+
+		$('#passwordGen').click(function(){
+
+			<?php
+			$availablePassword = array();
+			for($x=0; $x < 10; $x++){
+				array_push($availablePassword, StringGen::password());
+			}
+
+			?>
+			var tempPassword = <?php echo json_encode($availablePassword); ?>;
+			
+			$('#defaultPassword').val(tempPassword[Math.floor(Math.random() * 10)]);
+		});
+
+
+
 </script>
 </html>

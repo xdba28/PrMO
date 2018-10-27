@@ -200,7 +200,13 @@
                     return $this->db->results();
                 }
             }
-        }   
+		}
+		
+		public function listNotification(){
+            $user = Session::get($this->sessionName);
+			$this->db->query_builder("SELECT message FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			return $this->db->results();
+		}
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -255,9 +261,19 @@
 		}
 
 		public function projectHistory($originRefno, $currentRefno){
+
+			$noOfOrigin = count($originRefno);
+
+			if($noOfOrigin > 1){
+					$imploded = implode("' OR referencing_to = '", $originRefno);
+					$filteredSql = "referencing_to ='" .$imploded. "'";
+			}else{
+				$filteredSql = "referencing_to = '{$originRefno[0]}'";
+			}
+
 			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
 			FROM `projects`, `project_logs`
-			WHERE referencing_to = '{$originRefno}' OR
+			WHERE $filteredSql OR
 			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
 			")){
 				return $this->db->results();

@@ -90,7 +90,7 @@ else{
 								'type' => 'IN'
 							));
 
-							//$user->delete('outgoing_register', array('project', '=', $reference));
+							$user->delete('outgoing_register', array('project', '=', $reference));
 							
 						}					
 						break;

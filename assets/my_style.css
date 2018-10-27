@@ -539,3 +539,8 @@ li {
   max-width: 1200px;
   width: 100%;
 }
+
+.modal-body {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+}

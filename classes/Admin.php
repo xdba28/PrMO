@@ -81,7 +81,92 @@
                 }				
 
             return false;
-        }
+		}
+		
+		public function dashboard_procurement_entries($option){
+
+
+
+			switch ($option) {
+				case 'year':
+
+					$currentYear = date('Y');
+					$previousYear = date('Y',strtotime("- 1 year"));
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$previousYear}%'")){
+						$previousEntries = $this->db->first()->entries;
+					}
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$currentYear}%'")){
+						$currentEntries = $this->db->first()->entries;
+					}
+
+					break;
+				case 'month':
+
+					$currentMonth = date('Y-m');
+					$previousMonth = date('Y-m',strtotime("- 1 month"));
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$previousMonth}%'")){
+						$previousEntries = $this->db->first()->entries;
+					}
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$currentMonth}%'")){
+						$currentEntries = $this->db->first()->entries;
+					}
+
+					break;
+				case 'week':
+
+					// current week
+					$weekNo = date('W');
+					$startOftheWeek = date('Y-m-d', strtotime('monday this week'))." 00:00:00";
+					$endOftheWeek = date('Y-m-d', strtotime('sunday this week'))." 23:59:59";
+
+					//last week
+					$previousWeek = date('W', strtotime('- 1 week'));
+					$startOftheLastWeek = date('Y-m-d', strtotime('monday last week'))." 00:00:00";
+					$endOftheLastWeek = date('Y-m-d', strtotime('sunday last week'))." 23:59:59";				
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered BETWEEN '{$startOftheLastWeek}' AND '{$endOftheLastWeek}'")){
+						$previousEntries = $this->db->first()->entries;
+					}
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered BETWEEN '{$startOftheWeek}' AND '{$endOftheWeek}'")){
+						$currentEntries = $this->db->first()->entries;
+					}
+
+
+					break;
+				case 'day':
+
+					$currentDay = date('Y-m-d');
+					$previousDay = date('Y-m-d',strtotime("- 1 day"));
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$previousDay}%'")){
+						$previousEntries = $this->db->first()->entries;
+					}
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$currentDay}%'")){
+						$currentEntries = $this->db->first()->entries;
+					}			
+
+					break;
+			}
+			
+			if($previousEntries == "0"){
+				return "No Comparison Data available from previous {$option}.";
+		
+			}else{
+				$percentCalculation = $this->calculateDifferencePercentage($previousEntries, $currentEntries);
+				return $percentCalculation;
+
+			}
+		}
+
+		private function calculateDifferencePercentage($originalNumber, $newNumber){
+
+			$raw = (($newNumber - $originalNumber) / $originalNumber * 100);
+			$newFormat = number_format($raw,1);
+
+			return $newFormat;
+		}
 
 
         public function profile($id){

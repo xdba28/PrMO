@@ -101,19 +101,22 @@ require_once "../../functions/account-verifier.php";
 <script src="../../includes/js/custom.js"></script>
 
 <script>
+	$(function(){
+		// Enable pusher logging - don't include this in production
+		// Pusher.logToConsole = true;
 
-// // Enable pusher logging - don't include this in production
-// Pusher.logToConsole = true;
+		// var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+		// 	cluster: 'ap1',
+		// 	forceTLS: true
+		// });
 
-// var pusher = new Pusher('6afb55a56f2b4a235c4b', {
-// 	cluster: 'ap1',
-// 	forceTLS: true
-// });
-
-// var channel = pusher.subscribe('client');
-// channel.bind('client', function(data) {
-// 	alert(JSON.stringify(data));
-// });
+		// var Notif_channel = Notif.subscribe('notif');
+		// Notif_channel.bind('update', function(data){
+		// 	if(data.receiver === $('meta[name="auth"]').attr('content')){
+		// 		// toust & add noitfication 
+		// 	}
+		// });
+	});
 </script>
 
 
@@ -135,7 +138,6 @@ require_once "../../functions/account-verifier.php";
 				link.parentNode.setAttribute("class", "active");
 				break;
 		}
-
 
 
         $("#wizard").steps();

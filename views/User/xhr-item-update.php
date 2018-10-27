@@ -12,25 +12,11 @@ if($user->isLoggedIn()){
 
 	if(!empty($_POST)){
 		
-		// Actual Output
-		// $_POST['editType'] -> "PR" || "JO" || "DEL"
-		// $_POST['projId'] -> JO2018-B4EI73:42:34 === Project_ID:LotNo:ItemNo
-		
-		// PR
-		// Input::get('prUpStk') stock
-		// Input::get('prUpUnt') unit
-		// Input::get('prUpDesc') description
-		// Input::get('prUpQty') quantity
-		// Input::get('prUpUc') unit cost
-		// Input::get('prUpTc') total cost
+		// $sample = json_encode($_POST);
 
-		// JO
-		// Input::get('joList') list title
-		// Input::get('joCost') estimated cost
-		// Input::get('joTags') tags
-		// Input::get('joNotes') notes
+		// echo "<pre>".print_r($_POST)."</pre>";
 
-		$data = ['success' => true, 'data' => $_POST];
+		$data = ['success' => true];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}

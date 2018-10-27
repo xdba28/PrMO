@@ -1,3 +1,22 @@
+<script>
+	function ModalSubmit(id){
+		var DataModal = $(`#${id}`).serialize();
+		console.log(DataModal);
+		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
+			// code
+			do: function(res){
+				console.log(res);
+				swal({
+					title: "Action successful!",
+					text: "Project Updated.",
+					type: "success"
+				});
+			}
+		});
+	}
+</script>
+
+
 <!--Superadmin / account-request.php-->
 <div id="decline_modal" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
@@ -108,7 +127,7 @@
                     <div class="ibox-content">
 
                         <div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover dataTables-example" >
+							<table class="table table-striped table-bordered table-hover" id="DataTables_DocUpdate">
 							<thead>
 							<tr>
 								<th><input btn-t="updOutChk" type="checkbox" class="i-checks"> Select all</th>
@@ -187,7 +206,7 @@
       <div class="modal-body">
 
 		<!-- asdasdsa -->
-		<form class="search"><span id="RefSearch"></span>
+		<form id="FormSearchModal" class="search"><span id="RefSearch"></span>
 		<input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
 		<button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="search" height="42" width="42"></button>
 		</form><br>
@@ -203,25 +222,29 @@
 <!-- Actions modal for admin -->
 
 <div class="modal fade" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content ibox-content" dataFor="OutGoingProjectModal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content ibox-content" dataFor="OutGoingProjectModal" style="padding:0px">
+	
 	   <div class="sk-spinner sk-spinner-double-bounce">
 			<div class="sk-double-bounce1"></div>
 			<div class="sk-double-bounce2"></div>
-	  </div>
+	   </div>
+	   
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" dataFor="OutGoingProjectModalClose">
+        <h4 class="modal-title" id="exampleModalLabel">test tittle</h4>
+        <button id="actionsModalClose" type="button" class="close" data-dismiss="modal" aria-label="Close" dataFor="OutGoingProjectModalClose">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+	  
       <div class="modal-body" id="OutGoingProjectModal">
 
       </div>
-      <div class="modal-footer">
+	  
+      <div class="modal-footer" style="padding:.5rem; ">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
       </div>
+	  
     </div>
   </div>
 </div>
@@ -240,11 +263,11 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-lg-12">
-						<div class="ibox ">
+						<div class="ibox">
 							<div class="ibox-content">
 		
 								<div class="table-responsive">
-									<table class="table table-striped table-bordered table-hover dataTables-example" dataFor="userEdit">
+									<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
 
 									</table>
 									<div class="btn-group pull-right" style="margin-right:15px">
@@ -261,4 +284,126 @@
 			</div>				
 		</div>
 	</div>
+</div>
+
+<!-- pre procurement evaluation registration -->
+
+<div class="modal fade" id="pre-proc-evaluation" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation result Registration</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+				<form id="PreprocModal" method="POST" enctype="multipart/form-data" role="form">
+					<div class="row" id="">
+						<div class="col-sm-12">
+							<div class="form-group"> 
+								<label for="projectReference" class="font-bold my-blue">Project Reference no.</label>
+								<input type="text" class="form-control" id="projectReference" name="projectReference" required autocomplte="off" Readonly>
+							</div>						
+							<div class="form-group">
+								<label for="evaluator" class="form-label">Evaluator</label>
+								<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
+							</div>
+							<div class="form-group">
+								<label class="font-bold my-blue">Mode of Procurement</label>
+								<div class="input-group date">
+									<span class="input-group-addon"><i class="fa fa-list"></i></span>
+									<select class="form-control m-b" name="MOP">
+                                        <option value="">Choose...</option>
+                                        <option value="Public Bidding">Public Bidding</option>
+                                        <option value="SVP">Small Value Procurement</option>
+                                        <option value="Direct Contracting">Direct Contracting</option>
+										<option value="Negociated Procurement">Negociated Procurement</option>
+										<option value="Shopping">Shopping</option>
+										<option value="Repeat Order">Repeat Order</option>
+										<option value="Limited Source Bidding">Limited Source Bidding</option>
+                                    </select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="font-bold my-blue">Evaluator's Comment</label>
+								<div class="checkbox checkbox-danger" style="padding-left:5px">
+									<input id="checkbox1" type="checkbox" name="issue">
+									<label for="checkbox1" class="text-warning font-italic">
+										Check this if you consider this comment to be resolved or cleared by the enduser.
+									</label>
+								</div>								
+									<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
+							</div>
+						</div>
+					</div>
+					<input type="text" hidden value="PreprocResult" name="action">
+				</form>				
+	  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="ModalSubmit('PreprocModal')">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- test modal -->
+<div class="modal fade" id="test-modal" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="preprocTitle">Test Modal</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+				<form id="TestModal" method="POST" enctype="multipart/form-data" role="form">
+					<div class="row" id="">
+						<div class="col-sm-12">
+							<div class="form-group"> 
+								<label for="projectReference" class="font-normal">Project Reference no.</label>
+								<input type="text" class="form-control" id="projectReference" name="projectReference" required autocomplte="off" Readonly>
+							</div>						
+							<div class="form-group">
+								<label for="evaluator" class="form-label">Evaluator</label>
+								<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
+							</div>
+
+							<div class="form-group">
+								<label class="font-normal">Mode of Procurement</label>
+								<div class="input-group date">
+									<span class="input-group-addon"><i class="fa fa-list"></i></span>
+									<select class="form-control m-b" name="MOP">
+                                        <option value="">Choose...</option>
+                                        <option value="Public Bidding">Public Bidding</option>
+                                        <option value="SVP">Small Value Procurement</option>
+                                        <option value="Direct Contracting">Direct Contracting</option>
+										<option value="Negociated Procurement">Negociated Procurement</option>
+										<option value="Shopping">Shopping</option>
+										<option value="Repeat Order">Repeat Order</option>
+										<option value="Limited Source Bidding">Limited Source Bidding</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="font-normal">Evaluator's Comment</label>
+									<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
+							</div>
+						</div>
+					</div>
+				</form>				
+	  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="ModalSubmit('TestModal')" data-dismiss="modal">Submit</button>
+      </div>
+    </div>
+  </div>
 </div>

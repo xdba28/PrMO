@@ -12,13 +12,15 @@
 
 			switch ($option) {
 				case '1':
-					$translated_date = date("F j, Y / m:i:s A", $time);
+					$translated_date = date("F j, Y / g:i A", $time);
 					break;
 
-				case '2':
-					# code...
+				case 'month':
+					$translated_date = date("F, Y");
 					break;		
-
+				case 'weekno':
+					$translated_date = "Week no: ".date("W"). " of ".date('Y');
+					break;
 				default:
 					# code...
 					break;

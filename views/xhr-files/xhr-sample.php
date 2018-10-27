@@ -1,42 +1,17 @@
 <?php
-require_once('../../core/init.php');
 
-$user = new Admin(); 
+		//get the json file
+		$json = file_get_contents('jsonsteps.json');
+		// //Decode JSON
+		$stepsStructure = json_decode($json,true);
 
-if($user->isLoggedIn());
-else{
-	Redirect::To('../../blyte/acc3ss');
-	die();
-}
+		// echo "<pre>",print_r($stepsStructure),"</pre>";
 
-try
-{
+		// include ('jsonsteps.json');
 
-	$json = json_decode(file_get_contents('php://input'), true);
-	// sample data from post - -> > array('GSD2018-4', GSD2018-5)
-
-	if(!empty($json))
-	{
-
+		// $availableActions = $actionsData['actionsByMop'][$mop][$standing];
 		
+		// echo $stepsStructure['modeOfProcurement']['Shopping']['noofsteps'];
 
-
-		$data = ['success' => true];
-		header("Content-type:application/json");
-		echo json_encode($data);
-	}
-	else
-	{
-		$data = ['success' => 'error'];
-		header("Content-type:application/json");
-		echo json_encode($data);
-	}
-}
-catch(Exception $e)
-{
-	$data = ['success' => false];
-	header("Content-type:application/json");
-	echo json_encode($data);
-}
-
+		echo $stepsStructure['modeOfProcurement']['Shopping']['noofsteps'];
 ?>
