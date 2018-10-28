@@ -323,89 +323,116 @@
 					}
 				}]
 		});
+
+		function reloadPage(d){
+			SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
+				outgoing: d
+			}, {
+				do: function(res){
+					if(res.forEval.bool){
+						swal({
+							title: "Downloading Pre-Procurement Docs.",
+							text: "Download will start shortly.",
+							type: "success"
+						});
+					}else{
+						swal({
+							title: "Success!",
+							text: "Document(s) successfully logged out.",
+							type: "success"
+						});
+					}
+
+
+					if(res.twg !== null){
+						DataTable_Twg.clear().draw();
+						res.twg.forEach(function(e, i){
+							DataTable_Twg.row.add([
+								`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								e.title,
+								'TWG',
+								'TWG',
+								e.date_registered
+							]);
+						});
+						DataTable_Twg.draw();							
+					}else{
+						DataTable_Twg.clear().draw();
+					}
+
+					if(res.sign !== null){
+						DataTable_Signiture.clear().draw();
+						res.sign.forEach(function(e, i){
+							DataTable_Signiture.row.add([
+								`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								e.title,
+								e.transmitting_to,
+								e.specific_office,
+								e.date_registered
+							]);
+						});
+						DataTable_Signiture.draw();
+					}else{
+						DataTable_Signiture.clear().draw();
+					}
+
+					if(res.gen !== null){
+						DataTable_GenDoc.clear().draw();
+						res.gen.forEach(function(e, i){
+							DataTable_GenDoc.row.add([
+								`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								e.title,
+								e.transmitting_to,
+								e.specific_office,
+								e.date_registered
+							]);
+						});
+						DataTable_GenDoc.draw();
+					}else{
+						DataTable_GenDoc.clear().draw();
+					}
+
+					if(res.outReg !== null){
+						DataTables_DocUpdate.clear().draw();
+						res.outReg.forEach(function(e, i){
+							DataTables_DocUpdate.row.add([
+								`<input type="checkbox" data="upLog" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								e.title,
+								'TWG',
+								'TWG',
+								e.date_registered
+							]);
+							DataTables_DocUpdate.draw();
+						});
+					}else{
+						DataTables_DocUpdate.clear().draw();
+					}
+
+					if(res.forEval.bool){
+						setTimeout(function(){
+							res.forEval.data.forEach(function(e, i){
+								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+							});
+						}, 5000);
+					}
+					
+					$('.i-checks').iCheck({
+						checkboxClass: 'icheckbox_square-green',
+						radioClass: 'iradio_square-green'
+					});
+				}
+			});
+		}
 		
 		$('#tOut').on('click', function(e){
 			var data_twg = [];
 			$('[name="twg[]"]:checked').each(function(i, v){
 				data_twg.push($(this).attr("id"));
 			});
-			if(data_twg.length !== 0)
-			{
-				SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
-					outgoing: data_twg
-				}, {
-					do: function(res){
-						swal({
-							title: "Success!",
-							text: "Document(s) successfully logged out.",
-							type: "success"
-						});
-
-						if(res.twg !== null){
-							DataTable_Twg.clear().draw();
-							res.twg.forEach(function(e, i){
-								DataTable_Twg.row.add([
-									`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-									e.title,
-									'TWG',
-									'TWG',
-									e.date_registered
-								]);
-							});
-							DataTable_Twg.draw();							
-						}else{
-							DataTable_Twg.clear().draw();
-						}
-
-						if(res.sign !== null){
-							DataTable_Signiture.clear().draw();
-							res.sign.forEach(function(e, i){
-								DataTable_Signiture.row.add([
-									`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-									e.title,
-									e.transmitting_to,
-									e.specific_office,
-									e.date_registered
-								]);
-							});
-							DataTable_Signiture.draw();
-						}else{
-							DataTable_Signiture.clear().draw();
-						}
-						murderous pursuit
-
-						if(res.gen !== null){
-							DataTable_GenDoc.clear().draw();
-							res.gen.forEach(function(e, i){
-								DataTable_GenDoc.row.add([
-									`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-									e.title,
-									e.transmitting_to,
-									e.specific_office,
-									e.date_registered
-								]);
-							});
-							DataTable_GenDoc.draw();
-						}else{
-							DataTable_GenDoc.clear().draw();
-						}
-
-
-						if(res.forEval.bool){
-							res.forEval.data.forEach(function(e, i){
-								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
-							});
-						}
-						
-						$('.i-checks').iCheck({
-							checkboxClass: 'icheckbox_square-green',
-							radioClass: 'iradio_square-green'
-						});
-					}
-				});
+			if(data_twg.length !== 0){
+				reloadPage(data_twg);
 			}
-			else
-			{
+			else{
 				swal({
 					title: "No selected document!",
 					text: "Please select a document.",
@@ -414,6 +441,8 @@
 				});
 			}
 		});
+
+
 	});
 
 	

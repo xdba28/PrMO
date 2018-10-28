@@ -1,7 +1,6 @@
 <script>
 	function ModalSubmit(id){
 		var DataModal = $(`#${id}`).serialize();
-		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
 			// code
 			do: function(res){

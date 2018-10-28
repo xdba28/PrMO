@@ -11,6 +11,10 @@
         die();
 	}
 
+	notif(json_encode(array(
+		'receiver' => '2015-11583',
+		'message' => "Project Ref: asdasd is now registered as asdasd"
+	)));
 	
 	if(Input::exists()){
 		if(Token::check("newProject", Input::get('newProject'))){
@@ -65,8 +69,19 @@
 
 			));
 
+			$staff->register('notifications', array(
+				'recipient' => $_POST['enduser'],
+				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+				'datecreated' => Date::translate('test', 'now')
+			));
+
 			$staff->endTrans(); //commit
-			Session::flash("ProjReg", "Project successfully registered!");
+
+			Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
+			notif(json_encode(array(
+				'receiver' => $_POST['enduser'],
+				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}"
+			)));
 			unset($_GET);
 
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
@@ -427,11 +442,12 @@
 	$(document).ready(function(){
 
 		if(ProjReg !== ""){
+			var ProjRegMesg = ProjReg.split("|");
+			var ProjRegDetail = ProjRegMesg[1].split(":");
 			swal({
-				title: ProjReg,
-				text: "",
-				type: 'success',
-				timer: 13000
+				title: ProjRegMesg[0],
+				text: `Ref no: ${ProjRegDetail[1]} is now registered as Project ${ProjRegDetail[0]}`,
+				type: 'success'
 			});
 		}
 
@@ -568,8 +584,8 @@
 					$('#nwprj-tbl-data').html('');
 					start();
 				},
-			}, true)
-		}, 15000);
+			}, true);
+		}, 60000);
 	});
 
 	</script>

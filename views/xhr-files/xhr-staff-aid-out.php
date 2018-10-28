@@ -82,6 +82,7 @@ else{
 		$outData = NULL;
 		$signiture = NULL;
 		$gen = NULL;
+		$outReg = NULL;
 
 		$outgoing = $user->selectAll('outgoing');
 		if(!empty($outgoing)){
@@ -124,17 +125,24 @@ else{
 			}
 		}
 
-		// echo "<pre>".print_r($outData)."</pre>";
-		// echo "<hr>";
-		// echo "<pre>".print_r($signiture)."</pre>";
-		// echo "<hr>";
-		// echo "<pre>".print_r($gen)."</pre>";
-		
+		$released = $user->selectAll('outgoing_register');
+		if(!empty($released)){
+			foreach($released as $document){
+				$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+				$outReg[] = [
+					'project' => $document->project,
+					'title' => $project->project_title,
+					'date_registered' => Date::translate($document->date_registered, 1)
+				];
+			}
+		}
+
 		$data = [
 			'success' => true, 
 			'twg' => $outData,
 			'sign' => $signiture,
 			'gen' => $gen,
+			'outReg' => $outReg,
 			'forEval' => [
 				'bool' => $eval, 
 				'data' => $_POST['outgoing']

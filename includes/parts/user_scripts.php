@@ -103,19 +103,40 @@ require_once "../../functions/account-verifier.php";
 <script>
 	$(function(){
 		// Enable pusher logging - don't include this in production
-		// Pusher.logToConsole = true;
+		Pusher.logToConsole = true;
 
-		// var Notif = new Pusher('6afb55a56f2b4a235c4b', {
-		// 	cluster: 'ap1',
-		// 	forceTLS: true
-		// });
+		var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+			cluster: 'ap1',
+			forceTLS: true
+		});
 
-		// var Notif_channel = Notif.subscribe('notif');
-		// Notif_channel.bind('update', function(data){
-		// 	if(data.receiver === $('meta[name="auth"]').attr('content')){
-		// 		// toust & add noitfication 
-		// 	}
-		// });
+		var Notif_channel = Notif.subscribe('notif');
+		Notif_channel.bind('update', function(data){
+			let msg = JSON.parse(data);
+			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+				let NotifCount = document.getElementById('NotifCount');
+				let add = parseFloat(NotifCount.innerText) + 1;
+				NotifCount.innerText = (add).toFixed(0);
+				$('#NotifList').append(`<li><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-envelope fa-fw"></i> ${msg.message}</div></a></li>
+					<li class="dropdown-divider"></li>`);
+
+
+				toastr.options = {
+					"progressBar": true,
+					"preventDuplicates": false,
+					"showDuration": "400",
+					"hideDuration": "1000",
+					"timeOut": "6000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				toastr.info(msg.message);
+			}
+		});
 	});
 </script>
 

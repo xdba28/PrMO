@@ -91,34 +91,51 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/demo/peity-demo.js"></script> -->
 
 
-
 <!-- **********************************EXTERNAL**********************************-->
 <script src="../../assets/dropify/js/dropify.min.js"></script>
-
 
 <!-- Always Set Last --> 
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
+<script>
+	$(function(){
+		// Enable pusher logging - don't include this in production
+		Pusher.logToConsole = true;
 
-	<script>
-		$(function(){
-			// Enable pusher logging - don't include this in production
-			// Pusher.logToConsole = true;
-
-			// var Notif = new Pusher('6afb55a56f2b4a235c4b', {
-			// 	cluster: 'ap1',
-			// 	forceTLS: true
-			// });
-
-			// var Notif_channel = Notif.subscribe('notif');
-			// Notif_channel.bind('update', function(data){
-			// 	if(data.receiver === $('meta[name="auth"]').attr('content')){
-			// 		// toust & add noitfication 
-			// 	}
-			// });
+		var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+			cluster: 'ap1',
+			forceTLS: true
 		});
-	</script>
 
+		var Notif_channel = Notif.subscribe('notif');
+		Notif_channel.bind('update', function(data){
+			let msg = JSON.parse(data);
+			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+				let NotifCount = document.getElementById('NotifCount');
+				let add = parseFloat(NotifCount.innerText) + 1;
+				NotifCount.innerText = (add).toFixed(0);
+				$('#NotifList').append(`<li><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-envelope fa-fw"></i> ${msg.message}</div></a></li>
+					<li class="dropdown-divider"></li>`);
+
+
+				toastr.options = {
+					"progressBar": true,
+					"preventDuplicates": false,
+					"showDuration": "400",
+					"hideDuration": "1000",
+					"timeOut": "6000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				toastr.info(msg.message);
+			}
+		});
+	});
+</script>
 
     <script>
 		// CUSTOM GLOBAL SCRIPTS
@@ -325,11 +342,6 @@ require_once "../../functions/account-verifier.php";
 				//modal.find('.modal-body input').val(reference);
 				document.getElementById("projectReference").value = reference;
 			});
-
-			function ModalSubmit(id){
-				var DataModal = $(id).serialize();
-				console.log(DataModal);
-			}
 		
 			
 			//outgoing documents table collapse all div
@@ -633,8 +645,9 @@ require_once "../../functions/account-verifier.php";
 	</script>
 
 	<script>
+		var DataTables_DocUpdate = null;
 		$(function(){
-			var DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
 					customize: function (win){

@@ -13,9 +13,10 @@
 
 	<li class="dropdown">
 		<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-			<i class="fa fa-bell"></i>  <span class="label label-primary"><?php echo count($user->listNotification())?></span>
+			<i class="fa fa-bell"></i>  
+			<span class="label label-primary" id="NotifCount"><?php echo count($user->listNotification())?></span>
 		</a>
-		<ul class="dropdown-menu dropdown-alerts">
+		<ul class="dropdown-menu dropdown-alerts" id="NotifList">
 			<?php
 				if(!empty($user->listNotification())){
 					foreach($user->listNotification() as $notif){
@@ -70,13 +71,13 @@
 				</a>
 			</li>
 			<li class="dropdown-divider"></li> -->
-			<li>
+			<!-- <li>
 				<div class="text-center link-block">
 					<a href="#" class="dropdown-item">
 						<strong>See All Alerts</strong>
 						<i class="fa fa-angle-right"></i>
 					</a>
-				</div>
+				</div> -->
 			</li>
 		</ul>
 	</li>
