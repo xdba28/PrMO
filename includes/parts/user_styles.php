@@ -63,4 +63,5 @@
 <!-- Toastr -->
 <link rel="stylesheet" href="../../assets/css/plugins/toastr/toastr.min.css">
 
+
 <meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'))?>">

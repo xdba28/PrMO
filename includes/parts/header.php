@@ -12,72 +12,60 @@
 	</li>
 
 	<li class="dropdown">
-		<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+		<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" id="NotifClick">
 			<i class="fa fa-bell"></i>  
-			<span class="label label-primary" id="NotifCount"><?php echo count($user->listNotification())?></span>
+			<?php 
+				$ClassNotif = new User();
+				$notif = $ClassNotif->listNotification();
+				if($notif['count']->seen === '0') echo '<span class="label label-primary" id="NotifCount" style="display: none;"></span>';
+				else echo '<span class="label label-primary" id="NotifCount">'.$notif['count']->seen.'</span>';
+			?>
 		</a>
 		<ul class="dropdown-menu dropdown-alerts" id="NotifList">
 			<?php
-				if(!empty($user->listNotification())){
-					foreach($user->listNotification() as $notif){
-						?>
-							<li>
-								<a href="#" class="dropdown-item">
-									<div>
-										<i class="fa fa-envelope fa-fw"></i> <?php echo $notif->message;?>
-									</div>
-								</a>
-							</li>
-							<li class="dropdown-divider"></li>
-						<?php
+				if(!empty($notif['list'])){
+					foreach($notif['list'] as $n){
+						if($n->seen === '0'){
+							?>
+								<li class="active">
+									<a href="#" class="dropdown-item">
+										<div>
+											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
+										</div>
+										<small>Time: <?php echo Date::translate($n->datecreated, '1');?></small>
+									</a>
+								</li>
+								<li class="dropdown-divider"></li>
+							<?php
+						}else{
+							?>
+								<li>
+									<a href="#" class="dropdown-item">
+										<div>
+											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
+										</div>
+										<small>Time: <?php echo Date::translate($n->datecreated, '1');?></small>
+									</a>
+								</li>
+								<li class="dropdown-divider"></li>
+							<?php
+						}
 					}
 				}else{
 					?>
+					<div id="message">
 						<li>
 							<a href="#" class="dropdown-item">
 								<div>
-									<i class="fa fa-envelope fa-fw"></i> No Messages
+									<i class="fa fa-bell fa-fw"></i> No Messages
 								</div>
 							</a>
 						</li>
 						<li class="dropdown-divider"></li>
+					</div>
 					<?php
 				}
 			?>
-			<!-- <li>
-				<a href="#" class="dropdown-item">
-					<div>
-						<i class="fa fa-envelope fa-fw"></i> You have 16 messages
-						<span class="float-right text-muted small">4 minutes ago</span>
-					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li>
-			<li>
-				<a href="#" class="dropdown-item">
-					<div>
-						<i class="fa fa-twitter fa-fw"></i> 3 New Followers
-						<span class="float-right text-muted small">12 minutes ago</span>
-					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li>
-			<li>
-				<a href="#" class="dropdown-item">
-					<div>
-						<i class="fa fa-upload fa-fw"></i> Server Rebooted
-						<span class="float-right text-muted small">4 minutes ago</span>
-					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li> -->
-			<!-- <li>
-				<div class="text-center link-block">
-					<a href="#" class="dropdown-item">
-						<strong>See All Alerts</strong>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</div> -->
 			</li>
 		</ul>
 	</li>

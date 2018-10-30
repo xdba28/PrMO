@@ -10,11 +10,6 @@
        Redirect::To('../../blyte/acc3ss');
         die();
 	}
-
-	notif(json_encode(array(
-		'receiver' => '2015-11583',
-		'message' => "Project Ref: asdasd is now registered as asdasd"
-	)));
 	
 	if(Input::exists()){
 		if(Token::check("newProject", Input::get('newProject'))){
@@ -69,21 +64,17 @@
 
 			));
 
-			$staff->register('notifications', array(
-				'recipient' => $_POST['enduser'],
-				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-				'datecreated' => Date::translate('test', 'now')
-			));
-
 			$staff->endTrans(); //commit
 
 			Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
 			notif(json_encode(array(
 				'receiver' => $_POST['enduser'],
-				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}"
+				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+				'date' => Date::translate(Date::translate('test', 'now'), '1')
 			)));
-			unset($_GET);
-
+			Redirect::To('new-project');
+			exit();
+			
 			//disable the "register" now button in the new-project page to prevent any data discrepancy
 			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 			//send SMS notifications
@@ -115,8 +106,8 @@
 	<script>
 		var OBJ = 
 		<?php
-		$user = new Staff();
-		echo json_encode($user->allPRJO_req_detail());		
+		$staff = new Staff();
+		echo json_encode($staff->allPRJO_req_detail());		
 		?>;
 		var ProjReg = '<?php 
 		if(Session::exists("ProjReg")) echo Session::flash("ProjReg");
@@ -458,7 +449,7 @@
 					var user = el.req_by.split(":");
 					var data_tmp = `
 					<tr>
-						<td><a href="#${el.id}" class="client-link">${el.id}</a></td>
+						<td dataFor="active"><a href="#${el.id}" class="client-link">${el.id}</a></td>
 						<td>${user[1]}</td>
 						<td><i class="fa fa-clock"></i> ${el.date_created}</td>
 						<td><button class="ladda-button btn-rounded btn btn-warning" proj="${el.id}" data-style="zoom-in">Receive</button></td>
@@ -575,6 +566,11 @@
 					}
 				});
 			});
+
+			$('[dataFor="active"]').on('click', function(){
+				$('#nwprj-tbl-data  tr').attr('style', '');
+				$(this).parent().css("background", "#34495E").css('color', 'white');
+			});
 		}
 		start();
 		setTimeout(function(){
@@ -584,7 +580,7 @@
 					$('#nwprj-tbl-data').html('');
 					start();
 				},
-			}, true);
+			}, true)
 		}, 60000);
 	});
 

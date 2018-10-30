@@ -230,6 +230,8 @@
 							<th>Title</th>
 							<th>Transmitting</th>
 							<th>Office</th>
+							<th>Transaction</th>
+							<th>Remarks</th>
 							<th>Date Queued</th>
 						</tr>
 						</thead>
@@ -247,6 +249,8 @@
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
 							<td class="center"><?php echo $unit->office_name;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
+							<td class="center"><?php echo $document->transactions;?></td>
+							<td class="center"><?php echo $document->remarks;?></td>
 							<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 						</tr>
 						<?php
@@ -372,7 +376,7 @@
 						}else{
 							DataTable_Signiture.clear().draw();
 						}
-						murderous pursuit
+
 
 						if(res.gen !== null){
 							DataTable_GenDoc.clear().draw();

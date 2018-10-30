@@ -415,7 +415,15 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function(){
 
-		var ProjType = '<?php echo $type;?>';
+		<?php
+			if(Session::exists("Request")){
+			echo "window.open('../../bac/forms/pr-jo-doc');";
+			}
+		?>
+
+		var ProjType = '<?php 
+			if(!empty($type)) echo $type;
+			?>';
 		var obj = Object;
 		var OriginalData = null;
 		var act = null;

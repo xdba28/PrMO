@@ -21,6 +21,9 @@
 				case 'weekno':
 					$translated_date = "Week no: ".date("W"). " of ".date('Y');
 					break;
+				case 'today':
+					$translated_date = date('F j, Y');
+					break;				
 				default:
 					# code...
 					break;

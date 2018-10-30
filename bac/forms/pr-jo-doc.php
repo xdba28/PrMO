@@ -196,5 +196,5 @@ $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 ob_clean();
 // $objWriter->save('C:/Users/Denver/Desktop/PR-JO.docx');
 $objWriter->save("php://output");
-// Redirect::To('../../views/User/my-forms');
+exit();
 ?>

@@ -1,6 +1,7 @@
 <script>
 	function ModalSubmit(id){
 		var DataModal = $(`#${id}`).serialize();
+		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
 			// code
 			do: function(res){
@@ -266,9 +267,11 @@
 							<div class="ibox-content">
 		
 								<div class="table-responsive">
+									<form id="userEditForm">
 									<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
 
 									</table>
+									</form>
 									<div class="btn-group pull-right" style="margin-right:15px">
 										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
 											<i class="far fa-edit"></i>

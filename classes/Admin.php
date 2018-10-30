@@ -90,14 +90,27 @@
 			switch ($option) {
 				case 'year':
 
-					$currentYear = date('Y');
-					$previousYear = date('Y',strtotime("- 1 year"));
+					//current year
+					$year =  date('Y');
+					//first day of lastyear
+					$firstDayLastYear = date('Y-m-d H:i:s', strtotime('first day of january last year'));
+					//date this day last year
+					$dateTodayLastYear = date('Y-m-d H:i:s', strtotime('-1 year'));
 
-					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$previousYear}%'")){
+					//first day of the year
+					$firstDayThisYear = date('Y-m-d H:i:s', strtotime('first day of january this year'));
+					//until now
+					$today = date('Y-m-d H:i:s');					
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered BETWEEN '{$firstDayLastYear}' AND '{$dateTodayLastYear}'")){
 						$previousEntries = $this->db->first()->entries;
 					}
-					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$currentYear}%'")){
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered BETWEEN '{$firstDayThisYear}' AND '{$today}'")){
 						$currentEntries = $this->db->first()->entries;
+					}
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'totalEntries' FROM `projects` WHERE date_registered LIKE '{$year}%'")){
+						$totalEntries = $this->db->first()->totalEntries;
 					}
 
 					break;
@@ -111,6 +124,10 @@
 					}
 					if($this->db->query_builder("SELECT COUNT(project_id) as 'entries' FROM `projects` WHERE date_registered LIKE '{$currentMonth}%'")){
 						$currentEntries = $this->db->first()->entries;
+					}
+
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'totalEntries' FROM `projects` WHERE date_registered LIKE '{$currentMonth}%'")){
+						$totalEntries = $this->db->first()->totalEntries;
 					}
 
 					break;
@@ -133,6 +150,10 @@
 						$currentEntries = $this->db->first()->entries;
 					}
 
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'totalEntries' FROM `projects` WHERE date_registered BETWEEN '{$startOftheWeek}' AND '{$endOftheWeek}'")){
+						$totalEntries = $this->db->first()->totalEntries;
+					}
+
 
 					break;
 				case 'day':
@@ -147,15 +168,25 @@
 						$currentEntries = $this->db->first()->entries;
 					}			
 
+					if($this->db->query_builder("SELECT COUNT(project_id) as 'totalEntries' FROM `projects` WHERE date_registered LIKE '{$currentDay}%'")){
+						$totalEntries = $this->db->first()->totalEntries;
+					}
+
 					break;
 			}
+
+				
 			
 			if($previousEntries == "0"){
-				return "No Comparison Data available from previous {$option}.";
+				
+				$entriesReport = array($totalEntries, "No Comparison Data available from previous {$option}.");
+				return $entriesReport;
 		
 			}else{
+
 				$percentCalculation = $this->calculateDifferencePercentage($previousEntries, $currentEntries);
-				return $percentCalculation;
+				$entriesReport =  array($totalEntries, $percentCalculation);
+				return $entriesReport;
 
 			}
 		}
@@ -234,6 +265,19 @@
 				return true;
 			}
 			return false;
+		}
+
+		public function listNotification(){
+            $user = Session::get($this->sessionName);
+			$this->db->query_builder("SELECT message, datecreated, seen FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			$notifList = $this->db->results();
+			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
+			$nofitCount = $this->db->first();
+			$notif = [
+				'list' => $notifList,
+				'count' => $nofitCount
+			];
+			return $notif;
 		}
 
         public function register($table, $fields = array()){

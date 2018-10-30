@@ -36,12 +36,16 @@ else{
 							switch($project->transactions){
 								case 'EVALUATION':
 									$remarks = "Procurement Evaluation Form and other supporting documents are successfuly received in the Technical Member's office for Evaluation.";
+									$user->update('projects', 'project_ref_no', $reference, array(
+										'accomplished' => '2',
+										'workflow' => 'Pre Procurement Evaluation'
+									));
 									break;
 								case 'SIGNATURES':
 									$remarks = "Project Documents for signatures are successfully received in {$project->transmitting_to}, {$project->specific_office}.";
 									break;
 								default:
-									#code..
+									$remarks = "Project Documents successfuly received in {$project->transmitting_to}, {$project->specific_office}.";
 									break;
 							}
 
@@ -78,7 +82,7 @@ else{
 									$remarks = "Project Documents for signatures are successfully received in {$project->transmitting_to}, {$project->specific_office} and immidiately returned to PrMO.";
 									break;
 								default:
-									#code..
+									$remarks = "Project Documents successfuly received in {$project->transmitting_to}, {$project->specific_office} and immidiately returned to PrMO";
 									break;
 							}
 

@@ -91,16 +91,20 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/demo/peity-demo.js"></script> -->
 
 
+
 <!-- **********************************EXTERNAL**********************************-->
 <script src="../../assets/dropify/js/dropify.min.js"></script>
+
 
 <!-- Always Set Last --> 
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
 <script>
+	var audio = new Audio('../../assets/audio/definite.mp3');
+
 	$(function(){
 		// Enable pusher logging - don't include this in production
-		Pusher.logToConsole = true;
+		// Pusher.logToConsole = true;
 
 		var Notif = new Pusher('6afb55a56f2b4a235c4b', {
 			cluster: 'ap1',
@@ -111,13 +115,20 @@ require_once "../../functions/account-verifier.php";
 		Notif_channel.bind('update', function(data){
 			let msg = JSON.parse(data);
 			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+				audio.play();
+				$('#message').remove();
+				$('#NotifCount').show();
 				let NotifCount = document.getElementById('NotifCount');
-				let add = parseFloat(NotifCount.innerText) + 1;
-				NotifCount.innerText = (add).toFixed(0);
-				$('#NotifList').append(`<li><a href="#" class="dropdown-item"><div>
-					<i class="fa fa-envelope fa-fw"></i> ${msg.message}</div></a></li>
+				if(NotifCount.innerText === ''){
+					NotifCount.innerText = 1;
+				}else{
+					let add = parseFloat(NotifCount.innerText) + 1;
+					NotifCount.innerText = (add).toFixed(0);
+				}
+				$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div>
+					<small">Time: ${msg.date}</small></a></li>
 					<li class="dropdown-divider"></li>`);
-
 
 				toastr.options = {
 					"progressBar": true,
@@ -131,11 +142,36 @@ require_once "../../functions/account-verifier.php";
 					"showMethod": "fadeIn",
 					"hideMethod": "fadeOut"
 				}
-				toastr.info(msg.message);
+				toastr.info(msg.date, msg.message);
 			}
 		});
+
+		$('#NotifClick').on('click', function(){
+			SendDoSomething("POST", "../xhr-files/xhr-notif-update.php", {
+				id: $('meta[name="auth"]').attr('content')
+			}, {
+				do: function(res){
+					if(res.success){
+						$('#NotifCount').hide();
+						document.getElementById('NotifCount').innerText = '';
+					}
+				}
+			}, false, {
+				f: function(){
+					
+				}
+			});
+		});
+
+		$('#NotifClick').focusout(function(){
+			setTimeout(function(){
+				$('#NotifList li.active').removeClass('active');
+			}, 300);
+		});
+
 	});
 </script>
+
 
     <script>
 		// CUSTOM GLOBAL SCRIPTS
@@ -342,6 +378,11 @@ require_once "../../functions/account-verifier.php";
 				//modal.find('.modal-body input').val(reference);
 				document.getElementById("projectReference").value = reference;
 			});
+
+			function ModalSubmit(id){
+				var DataModal = $(id).serialize();
+				console.log(DataModal);
+			}
 		
 			
 			//outgoing documents table collapse all div
@@ -645,9 +686,8 @@ require_once "../../functions/account-verifier.php";
 	</script>
 
 	<script>
-		var DataTables_DocUpdate = null;
 		$(function(){
-			DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			var DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
 					customize: function (win){

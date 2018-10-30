@@ -204,9 +204,17 @@
 		
 		public function listNotification(){
             $user = Session::get($this->sessionName);
-			$this->db->query_builder("SELECT message FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
-			return $this->db->results();
+			$this->db->query_builder("SELECT message, datecreated, seen FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			$notifList = $this->db->results();
+			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
+			$nofitCount = $this->db->first();
+			$notif = [
+				'list' => $notifList,
+				'count' => $nofitCount
+			];
+			return $notif;
 		}
+
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -347,13 +355,26 @@
 
 		//this is to determine if a request form is already registered as a project and in the TWG evaluation stage alredy
 		public function isEvaluated($ID){
-			if($this->db->query_builder("SELECT *, COUNT(*) as 'isProject' FROM `projects` WHERE request_origin = '{$ID}'")){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'isProject' FROM `projects` WHERE request_origin LIKE '%{$ID}%'")){
 				if(($this->db->first()->isProject > 0) && ($this->db->first()->accomplished > 2)) {
 					//greater than 2 means this project already surpassed the step 2 which is finalization of technical members verdict
 					return true;
 				}
 				return false;
 			}
+		}
+
+		//project details important updates
+		public function importantUpdates($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
 		}
 
 		public function logLastUpdated($ID){ //to get the data when the last update of the project
