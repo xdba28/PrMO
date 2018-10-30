@@ -60,4 +60,8 @@
 <!-- Sweet Alert -->
 <link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
 
+<!-- Toastr -->
+<link rel="stylesheet" href="../../assets/css/plugins/toastr/toastr.min.css">
+
+
 <meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'))?>">

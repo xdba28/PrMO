@@ -96,26 +96,80 @@ require_once "../../functions/account-verifier.php";
 <!-- Sweet Alert -->
 <script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
-<!-- Always Set Last --> 
+<!-- Always Set Last -->
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
-
 <script>
+	// var audio = new Audio('../../assets/audio/Badger Scream.mp3');
+	var audio = new Audio('../../assets/audio/definite.mp3');
+	// var audio = new Audio('../../assets/audio/2018 0410 Gadon badmouths protesters and IBP.mp3');
 	$(function(){
 		// Enable pusher logging - don't include this in production
 		// Pusher.logToConsole = true;
 
-		// var Notif = new Pusher('6afb55a56f2b4a235c4b', {
-		// 	cluster: 'ap1',
-		// 	forceTLS: true
-		// });
+		var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+			cluster: 'ap1',
+			forceTLS: true
+		});
 
-		// var Notif_channel = Notif.subscribe('notif');
-		// Notif_channel.bind('update', function(data){
-		// 	if(data.receiver === $('meta[name="auth"]').attr('content')){
-		// 		// toust & add noitfication 
-		// 	}
-		// });
+		var Notif_channel = Notif.subscribe('notif');
+		Notif_channel.bind('update', function(data){
+			audio.play();
+			let msg = JSON.parse(data);
+			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+				$('#message').remove();
+				$('#NotifCount').show();
+				let NotifCount = document.getElementById('NotifCount');
+				if(NotifCount.innerText === ''){
+					NotifCount.innerText = 1;
+				}else{
+					let add = parseFloat(NotifCount.innerText) + 1;
+					NotifCount.innerText = (add).toFixed(0);
+				}
+				$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div>
+					<small>Time: ${msg.date}</small></a></li>
+					<li class="dropdown-divider"></li>`);
+
+				toastr.options = {
+					"progressBar": true,
+					"preventDuplicates": false,
+					"showDuration": "400",
+					"hideDuration": "1000",
+					"timeOut": "6000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				toastr.info(msg.date, msg.message);
+			}
+		});
+
+		$('#NotifClick').on('click', function(){
+			SendDoSomething("POST", "../xhr-files/xhr-notif-update.php", {
+				id: $('meta[name="auth"]').attr('content')
+			}, {
+				do: function(res){
+					if(res.success){
+						$('#NotifCount').hide();
+						document.getElementById('NotifCount').innerText = '';
+					}
+				}
+			}, false, {
+				f: function(){
+					
+				}
+			});
+		});
+
+		$('#NotifClick').focusout(function(){
+			setTimeout(function(){
+				$('#NotifList li.active').removeClass('active');
+			}, 300);
+		});
+
 	});
 </script>
 

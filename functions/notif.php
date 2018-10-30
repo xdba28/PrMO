@@ -1,5 +1,5 @@
 <?php
-function notif($data){
+function notif($data, $admin = false){
 	$pusher = new Pusher\Pusher(
 		'6afb55a56f2b4a235c4b',
 		'272e2a850479a8abd2aa',
@@ -9,6 +9,10 @@ function notif($data){
 			'useTLS' => true
 		)
 	);
-	$pusher->trigger('notif', 'update', $data);
+	if($admin){
+		$pusher->trigger('notif', 'admin', $data);
+	}else{
+		$pusher->trigger('notif', 'update', $data);
+	}
 }
 ?>

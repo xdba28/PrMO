@@ -243,75 +243,58 @@
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="tab-1">
                                     <div class="feed-activity-list">
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                               <!-- <img alt="image" class="rounded-circle fa fa-user" src="img/a2.jpg"> -->
-												<i class="ti-medall text-info" style="font-size: 50px;"></i>
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">2h ago</small>
-                                                <strong>Mark Johnson</strong> posted message on <strong>Monica Smith</strong> site. <br>
-                                                <small class="text-muted">Today 2:10 pm - 12.06.2014</small>
-                                            </div>
-                                        </div>
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                              <i class="ti-flag-alt text-danger" style="font-size: 50px;"></i>
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">2h ago</small>
-                                                <strong>Janet Rosowski</strong> add 1 photo on <strong>Monica Smith</strong>. <br>
-                                                <small class="text-muted">2 days ago at 8:30am</small>
-                                            </div>
-                                        </div>
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                                <img alt="image" class="rounded-circle" src="img/a4.jpg">
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">5h ago</small>
-                                                <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                                <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                                                <div class="actions">
-                                                    <a href=""  class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> Like </a>
-                                                    <a href=""  class="btn btn-xs btn-white"><i class="fa fa-heart"></i> Love</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                                <img alt="image" class="rounded-circle" src="img/a5.jpg">
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">2h ago</small>
-                                                <strong>Kim Smith</strong> posted message on <strong>Monica Smith</strong> site. <br>
-                                                <small class="text-muted">Yesterday 5:20 pm - 12.06.2014</small>
-                                                <div class="well">
-                                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                                    Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                                <img alt="image" class="rounded-circle" src="img/profile.jpg">
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">23h ago</small>
-                                                <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
-                                                <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
-                                            </div>
-                                        </div>
-                                        <div class="feed-element">
-                                            <a href="#" class="float-left">
-                                                <img alt="image" class="rounded-circle" src="img/a7.jpg">
-                                            </a>
-                                            <div class="media-body ">
-                                                <small class="float-right">46h ago</small>
-                                                <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                                <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                            </div>
-                                        </div>
+										
+										<?php
+											$updates = $user->importantUpdates($refno);
+											
+											if($updates){
+												
+												foreach($updates as $update){
+													$identifier =  substr($update->remarks, 0, 5);
+													$remarksParts = explode('^', $update->remarks);
+													switch($identifier){
+														case "AWARD":
+															$icon = 'ti-medall text-info';
+															$message ='<strong>Congratulation! </strong>'. $remarksParts[1] .' has been successfuly finalized';
+															break;
+														case "SOLVE":
+															$icon = 'far fa-thumbs-up text-success';
+															$message ='<strong>Cheer Up! </strong> Issues realated to '.$remarksParts[1].' was successfuly solved.';
+															break;
+														case "ISSUE":
+															$icon = 'ti-flag-alt text-danger';
+															$message ="<strong>Uh.. Oh, </strong> Your project encountered an issue related to ". $remarksParts[1] .". Check the details in your project's detailed history tab.";
+															break;											
+													}
+													
+													echo '
+														<div class="feed-element">
+															<a href="#" class="float-left">
+																<i class="'.$icon.'" style="font-size: 50px;"></i>
+															</a>
+															<div class="media-body ">
+																'.$message.' <br>
+																<small class="text-muted">'.Date::translate($update->logdate, '1').'</small>
+															</div>
+														</div>													
+													';
+												}
+											}else{
+												echo '
+												
+												<div class="feed-element">
+													<a href="#" class="float-left">
+													  <i class="ti-info-alt " style="font-size:44px;"></i>
+													</a>
+													<div class="media-body ">	
+													
+														<strong>&nbsp&nbsp No Important Updates yet.</strong>
+													</div>
+												</div>												
+												
+												';
+											}
+										?>
                                     </div>
 
                                 </div>
@@ -348,7 +331,9 @@
 														$newRemarks = "PR/JO was received in the office.";
 														break;
 													case 'AWARD':
-														# code...
+														$remarksParts =  explode('^', $detail->remarks);
+														$announcementClass = 'ti-medall text-info';
+														$newRemarks = $remarksParts[2];
 														break;
 													
 													default:

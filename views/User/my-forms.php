@@ -415,7 +415,15 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function(){
 
-		var ProjType = '<?php echo $type;?>';
+		<?php
+			if(Session::exists("Request")){
+			echo "window.open('../../bac/forms/pr-jo-doc');";
+			}
+		?>
+
+		var ProjType = '<?php 
+			if(!empty($type)) echo $type;
+			?>';
 		var obj = Object;
 		var OriginalData = null;
 		var act = null;
@@ -479,8 +487,8 @@
 				}
 			}else{
 				swal({
-					title: "No selected document!",
-					text: "Please select a document.",
+					title: "No items selected!",
+					text: "Please select items you want to edit.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
@@ -530,8 +538,8 @@
 				}
 			}else{
 				swal({
-					title: "No selected document!",
-					text: "Please select a document.",
+					title: "No items selected!",
+					text: "Please select items you want to delete.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
@@ -549,7 +557,7 @@
 					$('[dataFor="userEditClose"]').trigger('click');
 					swal({
 						title: "Success!",
-						text: "Successfully updated.",
+						text: "Update request successfully submitted.",
 						type: "success"
 					});
 					// reload table

@@ -12,9 +12,9 @@ if($user->isLoggedIn()){
 
 	if(!empty($_POST)){
 		
-		// $sample = json_encode($_POST);
-
-		// echo "<pre>".print_r($_POST)."</pre>";
+		$sample = json_encode($_POST);
+		
+		echo "<pre>",print_r($sample),"</pre>";
 
 		$data = ['success' => true];
 		header("Content-type:application/json");

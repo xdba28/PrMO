@@ -6,62 +6,73 @@
 		</div>
 	</form>
 </div>
-
 <ul class="nav navbar-top-links navbar-right">
 	<li>
 		<span class="m-r-sm text-muted welcome-message">Welcome to PrMO OPPTS Admin Dasboard</span>
 	</li>
 
 	<li class="dropdown">
-		<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-			<i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+		<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" id="NotifClick">
+			<i class="fa fa-bell"></i>  
+			<?php
+				$ClassNotif = new Admin();
+				$notif = $ClassNotif->listNotification();
+				if($notif['count']->seen === '0') echo '<span class="label label-primary" id="NotifCount" style="display: none;"></span>';
+				else echo '<span class="label label-primary" id="NotifCount">'.$notif['count']->seen.'</span>';
+			?>
+			
 		</a>
-		<ul class="dropdown-menu dropdown-alerts">
-			<li>
-				<a href="mailbox.html" class="dropdown-item">
-					<div>
-						<i class="fa fa-envelope fa-fw"></i> You have 16 messages
-						<span class="float-right text-muted small">4 minutes ago</span>
+		<ul class="dropdown-menu dropdown-alerts" id="NotifList">
+		<?php
+				if(!empty($notif['list'])){
+					foreach($notif['list'] as $n){
+						if($n->seen === '0'){
+							?>
+								<li class="active">
+									<a href="#" class="dropdown-item">
+										<div>
+											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
+										</div>
+										<small>Time: <?php echo Date::translate($n->datecreated, '1');?></small>
+									</a>
+								</li>
+								<li class="dropdown-divider"></li>
+							<?php
+						}else{
+							?>
+								<li>
+									<a href="#" class="dropdown-item">
+										<div>
+											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
+										</div>
+										<small>Time: <?php echo Date::translate($n->datecreated, '1');?></small>
+									</a>
+								</li>
+								<li class="dropdown-divider"></li>
+							<?php
+						}
+					}
+				}else{
+					?>
+					<div id="message">
+						<li>
+							<a href="#" class="dropdown-item">
+								<div>
+									<i class="fa fa-bell fa-fw"></i> No Messages
+								</div>
+							</a>
+						</li>
+						<li class="dropdown-divider"></li>
 					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li>
-			<li>
-				<a href="profile.html" class="dropdown-item">
-					<div>
-						<i class="fa fa-twitter fa-fw"></i> 3 New Followers
-						<span class="float-right text-muted small">12 minutes ago</span>
-					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li>
-			<li>
-				<a href="grid_options.html" class="dropdown-item">
-					<div>
-						<i class="fa fa-upload fa-fw"></i> Server Rebooted
-						<span class="float-right text-muted small">4 minutes ago</span>
-					</div>
-				</a>
-			</li>
-			<li class="dropdown-divider"></li>
-			<li>
-				<div class="text-center link-block">
-					<a href="notifications.html" class="dropdown-item">
-						<strong>See All Alerts</strong>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</div>
+					<?php
+				}
+			?>
 			</li>
 		</ul>
 	</li>
 	<li>
 		<a href="../logout">
 			<i class="fa fa-sign-out-alt"></i> Log out
-		</a>
-	</li>
-	<li>
-		<a class="right-sidebar-toggle">
-			<i class="fa fa-tasks"></i>
 		</a>
 	</li>
 </ul>

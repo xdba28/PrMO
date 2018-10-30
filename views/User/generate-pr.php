@@ -71,7 +71,8 @@
 						
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
-						Redirect::To('../../bac/forms/pr-jo-doc');
+						Redirect::To('my-forms');
+						exit();
 
 						//pop sweet alert "Your request has been registered and ready to download";
 						//after some seconds? redirect to pr/jo created
@@ -155,8 +156,9 @@
 		
 					//proceed to printing the actual form
 					Session::flash('Request', $form_ref_no.":PR");
-					Redirect::To('../../bac/forms/pr-jo-doc');
-					
+					Redirect::To('my-forms');
+					exit();
+				
 				}catch(Exception $e){
 					die($e->getMessage());
 				}				
@@ -250,7 +252,7 @@
 									<div class="panel-body">
 									   <h2>Project Information</h2>
 
-										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
+										<p>Specify the required fields to generate the Purchase Request Form that suits your need.</p>
 										<div class="row">
 											<div class="col-lg-7">
 												<div class="form-group">
