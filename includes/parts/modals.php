@@ -267,6 +267,7 @@
 							<div class="ibox-content">
 		
 								<div class="table-responsive">
+									<!-- Form Tag -->
 									<form id="userEditForm">
 									<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
 
