@@ -267,12 +267,9 @@
 							<div class="ibox-content">
 		
 								<div class="table-responsive">
-									<!-- Form Tag -->
-									<form id="userEditForm">
 									<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
 
 									</table>
-									</form>
 									<div class="btn-group pull-right" style="margin-right:15px">
 										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
 											<i class="far fa-edit"></i>

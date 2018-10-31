@@ -14,11 +14,11 @@ if($user->isLoggedIn()){
 		
 		// $sample = json_encode($_POST);
 
-		// echo "<pre>".print_r($_POST)."</pre>";
+		echo "<pre>".print_r($_POST)."</pre>";
 
 		$data = ['success' => true];
-		header("Content-type:application/json");
-		echo json_encode($data);
+		// header("Content-type:application/json");
+		// echo json_encode($data);
 	}
 	else
 	{

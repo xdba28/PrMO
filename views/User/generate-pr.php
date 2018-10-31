@@ -156,6 +156,7 @@
 		
 					//proceed to printing the actual form
 					Session::flash('Request', $form_ref_no.":PR");
+					sleep(3);
 					Redirect::To('my-forms');
 					exit();
 				
@@ -183,6 +184,11 @@
 	<script>
 		function form(){
 			$('div.row.ibox-content').toggleClass('sk-loading');
+			swal({
+				title: "Project request submitted!",
+				text: "Project request document will download shortly.",
+				type: "success"
+			});
 		}
 	</script>
 
