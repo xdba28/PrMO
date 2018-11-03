@@ -267,9 +267,11 @@
 							<div class="ibox-content">
 		
 								<div class="table-responsive">
-									<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
+									<form id="userEditForm">
+										<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
 
-									</table>
+										</table>
+									</form>
 									<div class="btn-group pull-right" style="margin-right:15px">
 										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
 											<i class="far fa-edit"></i>
@@ -351,59 +353,3 @@
   </div>
 </div>
 
-<!-- test modal -->
-<div class="modal fade" id="test-modal" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
-  <div class="modal-dialog  modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="preprocTitle">Test Modal</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-				<form id="TestModal" method="POST" enctype="multipart/form-data" role="form">
-					<div class="row" id="">
-						<div class="col-sm-12">
-							<div class="form-group"> 
-								<label for="projectReference" class="font-normal">Project Reference no.</label>
-								<input type="text" class="form-control" id="projectReference" name="projectReference" required autocomplte="off" Readonly>
-							</div>						
-							<div class="form-group">
-								<label for="evaluator" class="form-label">Evaluator</label>
-								<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
-							</div>
-
-							<div class="form-group">
-								<label class="font-normal">Mode of Procurement</label>
-								<div class="input-group date">
-									<span class="input-group-addon"><i class="fa fa-list"></i></span>
-									<select class="form-control m-b" name="MOP">
-                                        <option value="">Choose...</option>
-                                        <option value="Public Bidding">Public Bidding</option>
-                                        <option value="SVP">Small Value Procurement</option>
-                                        <option value="Direct Contracting">Direct Contracting</option>
-										<option value="Negociated Procurement">Negociated Procurement</option>
-										<option value="Shopping">Shopping</option>
-										<option value="Repeat Order">Repeat Order</option>
-										<option value="Limited Source Bidding">Limited Source Bidding</option>
-                                    </select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="font-normal">Evaluator's Comment</label>
-									<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
-							</div>
-						</div>
-					</div>
-				</form>				
-	  
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="ModalSubmit('TestModal')" data-dismiss="modal">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>

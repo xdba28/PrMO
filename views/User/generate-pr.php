@@ -250,7 +250,8 @@
 								
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
-									   <h2>Project Information</h2>
+									   <h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Project Information</h2>
+									  
 
 										<p>Specify the required fields to generate the Purchase Request Form that suits your need.</p>
 										<div class="row">
@@ -295,7 +296,7 @@
 								</div>
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
-										<h2>Particulars Setting</h2>
+										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Particulars Setting</h2>
 										<p>List all your item needed to the corresponding fields.</p>
 
 										<div class="row">
@@ -363,7 +364,7 @@
 								</div>
 								<div id="tab-3" class="tab-pane">
 									<div class="panel-body">
-										   <h2>Project Signatories</h2>
+										   <h2><a style="color:#2a9c97">Step 3 of  &nbsp3</a><br>Project Signatories</h2>
 
 											<p>Specify all signatories to finalized this form.</p>
 											

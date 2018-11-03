@@ -67,7 +67,18 @@
                  if($login){
                      Redirect::To('-dashboard');
                  }else{
-                     Session::flash('incorrect', 'Incorrect Username or Password');
+
+					if(is_null($user->data())){
+						Session::flash('incorrect', 'Incorrect Username or Password');
+					}else{
+						if($user->data()->status == "DEACTIVATED"){
+							Session::flash('deactivated', 'Sorry, but your account was deactivated.');
+						}
+					}
+					 
+
+                     
+					 
                  }
 
             }else{
@@ -120,7 +131,9 @@
 						echo Session::flash('Loggedout');
 					}else if(Session::exists('incorrect')){
                         echo Session::flash('incorrect');
-                    }else{
+                    }else if(Session::exists('deactivated')){
+						 echo Session::flash('deactivated');
+					}else{
                         echo 'Please Login in.';
                     }
                 ?>
@@ -134,7 +147,7 @@
                 </div>
 				<input type="hidden" name="blyteToken" value="<?php echo Token::generate("blyteToken");?>">
                 <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-				<a href="../index" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
+				<a href="../" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
                
             </form>
             <p class="m-t"> <small>Copyright BU-BAC PrMO &copy; 2018-2019</small> </p>

@@ -73,7 +73,8 @@
                         'username' => Input::get('userName'),
                         'userpassword' => Input::get('password'),
 						'submitted' => date('Y-m-d H:i:s'),
-						'specific_office' => Input::get('specific_office')
+						'specific_office' => Input::get('specific_office'),
+						'job_title' => Input::get('jobtitle')
 
                     ));
                     
@@ -223,7 +224,11 @@
                                             <div class="form-group"  id="popOver2" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you">
                                                 <label>Extension name </label>
                                                 <input id="extname" name="extname" type="text" class="form-control">
-                                            </div>										
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Job title</label>
+                                                <input id="jobtitle" name="jobtitle" type="text" class="form-control ">
+                                            </div>												
 											
                                         </div>
                                         <div class="col-lg-6">

@@ -36,7 +36,7 @@ try
 		'phone' => $r->contact,
 		'edr_designated_office' => $office->ID,
 		'current_specific_office' => $r->specific_office,
-		'edr_job_title' => "none",
+		'edr_job_title' => $r->jobtitle,
 		'edr_profile_photo' => NULL
 	));
 

@@ -130,12 +130,83 @@
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
                 <div class="middle-box text-center animated fadeInRightBig">
-                    <h3 class="font-bold">This is page content</h3>
-                    <div class="error-desc">
-                        You can create here any grid layout you want. And any variation layout you imagine:) Check out
-                        main dashboard and other site. It use many different layout.
-                        <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
-                    </div>
+									<!-- start accordion -->
+									<div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
+									  <div class="panel">
+										<a class="panel-heading" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne">
+										  <h4 class="panel-title">Request</h4>
+										</a>
+										<div id="collapseOne1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+										  <div class="panel-body">
+										  
+												<p><strong>Requisition of Equipment</strong></p>
+												<p>The first process the Property Management System does is to manage various request of equipments from the all the employees of the Commision on Audit Region V has</p><br>
+												
+												<p><strong>Approval of Requests</strong></p>
+												<p>All request made by the employees are automatically pending until an Approving personel approves the request, then the process is now in the Procurement Stage</p>												
+												
+										  </div>
+										</div>
+									  </div>
+									  <div class="panel">
+										<a class="panel-heading collapsed" role="tab" id="headingTwo1" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo1" aria-expanded="false" aria-controls="collapseTwo">
+										  <h4 class="panel-title">Procurement</h4>
+										</a>
+										<div id="collapseTwo1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+										  <div class="panel-body">
+											<p><strong>Procurement</strong></p>
+											
+											<p>
+												Procurement, in the simplest sense, involves a series of activities and processes that are mecessary for an organization to acquire necesarry products, equipments, property or services from the best suppliers at the best price. Such products or services
+												that are procured include raw materials, officer equipments, furniture and facilities, technical equipment and support, telecommunications, printed collateral, contingent worker recruitment, testing and training, and travel-relate services, among any others.
+											</p>
+											
+											<p>
+												But this process is excluded in the task the PMS can offer the end users. Only persons in the authority is authorized to be in this process.
+											</p>
+											
+										
+											
+										  </div>
+										</div>
+									  </div>
+									  <div class="panel">
+										<a class="panel-heading collapsed" role="tab" id="headingThree1" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree1" aria-expanded="false" aria-controls="collapseThree">
+										  <h4 class="panel-title">Registration</h4>
+										</a>
+										<div id="collapseThree1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+										  <div class="panel-body">
+											<p><strong>Registration of Purchased Property / Equipment</strong></p>
+											
+											<p>
+												Process continuation, after purchasing of the procured requests. Registration starts in the <u>Registration of new Equipment</u> where you can choose among the approved request whether which of these are already purchased and ready for registration.
+											</p>
+											
+											<p><strong>Awknoledment Receipt of Equipent (ARE)</strong></p>
+											
+											<p>
+												After the equipment is registered, an Awknoledment Receipt is automatically created and to be printed <u>(awarded together with the requested equipment)</u> for the assignee and to be signed by approving personel.
+											</p>
+											
+										  </div>
+										</div>
+									  </div>
+									  <div class="panel">
+										<a class="panel-heading collapsed" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour1" aria-expanded="false" aria-controls="collapseFour">
+										  <h4 class="panel-title">Maintenance Reports</h4>
+										</a>
+										<div id="collapseFour1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+										  <div class="panel-body">
+											<p><strong>Property Inspection Report</strong></p>
+											
+											<p>Last process the PMS can offer is the registration of Inspection Reports of all equipments registered in the system. You can monitor when the equipment is inspected, what the remarks is, the inspector who conducted the inspection, and the update of the status of each equipment.</p>
+											
+											
+										  </div>
+										</div>
+									  </div>
+									</div>
+									<!-- end of accordion -->
                 </div>
             </div>
 			<!-- Main Content End -->

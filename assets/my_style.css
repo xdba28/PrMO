@@ -635,3 +635,7 @@ li {
 	line-height: 1;
   }
   
+
+  .custom-project-list table tr td{
+	padding: 10px 10px;
+  }

@@ -1,17 +1,13 @@
 <?php 
-
     require_once('../../core/init.php');
-
     $user = new User(); 
-
     if($user->isLoggedIn()){
      //do nothing
     }else{
        Redirect::To('../../index');
         die();
-    }
-    
-
+	}
+	    
 ?>
 
 
@@ -86,7 +82,6 @@
 							<?php
 							
 							if(!isset($_GET['q'])){
-
 							echo'
 							
                                 <div class="col-lg-8">
@@ -108,7 +103,6 @@
 												</li>							
 											 </ul>											
                                         </div>
-
                                     </div>
                                 </div>								
 							
@@ -117,7 +111,6 @@
 							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true); // requests that are already received
 							
 							foreach($requests as $request){
-
 								if($user->isEvaluated($request->form_ref_no)){
 									$colorClass = "panel-danger";
 								}else{
@@ -185,7 +178,6 @@
 							}else{
 								
 								$refno = $_GET['q'];
-
 								$admin = new Admin();
 								$valid_request = $admin->selectAll("project_request_forms");
 			
@@ -201,7 +193,6 @@
 									include('../../includes/errors/404.php');
 									exit();						
 								}
-
 								$type = substr($refno, 0, 2);
 								if($type == "PR"){
 							?>
@@ -209,10 +200,8 @@
 							<?php
 								$user = new User();
 								$numberOfLots = $user->numberOfLots($refno);
-
 								$lots =  $numberOfLots->numberOfLots;
 								for($x = 0; $x<$lots; $x++){
-
 									if(($numberOfLots->numberOfLots == 1) && ($numberOfLots->lot_no == '101')){
 										$currentLot = '101';
 										$showLot = 'No lot specified';
@@ -222,10 +211,7 @@
 									}
 									
 									$content = $user->getContent($refno, $type, $currentLot);
-
-
 									$limiter = '';
-
 							?>
 
 							<div class="col-lg-12">
@@ -262,9 +248,7 @@
 											<?php
 												$line = 1;
 												foreach($content as $detail){
-
 													$item_details = [
-														'refno' => $refno,
 														'lot' => $currentLot,
 														'item_id' => $detail->ID,
 														'stock_no' => $detail->stock_no,
@@ -304,15 +288,12 @@
 							<?php
 									}
 								}else if($type == "JO"){
-
 									$user = new User();
 									$numberOfLots = $user->numberOfLots($refno);
-
 									$lots =  $numberOfLots->numberOfLots;
 									for($x = 0; $x<$lots; $x++){
 										$currentLot = $x + 1;
 										$content = $user->getContent($refno, $type, $currentLot);
-
 							?>
 
                 <div class="col-lg-12">
@@ -349,8 +330,8 @@
 									<?php
 										foreach($content as $detail){
 											$item_details = [
-												'refno' => $refno,
 												'lot' => $currentLot,
+												'item_id' => $detail->ID,
 												'header' => $detail->header,
 												'lot_cost' => $detail->lot_cost,
 												'tags' => str_replace(",", ", ", $detail->tags),
@@ -413,165 +394,243 @@
 
 </body>
 <script>
+	
 	document.addEventListener('DOMContentLoaded', function(){
-
 		<?php
 			if(Session::exists("Request")){
 			echo "window.open('../../bac/forms/pr-jo-doc');";
 			}
 		?>
-
 		var ProjType = '<?php 
 			if(!empty($type)) echo $type;
 			?>';
 		var obj = Object;
-		var OriginalData = null;
+		var OriginalData = {
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+		};
+		var EditData = {};
+		var DeleteData = {
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+		};
 		var act = null;
-
 		$('.i-checks').iCheck({
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green'
 		});
-
 		$('#edit').on('click', function(e){
 			if($('.i-checks:checked').length !== 0){
 				act = 'update';
 				$('[dataFor="userEditSubmit"]').html('Update').attr('class', 'btn btn-primary');
 				$('[dataFor="userEdit"]').html('');
 				if(ProjType === "PR"){
+					let array = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th><th>Stock No.</th>
 						<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th>
 						<th>Total Cost</th></tr></thead><tbody dataFor="userEditAppend"></tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
 						$('[dataFor="userEditAppend"]').append(`<tr>
-								<td>${obj.lot}</td>
-								<td><input type="text" name="prUpStk[]" class="form-control" value="${obj.stock_no}"></td>
-								<td><input type="text" name="prUpUnt[]" class="form-control" value="${obj.unit}"></td>
-								<td><textarea name="prUpDesc[]" cols="30" rows="1" maxlength="1000" class="form-control">${obj.desc}</textarea></td>
-								<td><input type="number" name="prUpQty[]" index="${i}" class="form-control" min="1" value="${obj.qty}"></td>
-								<td><input type="number" name="prUpUc[]" index="${i}" class="form-control" step=".01" min="0.01" value="${obj.uCost}"></td>
-								<td><input type="number" name="prUpTc[]" index="${i}" class="form-control" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
+								<td>
+									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
+									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
+								</td>
+								<td><input type="text" name="stockNo-${i}" class="form-control" value="${obj.stock_no}"></td>
+								<td><input type="text" name="unit-${i}" class="form-control" value="${obj.unit}"></td>
+								<td><textarea name="description-${i}" cols="30" rows="1" maxlength="1000" class="form-control">${obj.desc}</textarea></td>
+								<td><input type="number" name="quantity-${i}" data="qty" class="form-control" min="1" value="${obj.qty}"></td>
+								<td><input type="number" name="unitCost-${i}" data="unit" class="form-control" step=".01" min="0.01" value="${obj.uCost}"></td>
+								<td><input type="number" name="totalCost-${i}" class="form-control" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
 							</tr>`);
 					});
-					OriginalData = $('#userEditForm').serializeArray();
-	
-					$('[name="prUpQty[]"]').on('change', function(){
-						let inx = $(this).attr('index');
-						$(`[name="prUpTc[]"][index="${inx}"]`).val(($(this).val() * $(`[name="prUpUc[]"][index="${inx}"]`).val()).toFixed(2))
+					OriginalData.items = array;
+					
+					$('[data="qty"]').on('change', function(){
+						let inx = $(this).attr('name').split("-");
+						$(`[name="totalCost-${inx[1]}"]`).val(($(this).val() * $(`[name="unitCost-${inx[1]}"]`).val()).toFixed(2));
+					});
+					$('[data="unit"]').on('change', function(){
+						let inx = $(this).attr('name').split("-");
+						$(`[name="totalCost-${inx[1]}"]`).val(($(`[name="quantity-${inx[1]}"]`).val() * $(this).val()).toFixed(2));
 					});
 	
-					$('[name="prUpUc[]"]').on('change', function(){
-						let inx = $(this).attr('index');
-						$(`[name="prUpTc[]"][index="${inx}"]`).val(($(`[name="prUpQty[]"][index="${inx}"]`).val() * $(this).val()).toFixed(2))
-					});
 					$('#userEdit').modal('show');
-				}else{
+				}else if(ProjType === "JO"){
+					let array = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th>
 						<th>List Title</th><th>Lot Estimated Cost</th><th>Tags</th>
 						<th>Notes</th></tr></thead><tbody dataFor="userEditAppend">
 						</tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
 						$('[dataFor="userEditAppend"]').append(`<tr>
-								<td>${obj.lot}</td>
-								<td><input type="text" name="joList[]" class="form-control" value="${obj.header}"></td>
-								<td><input type="number" name="joCost[]" class="form-control" step=".01" min="0.01" value="${obj.lot_cost}"></td>
-								<td><input type="text" name="joTags[]" class="form-control" data-role="tagsinput" value="${obj.tags}"></td>
-								<td><textarea name="joNotes[]" placeholder="Some text" class="form-control">${obj.notes}</textarea></td>		
+								<td>
+									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
+									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
+								</td>
+								<td><input type="text" name="list-${i}" class="form-control" value="${obj.header}"></td>
+								<td><input type="number" name="cost-${i}" class="form-control" step=".01" min="0.01" value="${obj.lot_cost}"></td>
+								<td><input type="text" name="tags-${i}" dataFor="tags" class="form-control" data-role="tagsinput" value="${obj.tags}"></td>
+								<td><textarea name="notes-${i}" placeholder="Some text" class="form-control">${obj.notes}</textarea></td>		
 							</tr>`);
 					});
-					$('[name="joTags"]').tagsinput();
-					OriginalData = $('#userEditForm').serializeArray();
+					OriginalData.items = array;
+					$('[dataFor="tags"]').tagsinput();
 					$('#userEdit').modal('show');
 				}
 			}else{
 				swal({
-					title: "No items selected!",
-					text: "Please select items you want to edit.",
+					title: "No selected document!",
+					text: "Please select a document.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
 			}
 		});
-
 		$('#del').on('click', function(){
 			if($('.i-checks:checked').length !== 0){
 				act = 'delete';
 				$('[dataFor="userEditSubmit"]').html('Delete').attr('class', 'btn btn-danger');
 				$('[dataFor="userEdit"]').html('');
 				if(ProjType === "PR"){
+					let array = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th><th>Stock No.</th>
 						<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th>
 						<th>Total Cost</th></tr></thead><tbody dataFor="userEditAppend"></tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
 						$('[dataFor="userEditAppend"]').append(`<tr>
-								<td>${obj.lot}</td>
-								<td><input readonly type="text" name="prUpStk[]" class="form-control" value="${obj.stock_no}"></td>
-								<td><input readonly type="text" name="prUpUnt[]" class="form-control" value="${obj.unit}"></td>
-								<td><textarea readonly name="prUpDesc[]" cols="30" rows="1" maxlength="1000" class="form-control">${obj.desc}</textarea></td>
-								<td><input readonly type="number" name="prUpQty[]" class="form-control" min="1" value="${obj.qty}"></td>
-								<td><input readonly type="number" name="prUpUc[]" class="form-control" step=".01" min="0.01" value="${obj.uCost}"></td>
-								<td><input readonly type="number" name="prUpTc[]" class="form-control" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
+								<td>
+									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
+									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
+								</td>
+								<td><input type="text" readonly name="stockNo-${i}" class="form-control" value="${obj.stock_no}"></td>
+								<td><input type="text" readonly name="unit-${i}" class="form-control" value="${obj.unit}"></td>
+								<td><textarea readonly name="description-${i}" cols="30" rows="1" maxlength="1000" class="form-control">${obj.desc}</textarea></td>
+								<td><input type="number" readonly name="quantity-${i}" data="qty" class="form-control" min="1" value="${obj.qty}"></td>
+								<td><input type="number" readonly name="unitCost-${i}" data="unit" class="form-control" step=".01" min="0.01" value="${obj.uCost}"></td>
+								<td><input type="number" readonly name="totalCost-${i}" class="form-control" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
 							</tr>`);
 					});
+					DeleteData.items = array;
 					$('#userEdit').modal('show');
-				}else{
+				}else if(ProjType === "JO"){
+					let array = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th>
 						<th>List Title</th><th>Lot Estimated Cost</th><th>Tags</th>
 						<th>Notes</th></tr></thead><tbody dataFor="userEditAppend">
 						</tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
 						$('[dataFor="userEditAppend"]').append(`<tr>
-								<td>${obj.lot}</td>
-								<td><input readonly type="text" name="joList[]" class="form-control" value="${obj.header}"></td>
-								<td><input readonly type="number" name="joCost[]" class="form-control" step=".01" min="0.01" value="${obj.lot_cost}"></td>
-								<td><input readonly type="text" name="joTags[]" class="form-control" data-role="tagsinput" value="${obj.tags}"></td>
-								<td><textarea readonly name="joNotes[]" placeholder="Some text" class="form-control">${obj.notes}</textarea></td>		
+								<td>
+									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
+									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
+								</td>
+								<td><input readonly type="text" name="list-${i}" class="form-control" value="${obj.header}"></td>
+								<td><input readonly type="number" name="cost-${i}" class="form-control" step=".01" min="0.01" value="${obj.lot_cost}"></td>
+								<td><input disabled type="text" name="tags-${i}" dataFor="tags" class="form-control" data-role="tagsinput" value="${obj.tags}"></td>
+								<td><textarea readonly name="notes-${i}" placeholder="Some text" class="form-control">${obj.notes}</textarea></td>		
 							</tr>`);
 					});
-					$('[name="joTags"]').tagsinput();
-					OriginalData = $('#userEditForm').serializeArray();
+					DeleteData.items = array;
+					$('[dataFor="tags"]').tagsinput();
+					$(".bootstrap-tagsinput").prop("style", 'background: #E4E4E4; border: 1px solid #E4E4E4;');
 					$('#userEdit').modal('show');
 				}
 			}else{
 				swal({
-					title: "No items selected!",
-					text: "Please select items you want to delete.",
+					title: "No selected document!",
+					text: "Please select a document.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
 			}
 		});
-
 		document.querySelector('[dataFor="userEditSubmit"]').addEventListener('click', function(){
-			var EditData = $('#userEditForm').serializeArray();
-			SendDoSomething("POST", "xhr-item-update.php", {
-				orig: OriginalData,
-				edit: EditData,
-				action: act
-			}, {
-				do: function(d){
-					$('[dataFor="userEditClose"]').trigger('click');
-					swal({
-						title: "Success!",
-						text: "Update request successfully submitted.",
-						type: "success"
+			if(act === 'update'){
+				if(ProjType === "PR"){
+					let editArray = [];
+					OriginalData.items.forEach(function(e, i){
+						editArray.push({
+							lot: $(`[name="lot-${i}"]`).val(),
+							item_id: $(`[name="item_id-${i}"]`).val(),
+							stockNo: $(`[name="stockNo-${i}"]`).val(),
+							unit: $(`[name="unit-${i}"]`).val(),
+							description: $(`[name="description-${i}"]`).val(),
+							quantity: $(`[name="quantity-${i}"]`).val(),
+							unitCost: $(`[name="unitCost-${i}"]`).val(),
+							totalCost: $(`[name="totalCost-${i}"]`).val()
+						});
 					});
-					// reload table
-				}
-			}, false, {
-				f: function(){
-					$('[dataFor="userEditClose"]').trigger('click');
-					swal({
-						title: "An error occurred!",
-						text: "Cannot send data.",
-						type: "error"
+					EditData.items = editArray;
+				}else if(ProjType === "JO"){
+					let editArray = [];
+					OriginalData.items.forEach(function(e, i){
+						editArray.push({
+							lot: $(`[name="lot-${i}"]`).val(),
+							item_id: $(`[name="item_id-${i}"]`).val(),
+							list: $(`[name="list-${i}"]`).val(),
+							cost: $(`[name="cost-${i}"]`).val(),
+							tags:  $(`[name="tags-${i}"]`).val(),
+							notes: $(`[name="notes-${i}"]`).val()
+						});
 					});
+					EditData.items = editArray;
 				}
-			});
+				
+				SendDoSomething("POST", "xhr-item-update.php", {
+					orig: OriginalData,
+					edit: EditData,
+					action: act
+				}, {
+					do: function(d){
+						$('[dataFor="userEditClose"]').trigger('click');
+						swal({
+							title: "Success!",
+							text: "Successfully updated.",
+							type: "success"
+						});
+						// reload table
+					}
+				}, false, {
+					f: function(){
+						$('[dataFor="userEditClose"]').trigger('click');
+						swal({
+							title: "An error occurred!",
+							text: "Cannot send data.",
+							type: "error"
+						});
+					}
+				});
+			}else if(act === 'delete'){
+				SendDoSomething("POST", "xhr-item-update.php", {
+					del: DeleteData,
+					action: act
+				}, {
+					do: function(d){
+						$('[dataFor="userEditClose"]').trigger('click');
+						swal({
+							title: "Success!",
+							text: "Successfully updated.",
+							type: "success"
+						});
+						// reload table
+					}
+				}, false, {
+					f: function(){
+						$('[dataFor="userEditClose"]').trigger('click');
+						swal({
+							title: "An error occurred!",
+							text: "Cannot send data.",
+							type: "error"
+						});
+					}
+				});
+			}
 		});
 	});
 </script>

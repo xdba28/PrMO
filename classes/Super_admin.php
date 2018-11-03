@@ -124,7 +124,35 @@
             ")) {
                 return $this->db->first();
             }
-        }        
+		}
+		
+		public function userOverview(){
+			if($this->db->query_builder("SELECT 
+			ID, office_name, acronym, campus, note, verifier, approving, COUNT(edr_id) as 'registered_users', (SELECT COUNT(*) FROM `enduser`) as 'overall_users'
+			FROM
+			`units`, `enduser`
+			WHERE
+			units.ID = enduser.edr_designated_office
+			GROUP BY ID")){
+				return $this->db->results();
+			}
+		}
+
+		public function unitUsers($unit){
+			if($this->db->query_builder("SELECT 
+			account_id, username, userpassword, newAccount , edr_designated_office, current_specific_office
+			
+			FROM 
+			`enduser`, `edr_account` 
+			
+			WHERE
+			enduser.edr_id = edr_account.account_id AND
+			edr_designated_office = '{$unit}'
+			")){
+				return $this->db->results();
+			}
+
+		}
 		
         public function registered_users(){
             if($this->db->query_builder("SELECT * FROM `edr_account` WHERE 1")) {
@@ -181,7 +209,26 @@
                 }
 
             return false;
-        } 
+		}
+	
+		public function fullnameOfEnduser($ID){
+            $user = $ID;
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        }
         
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
