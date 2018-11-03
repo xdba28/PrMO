@@ -243,7 +243,10 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
                     }
                    
-                    return $fullname;
+					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title];
+					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
+                   
+                    return $json;
                 }
 
             return false;

@@ -3,6 +3,8 @@
 	$hold = $user->fullname();
 	$currentUser = json_decode($hold,true);
 	
+	//echo "<pre>",print_r($hold),"</pre>";
+	
 
 ?>
 
