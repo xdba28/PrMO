@@ -71,11 +71,11 @@
             </div>
 			
 			<!-- Main Content -->
+		<div class="wrapper wrapper-content animated fadeInUp">
 			<div class="row">
-				<div class="col-lg-12">
-					<div class="wrapper wrapper-content animated fadeInUp">
+				<div class="col-lg-12 animated fadeInRight">
 
-						<div class="ibox">
+						<div class="ibox myShadow">
 							<div class="ibox-title">
 								<h5>All projects entitled to this account</h5>
 							</div>

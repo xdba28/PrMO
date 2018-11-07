@@ -112,8 +112,8 @@
 		function form(){
 			$('div.row.ibox-content').toggleClass('sk-loading');
 			swal({
-				title: "Project request submitted!",
-				text: "Project request document will download shortly.",
+				title: "Success!",
+				text: "Request form will be downloaded shortly.",
 				type: "success"
 			});
 		}
@@ -179,7 +179,7 @@
 								<div><form method="POST" id="jo_form" onsubmit="form()"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
-									   <h2>Project Information</h2>
+									   <h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Project Information</h2>
 
 										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
 
@@ -214,7 +214,7 @@
 								</div>
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
-										<h2>Particulars Setting</h2>
+										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Particulars Setting</h2>
 										<p>List all your item needed to the corresponding fields.</p>
 
 												<div class="">
@@ -235,27 +235,41 @@
 								</div>
 								<div id="tab-3" class="tab-pane">
 									<div class="panel-body">
-										   <h2>Project Signatories</h2>
+										   <h2><a style="color:#2a9c97">Step 3 of  &nbsp3</a><br>Project Signatories</h2>
 
 											<p>Specify all signatories to finalized this form.</p>
 											
 											<div class="row">
+											<?php
+												$enduserData = $user->get('enduser', array('edr_id', '=', $user->data()->account_id));
+												$enduserUnitData = $user->get('units', array('ID', '=', $enduserData->edr_designated_office));
+												$signatories = array();
+												foreach ($enduserUnitData as $key => $value) {
+													if($value == "unset"){
+														$signatories[$key] = "No data available";
+													}else{
+														$signatories[$key] = $value;
+													}
+												}
+
+												// echo "<pre>",print_r($signatories),"</pre>";
+											?>											
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="<?php echo $user->fullname();?>" class="form-control" disabled form="jo_form" required>
+														<input id="enduser" name="enduser" type="text" value="<?php echo $currentUser[0];?>" class="form-control" disabled form="jo_form" required>
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form" required>
+														<input id="noted" name="noted" type="text" value="<?php echo $signatories['note'];?>" class="form-control" form="jo_form" readonly>
 													</div>
 													<div class="form-group">
 														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form" required>
+														<input id="verified" name="verified" type="text" value="<?php echo $signatories['verifier'];?>" class="form-control" form="jo_form" readonly>
 													</div>
 													<div class="form-group">
 														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
+														<input id="approved" name="approved" type="text" value="<?php echo $signatories['approving'];?>" class="form-control" form="jo_form" readonly>
 														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
 														<input type="text" name="joToken" readonly hidden value="<?php echo Token::generate("joToken");?>" required form="jo_form">
 													</div>													

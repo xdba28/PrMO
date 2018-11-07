@@ -128,7 +128,7 @@
                         <p class="text-muted text-center">
                             <small>Do not have an account?</small>
                         </p>
-                        <a class="btn btn-sm btn-white btn-block" href="register.php">Request an account</a>
+                        <a class="btn btn-sm btn-white btn-block" href="register">Request an account</a>
                     </form>
                     <?php
 						if(Session::exists('request_success')){		

@@ -70,14 +70,23 @@
             $user =  $this->find($username);
                 
                 if($user){
-                    
-                    if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
-                        Session::put($this->sessionName, $this->data()->account_id);
-                        $_SESSION['accounttype'] = $this->data()->newAccount;
- 
 
-                        return true;
-                    }
+
+						if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
+
+							if($this->data()->status == "DEACTIVATED"){
+								return false;
+							}else{
+								Session::put($this->sessionName, $this->data()->account_id);
+								$_SESSION['accounttype'] = $this->data()->newAccount;
+
+								return true;
+							}
+
+						}
+					
+                    
+
                 }				
 
             return false;
@@ -220,6 +229,28 @@
                 return $this->db->first();
             }
 		}  
+
+        public function fullname(){
+            $user = Session::get($this->sessionName);
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+					}
+					
+					$myArray = ["0" => $fullname, "1" => $temp->prnl_job_title];
+					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
+                   
+                    return $json;
+                }
+
+            return false;
+        }
 		
         public function fullnameOf($ID){ //for personnel use
             $user = $ID;
@@ -269,7 +300,7 @@
 
 		public function listNotification(){
             $user = Session::get($this->sessionName);
-			$this->db->query_builder("SELECT message, datecreated, seen FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			$this->db->query_builder("SELECT message, datecreated, seen, href FROM notifications WHERE recipient = '{$user}' ORDER BY ID DESC");
 			$notifList = $this->db->results();
 			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
 			$nofitCount = $this->db->first();

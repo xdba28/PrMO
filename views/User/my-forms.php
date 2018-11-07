@@ -1,9 +1,6 @@
 <?php 
-
     require_once('../../core/init.php');
-
     $user = new User(); 
-
     if($user->isLoggedIn()){
      //do nothing
     }else{
@@ -11,7 +8,6 @@
         die();
 	}
 	    
-
 ?>
 
 
@@ -73,119 +69,123 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="wrapper wrapper-content animated fadeInUp">
-						<div class="row">
-							<div class="col-lg-12 animated fadeInRight">
-								<div class="alert alert-info">
-									<a class="alert-link">Note that requests that are already passed the Technical Member's evaluation cannot be modified by the requestor or the endusers. Only the Procurement Aids has the privilage to modify or update your requests after passing the evaluation. It is adviced to head to PrMO and state your concern with regards updating your request/s concern.</a>
-								</div>
-							</div>
-						</div>
+
 						<div class="row">
 			
 						
 							<?php
 							
-							if(!isset($_GET['q'])){
-
-							echo'
-							
-                                <div class="col-lg-8">
-                                    <div class="panel panel-default rem">
-                                        <div class="panel-heading">
-                                           <i class="fa fa-info-circle side" style="color:black"></i> Guides and Legend
-                                        </div>
-                                        <div class="panel-body">
-                                            <p>Kindly notice the header color of each cards and refer to this legend.</p>
-											 <ul class="list-group clear-list m-t">
-												<li class="list-group-item">
-													<span class="label label-info">1</span> Cards with the teal header are request forms that are not yet submitted and received by the PrMO, therefore you have the full privilage to update or delete any listing on your request.
-												</li>
-												<li class="list-group-item">
-													<span class="label label-warning">2</span> Cards with the orange header are request forms that are already submitted and received by the PrMO or in the process of Technical Member evaluation, Therefore modifying of listing in this request are strictly monitored by our personnels, also modification on this request requires approval from our personnel for your modification/s to be applied whether it is your personal reason or modification required by the Technical Member.
-												</li>
-												<li class="list-group-item">
-													<span class="label label-danger">3</span> Cards with the red header are request forms that are already passed the Technical Member evaluation, meaning you cannot manually modify any listing in your request. It is adviced to head to PrMO and state your concern with regards updating your request/s listing.
-												</li>							
-											 </ul>											
-                                        </div>
-
-                                    </div>
-                                </div>								
-							
-							';
-							
-							$requests = $user->myRequests(Session::get(Config::get('session/session_name')), true); // requests that are already received
-							
-							foreach($requests as $request){
-
-								if($user->isEvaluated($request->form_ref_no)){
-									$colorClass = "panel-danger";
-								}else{
-									$colorClass = "panel-warning";
-								}
+								if(!isset($_GET['q'])){
 								
 							?>
-								<div class="col-lg-4">
-									<div class="panel <?php echo $colorClass;?> rem1">
-										<div class="panel-heading" style="color:black">
-											Ref:   <?php echo $request->form_ref_no;?>
-										</div>
-										<div class="panel-body">
-											<h3><?php echo $request->title;
-											
-											?></h3>
-											<hr style="background-color:#23c6c8">
-											
-											<div class="">
-												<p class="inline">Number of Lots:</p>
-												<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo $request->number_of_lots;?></p>
-												<br>
-												<p class="inline">Date Created:</p>
-												<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo Date::translate($request->date_created, 1);?></p>															
-											</div>	
-											<div class="panel-footer">
-												<a href="?q=<?php echo $request->form_ref_no;?>"><button class="btn btn-warning pull-right btn-rounded" style="margin-bottom:10px; margin-right:-15px">Details</button></a>
-											</div>	
-										</div>
-									</div>
-								</div>		
-							<?php
-								}											
-								$requests = $user->myRequests(Session::get(Config::get('session/session_name')), false); // requests that are not yet received
-								 
-								foreach($requests as $request){
-							?>
+				<div class="col-lg-12 animated fadeInRight">
+					<div class="panel panel-default rem">
+						<div class="panel-heading">
+						   <i class="fa fa-info-circle side" style="color:black"></i> Guides and Legend
+						</div>
+						<div class="panel-body">
+							 <ul class="list-group clear-list m-t">
+								<li class="list-group-item">
+									<span class="label" style="background:#66B92E; color:white">1</span> Forms with the green status indicator are request forms that are not yet submitted and received by the PrMO, therefore you have the full privilage to update or delete any listing on your request.
+								</li>
+								<li class="list-group-item">
+									<span class="label" style="background:#DA932C; color:white">2</span> Forms with the orange status indicator are request forms that are already submitted and received by the PrMO or in the process of Technical Member evaluation, Therefore modifying of listing in this request are strictly monitored by our personnels, also modification on this request requires approval from our personnel for your modification/s to be applied whether it is your personal reason or modification required by the Technical Member.
+								</li>
+								<li class="list-group-item">
+									<span class="label" style="background:#D65B4A; color:white">3</span> Forms with the red status indicator are request forms that are already passed the Technical Member evaluation, meaning you cannot manually modify any listing in your request. It is adviced to head to PrMO and state your concern with regards updating your request/s listing.
+								</li>							
+							 </ul>											
+						</div>
+					</div>
+				</div>	
+                <div class="col-lg-12 animated fadeInLeft">
+                    <div class="ibox myShadow">
+                        <div class="ibox-title">
+                            <h5>All Forms Created</h5>
+
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-5 m-b-xs"><select class="form-control-sm form-control input-s-sm inline">
+                                    <option value="0">Purchase Requets</option>
+                                    <option value="1">Job Orders</option>
+                                </select>
+                                </div>
+                                <div class="col-sm-4 m-b-xs">
+									<!--Middle Collumn-->
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="input-group"><input placeholder="Search" id="filter" type="text" class="form-control form-control-sm"> <span class="input-group-append"> <button type="button" class="btn btn-sm btn-primary">Go!
+                                    </button> </span></div>
+
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="myTable" class="footable table table-striped " data-filter=#filter>
+                                    <thead>
+                                    <tr>
+
+                                        <th>no. </th>
+                                        <th>Reference </th>
+                                        <th>Title </th>
+										<th class="center">Status </th>
+                                        <th>Date Created</th>
+										<th style="text-align:center">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+									<?php 
+										$myRequests = $user->getAll('project_request_forms', array('requested_by', '=', Session::get(Config::get('session/session_name'))));
+										//echo "<pre>",print_r($myRequests),"</pre>";
+										foreach($myRequests as $request){
+											if(isset($count)){$count++;}else{$count=1;}
+												
+											if($request->status == "unreceived"){
+												$displayStatus = '<span class="status-text status-green">Unreceived</span>';
+												$actionButton  = '<div class="btn-group">
+																	 <a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
+																	 <a class="btn btn-warning btn-sm btn-rounded btn-outline">Delete</a>                             
+																 </div>';
+
+											}else{
+												if($user->isEvaluated($request->form_ref_no)){
+													$displayStatus = '<span class="status-text status-red">Evaluation Passed</span>';
+													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+												}else{
+													$displayStatus = '<span class="status-text status-orange">Received</span>';
+													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+												}
+												
+											}
+
+									?>
+										<tr>
+											<td><?php echo $count;?></td>
+											<td><?php echo $request->form_ref_no;?></td>
+											<td style="max-width:300px"><?php echo $request->title;?></td>
+											<td class="status left"><?php echo $displayStatus;?></td>
+											<td><?php echo Date::translate($request->date_created, 2);?></td>
+											<td class="center"><?php echo $actionButton;?></td>
+										</tr>		
+
+									<?php 
+										}
+									?>
+                
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 							
-								<div class="col-lg-4">
-									<div class="panel panel-info rem1">
-										<div class="panel-heading" style="color:black">
-											Ref: <?php echo $request->form_ref_no?>
-										</div>
-										<div class="panel-body">
-											<h3><?php echo $request->title?></h3>
-											<hr style="background-color:#23c6c8">
-											
-											<div class="">
-												<p class="inline">Number of Lots:</p>
-												<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo $request->number_of_lots;?></p>
-												<br>
-												<p class="inline">Date Created:</p>
-												<p class="inline" style="font-size:13px"> &nbsp&nbsp <?php echo Date::translate($request->date_created, 1);?></p>															
-											</div>	
-											<div class="panel-footer">
-												<a href="#"><button class="btn btn-danger pull-right btn-rounded" style="margin-bottom:10px; margin-right:-15px; margin-left:3px">Delete</button></a>
-												<a href="?q=<?php echo $request->form_ref_no;?>"><button class="btn btn-info pull-right btn-rounded" style="margin-bottom:10px;">Details</button></a>
-											</div>											
-										</div>
-									</div>
-								</div>								
 							
 							<?php
-								} 
+								
 							}else{
 								
 								$refno = $_GET['q'];
-
 								$admin = new Admin();
 								$valid_request = $admin->selectAll("project_request_forms");
 			
@@ -194,6 +194,7 @@
 								foreach ($valid_request as $request){
 									if($refno == $request->form_ref_no){
 										$valid = true;
+										$status = $request->status;
 									}
 								}
 				
@@ -201,7 +202,6 @@
 									include('../../includes/errors/404.php');
 									exit();						
 								}
-
 								$type = substr($refno, 0, 2);
 								if($type == "PR"){
 							?>
@@ -209,10 +209,8 @@
 							<?php
 								$user = new User();
 								$numberOfLots = $user->numberOfLots($refno);
-
 								$lots =  $numberOfLots->numberOfLots;
 								for($x = 0; $x<$lots; $x++){
-
 									if(($numberOfLots->numberOfLots == 1) && ($numberOfLots->lot_no == '101')){
 										$currentLot = '101';
 										$showLot = 'No lot specified';
@@ -222,10 +220,7 @@
 									}
 									
 									$content = $user->getContent($refno, $type, $currentLot);
-
-
 									$limiter = '';
-
 							?>
 
 							<div class="col-lg-12">
@@ -234,7 +229,7 @@
 										<h5><?php echo $showLot, " - ", $content[0]->lot_title;?></h5>
 										<div class="ibox-tools">
 											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
+												<a href ="my-forms" class="btn btn-info btn-rounded btn-outline btn-xs" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
 												<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 													<i class="fa fa-wrench"></i>
 												</a>
@@ -262,7 +257,6 @@
 											<?php
 												$line = 1;
 												foreach($content as $detail){
-
 													$item_details = [
 														'lot' => $currentLot,
 														'item_id' => $detail->ID,
@@ -303,15 +297,12 @@
 							<?php
 									}
 								}else if($type == "JO"){
-
 									$user = new User();
 									$numberOfLots = $user->numberOfLots($refno);
-
 									$lots =  $numberOfLots->numberOfLots;
 									for($x = 0; $x<$lots; $x++){
 										$currentLot = $x + 1;
 										$content = $user->getContent($refno, $type, $currentLot);
-
 							?>
 
                 <div class="col-lg-12">
@@ -320,9 +311,7 @@
                             <h5>Lot <?php echo $currentLot;?> - <?php echo $content[0]->lot_title;?></h5>
 
                             <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
+								<a href ="my-forms" class="btn btn-info btn-rounded btn-outline btn-xs" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 									<i class="fa fa-wrench"></i>
 								</a>
@@ -386,11 +375,17 @@
 							<?php
 									}
 								}
+								
+								if($user->isEvaluated($refno)){
+									//do nothing
+								}else{
 								echo '<br>
 								<div style="margin-left:72%">
 									<button class="btn btn-lg btn-rounded btn-outline btn-primary" id="edit">Edit Selected</button>
 									<button class="btn btn-lg btn-rounded btn-outline btn-danger" id="del">Delete Selected</button>
 								</div>';
+								}
+
 							}
 							?>
 
@@ -413,25 +408,26 @@
 </body>
 <script>
 	
-
 	document.addEventListener('DOMContentLoaded', function(){
-
 		<?php
 			if(Session::exists("Request")){
 			echo "window.open('../../bac/forms/pr-jo-doc');";
 			}
 		?>
-
 		var ProjType = '<?php 
 			if(!empty($type)) echo $type;
 			?>';
-		var obj = Object;
+		var obj = null;
 		var OriginalData = {
-			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>',
+			type: ProjType,
+			status: '<?php if(!empty($status)) echo $status;?>'
 		};
-		var EditData = {};
+		var EditData = new Object();
 		var DeleteData = {
-			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>',
+			type: ProjType,
+			status: '<?php if(!empty($status)) echo $status;?>'
 		};
 		var act = null;
 
@@ -447,12 +443,22 @@
 				$('[dataFor="userEdit"]').html('');
 				if(ProjType === "PR"){
 					let array = [];
+					let lot = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th><th>Stock No.</th>
 						<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th>
 						<th>Total Cost</th></tr></thead><tbody dataFor="userEditAppend"></tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
 						array.push(obj);
+
+						let lotfind = lot.find(function(el){
+							return el === obj.lot
+						});
+						
+						if(typeof lotfind === 'undefined'){
+							lot.push(obj.lot);
+						}
+
 						$('[dataFor="userEditAppend"]').append(`<tr>
 								<td>
 									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
@@ -467,6 +473,7 @@
 							</tr>`);
 					});
 					OriginalData.items = array;
+					OriginalData.lotref = lot;
 					
 					$('[data="qty"]').on('change', function(){
 						let inx = $(this).attr('name').split("-");
@@ -479,9 +486,9 @@
 					});
 	
 					$('#userEdit').modal('show');
-
 				}else if(ProjType === "JO"){
 					let array = [];
+					let lot = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th>
 						<th>List Title</th><th>Lot Estimated Cost</th><th>Tags</th>
 						<th>Notes</th></tr></thead><tbody dataFor="userEditAppend">
@@ -489,6 +496,15 @@
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
 						array.push(obj);
+
+						let lotfind = lot.find(function(el){
+							return el === obj.lot
+						});
+						
+						if(typeof lotfind === 'undefined'){
+							lot.push(obj.lot);
+						}
+
 						$('[dataFor="userEditAppend"]').append(`<tr>
 								<td>
 									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
@@ -501,13 +517,14 @@
 							</tr>`);
 					});
 					OriginalData.items = array;
+					OriginalData.lotref = lot;
 					$('[dataFor="tags"]').tagsinput();
 					$('#userEdit').modal('show');
 				}
 			}else{
 				swal({
-					title: "No selected document!",
-					text: "Please select a document.",
+					title: "No Items selected for editing!",
+					text: "Please select an item.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
@@ -569,8 +586,8 @@
 				}
 			}else{
 				swal({
-					title: "No selected document!",
-					text: "Please select a document.",
+					title: "No items to be deleted!",
+					text: "Please select an item to be deleated.",
 					type: "error",
 					confirmButtonColor: "#DD6B55"
 				});
@@ -616,11 +633,19 @@
 				}, {
 					do: function(d){
 						$('[dataFor="userEditClose"]').trigger('click');
-						swal({
-							title: "Success!",
-							text: "Successfully updated.",
-							type: "success"
-						});
+						if(d.notif){
+							swal({
+								title: "Success!",
+								text: "Your Requests has been successfully submited we'll notify you if your request has been approved.",
+								type: "success"
+							});
+						}else{
+							swal({
+								title: "Success!",
+								text: "Item(s) successfully updated",
+								type: "success"
+							});
+						}
 						// reload table
 					}
 				}, false, {
@@ -642,7 +667,7 @@
 						$('[dataFor="userEditClose"]').trigger('click');
 						swal({
 							title: "Success!",
-							text: "Successfully updated.",
+							text: "Successfully deleted.",
 							type: "success"
 						});
 						// reload table

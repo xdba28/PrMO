@@ -635,3 +635,80 @@ li {
 	line-height: 1;
   }
   
+
+  .custom-project-list table tr td{
+	padding: 10px 10px;
+  }
+
+
+  /*my table*/
+
+  #myTable td{
+	color: black;
+	padding: 10px 22px;
+	vertical-align: middle;
+  }
+
+  #myTable th{
+	  background: #313D4F;
+	  color:white;
+  }
+
+
+
+
+  #myTable .status-text {
+	display: inline-block;
+	font-size: 12px;
+	margin: 11px 0;
+	padding-left: 20px;
+	position: relative;
+  }
+  #myTable .status-text:before {
+	border: 3px solid;
+	border-radius: 50%;
+	content: "";
+	height: 14px;
+	left: 0;
+	position: absolute;
+	top: 1px;
+	width: 14px;
+  }
+  #myTable .status-text.status-blue:before {
+	border-color: #1C93ED;
+  }
+  #myTable .status-text.status-green:before {
+	border-color: #66B92E;
+  }
+  #myTable .status-text.status-orange:before {
+	border-color: #DA932C;
+  }
+  #myTable .status-text.status-red:before {
+	border-color: #D65B4A;
+  }
+
+  .myShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px rgb(47, 47, 47), 0 0 20px 0px rgba(107, 104, 104, 0);
+  }
+
+  .ibox-tools a {
+    cursor: pointer;
+    margin-left: 5px;
+	color: black !important;
+  }
+
+  	/* for a's that has a class of btn to look like button, this turns text color to black */
+   a.blacklink{
+	  color: black;
+  }
+
+  /* #F37123 -> BUorange */
+  /* #009bdf -> BUblue */
+
+
+.alert-info {
+    color: black;
+    background-color: #66CCFF;
+    border-color: #bee5eb;
+}

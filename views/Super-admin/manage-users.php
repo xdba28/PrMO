@@ -119,7 +119,7 @@
                 </div>
             </div>
 
-            <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="wrapper wrapper-content animated fadeInUp">
 			
 			<?php
 				if(isset($_GET['q'])){
@@ -127,9 +127,6 @@
                 $personnel = new Super_admin();
                 $name = $personnel->fullnameOF($_GET['q']);
                 $data = $personnel->personnelData($_GET['q']);
-				
-				//echo '<pre>',print_r($data),'</pre>';
-				//die();
 				
 
 			?>
@@ -176,16 +173,6 @@
                                     <div class="col-md-4">
                                         <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
                                         <h5><strong>240</strong> Followers</h5>
-                                    </div>
-                                </div>
-                                <div class="user-button">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-envelope"></i> Send Message</button>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <button type="button" class="btn btn-default btn-sm btn-block"><i class="fa fa-coffee"></i> Buy a coffee</button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

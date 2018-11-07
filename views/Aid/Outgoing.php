@@ -183,7 +183,7 @@
 									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
-							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
+							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="sign[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
 							<td class="center"><?php echo $unit->office_name;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
@@ -205,7 +205,9 @@
 						</tr>
 						</tfoot>
 						</table>
-							</div>
+						<button type="button" id="SignOut" class="btn btn-primary btn-rounded pull-right" style="margin-right:20px"><i class="fas fa-external-link-alt"></i> Out Selected</button><br><br>
+
+						</div>
 
 						</div>
 					</div>
@@ -230,7 +232,7 @@
 							<th>Title</th>
 							<th>Transmitting</th>
 							<th>Office</th>
-							<th>Transaction</th>
+							<th>transaction</th>
 							<th>Remarks</th>
 							<th>Date Queued</th>
 						</tr>
@@ -245,12 +247,12 @@
 									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
-							<td class="tdcheck"><input type="checkbox" data="gen" class="i-checks" name="input[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
+							<td class="tdcheck"><input type="checkbox" data="gen" class="i-checks" name="general[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
 							<td class="center"><?php echo $unit->office_name;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
 							<td class="center"><?php echo $document->transactions;?></td>
-							<td class="center"><?php echo $document->remarks;?></td>
+							<td class="center"><?php echo $document->remarks;?></td>							
 							<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 						</tr>
 						<?php
@@ -269,6 +271,7 @@
 						</tr>
 						</tfoot>
 						</table>
+						<button type="button" id="GenOut" class="btn btn-primary btn-rounded pull-right" style="margin-right:20px"><i class="fas fa-external-link-alt"></i> Out Selected</button><br><br>
 							</div>
 
 						</div>
@@ -279,7 +282,7 @@
 			
             </div>
 			<!-- Main Content End -->
-			
+	
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
@@ -293,7 +296,6 @@
 
 </body>
 <script>
-
 	$(document).ready(function(){
 		var DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
@@ -349,7 +351,7 @@
 							DataTable_Twg.clear().draw();
 							res.twg.forEach(function(e, i){
 								DataTable_Twg.row.add([
-									`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 									e.title,
 									'TWG',
 									'TWG',
@@ -365,7 +367,7 @@
 							DataTable_Signiture.clear().draw();
 							res.sign.forEach(function(e, i){
 								DataTable_Signiture.row.add([
-									`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									`<input type="checkbox" data="out" class="i-checks" name="sign[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 									e.title,
 									e.transmitting_to,
 									e.specific_office,
@@ -382,10 +384,12 @@
 							DataTable_GenDoc.clear().draw();
 							res.gen.forEach(function(e, i){
 								DataTable_GenDoc.row.add([
-									`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+									`<input type="checkbox" data="gen" class="i-checks" name="general[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 									e.title,
 									e.transmitting_to,
 									e.specific_office,
+									e.transaction,
+									e.remark,
 									e.date_registered
 								]);
 							});
@@ -394,11 +398,17 @@
 							DataTable_GenDoc.clear().draw();
 						}
 
-
 						if(res.forEval.bool){
-							res.forEval.data.forEach(function(e, i){
-								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+							swal({
+								title: "Evaluation form downloading",
+								text: "Download of Pre-procurement evaluation form will start shortly.",
+								type: "info"
 							});
+							setTimeout(function(){
+								res.forEval.data.forEach(function(e, i){
+									window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+								});
+							}, 3500);
 						}
 						
 						$('.i-checks').iCheck({

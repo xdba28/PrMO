@@ -14,7 +14,9 @@
 				case '1':
 					$translated_date = date("F j, Y / g:i A", $time);
 					break;
-
+				case '2':
+					$translated_date = date("F j, Y", $time);
+					break;
 				case 'month':
 					$translated_date = date("F, Y");
 					break;		

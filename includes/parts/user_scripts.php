@@ -100,9 +100,8 @@ require_once "../../functions/account-verifier.php";
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
 <script>
-	// var audio = new Audio('../../assets/audio/Badger Scream.mp3');
 	var audio = new Audio('../../assets/audio/definite.mp3');
-	// var audio = new Audio('../../assets/audio/2018 0410 Gadon badmouths protesters and IBP.mp3');
+	
 	$(function(){
 		// Enable pusher logging - don't include this in production
 		// Pusher.logToConsole = true;
@@ -114,7 +113,6 @@ require_once "../../functions/account-verifier.php";
 
 		var Notif_channel = Notif.subscribe('notif');
 		Notif_channel.bind('update', function(data){
-			audio.play();
 			let msg = JSON.parse(data);
 			if(msg.receiver === $('meta[name="auth"]').attr('content')){
 				$('#message').remove();
@@ -126,11 +124,18 @@ require_once "../../functions/account-verifier.php";
 					let add = parseFloat(NotifCount.innerText) + 1;
 					NotifCount.innerText = (add).toFixed(0);
 				}
-				$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
-					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div>
-					<small>Time: ${msg.date}</small></a></li>
+				
+				if(typeof msg.href !== 'undefined'){
+					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
 					<li class="dropdown-divider"></li>`);
+				}else{
+					$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
+					<li class="dropdown-divider"></li>`);
+				}
 
+				audio.play();
 				toastr.options = {
 					"progressBar": true,
 					"preventDuplicates": false,

@@ -11,8 +11,8 @@
 <li>
 	<a href="#"><i class="fas fa-file-contract side"></i> <span class="nav-label">Request Forms</span> <span class="fa arrow"></span></a>
 	<ul class="nav nav-second-level collapse">
-		<li><a href="generate-pr" class="link">Purchase Request</a></li>
-		<li><a href="generate-jo" class="link">Job Order</a></li>
+		<li><a href="generate-pr" class="link">Create Purchase Request</a></li>
+		<li><a href="generate-jo" class="link">Create Job Order</a></li>
 	</ul>
 </li>
 

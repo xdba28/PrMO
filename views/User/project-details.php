@@ -194,15 +194,20 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Participants:</dt>
+                                            <dt>Origin Forms:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
                                             <dd class="project-people mb-1">
-                                                <a href=""><img alt="image" class="rounded-circle" src="img/a3.jpg"></a>
-                                                <a href=""><img alt="image" class="rounded-circle" src="img/a1.jpg"></a>
-                                                <a href=""><img alt="image" class="rounded-circle" src="img/a2.jpg"></a>
-                                                <a href=""><img alt="image" class="rounded-circle" src="img/a4.jpg"></a>
-                                                <a href=""><img alt="image" class="rounded-circle" src="img/a5.jpg"></a>
+											<?php 
+												
+												$forms = json_decode($project->request_origin, true);
+												
+												foreach($forms as $individualOrigin => $value){
+													echo '<a href="my-forms?q='.$value.'">'.$value.'</a><strong>, </strong>';
+												}
+												
+											
+											?>
                                             </dd>
                                         </div>
                                     </dl>

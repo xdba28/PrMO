@@ -28,7 +28,10 @@
 						if($n->seen === '0'){
 							?>
 								<li class="active">
-									<a href="#" class="dropdown-item">
+									<?php 
+										if($n->href === null) echo '<a href="#" class="dropdown-item">';
+										else echo '<a href="'. $n->href .'" class="dropdown-item">';
+									?>
 										<div>
 											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
 										</div>
@@ -40,7 +43,10 @@
 						}else{
 							?>
 								<li>
-									<a href="#" class="dropdown-item">
+									<?php
+										if($n->href === null) echo '<a href="#" class="dropdown-item">';
+										else echo '<a href="'. $n->href .'" class="dropdown-item">';
+									?>
 										<div>
 											<i class="fa fa-bell fa-fw"></i> <?php echo $n->message;?>
 										</div>
