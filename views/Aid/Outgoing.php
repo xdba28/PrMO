@@ -36,7 +36,7 @@
 			<div class="sidebar-collapse">
 				<ul class="nav metismenu" id="side-menu">
 					<?php include '../../includes/parts/side_nav_header.php'; ?>
-					<?php include '../../includes/parts/staff_side_nav.php'; ?>
+					<?php include '../../includes/parts/aid_side_nav.php'; ?>
 				</ul>
 
 			</div>
