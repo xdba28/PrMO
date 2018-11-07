@@ -84,6 +84,7 @@
 		
 					//proceed to printing the actual form						
 					Session::flash('Request', $form_ref_no.":PR");
+					sleep(3);
 					Redirect::To('my-forms');
 					exit();
 		
@@ -110,6 +111,11 @@
 	<script>
 		function form(){
 			$('div.row.ibox-content').toggleClass('sk-loading');
+			swal({
+				title: "Success!",
+				text: "Request form will be downloaded shortly.",
+				type: "success"
+			});
 		}
 	</script>
 
@@ -234,22 +240,36 @@
 											<p>Specify all signatories to finalized this form.</p>
 											
 											<div class="row">
+											<?php
+												$enduserData = $user->get('enduser', array('edr_id', '=', $user->data()->account_id));
+												$enduserUnitData = $user->get('units', array('ID', '=', $enduserData->edr_designated_office));
+												$signatories = array();
+												foreach ($enduserUnitData as $key => $value) {
+													if($value == "unset"){
+														$signatories[$key] = "No data available";
+													}else{
+														$signatories[$key] = $value;
+													}
+												}
+
+												// echo "<pre>",print_r($signatories),"</pre>";
+											?>											
 												<div class="col-lg-7">
 													<div class="form-group">
 														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="<?php echo $user->fullname();?>" class="form-control" disabled form="jo_form" required>
+														<input id="enduser" name="enduser" type="text" value="<?php echo $currentUser[0];?>" class="form-control" disabled form="jo_form" required>
 													</div>
 													<div class="form-group">
 														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form" required>
+														<input id="noted" name="noted" type="text" value="<?php echo $signatories['note'];?>" class="form-control" form="jo_form" readonly>
 													</div>
 													<div class="form-group">
 														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form" required>
+														<input id="verified" name="verified" type="text" value="<?php echo $signatories['verifier'];?>" class="form-control" form="jo_form" readonly>
 													</div>
 													<div class="form-group">
 														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
+														<input id="approved" name="approved" type="text" value="<?php echo $signatories['approving'];?>" class="form-control" form="jo_form" readonly>
 														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
 														<input type="text" name="joToken" readonly hidden value="<?php echo Token::generate("joToken");?>" required form="jo_form">
 													</div>													

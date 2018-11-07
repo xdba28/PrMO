@@ -64,13 +64,22 @@
 
 			));
 
+			$staff->register('notifications', array(
+				'recipient' => $_POST['enduser'],
+				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+				'datecreated' => Date::translate('test', 'now'),
+				'seen' => 0,
+				'href' => "project-details?refno={$project_ref_no}"
+			));
+
 			$staff->endTrans(); //commit
 
 			Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
 			notif(json_encode(array(
 				'receiver' => $_POST['enduser'],
 				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-				'date' => Date::translate(Date::translate('test', 'now'), '1')
+				'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				'href' => "project-details?refno={$project_ref_no}"
 			)));
 			Redirect::To('new-project');
 			exit();

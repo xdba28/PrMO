@@ -115,7 +115,6 @@ require_once "../../functions/account-verifier.php";
 		Notif_channel.bind('update', function(data){
 			let msg = JSON.parse(data);
 			if(msg.receiver === $('meta[name="auth"]').attr('content')){
-				audio.play();
 				$('#message').remove();
 				$('#NotifCount').show();
 				let NotifCount = document.getElementById('NotifCount');
@@ -125,11 +124,18 @@ require_once "../../functions/account-verifier.php";
 					let add = parseFloat(NotifCount.innerText) + 1;
 					NotifCount.innerText = (add).toFixed(0);
 				}
-				$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
-					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div>
-					<small">Time: ${msg.date}</small></a></li>
+				
+				if(typeof msg.href !== 'undefined'){
+					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
 					<li class="dropdown-divider"></li>`);
-
+				}else{
+					$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
+					<li class="dropdown-divider"></li>`);
+				}
+				
+				audio.play();
 				toastr.options = {
 					"progressBar": true,
 					"preventDuplicates": false,
@@ -1058,3 +1064,34 @@ require_once "../../functions/account-verifier.php";
 		});
 
     </script>
+	<script>
+// Back to top
+var amountScrolled = 200;
+var amountScrolledNav = 25;
+
+$(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+    $('button.back-to-top').addClass('show');
+  } else {
+    $('button.back-to-top').removeClass('show');
+  }
+});
+
+$('button.back-to-top').click(function() {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+// Ignore this
+// This is just for content manipulation
+var skeleton = '<div class="skeleton"><div class="skeleton-wrapper"><div class="skeleton-wrapper-inner"><div class="skeleton-wrapper-body"><div class="skeleton-avatar"></div><div class="skeleton-author"></div><div class="skeleton-label"></div><div class="skeleton-content-1"></div><div class="skeleton-content-2"></div><div class="skeleton-content-3"></div></div></div></div></div>';
+for(var i=0;i<10;i++){
+  $('#content').append(skeleton); 
+}
+
+// Add waves effect
+Waves.attach('button.back-to-top', 'waves-effect');
+Waves.init();
+</script>

@@ -702,4 +702,13 @@ li {
    a.blacklink{
 	  color: black;
   }
+
+  /* #F37123 -> BUorange */
+  /* #009bdf -> BUblue */
+
+
+.alert-info {
+    color: black;
+    background-color: #66CCFF;
+    border-color: #bee5eb;
 }

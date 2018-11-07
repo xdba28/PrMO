@@ -73,7 +73,7 @@
 					if(!isset($_GET['q'])){
 				?>
 				<div class="row">
-					<div class="col-lg-12">
+					<div class="col-lg-12  animated fadeInRight">
 					
 						<div class="ibox">
 							<div class="ibox-title">
@@ -150,7 +150,7 @@
 
 		
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12  animated fadeInRight">
                 <div class="ibox ">
                     <div class="ibox-title">
                         <h5>Showing All Registered Accounts from <a style="color:#3399FF"><?php echo Input::get('unit');?></a></h5>

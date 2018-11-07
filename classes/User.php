@@ -204,7 +204,7 @@
 		
 		public function listNotification(){
             $user = Session::get($this->sessionName);
-			$this->db->query_builder("SELECT message, datecreated, seen FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			$this->db->query_builder("SELECT message, datecreated, seen, href FROM notifications WHERE recipient = '{$user}' ORDER BY ID DESC");
 			$notifList = $this->db->results();
 			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
 			$nofitCount = $this->db->first();
@@ -326,6 +326,29 @@
 				}
 			}
 		}//for fetching lot content
+
+
+		//used for PR and JO lots
+		public function updateLots($lot, $origin, $costNote){
+			if($this->db->query_builder("UPDATE lots SET lot_cost = '{$costNote[0]}', note = '{$costNote[1]}' WHERE request_origin = '{$origin}' AND lot_no = '{$lot}'")){
+				return true;
+			}
+			return false;
+		}
+
+		// used for recomputing PR lots costs
+		public function recompute($origin, $lot){
+			if($this->db->query_builder("SELECT 
+			SUM(total_cost) as 'recomputed_total'
+			
+			FROM 
+			`lots`, `lot_content_for_pr`
+			WHERE lot_content_for_pr.lot_id_origin = lots.lot_id AND
+			lot_no = '{$lot}' AND request_origin = '{$origin}'")){
+				return $this->db->first()->recomputed_total;
+			}
+			return false;
+		}
 
 		public function myRequests($user, $registered = false){
 

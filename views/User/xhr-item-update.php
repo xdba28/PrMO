@@ -14,7 +14,9 @@ if($user->isLoggedIn()){
 		
 		try{
 
-
+			$notif = false;
+			// echo $_POST['orig']['type'];
+			// echo $_POST['orig']['status'];
 			
 
 			$originalData =  $_POST['orig'];
@@ -25,30 +27,112 @@ if($user->isLoggedIn()){
 
 			// echo "<pre>",print_r($_POST),"</pre>";
 
-			#check the status of the form first before anything else, also include the type of form to be submitted whether it is PR or JO
 
-				// if($_POST['action'] == "update"){
-				// 	$user->startTrans();
+			
+			if($_POST['orig']['status'] == "unreceived"){
+				if($_POST['action'] == "update"){
+					
+					if($_POST['orig']['type'] == "PR"){
+						#update trans for pr
+						$user->startTrans();
 
-				// 	 $user->register('form_update_requests', array(
+							foreach ($originalData['items'] as $item) {
+		
+								if(isset($count)){$count++;}else{$count = 0;}
+								
 
-				// 		'form_origin' => $originalData['origin_form'],
-				// 		'original_data' => $originalItemsEncoded,
-				// 		'update_data' => $editedItemsEncoded,
-				// 		'requested_by' => Session::get(Config::get('session/session_name')),
-				// 		'date_registered' => Date::translate('test', 'now')
+								$user->update('lot_content_for_pr', 'ID', $item['item_id'], array(
+									
+									'stock_no' => $editedData['items'][$count]['stockNo'],
+									'unit' => $editedData['items'][$count]['unit'],
+									'item_description' => $editedData['items'][$count]['description'],
+									'quantity' => $editedData['items'][$count]['quantity'],
+									'unit_cost' => $editedData['items'][$count]['unitCost'],
+									'total_cost' => $editedData['items'][$count]['totalCost']
 
-				// 	 ));
+								));
+
+								
+							}
+							
+							foreach($_POST['orig']['lotref'] as $individualLot){
+								// recompute lot cost
+
+								$newLotCost =  $user->recompute($originalData['origin_form'], $individualLot);
+
+								$user->updateLots($individualLot, $originalData['origin_form'], array(
+										$newLotCost,
+										"none"
+								));
+								
+							}
+
+
+						$user->endTrans();
+
+
+						// echo "<pre>",print_r(array_diff($originalData['items'][0],$originalData['items'][2])),"</pre>";
+					}else{
+						#update trans for jo
+						$user->startTrans();
+	
+							foreach ($originalData['items'] as $item) {
+	
+								if(isset($count)){$count++;}else{$count = 0;}
+								
+	
+								$user->update('lot_content_for_jo', 'ID', $item['item_id'], array(
+									'header' => $editedData['items'][$count]['list'],
+									'tags' => $editedData['items'][$count]['tags']
+								));
+
+
+								$user->updateLots($editedData['items'][$count]['lot'], $originalData['origin_form'], array(
+									$editedData['items'][$count]['cost'],
+									$editedData['items'][$count]['notes']
+
+								));
+							}
+
+							
+	
+						$user->endTrans();
+					}
+
+				}else if($_POST['action'] == "delete"){
+					#rekta delete
+				}
+
+			}else{
+
+				if($_POST['action'] == "update"){
+					$user->startTrans();
+
+					 $user->register('form_update_requests', array(
+
+						'form_origin' => $originalData['origin_form'],
+						'original_data' => $originalItemsEncoded,
+						'update_data' => $editedItemsEncoded,
+						'requested_by' => Session::get(Config::get('session/session_name')),
+						'date_registered' => Date::translate('test', 'now')
+
+					 ));
 
 					
-				// 		 # code...
-					 
+						 # code...
+					//  send notif to aids
+					$notif = true;
 			
-				// 	 $user->endTrans();
+					$user->endTrans();
 
-				// }else if($_POST['action'] == "delete"){
-				// 	// $asd = "asd";
-				// }
+				}else if($_POST['action'] == "delete"){
+					#register delete request
+				}				
+
+			}
+			
+
+
 
 
 
@@ -61,7 +145,7 @@ if($user->isLoggedIn()){
 			// log files
 		}
 
-		$data = ['success' => true];
+		$data = ['success' => true, 'notif' => $notif];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}

@@ -194,6 +194,7 @@
 								foreach ($valid_request as $request){
 									if($refno == $request->form_ref_no){
 										$valid = true;
+										$status = $request->status;
 									}
 								}
 				
@@ -416,19 +417,25 @@
 		var ProjType = '<?php 
 			if(!empty($type)) echo $type;
 			?>';
-		var obj = Object;
+		var obj = null;
 		var OriginalData = {
-			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>',
+			type: ProjType,
+			status: '<?php if(!empty($status)) echo $status;?>'
 		};
-		var EditData = {};
+		var EditData = new Object();
 		var DeleteData = {
-			origin_form: '<?php if(!empty($refno)) echo $refno;?>'
+			origin_form: '<?php if(!empty($refno)) echo $refno;?>',
+			type: ProjType,
+			status: '<?php if(!empty($status)) echo $status;?>'
 		};
 		var act = null;
+
 		$('.i-checks').iCheck({
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green'
 		});
+
 		$('#edit').on('click', function(e){
 			if($('.i-checks:checked').length !== 0){
 				act = 'update';
@@ -436,12 +443,22 @@
 				$('[dataFor="userEdit"]').html('');
 				if(ProjType === "PR"){
 					let array = [];
+					let lot = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th><th>Stock No.</th>
 						<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th>
 						<th>Total Cost</th></tr></thead><tbody dataFor="userEditAppend"></tbody>`);
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
 						array.push(obj);
+
+						let lotfind = lot.find(function(el){
+							return el === obj.lot
+						});
+						
+						if(typeof lotfind === 'undefined'){
+							lot.push(obj.lot);
+						}
+
 						$('[dataFor="userEditAppend"]').append(`<tr>
 								<td>
 									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
@@ -456,11 +473,13 @@
 							</tr>`);
 					});
 					OriginalData.items = array;
+					OriginalData.lotref = lot;
 					
 					$('[data="qty"]').on('change', function(){
 						let inx = $(this).attr('name').split("-");
 						$(`[name="totalCost-${inx[1]}"]`).val(($(this).val() * $(`[name="unitCost-${inx[1]}"]`).val()).toFixed(2));
 					});
+
 					$('[data="unit"]').on('change', function(){
 						let inx = $(this).attr('name').split("-");
 						$(`[name="totalCost-${inx[1]}"]`).val(($(`[name="quantity-${inx[1]}"]`).val() * $(this).val()).toFixed(2));
@@ -469,6 +488,7 @@
 					$('#userEdit').modal('show');
 				}else if(ProjType === "JO"){
 					let array = [];
+					let lot = [];
 					$('[dataFor="userEdit"]').append(`<thead><tr><th>Lot No.</th>
 						<th>List Title</th><th>Lot Estimated Cost</th><th>Tags</th>
 						<th>Notes</th></tr></thead><tbody dataFor="userEditAppend">
@@ -476,6 +496,15 @@
 					$('.i-checks:checked').each(function(i){
 						obj = JSON.parse($(this).attr('details'));
 						array.push(obj);
+
+						let lotfind = lot.find(function(el){
+							return el === obj.lot
+						});
+						
+						if(typeof lotfind === 'undefined'){
+							lot.push(obj.lot);
+						}
+
 						$('[dataFor="userEditAppend"]').append(`<tr>
 								<td>
 									<input type="text" name="lot-${i}" value="${obj.lot}" hidden>${obj.lot}
@@ -488,6 +517,7 @@
 							</tr>`);
 					});
 					OriginalData.items = array;
+					OriginalData.lotref = lot;
 					$('[dataFor="tags"]').tagsinput();
 					$('#userEdit').modal('show');
 				}
@@ -500,6 +530,7 @@
 				});
 			}
 		});
+
 		$('#del').on('click', function(){
 			if($('.i-checks:checked').length !== 0){
 				act = 'delete';
@@ -562,6 +593,7 @@
 				});
 			}
 		});
+
 		document.querySelector('[dataFor="userEditSubmit"]').addEventListener('click', function(){
 			if(act === 'update'){
 				if(ProjType === "PR"){
@@ -601,11 +633,19 @@
 				}, {
 					do: function(d){
 						$('[dataFor="userEditClose"]').trigger('click');
-						swal({
-							title: "Success!",
-							text: "Your Requests has been successfully submited we'll notify you if your request has been approved.",
-							type: "success"
-						});
+						if(d.notif){
+							swal({
+								title: "Success!",
+								text: "Your Requests has been successfully submited we'll notify you if your request has been approved.",
+								type: "success"
+							});
+						}else{
+							swal({
+								title: "Success!",
+								text: "Item(s) successfully updated",
+								type: "success"
+							});
+						}
 						// reload table
 					}
 				}, false, {
@@ -627,7 +667,7 @@
 						$('[dataFor="userEditClose"]').trigger('click');
 						swal({
 							title: "Success!",
-							text: "Successfully updated.",
+							text: "Successfully deleted.",
 							type: "success"
 						});
 						// reload table

@@ -300,7 +300,7 @@
 
 		public function listNotification(){
             $user = Session::get($this->sessionName);
-			$this->db->query_builder("SELECT message, datecreated, seen FROM notifications WHERE recipient = '{$user}' ORDER BY message DESC");
+			$this->db->query_builder("SELECT message, datecreated, seen, href FROM notifications WHERE recipient = '{$user}' ORDER BY ID DESC");
 			$notifList = $this->db->results();
 			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
 			$nofitCount = $this->db->first();
