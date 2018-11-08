@@ -157,20 +157,9 @@ class ColumnIterator implements \Iterator
 
     /**
      * Set the iterator to its previous value.
-<<<<<<< HEAD
-     *
-     * @throws PhpSpreadsheetException
      */
     public function prev()
     {
-        if ($this->currentColumnIndex <= $this->startColumnIndex) {
-            throw new PhpSpreadsheetException('Column is already at the beginning of range (' . Coordinate::stringFromColumnIndex($this->endColumnIndex) . ' - ' . Coordinate::stringFromColumnIndex($this->endColumnIndex) . ')');
-        }
-=======
-     */
-    public function prev()
-    {
->>>>>>> denver
         --$this->currentColumnIndex;
     }
 
@@ -181,10 +170,6 @@ class ColumnIterator implements \Iterator
      */
     public function valid()
     {
-<<<<<<< HEAD
-        return $this->currentColumnIndex <= $this->endColumnIndex;
-=======
         return $this->currentColumnIndex <= $this->endColumnIndex && $this->currentColumnIndex >= $this->startColumnIndex;
->>>>>>> denver
     }
 }

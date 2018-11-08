@@ -16,10 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Borders;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Font;
-<<<<<<< HEAD
-=======
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
->>>>>>> denver
 use XMLReader;
 
 class Gnumeric extends BaseReader
@@ -788,11 +785,7 @@ class Gnumeric extends BaseReader
                     continue;
                 }
 
-<<<<<<< HEAD
-                $range = explode('!', $range);
-=======
                 $range = Worksheet::extractSheetTitle($range, true);
->>>>>>> denver
                 $range[0] = trim($range[0], "'");
                 if ($worksheet = $spreadsheet->getSheetByName($range[0])) {
                     $extractedRange = str_replace('$', '', $range[1]);

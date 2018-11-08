@@ -88,10 +88,7 @@ DATEDIF
 DATEVALUE
 DAVERAGE
 DAY
-<<<<<<< HEAD
-=======
 DAYS
->>>>>>> denver
 DAYS360
 DB
 DCOUNT

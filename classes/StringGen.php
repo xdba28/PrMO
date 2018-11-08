@@ -1,10 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-    class StringGen{
-=======
     class StringGen{	
->>>>>>> denver
 
         public static function generate(){
 
@@ -33,9 +29,6 @@
                 }
 
            return $string;
-<<<<<<< HEAD
-        }
-=======
 		}
 		
 		public static function projectRefno($type){
@@ -54,7 +47,6 @@
 			
 		}
 
->>>>>>> denver
     }
 
 ?>

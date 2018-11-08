@@ -70,15 +70,7 @@
             $user =  $this->find($username);
                 
                 if($user){
-<<<<<<< HEAD
-                    
-                    if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
-                        Session::put($this->sessionName, $this->data()->account_id);
-                        $_SESSION['accounttype'] = $this->data()->newAccount;
- 
-=======
 
->>>>>>> denver
 
 						if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
 
@@ -98,9 +90,6 @@
                 }				
 
             return false;
-<<<<<<< HEAD
-        }
-=======
 		}
 		
 		public function dashboard_procurement_entries($option){
@@ -218,7 +207,6 @@
 
 			return $newFormat;
 		}
->>>>>>> denver
 
 
         public function profile($id){
@@ -341,33 +329,6 @@
 			return false;
         }
 
-<<<<<<< HEAD
-        public function userData($ID){
-            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, concat(prnl_fname,prnl_lname), concat(prnl_fname,' ' ,prnl_lname), prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, username, group_id, name as 'group_name', permission
-            FROM `personnel`, `units`, `prnl_account`, `group`
-
-            WHERE
-            personnel.prnl_designated_office = units.ID AND
-            personnel.prnl_id = prnl_account.account_id AND
-            prnl_account.group_ = group.group_id AND
-            prnl_id = '{$ID}'
-            ")) {
-                return $this->db->first();
-            }
-        }  
-
-        public function register($table, $fields = array()){
-            if(!$this->db->insert($table, $fields)){
-                throw new Exception('There was a problem registering data', 1);
-            }
-        }
-
-        public function update($table, $particular, $identifier, $fields){
-            if(!$this->db->update($table, $particular, $identifier, $fields)){
-                throw new Exception("Error Updating Request", 1);
-            }
-        }
-=======
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
 				throw new Exception("Error Updating Request", 1);
@@ -396,7 +357,6 @@
 			}
 			return false;
 		}
->>>>>>> denver
 
         public function exist(){
             return  (!empty($this->data)) ? true : false;
@@ -423,11 +383,7 @@
         public function logout(){
 
             Session::delete($this->sessionName);
-<<<<<<< HEAD
-            Session::delete("accounttype");            
-=======
             Session::delete("accounttype");
->>>>>>> denver
             Cookie::delete($this->cookieName);
         }
         

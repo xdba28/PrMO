@@ -14,11 +14,7 @@
 
 	$sa = new Super_admin();
 	
-<<<<<<< HEAD
-	$er_data = null;
-=======
 	$e = "";
->>>>>>> denver
 
     if(Input::exists()){
         if(Token::check("newUserToken", Input::get('newUserToken'))){
@@ -69,11 +65,7 @@
                         'userpassword' => Hash::make(Input::get('defaultPassword'), $salt)
                     ));
 
-<<<<<<< HEAD
-					Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
-=======
                     Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
->>>>>>> denver
 
                 }catch(Exception $e){
 
@@ -83,15 +75,6 @@
 
                 /* DENVER!!!!! Display errors in toust*/
                 foreach($validation->errors() as $error){
-<<<<<<< HEAD
-                    $er_data .= $error.'<br>';
-                }
-            }
-
-        }
-    }
-
-=======
                     $e .= $error;
                 }
             }
@@ -105,7 +88,6 @@
 
    
 
->>>>>>> denver
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,14 +99,9 @@
 
     <title>INSPINIA | Dashboard v.3</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
-<<<<<<< HEAD
-	<script>
-		var err = '<?php echo $er_data?>';
-=======
 
 	<script>
 		var error = '<?php echo $e?>';
->>>>>>> denver
 	</script>
 
 </head>
@@ -274,27 +251,17 @@
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Username</label>
 										<div class="input-group">
-<<<<<<< HEAD
-											<span class="input-group-addon"><i class="ti-user my-blue"></i></span><input value="sample.username" type="text" name="username" form="profile" class="form-control" required>
-=======
 											<span class="input-group-addon"><i class="ti-user my-blue"></i></span><input value="" type="text" id="username" name="username" form="profile" class="form-control" required>
->>>>>>> denver
 										</div>
 									</div>		
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Password</label>
 										<div class="input-group">
-<<<<<<< HEAD
-											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="<?php echo StringGen::password();?>" readonly type="text" name="defaultPassword" form="profile" class="form-control" required>
-										</div>
-									</div>										
-=======
 											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="" readonly type="text" id="defaultPassword" name="defaultPassword" form="profile" class="form-control" required>
 										</div>
 									</div>	
 
 									<button type="button" id="passwordGen" class="pull-right btn btn-sm btn-default">Generate Password</button>									
->>>>>>> denver
 								</div>	
 							</div>
 							
@@ -466,24 +433,6 @@
     </div>
 
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>
-<<<<<<< HEAD
-	<script>
-		$(function()
-		{
-			if(err === '')
-			{
-				swal({
-					title: "hello",
-					text: "hello",
-					type: "error"
-				});
-				toastr.success("Hello");
-			}
-		});
-	</script>
-
-</body>
-=======
 </body>
 <script>
 	if(error !== ""){
@@ -522,5 +471,4 @@
 
 
 </script>
->>>>>>> denver
 </html>

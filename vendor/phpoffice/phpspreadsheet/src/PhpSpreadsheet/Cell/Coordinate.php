@@ -3,10 +3,7 @@
 namespace PhpOffice\PhpSpreadsheet\Cell;
 
 use PhpOffice\PhpSpreadsheet\Exception;
-<<<<<<< HEAD
-=======
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
->>>>>>> denver
 
 /**
  * Helper class to manipulate cell coordinates.
@@ -74,15 +71,7 @@ abstract class Coordinate
         }
 
         // Split out any worksheet name from the reference
-<<<<<<< HEAD
-        $worksheet = '';
-        $cellAddress = explode('!', $pCoordinateString);
-        if (count($cellAddress) > 1) {
-            list($worksheet, $pCoordinateString) = $cellAddress;
-        }
-=======
         list($worksheet, $pCoordinateString) = Worksheet::extractSheetTitle($pCoordinateString, true);
->>>>>>> denver
         if ($worksheet > '') {
             $worksheet .= '!';
         }
@@ -113,15 +102,7 @@ abstract class Coordinate
         }
 
         // Split out any worksheet name from the coordinate
-<<<<<<< HEAD
-        $worksheet = '';
-        $cellAddress = explode('!', $pCoordinateString);
-        if (count($cellAddress) > 1) {
-            list($worksheet, $pCoordinateString) = $cellAddress;
-        }
-=======
         list($worksheet, $pCoordinateString) = Worksheet::extractSheetTitle($pCoordinateString, true);
->>>>>>> denver
         if ($worksheet > '') {
             $worksheet .= '!';
         }

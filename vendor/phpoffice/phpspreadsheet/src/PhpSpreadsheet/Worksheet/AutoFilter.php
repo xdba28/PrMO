@@ -89,16 +89,8 @@ class AutoFilter
      */
     public function setRange($pRange)
     {
-<<<<<<< HEAD
-        // Uppercase coordinate
-        $cellAddress = explode('!', strtoupper($pRange));
-        if (count($cellAddress) > 1) {
-            list($worksheet, $pRange) = $cellAddress;
-        }
-=======
         // extract coordinate
         list($worksheet, $pRange) = Worksheet::extractSheetTitle($pRange, true);
->>>>>>> denver
 
         if (strpos($pRange, ':') !== false) {
             $this->range = $pRange;

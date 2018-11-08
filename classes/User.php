@@ -97,6 +97,7 @@
                             }else{
                                 $hash = $hashCheck->first()->hash;
                             }
+
                                 Cookie::put($this->cookieName, $hash, Config::get('remember/cookie_expiry'));
                         }
             
@@ -199,9 +200,6 @@
                     return $this->db->results();
                 }
             }
-<<<<<<< HEAD
-        }   
-=======
 		}
 		
 		public function listNotification(){
@@ -217,7 +215,6 @@
 			return $notif;
 		}
 
->>>>>>> denver
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -246,8 +243,6 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
                     }
                    
-<<<<<<< HEAD
-=======
 					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title];
 					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
                    
@@ -270,14 +265,10 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
                     }
                    
->>>>>>> denver
                     return $fullname;
                 }
 
             return false;
-<<<<<<< HEAD
-        }
-=======
 		}
 
 		public function projectHistory($originRefno, $currentRefno){
@@ -423,7 +414,6 @@
 				return $this->db->results();
 			}
 		}
->>>>>>> denver
 
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
@@ -431,13 +421,6 @@
                 return false;
             }
             return true;
-<<<<<<< HEAD
-        }   
-
-        public function exist(){
-            return (!empty($this->data)) ? true : false;
-        }    
-=======
 		}
 
 		public function selectAll($table){
@@ -471,7 +454,6 @@
 		public function endTrans(){
 			$this->db->endTrans();
 		}		
->>>>>>> denver
 
         public function data(){
             return $this->data;

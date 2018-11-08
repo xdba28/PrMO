@@ -25,10 +25,7 @@ $office = $sa->get("units", array("ID", "=", $r->designation));
 try
 {
 	$sa->startTrans();
-<<<<<<< HEAD
-=======
 
->>>>>>> denver
 	$sa->register("enduser", array(
 		'edr_id' => $r->employee_id,
 		'edr_fname' => $r->fname,
@@ -38,12 +35,6 @@ try
 		'edr_email' => $r->email,
 		'phone' => $r->contact,
 		'edr_designated_office' => $office->ID,
-<<<<<<< HEAD
-		'edr_job_title' => "none",
-		'edr_profile_photo' => NULL
-	));
-
-=======
 		'current_specific_office' => $r->specific_office,
 		'edr_job_title' => $r->jobtitle,
 		'edr_profile_photo' => NULL
@@ -51,16 +42,10 @@ try
 
 	$temporaryPassword = StringGen::password();
 
->>>>>>> denver
 	$sa->register('edr_account', array(
 		'account_id' => $r->employee_id,
 		'username' => $r->username,
 		'salt' => $salt,
-<<<<<<< HEAD
-		'userpassword' => Hash::make($r->userpassword, $salt),
-		'group' => 1
-	));
-=======
 		'userpassword' => Hash::make($temporaryPassword, $salt),
 		'group_' => 1
 	));
@@ -69,22 +54,14 @@ try
 
 	$sa->delPersn("account_requests", array("employee_id", "=", $r->employee_id));
 	
->>>>>>> denver
 	$sa->endTrans();
 }
 catch(Exception $e)
 {
-<<<<<<< HEAD
-	echo $e;
-}
-
-
-=======
 	$data = [
 		'success' => false
 	];
 	header("Content-type:application/json");
 	echo json_encode($data);
 }
->>>>>>> denver
 ?>

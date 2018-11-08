@@ -354,15 +354,7 @@ class DataSeriesValues
                 }
                 unset($dataValue);
             } else {
-<<<<<<< HEAD
-                $cellRange = explode('!', $this->dataSource);
-                if (count($cellRange) > 1) {
-                    list(, $cellRange) = $cellRange;
-                }
-
-=======
                 list($worksheet, $cellRange) = Worksheet::extractSheetTitle($this->dataSource, true);
->>>>>>> denver
                 $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
                 if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
                     $this->dataValues = Functions::flattenArray($newDataValues);

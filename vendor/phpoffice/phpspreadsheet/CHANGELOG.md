@@ -5,8 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-<<<<<<< HEAD
-=======
 ## [1.5.0] - 2018-10-21
 
 ### Added
@@ -31,7 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix warning when reading xlsx without styles - [#631](https://github.com/PHPOffice/PhpSpreadsheet/pull/631)
 - Fix broken sample links on windows due to $baseDir having backslash - [#653](https://github.com/PHPOffice/PhpSpreadsheet/pull/653)
 
->>>>>>> denver
 ## [1.4.0] - 2018-08-06
 
 ### Added

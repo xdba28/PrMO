@@ -9,10 +9,7 @@ $finder = PhpCsFixer\Finder::create()
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setFinder($finder)
-<<<<<<< HEAD
-=======
     ->setCacheFile(sys_get_temp_dir() . '/php-cs-fixer' . preg_replace('~\W~', '-', __DIR__))
->>>>>>> denver
     ->setRules([
         'align_multiline_comment' => true,
         'array_syntax' => ['syntax' => 'short'],

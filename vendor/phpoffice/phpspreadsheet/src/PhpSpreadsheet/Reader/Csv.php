@@ -163,15 +163,7 @@ class Csv extends BaseReader
 
         // Count how many times each of the potential delimiters appears in each line
         $numberLines = 0;
-<<<<<<< HEAD
-        while (($line = fgets($this->fileHandle)) !== false && (++$numberLines < 1000)) {
-            // Drop everything that is enclosed to avoid counting false positives in enclosures
-            $enclosure = preg_quote($this->enclosure, '/');
-            $line = preg_replace('/(' . $enclosure . '.*' . $enclosure . ')/U', '', $line);
-
-=======
         while (($line = $this->getNextLine()) !== false && (++$numberLines < 1000)) {
->>>>>>> denver
             $countLine = [];
             for ($i = strlen($line) - 1; $i >= 0; --$i) {
                 $char = $line[$i];
@@ -235,8 +227,6 @@ class Csv extends BaseReader
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Get the next full line from the file.
      *
      * @param string $line
@@ -273,7 +263,6 @@ class Csv extends BaseReader
     }
 
     /**
->>>>>>> denver
      * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns).
      *
      * @param string $pFilename

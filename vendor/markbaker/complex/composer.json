@@ -73,8 +73,6 @@
             "classes/src/operations/divideinto.php"
         ]
     },
-<<<<<<< HEAD
-=======
     "scripts": {
         "style": [
             "phpcs --report-width=200 --report-summary  --report-full classes/src/ --standard=PSR2 -n"
@@ -89,6 +87,5 @@
             "phpcpd classes/src/ -n"
         ]
     },
->>>>>>> denver
     "minimum-stability": "dev"
 }

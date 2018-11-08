@@ -82,11 +82,7 @@ class Sample
 
         $files = [];
         foreach ($regex as $file) {
-<<<<<<< HEAD
-            $file = str_replace($baseDir . '/', '', $file[0]);
-=======
             $file = str_replace(str_replace('\\', '/', $baseDir) . '/', '', str_replace('\\', '/', $file[0]));
->>>>>>> denver
             $info = pathinfo($file);
             $category = str_replace('_', ' ', $info['dirname']);
             $name = str_replace('_', ' ', preg_replace('/(|\.php)/', '', $info['filename']));

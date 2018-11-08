@@ -25,11 +25,7 @@ class Iterator implements \Iterator
      *
      * @param Spreadsheet $subject
      */
-<<<<<<< HEAD
-    public function __construct(Spreadsheet $subject = null)
-=======
     public function __construct(Spreadsheet $subject)
->>>>>>> denver
     {
         // Set subject
         $this->subject = $subject;
@@ -86,10 +82,6 @@ class Iterator implements \Iterator
      */
     public function valid()
     {
-<<<<<<< HEAD
-        return $this->position < $this->subject->getSheetCount();
-=======
         return $this->position < $this->subject->getSheetCount() && $this->position >= 0;
->>>>>>> denver
     }
 }

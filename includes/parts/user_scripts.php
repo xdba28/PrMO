@@ -83,18 +83,6 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
-<<<<<<< HEAD
-
-<!-- Password meter -->
-<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
-
-<!-- Crypto-js -->
-<script src="../../assets/js/plugins/crypto-js/crypto-js.js"></script>
-
-<!-- Sweet Alert -->
-<script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
-=======
 <!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
@@ -189,13 +177,10 @@ require_once "../../functions/account-verifier.php";
 
 	});
 </script>
->>>>>>> denver
 
 
 <script>
     $(document).ready(function(){
-<<<<<<< HEAD
-=======
 		// side nav active		
 		var path = window.location.pathname.split("/");
 		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
@@ -214,7 +199,6 @@ require_once "../../functions/account-verifier.php";
 		}
 
 
->>>>>>> denver
         $("#wizard").steps();
         $("#form").steps({
             bodyTag: "fieldset",
@@ -676,19 +660,12 @@ require_once "../../functions/account-verifier.php";
 			$('#popOver').popover();
 			$('#popOver1').popover();
 			$('#popOver2').popover();
-<<<<<<< HEAD
-
-			if(newuser == true){
-				$('#new-user-modal').modal('show');
-				
-=======
 			$('.footable').footable();
             $('.footable2').footable();
 
 
 			if(newuser == true){
 				$('#new-user-modal').modal('show');	
->>>>>>> denver
 			}     
             
             $('input').focus(function(){
@@ -714,16 +691,6 @@ require_once "../../functions/account-verifier.php";
                     verdict: ".pwstrength_viewport_verdict4"
                 }
             };
-<<<<<<< HEAD
-            options4.common = {
-				
-				<?php
-				
-				?>
-				
-                zxcvbn: true,
-                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku'],
-=======
 
             options4.common = {
 
@@ -735,7 +702,6 @@ require_once "../../functions/account-verifier.php";
 						echo  $commonFields = '';
 					}
 				?>],
->>>>>>> denver
                 userInputs: ['#year', '#new_username']
             };
             $('.example4').pwstrength(options4);
@@ -760,9 +726,6 @@ require_once "../../functions/account-verifier.php";
 			
 		});
 
-<<<<<<< HEAD
-	</script>	
-=======
 	</script>	
 
 	<script>
@@ -796,4 +759,3 @@ for(var i=0;i<10;i++){
 Waves.attach('button.back-to-top', 'waves-effect');
 Waves.init();
 </script>
->>>>>>> denver

@@ -62,15 +62,10 @@
 					?>
 					<div id="message">
 						<li>
-<<<<<<< HEAD
-							<a href="../logout">
-								<i class="fa fa-sign-out-alt"></i> Log out
-=======
 							<a href="#" class="dropdown-item">
 								<div>
 									<i class="fa fa-bell fa-fw"></i> No Messages
 								</div>
->>>>>>> denver
 							</a>
 						</li>
 						<li class="dropdown-divider"></li>

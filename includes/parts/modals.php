@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <script>
 	function ModalSubmit(id, modal){
 		var DataModal = $(`#${id}`).serialize();
@@ -17,7 +15,6 @@
 </script>
 
 
->>>>>>> denver
 <!--Superadmin / account-request.php-->
 <div id="decline_modal" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
@@ -91,19 +88,12 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-<<<<<<< HEAD
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-=======
             <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
->>>>>>> denver
 				<button type="submit" class="btn btn-primary" form="newAccount">Finish</button>
 
 			</div>			
         </div>
     </div>
-<<<<<<< HEAD
-</div>
-=======
 </div>
 
 
@@ -387,4 +377,3 @@
   </div>
 </div>
 
->>>>>>> denver

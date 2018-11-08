@@ -70,11 +70,7 @@ class DateTime
                 (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC)) {
                 return Functions::VALUE();
             }
-<<<<<<< HEAD
-            if ((is_object($dateValue)) && ($dateValue instanceof \DateTimeImmutable)) {
-=======
             if ((is_object($dateValue)) && ($dateValue instanceof \DateTimeInterface)) {
->>>>>>> denver
                 $dateValue = Date::PHPToExcel($dateValue);
             } else {
                 $saveReturnDateType = Functions::getReturnDateType();
@@ -769,8 +765,6 @@ class DateTime
     }
 
     /**
-<<<<<<< HEAD
-=======
      * DAYS.
      *
      * Returns the number of days between two dates
@@ -817,7 +811,6 @@ class DateTime
     }
 
     /**
->>>>>>> denver
      * DAYS360.
      *
      * Returns the number of days between two dates based on a 360-day year (twelve 30-day months),

@@ -67,11 +67,6 @@
                  if($login){
                      Redirect::To('-dashboard');
                  }else{
-<<<<<<< HEAD
-                     Session::flash('incorrect', 'Incorrect Username or Password');
-                 }
-
-=======
 
 					if(is_null($user->data())){
 						Session::flash('incorrect', 'Incorrect Username or Password');
@@ -86,7 +81,6 @@
 					 
                  }
 
->>>>>>> denver
             }else{
                 foreach($validation->errors() as $error){
                     echo $error,"<br>";
@@ -131,19 +125,11 @@
 
             <p>
                 <?php
-<<<<<<< HEAD
-					if(Session::exists('accountUpdated')){
-						echo Session::flash('accountUpdated');
-					}else if(Session::exists('Loggedout')){
-                        echo Session::flash('Loggedout');
-                    }else if(Session::exists('incorrect')){
-=======
                     if(Session::exists('accountUpdated')){
 						echo Session::flash('accountUpdated');
                     }else if(Session::exists('Loggedout')){
 						echo Session::flash('Loggedout');
 					}else if(Session::exists('incorrect')){
->>>>>>> denver
                         echo Session::flash('incorrect');
                     }else if(Session::exists('deactivated')){
 						 echo Session::flash('deactivated');
@@ -161,12 +147,7 @@
                 </div>
 				<input type="hidden" name="blyteToken" value="<?php echo Token::generate("blyteToken");?>">
                 <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-<<<<<<< HEAD
-				<a href="../index" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
-
-=======
 				<a href="../" class="btn btn-warning block full-width m-b">Redirect to User Login</a>
->>>>>>> denver
                
             </form>
             <p class="m-t"> <small>Copyright BU-BAC PrMO &copy; 2018-2019</small> </p>

@@ -2,10 +2,6 @@
 /analysis
 /vendor/
 /phpunit.xml
-<<<<<<< HEAD
-/.php_cs.cache
-=======
->>>>>>> denver
 
 ## IDE support
 *.buildpath

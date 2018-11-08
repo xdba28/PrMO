@@ -10,11 +10,8 @@
        Redirect::To('../../blyte/acc3ss');
         die();
 	}
-<<<<<<< HEAD
-=======
 
 	$e = "";
->>>>>>> denver
 
     $user = $user->profile(Session::get(Config::get('session/session_name')));
 
@@ -95,11 +92,7 @@
 				{
 					swal({
 						title: data,
-<<<<<<< HEAD
-						text: "",
-=======
 						text: "Account Request Approved!",
->>>>>>> denver
 						timer: 13000,
 						type: "success"
 					});

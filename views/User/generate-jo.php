@@ -10,10 +10,6 @@
        Redirect::To('../../index');
         die();
 	}
-<<<<<<< HEAD
-	
-=======
->>>>>>> denver
 
 	if(Input::exists()){
 	
@@ -26,22 +22,14 @@
 				$date_created =  date('Y-m-d H:i:s'); //this would be a the identifier for registering of lots
 				$number_of_lots = Input::get('lot'); // number of lots for this request form
 	
-<<<<<<< HEAD
-				$rows_per_lot = json_decode(Input::get('rowCount'), true); //decode the row counter per lot
-=======
 				$rows_per_lot = json_decode($_POST['rowCount'], true); //decode the row counter per lot
->>>>>>> denver
 				$counter = 0;
 				foreach($rows_per_lot as $element){
 					$myArray[$counter] = $element["tag"] + 1;
 					$counter++;
 				}
-<<<<<<< HEAD
-				
-=======
 				// $myArray[0] = $rows_per_lot["lst"] + 1;
 
->>>>>>> denver
 				$user->register('project_request_forms', array(
 		
 					'form_ref_no' => $form_ref_no,
@@ -95,16 +83,11 @@
 					}
 		
 					//proceed to printing the actual form						
-<<<<<<< HEAD
-					Session::flash("Request", $form_ref_no.":JO");
-					Redirect::to("pr-jo-doc");
-=======
 					Session::flash('Request', $form_ref_no.":PR");
 					sleep(3);
 					Redirect::To('my-forms');
 					exit();
 		
->>>>>>> denver
 			}catch(Exception $e){
 				die($e->getMessage());
 			}
@@ -124,8 +107,6 @@
 
 
 	<?php include_once '../../includes/parts/user_styles.php'; ?>
-<<<<<<< HEAD
-=======
 
 	<script>
 		function form(){
@@ -137,7 +118,6 @@
 			});
 		}
 	</script>
->>>>>>> denver
 
 </head>
 
@@ -183,15 +163,11 @@
 			
 			<!-- Main Content -->
 			<div class="wrapper wrapper-content animated fadeInRight">
-<<<<<<< HEAD
-				<div class="row">
-=======
 				<div class="row ibox-content">
 					<div class="sk-spinner sk-spinner-double-bounce">
 							<div class="sk-double-bounce1"></div>
 							<div class="sk-double-bounce2"></div>
 					</div>
->>>>>>> denver
 					<div class="col-lg-12">
 						<div class="tabs-container">
 							<ul class="nav nav-tabs">
@@ -200,14 +176,6 @@
 								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
 							</ul>
 							<div class="tab-content">
-<<<<<<< HEAD
-								<div><form method="POST" id="jo_form"></form></div>
-								<div id="tab-1" class="tab-pane active">
-									<div class="panel-body">
-									   <h2>Project Information</h2>
-
-										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
-=======
 								<div><form method="POST" id="jo_form" onsubmit="form()"></form></div>
 								<div id="tab-1" class="tab-pane active">
 									<div class="panel-body">
@@ -215,7 +183,6 @@
 
 										<p>Specify the required fields to generate the Job Order Form that suits your need.</p>
 
->>>>>>> denver
 										<div class="row">
 											<div class="col-lg-7">
 												<div class="form-group">
@@ -238,25 +205,17 @@
 													</div>
 												</div>
 											</div>	
-<<<<<<< HEAD
-=======
 											<div class="col-lg-7">
 												<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>								
 											</div>											
->>>>>>> denver
 										</div>
 
 									</div>	
 								</div>
 								<div id="tab-2" class="tab-pane">
 									<div class="panel-body">
-<<<<<<< HEAD
-										<h2>Particulars Setting</h2>
-										<p>Some shitty explaination what the hell is going on</p>
-=======
 										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Particulars Setting</h2>
 										<p>List all your item needed to the corresponding fields.</p>
->>>>>>> denver
 
 												<div class="">
 													<div class="add-project" id="popOver" data-trigger="hover" title="Friendly Reminder" data-placement="left" data-content="It seems that you're a bit confused here 🤔 that I catch your attention. Cheer up‼ Cause we're here to guide you. 😉👌 Click on the button to proceed 👉">											
@@ -268,44 +227,19 @@
 											<div class="col-lg-12" >
 												<h1>No Lots Set.</h1>
 											</div>
-<<<<<<< HEAD
-=======
 											<div class="col-lg-12">
 												<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
 											</div>											
->>>>>>> denver
 										</div>
 									</div>
 								</div>
 								<div id="tab-3" class="tab-pane">
 									<div class="panel-body">
-<<<<<<< HEAD
-										   <h2>Project Signatories</h2>
-=======
 										   <h2><a style="color:#2a9c97">Step 3 of  &nbsp3</a><br>Project Signatories</h2>
->>>>>>> denver
 
 											<p>Specify all signatories to finalized this form.</p>
 											
 											<div class="row">
-<<<<<<< HEAD
-												<div class="col-lg-7">
-													<div class="form-group">
-														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="<?php echo $user->fullname();?>" class="form-control" disabled form="jo_form" required>
-													</div>
-													<div class="form-group">
-														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text"  class="form-control" form="jo_form" required>
-													</div>
-													<div class="form-group">
-														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text"  class="form-control" form="jo_form" required>
-													</div>
-													<div class="form-group">
-														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text"  class="form-control" form="jo_form">
-=======
 											<?php
 												$enduserData = $user->get('enduser', array('edr_id', '=', $user->data()->account_id));
 												$enduserUnitData = $user->get('units', array('ID', '=', $enduserData->edr_designated_office));
@@ -336,7 +270,6 @@
 													<div class="form-group">
 														<label>Aproved By *</label>
 														<input id="approved" name="approved" type="text" value="<?php echo $signatories['approving'];?>" class="form-control" form="jo_form" readonly>
->>>>>>> denver
 														<input type="text" name="rowCount" readonly form="jo_form" hidden required>
 														<input type="text" name="joToken" readonly hidden value="<?php echo Token::generate("joToken");?>" required form="jo_form">
 													</div>													
@@ -350,11 +283,7 @@
 												</div>	
 												<div class="col-md-7">
 													<button class="btn btn-primary btn-outline pull-right" type="submit" form="jo_form">Finish</button>
-<<<<<<< HEAD
-													<button class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button>													
-=======
 													<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
->>>>>>> denver
 												</div>
 											</div>											
 									</div>
@@ -380,52 +309,6 @@
 
     <script>
         $(document).ready(function(){
-<<<<<<< HEAD
-
-			$('#lot').on('change', function()
-			{
-				var lots = this.value;
-				var obj = [];
-				$('#wf-stp-2').html('');
-				for(let i = 0 ; i < lots ; i++)
-				{
-					obj.push({tag: 0});
-					var tmp_lot = `
-					<div class="col-lg-6">
-						<div class="ibox" style="border: 1px solid rgba(28,110,164,0.63); padding:20px">
-							<div class="alert alert-info">
-								<center><h5>Lot Number ${i + 1}</h5></center>
-								
-							</div>
-							<div class="ibox-content" id="lot-${i}" style="-webkit-box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);-moz-box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);box-shadow: -1px 4px 9px 0px rgba(0,0,0,0.66);">
-							
-							<div class="form-group">
-								<label>Lot Title *</label>
-								<input type="text" class="form-control" name="L${i}-title" form="jo_form" required>
-								<label>Estimated Cost *</label>
-								<input type="number" class="form-control" name="L${i}-ELC" form="jo_form" required>								
-							</div>
-							<hr style="	height: 10px; border: 0; box-shadow: 0 10px 10px -10px #8c8b8b inset;">
-							
-	
-								<div>
-									<br>
-									<p class="font-bold">List Name: </p>
-									<input type="text" name="L${i}-listname-0" class="form-control" form="jo_form" required>
-									<br>
-									<p class="font-bold">&#128204; Tags:</p>
-									<input class="form-control" name="L${i}-tags-0" id="lot-${i}-tag-0" data-role="tagsinput" form="jo_form">
-									<br>
-								</div>
-							</div><br>
-
-							<div class="form-group">
-								<label>Note</label>					
-								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form"></textarea>							
-							</div>							
-							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
-
-=======
 
 			$('[data="tab"]').on('click', function(){
 				var tab = $(this).attr("id").split("-");
@@ -478,40 +361,8 @@
 								<textarea placeholder="Some text" class="form-control" name="L${i}-note" form="jo_form"></textarea>							
 							</div>							
 							<button class="btn btn-primary btn-rounded pull-right" data-type="btn" data-tag="lot-${i}" type="button"><span class="bold">Add List&nbsp;&nbsp;</span><i class="ti-plus"></i></button><br>
->>>>>>> denver
 
-							
-						</div>
-					</div>`;
-					$(`#wf-stp-2`).append(tmp_lot);
-					$(`#lot-${i}-tag-0`).tagsinput();
-				}
-				$('[name="rowCount"]').val(JSON.stringify(obj));
 
-				$('[data-type="btn"]').on('click', function()
-				{
-					var num = $(this).attr("data-tag").split("-");
-					obj[num[1]].tag++;
-					var tg_num = obj[num[1]].tag;
-					var list_tmp = `
-					<div>
-						<br><hr style="	height: 6px; background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;border: 0;">
-						<p class="font-bold">List Name: </p>
-						<input type="text" name="L${num[1]}-listname-${tg_num}" class="form-control" form="jo_form" required>
-						<br>
-						<p class="font-bold">&#128204; Tags:</p>
-						<input class="form-control" name="L${num[1]}-tags-${tg_num}" id="lot-${num[1]}-tag-${tg_num}" data-role="tagsinput" form="jo_form">
-						<br>
-					<div>`;
-					$(`#${num[0]}-${num[1]}`).append(list_tmp);
-					$(`#lot-${num[1]}-tag-${tg_num}`).tagsinput();
-					$('[name="rowCount"]').val(JSON.stringify(obj));
-				});
-			});
-		});
-
-<<<<<<< HEAD
-=======
 							
 						</div>
 					</div>`;
@@ -542,7 +393,6 @@
 			});
 		});
 
->>>>>>> denver
     </script>
 
 

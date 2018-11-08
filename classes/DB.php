@@ -41,14 +41,6 @@
                     }
 				}
 
-<<<<<<< HEAD
-                if ($this->query->execute()) {
-                    $this->results = $this->query->fetchAll(PDO::FETCH_OBJ);
-                    $this->count = $this->query->rowCount();
-                }else{
-                    $this->error = true;
-                }
-=======
 				$statement =  substr($sql, 0, 6);
 				if($statement == "SELECT"){	//this resolves the problem caught in the PDOException related to using fetchAll unnecessarily
 					if ($this->query->execute()){ //this return errors when executing insert or update becase this fetches data based on the query while on the other hand you have nothing to fetch when your query is insert or update
@@ -66,7 +58,6 @@
 				}
 				
 
->>>>>>> denver
     
                 return $this;
             }
@@ -161,17 +152,11 @@
 
 
 
+
 		public function startTrans(){
 			return $this->pdo->beginTransaction();
 		}
 
-<<<<<<< HEAD
-=======
-		public function startTrans(){
-			return $this->pdo->beginTransaction();
-		}
-
->>>>>>> denver
 		public function endTrans(){
 			return $this->pdo->commit();
 		}

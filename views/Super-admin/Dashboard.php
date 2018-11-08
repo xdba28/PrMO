@@ -11,72 +11,6 @@
         die();
     }
 
-<<<<<<< HEAD
-	/* This is for the validator modal admin level */
-	$user = new Admin();
-	$data = $user->userData(Session::get(Config::get('session/session_name')));
-	$myArray = array('default');
-	foreach($data as $element => $val){
-		array_push($myArray, $val);
-	}
-
-	$commonFields =  "'". implode("', '", $myArray) ."'";
-
-	if(Input::exists()){
-        if(Token::check("passwordToken", Input::get('passwordToken'))){
-
-            $validate = new Validate();
-
-            $validation = $validate->check($_POST, array(
-                    'new_username' => [
-                        'required' => true,
-                        'unique' => 'edr_account',
-                        'unique' => 'prnl_account'
-                    ],
-                    'new_password' => [
-                        'required' => true
-                    ],
-                    'password_again' => [
-                        'matches' => 'new_password'
-                    ]
-            ));
-
-            if($validation->passed()){
-                $user = new User();
-                $salt = Hash::salt(32);
-                $ID = Session::get(Config::get('session/session_name'));
-
-                try{
-                    if($user->update('prnl_account', 'account_id', $ID, array(
-                        'newAccount' => 0,
-                        'username' => Input::get('new_username'),
-                        'salt' => $salt,
-                        'userpassword' => Hash::make(Input::get('new_password'), $salt)
-                        
-                        ))){
-                        Session::delete("accounttype");
-                        Session::put("accounttype", 0);
-                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
-                        $user->logout();
-                        Redirect::To('../../blyte/acc3ss');
-                    }
-                }catch(Exception $e){
-                    die($e->getMessage());
-                }
-                
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
-            }
-        }
-    }
-
-
-?>
-
-
-=======
         /* This is for the validator modal admin level */
         $user = new Admin();
         $data = $user->userData(Session::get(Config::get('session/session_name')));
@@ -139,7 +73,6 @@
 ?>
 
 
->>>>>>> denver
 <!DOCTYPE html>
 <html>
 
@@ -197,14 +130,6 @@
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
                 <div class="middle-box text-center animated fadeInRightBig">
-<<<<<<< HEAD
-                    <h3 class="font-bold">This is page content</h3>
-                    <div class="error-desc">
-                        You can create here any grid layout you want. And any variation layout you imagine:) Check out
-                        main dashboard and other site. It use many different layout.
-                        <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
-                    </div>
-=======
 									<!-- start accordion -->
 									<div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
 									  <div class="panel">
@@ -282,7 +207,6 @@
 									  </div>
 									</div>
 									<!-- end of accordion -->
->>>>>>> denver
                 </div>
             </div>
 			<!-- Main Content End -->
@@ -294,16 +218,9 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-	<?php include_once '../../includes/parts/admin_scripts.php'; ?>
-
-	<!-- Password meter -->
-<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-=======
 	<?php include_once'../../includes/parts/admin_scripts.php'; ?>
 	<!-- Password meter -->
 	<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
->>>>>>> denver
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
 	<script>	
 		$(document).ready(function(){
@@ -315,44 +232,10 @@
                     progress: ".pwstrength_viewport_progress4",
                     verdict: ".pwstrength_viewport_verdict4"
                 }
-<<<<<<< HEAD
             };
 
             options4.common = {
 
-				
-                zxcvbn: true,
-                zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php echo $commonFields;?>],
-                userInputs: ['#year', '#new_username']
-=======
->>>>>>> denver
-            };
-            $('.example4').pwstrength(options4);
-
-			
-			//password valide
-			var password = document.getElementById("new_password")
-			  , confirm_password = document.getElementById("password_again");
-
-			function validatePassword(){
-			  if(password.value != confirm_password.value) {
-				confirm_password.setCustomValidity("Passwords Don't Match");
-			  } else {
-				confirm_password.setCustomValidity('');
-			  }
-			}
-
-			password.onchange = validatePassword;
-			confirm_password.onkeyup = validatePassword;						
-			
-		})
-	
-	</script>
-
-            options4.common = {
-
-<<<<<<< HEAD
-=======
                 zxcvbn: true,
 				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
 					if(isset($commonFields)) echo $commonFields;
@@ -383,7 +266,6 @@
 		})
 	
 	</script>
->>>>>>> denver
 
 </body>
 

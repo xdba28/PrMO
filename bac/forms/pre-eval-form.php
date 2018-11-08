@@ -103,7 +103,7 @@ foreach($refno as $ref){
 	$p = $p.$ref."\n";
 }
 
-$table->addCell(1700, ['vMerge' => 'restart'])->addText("Reference No.\n\n".$p);
+$table->addCell(1700, ['vMerge' => 'restart'])->addText(htmlspecialchars("Reference No.\n\n".$p));
 $table->addCell(3000)->addText("Goods    Civil Words  ", null, $c);
 $table->addCell(1300)->addText("Consultancy");
 $table->addCell(5000, ['gridSpan' => 2])->addText("Mode of Procurement", null, $c);

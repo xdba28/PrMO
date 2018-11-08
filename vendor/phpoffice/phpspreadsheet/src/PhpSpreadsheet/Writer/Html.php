@@ -344,14 +344,6 @@ class Html extends BaseWriter
      */
     public function generateHTMLHeader($pIncludeStyles = false)
     {
-<<<<<<< HEAD
-        // Spreadsheet object known?
-        if ($this->spreadsheet === null) {
-            throw new WriterException('Internal Spreadsheet object not set to an instance of an object.');
-        }
-
-=======
->>>>>>> denver
         // Construct HTML
         $properties = $this->spreadsheet->getProperties();
         $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">' . PHP_EOL;
@@ -407,14 +399,6 @@ class Html extends BaseWriter
      */
     public function generateSheetData()
     {
-<<<<<<< HEAD
-        // Spreadsheet object known?
-        if ($this->spreadsheet === null) {
-            throw new WriterException('Internal Spreadsheet object not set to an instance of an object.');
-        }
-
-=======
->>>>>>> denver
         // Ensure that Spans have been calculated?
         if ($this->sheetIndex !== null || !$this->spansAreCalculated) {
             $this->calculateSpans();
@@ -531,14 +515,6 @@ class Html extends BaseWriter
      */
     public function generateNavigation()
     {
-<<<<<<< HEAD
-        // Spreadsheet object known?
-        if ($this->spreadsheet === null) {
-            throw new WriterException('Internal Spreadsheet object not set to an instance of an object.');
-        }
-
-=======
->>>>>>> denver
         // Fetch sheets
         $sheets = [];
         if ($this->sheetIndex === null) {
@@ -765,14 +741,6 @@ class Html extends BaseWriter
      */
     public function generateStyles($generateSurroundingHTML = true)
     {
-<<<<<<< HEAD
-        // Spreadsheet object known?
-        if ($this->spreadsheet === null) {
-            throw new WriterException('Internal Spreadsheet object not set to an instance of an object.');
-        }
-
-=======
->>>>>>> denver
         // Build CSS
         $css = $this->buildCSS($generateSurroundingHTML);
 
@@ -812,14 +780,6 @@ class Html extends BaseWriter
      */
     public function buildCSS($generateSurroundingHTML = true)
     {
-<<<<<<< HEAD
-        // Spreadsheet object known?
-        if ($this->spreadsheet === null) {
-            throw new WriterException('Internal Spreadsheet object not set to an instance of an object.');
-        }
-
-=======
->>>>>>> denver
         // Cached?
         if ($this->cssStyles !== null) {
             return $this->cssStyles;
