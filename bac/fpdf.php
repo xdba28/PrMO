@@ -17,25 +17,30 @@ class PDF extends FPDF
 	}
 }
 
-$pdf = new PDF("P", "mm", "A4");
-$pdf->AliasNbPages();
-$pdf->AddPage();
+// $pdf = new PDF("P", "mm", "A4");
+// $pdf->AliasNbPages();
+// $pdf->AddPage();
 
-$pdf->SetFont("Arial", "B", 12);
-$pdf->Cell(0, 5, "Job Order", 0, 1, "C");
-// $pdf->Ln(18);
-
-$pdf->SetFont("Arial", "", 11);
-$pdf->Cell(0, 9, "Title:", 0, 0, "C");
-$pdf->Ln(15);
+// $pdf->SetFont("Arial", "B", 12);
+// $pdf->Cell(0, 5, "Job Order", 0, 1, "C");
+// // $pdf->Ln(18);
 
 // $pdf->SetFont("Arial", "", 11);
-$pdf->Write(0, "Provision of catering services during the pre- orientation for all College/Program departments deputized to offer respective degrees through ETEEAP on August 16, 2018 @GASS Conference Room");
-// $pdf->Ln(10);
+// $pdf->Cell(0, 9, "Title:", 0, 0, "C");
+// $pdf->Ln(15);
+
+// // $pdf->SetFont("Arial", "", 11);
+// $pdf->Write(0, "Provision of catering services during the pre- orientation for all College/Program departments deputized to offer respective degrees through ETEEAP on August 16, 2018 @GASS Conference Room");
+// // $pdf->Ln(10);
 
 // $pdf->Cell(40, 10, "Hello Word", 0, 1);
 // $pdf->Cell(40, 10, "Hello Word", 0, 1);
 
-$pdf->Output();
 
+$_ = new PDF("P", "mm", "A4");
+$_->AddPage();
+$_->SetFont('Arial', 'b', 16);
+$_->Cell(40, 10, 'Hello World!', 1);
+
+$_->Output();
 ?>

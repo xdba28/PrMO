@@ -100,7 +100,7 @@ require_once "../../functions/account-verifier.php";
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
 <script>
-	var audio = new Audio('../../assets/audio/definite.mp3');
+	const audio = new Audio('../../assets/audio/definite.mp3');
 	
 	$(function(){
 		// Enable pusher logging - don't include this in production

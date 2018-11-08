@@ -311,6 +311,16 @@
 			return $notif;
 		}
 
+		// modal pre procurement evaluation registration
+		public function checkProjectIssue($id){
+			if($this->db->query_builder("SELECT remarks FROM project_logs 
+			WHERE remarks LIKE '%ISSUE%' AND referencing_to = '{$id}'")){
+				return $this->db->results();
+			}else{
+				return false;
+			}
+		}
+
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
 				throw new Exception('There was a problem registering data', 1);

@@ -100,7 +100,7 @@ require_once "../../functions/account-verifier.php";
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
 <script>
-	var audio = new Audio('../../assets/audio/definite.mp3');
+	const audio = new Audio('../../assets/audio/definite.mp3');
 
 	$(function(){
 		// Enable pusher logging - don't include this in production
@@ -321,10 +321,10 @@ require_once "../../functions/account-verifier.php";
 					ref:reference
 				}, {
 					do:function(res){
-						var availableActions = res.fetchedResult;
-						var classtype = "";
-						var icon = "";
-						var cardAction = "";
+						let availableActions = res.fetchedResult;
+						let classtype = "";
+						let icon = "";
+						let cardAction = "";
 
 						for(let i of availableActions){
 
@@ -365,6 +365,29 @@ require_once "../../functions/account-verifier.php";
 									</div>
 								</div>
 							</a>`;
+							if(res.issue){
+								$('[dataFor="pre-proc-eval-issue"]').html(`
+								<div class="radio radio-danger" style="padding-left:5px">
+									<input type="radio" name="issue_again" id="radio1" value="option1">
+									<label for="radio1" class="text-warning">
+										Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
+									</label>
+								</div>
+								<div class="radio radio-info" style="padding-left:5px">
+									<input type="radio" name="resolution" id="radio2" value="option2">
+									<label for="radio2" class="text-info">
+										Check this if this evaluation is a resolution from the previous evaluation issue.
+									</label>
+								</div>`);
+							}else{
+								$('[dataFor="pre-proc-eval-issue"]').html(`
+								<div class="checkbox checkbox-danger" style="padding-left:5px">
+									<input id="checkbox1" type="checkbox" name="issue">
+									<label for="checkbox1" class="text-warning font-italic">
+										Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
+									</label>
+								</div>`);
+							}
 						}
 						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
 					}
@@ -384,11 +407,6 @@ require_once "../../functions/account-verifier.php";
 				//modal.find('.modal-body input').val(reference);
 				document.getElementById("projectReference").value = reference;
 			});
-
-			function ModalSubmit(id){
-				var DataModal = $(id).serialize();
-				console.log(DataModal);
-			}
 		
 			
 			//outgoing documents table collapse all div
