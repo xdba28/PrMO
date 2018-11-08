@@ -41,8 +41,6 @@
 
     }
 	
-
-	
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,6 +50,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+	<link rel="shortcut icon" href="assets/pics/flaticons/men.png" type="image/x-icon">
     <title>PrMO OPPTS | Login</title>
 
 
@@ -96,10 +95,16 @@
                 <div class="ibox-content">
 					
 					<?php
-						if(Session::exists('Loggedout')){		
+						if(Session::exists('accountUpdated')){
+							echo '<center><h2>'.Session::flash('accountUpdated').'</h2></center>';
+						}else if(Session::exists('Loggedout')){		
                             echo '<center><h2>'.Session::flash('Loggedout').'</h2></center>';
                         }
+<<<<<<< HEAD
 						if(Session::exists('incorrect')){		
+=======
+						else if(Session::exists('incorrect')){		
+>>>>>>> denver
                             echo '<center><h4>'.Session::flash('incorrect').'</h4></center>';
                         }
 					?>
@@ -127,7 +132,7 @@
                         <p class="text-muted text-center">
                             <small>Do not have an account?</small>
                         </p>
-                        <a class="btn btn-sm btn-white btn-block" href="register.php">Request an account</a>
+                        <a class="btn btn-sm btn-white btn-block" href="register">Request an account</a>
                     </form>
                     <?php
 						if(Session::exists('request_success')){		
@@ -193,4 +198,3 @@
 </body>
 
 </html>
-

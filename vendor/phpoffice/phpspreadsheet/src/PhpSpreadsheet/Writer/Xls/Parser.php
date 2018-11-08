@@ -3,6 +3,10 @@
 namespace PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
+<<<<<<< HEAD
+=======
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet as PhpspreadsheetWorksheet;
+>>>>>>> denver
 use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
 
 // Original file header of PEAR::Spreadsheet_Excel_Writer_Parser (used as the base for this class):
@@ -643,7 +647,11 @@ class Parser
     private function convertRange3d($token)
     {
         // Split the ref at the ! symbol
+<<<<<<< HEAD
         list($ext_ref, $range) = explode('!', $token);
+=======
+        list($ext_ref, $range) = PhpspreadsheetWorksheet::extractSheetTitle($token, true);
+>>>>>>> denver
 
         // Convert the external reference part (different for BIFF8)
         $ext_ref = $this->getRefIndex($ext_ref);
@@ -695,7 +703,11 @@ class Parser
     private function convertRef3d($cell)
     {
         // Split the ref at the ! symbol
+<<<<<<< HEAD
         list($ext_ref, $cell) = explode('!', $cell);
+=======
+        list($ext_ref, $cell) = PhpspreadsheetWorksheet::extractSheetTitle($cell, true);
+>>>>>>> denver
 
         // Convert the external reference part (different for BIFF8)
         $ext_ref = $this->getRefIndex($ext_ref);

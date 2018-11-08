@@ -23,7 +23,11 @@ class Autoloader
             spl_autoload_register('__autoload');
         }
         //    Register ourselves with SPL
+<<<<<<< HEAD
         return spl_autoload_register(['Complex\Autoloader', 'Load']);
+=======
+        return spl_autoload_register(['Complex\\Autoloader', 'Load']);
+>>>>>>> denver
     }
 
 
@@ -41,7 +45,11 @@ class Autoloader
 
         $pClassFilePath = __DIR__ . DIRECTORY_SEPARATOR .
                           'src' . DIRECTORY_SEPARATOR .
+<<<<<<< HEAD
                           str_replace('Complex\\', '', $pClassName) .
+=======
+                          str_replace(['Complex\\', '\\'], ['', '/'], $pClassName) .
+>>>>>>> denver
                           '.php';
 
         if ((file_exists($pClassFilePath) === false) || (is_readable($pClassFilePath) === false)) {

@@ -199,7 +199,25 @@
                     return $this->db->results();
                 }
             }
+<<<<<<< HEAD
         }   
+=======
+		}
+		
+		public function listNotification(){
+            $user = Session::get($this->sessionName);
+			$this->db->query_builder("SELECT message, datecreated, seen, href FROM notifications WHERE recipient = '{$user}' ORDER BY ID DESC");
+			$notifList = $this->db->results();
+			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
+			$nofitCount = $this->db->first();
+			$notif = [
+				'list' => $notifList,
+				'count' => $nofitCount
+			];
+			return $notif;
+		}
+
+>>>>>>> denver
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -228,11 +246,184 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
                     }
                    
+<<<<<<< HEAD
+=======
+					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title];
+					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
+                   
+                    return $json;
+                }
+
+            return false;
+		}
+		
+        public function fullnameOfEnduser($ID){ //for enduser use
+            $user = $ID;
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+                    }
+                   
+>>>>>>> denver
                     return $fullname;
                 }
 
             return false;
+<<<<<<< HEAD
         }
+=======
+		}
+
+		public function projectHistory($originRefno, $currentRefno){
+
+			$noOfOrigin = count($originRefno);
+
+			if($noOfOrigin > 1){
+					$imploded = implode("' OR referencing_to = '", $originRefno);
+					$filteredSql = "referencing_to ='" .$imploded. "'";
+			}else{
+				$filteredSql = "referencing_to = '{$originRefno[0]}'";
+			}
+
+			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
+			FROM `projects`, `project_logs`
+			WHERE $filteredSql OR
+			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
+			")){
+				return $this->db->results();
+			}
+
+			return false;
+		}
+
+		public function numberOfLots($refno){
+			if($this->db->query_builder("SELECT COUNT(lot_id) as 'numberOfLots', lot_no FROM
+			`lots` WHERE request_origin = '{$refno}'
+			GROUP BY request_origin")){
+				return $this->db->first();
+			}
+		}//for counting the number of lots
+
+		public function getContent($refno, $type, $lot){
+			if($type == "PR"){
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
+				FROM
+				`lots`, `lot_content_for_pr`
+				WHERE
+				lots.lot_id = lot_content_for_pr.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}else{
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot',  lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
+				FROM
+				`lots`, `lot_content_for_jo`
+				WHERE
+				lots.lot_id = lot_content_for_jo.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}
+		}//for fetching lot content
+
+
+		//used for PR and JO lots
+		public function updateLots($lot, $origin, $costNote){
+			if($this->db->query_builder("UPDATE lots SET lot_cost = '{$costNote[0]}', note = '{$costNote[1]}' WHERE request_origin = '{$origin}' AND lot_no = '{$lot}'")){
+				return true;
+			}
+			return false;
+		}
+
+		// used for recomputing PR lots costs
+		public function recompute($origin, $lot){
+			if($this->db->query_builder("SELECT 
+			SUM(total_cost) as 'recomputed_total'
+			
+			FROM 
+			`lots`, `lot_content_for_pr`
+			WHERE lot_content_for_pr.lot_id_origin = lots.lot_id AND
+			lot_no = '{$lot}' AND request_origin = '{$origin}'")){
+				return $this->db->first()->recomputed_total;
+			}
+			return false;
+		}
+
+		public function myRequests($user, $registered = false){
+
+			if($registered){
+				if($this->db->query_builder("SELECT form_ref_no, title, type, date_created, COUNT(lots.lot_id) as 'number_of_lots'
+				FROM project_request_forms, lots
+				WHERE 
+				project_request_forms.form_ref_no = lots.request_origin AND
+				EXISTS
+				(SELECT * FROM `project_logs` WHERE project_request_forms.form_ref_no = project_logs.referencing_to AND remarks = 'START_PROJECT') AND requested_by ='{$user}'
+				
+				GROUP BY request_origin")){
+					return $this->db->results();
+				}
+			}else{
+				if($this->db->query_builder("SELECT form_ref_no, title, type, date_created, COUNT(lots.lot_id) as 'number_of_lots'
+				FROM project_request_forms, lots
+				WHERE 
+				project_request_forms.form_ref_no = lots.request_origin AND
+				NOT EXISTS
+				(SELECT * FROM `project_logs` WHERE project_request_forms.form_ref_no = project_logs.referencing_to AND remarks = 'START_PROJECT') AND requested_by ='{$user}'
+				
+				GROUP BY request_origin")){
+					return $this->db->results();
+				}
+			}
+
+
+		}
+
+		//this is to determine if a request form is already registered as a project and in the TWG evaluation stage alredy
+		public function isEvaluated($ID){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'isProject' FROM `projects` WHERE request_origin LIKE '%{$ID}%'")){
+				if(($this->db->first()->isProject > 0) && ($this->db->first()->accomplished > 2)) {
+					//greater than 2 means this project already surpassed the step 2 which is finalization of technical members verdict
+					return true;
+				}
+				return false;
+			}
+		}
+
+		//project details important updates
+		public function importantUpdates($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}
+
+		public function logLastUpdated($ID){ //to get the data when the last update of the project
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' ORDER BY logdate DESC LIMIT 1")){
+				return $this->db->first();
+			}
+		}
+		
+		public function like($table, $column, $particular){
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE $column LIKE '{$particular}'")){
+				return $this->db->results();
+			}
+		}
+>>>>>>> denver
 
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
@@ -240,11 +431,47 @@
                 return false;
             }
             return true;
+<<<<<<< HEAD
         }   
 
         public function exist(){
             return (!empty($this->data)) ? true : false;
         }    
+=======
+		}
+
+		public function selectAll($table){
+            if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
+                return $this->db->results();
+            }
+		}		
+
+		public function get($table, $where){	
+			if($this->db->get($table, $where)){
+				return $this->db->first();
+			}
+			return false;
+		}		
+		
+		public function getAll($table, $where){	
+			if($this->db->get($table, $where)){
+				return $this->db->results();
+			}
+			return false;
+		}
+
+        public function exist(){
+            return (!empty($this->data)) ? true : false;
+		}    
+		
+		public function startTrans(){
+			$this->db->startTrans();
+		}
+
+		public function endTrans(){
+			$this->db->endTrans();
+		}		
+>>>>>>> denver
 
         public function data(){
             return $this->data;

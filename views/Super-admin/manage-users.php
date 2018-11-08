@@ -16,7 +16,11 @@
     $PersonnelInfo = $sa->personnels();
 	
 	if(Input::exists()){
+<<<<<<< HEAD
 		if(Token::check("manageUserToken", Input::get('manageUserToken'))){
+=======
+		if(Token::check('updateInfoToken', Input::get('updateInfoToken'))){
+>>>>>>> denver
 			
 			$sa = new Super_admin();
             $ID = $_GET['q'];
@@ -45,10 +49,17 @@
 
                 ));
 
+<<<<<<< HEAD
                 //create flash "Personnel Info Successfuly Updated"
 				//assign this flash to toust
 				
 				Session::flash("PersonnelInfo", "Successfully updated personnel information");
+=======
+
+				Session::flash("PersUpdate", "Successfully updated personnel information");
+                //create flash "Personnel Info Successfuly Updated"
+                //assign this flash to toust
+>>>>>>> denver
 				
 				
 			}catch(Exception $e){
@@ -72,9 +83,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>INSPINIA | Dashboard v.3</title>
+<<<<<<< HEAD
 	<?php include "../../includes/parts/admin_styles.php"?>
 	<script>
 		var personnelUpdate = '<?php if(Session::exists("PersonnelInfo")) Session::flash("PersonnelInfo");?>';
+=======
+	<?php include "../../includes/parts/admin_styles.php";?>
+	<script>
+		var PersUpdate = '<?php 
+		if(Session::exists("PersUpdate")) Session::flash("PersUpdate");
+		else echo "";
+		?>';
+>>>>>>> denver
 	</script>
 
 </head>
@@ -116,7 +136,11 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div class="wrapper wrapper-content animated fadeInRight">
+=======
+            <div class="wrapper wrapper-content animated fadeInUp">
+>>>>>>> denver
 			
 			<?php
 				if(isset($_GET['q'])){
@@ -125,12 +149,18 @@
                 $name = $personnel->fullnameOF($_GET['q']);
                 $data = $personnel->personnelData($_GET['q']);
 				
+<<<<<<< HEAD
 				//echo '<pre>',print_r($data),'</pre>';
 				//die();
 				
 
 			?>
             <div class="row animated fadeInRight">
+=======
+
+			?>
+            <div class="row">
+>>>>>>> denver
                 <div class="col-md-4">
                     <div class="ibox ">
                         <div class="ibox-title">
@@ -175,6 +205,7 @@
                                         <h5><strong>240</strong> Followers</h5>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <div class="user-button">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -185,6 +216,8 @@
                                         </div>
                                     </div>
                                 </div>
+=======
+>>>>>>> denver
                             </div>
 						</div>
 					</div>
@@ -228,7 +261,11 @@
 												</select>
 											</div>							
 											<div class="form-group"><label>Account Status</label> <input type="text" value="<?php echo $data->status;?>" disabled class="form-control"></div> 
+<<<<<<< HEAD
 											<input type="text" name="manageUserToken" value="<?php echo Token::generate("manageUserToken");?>" hidden readonly>
+=======
+											<input type="text" name="updateInfoToken" value="<?php echo Token::generate('updateInfoToken');?>" hidden readonly>
+>>>>>>> denver
 										</form>		
 									</div>	
 									<div class="col-lg-12">
@@ -507,6 +544,7 @@
 
 	<?php include "../../includes/parts/admin_scripts.php"?>
 
+<<<<<<< HEAD
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
@@ -529,4 +567,24 @@
 
     </script>
 </body>
+=======
+</body>
+
+	<script>
+		$(function()
+		{
+			if(PersUpdate !== "")
+			{
+				swal({
+					title: PersUpdate,
+					text: "",
+					confirmButtonColor: "#DD6B55",
+					type: 'success',
+					timer: 13000
+				});
+			}
+		});
+	</script>
+
+>>>>>>> denver
 </html>

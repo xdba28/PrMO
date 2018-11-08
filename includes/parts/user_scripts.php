@@ -83,6 +83,7 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+<<<<<<< HEAD
 
 <!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
@@ -93,10 +94,127 @@ require_once "../../functions/account-verifier.php";
 
 <!-- Sweet Alert -->
 <script src="../../assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+=======
+<!-- Password meter -->
+<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+<!-- dataTables -->
+<script src="../../assets/js/plugins/dataTables/datatables.min.js"></script>
+<script src="../../assets/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Notification -->
+<script src="../../assets/js/pusher.min.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../../assets/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+<!-- Always Set Last -->
+<!-- Denver's Custom JS -->
+<script src="../../includes/js/custom.js"></script>
+<script>
+	const audio = new Audio('../../assets/audio/definite.mp3');
+	
+	$(function(){
+		// Enable pusher logging - don't include this in production
+		// Pusher.logToConsole = true;
+
+		var Notif = new Pusher('6afb55a56f2b4a235c4b', {
+			cluster: 'ap1',
+			forceTLS: true
+		});
+
+		var Notif_channel = Notif.subscribe('notif');
+		Notif_channel.bind('update', function(data){
+			let msg = JSON.parse(data);
+			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+				$('#message').remove();
+				$('#NotifCount').show();
+				let NotifCount = document.getElementById('NotifCount');
+				if(NotifCount.innerText === ''){
+					NotifCount.innerText = 1;
+				}else{
+					let add = parseFloat(NotifCount.innerText) + 1;
+					NotifCount.innerText = (add).toFixed(0);
+				}
+				
+				if(typeof msg.href !== 'undefined'){
+					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
+					<li class="dropdown-divider"></li>`);
+				}else{
+					$('#NotifList').prepend(`<li class="active"><a href="#" class="dropdown-item"><div>
+					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
+					<li class="dropdown-divider"></li>`);
+				}
+
+				audio.play();
+				toastr.options = {
+					"progressBar": true,
+					"preventDuplicates": false,
+					"showDuration": "400",
+					"hideDuration": "1000",
+					"timeOut": "6000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				toastr.info(msg.date, msg.message);
+			}
+		});
+
+		$('#NotifClick').on('click', function(){
+			SendDoSomething("POST", "../xhr-files/xhr-notif-update.php", {
+				id: $('meta[name="auth"]').attr('content')
+			}, {
+				do: function(res){
+					if(res.success){
+						$('#NotifCount').hide();
+						document.getElementById('NotifCount').innerText = '';
+					}
+				}
+			}, false, {
+				f: function(){
+					
+				}
+			});
+		});
+
+		$('#NotifClick').focusout(function(){
+			setTimeout(function(){
+				$('#NotifList li.active').removeClass('active');
+			}, 300);
+		});
+
+	});
+</script>
+>>>>>>> denver
 
 
 <script>
     $(document).ready(function(){
+<<<<<<< HEAD
+=======
+		// side nav active		
+		var path = window.location.pathname.split("/");
+		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+		var sLink = ['Dashboard'];
+		switch (path[path.length - 1]){
+			case sLink.find(function(el){
+				return path[path.length - 1] === el
+			}):
+				link.parentNode.setAttribute("class", "active");
+				break;
+			default:
+				link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+				link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+				link.parentNode.setAttribute("class", "active");
+				break;
+		}
+
+
+>>>>>>> denver
         $("#wizard").steps();
         $("#form").steps({
             bodyTag: "fieldset",
@@ -558,10 +676,19 @@ require_once "../../functions/account-verifier.php";
 			$('#popOver').popover();
 			$('#popOver1').popover();
 			$('#popOver2').popover();
+<<<<<<< HEAD
 
 			if(newuser == true){
 				$('#new-user-modal').modal('show');
 				
+=======
+			$('.footable').footable();
+            $('.footable2').footable();
+
+
+			if(newuser == true){
+				$('#new-user-modal').modal('show');	
+>>>>>>> denver
 			}     
             
             $('input').focus(function(){
@@ -587,6 +714,7 @@ require_once "../../functions/account-verifier.php";
                     verdict: ".pwstrength_viewport_verdict4"
                 }
             };
+<<<<<<< HEAD
             options4.common = {
 				
 				<?php
@@ -595,6 +723,19 @@ require_once "../../functions/account-verifier.php";
 				
                 zxcvbn: true,
                 zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku'],
+=======
+
+            options4.common = {
+
+				
+                zxcvbn: true,
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php 
+					if(isset($commonFields)) echo $commonFields;
+					else{
+						echo  $commonFields = '';
+					}
+				?>],
+>>>>>>> denver
                 userInputs: ['#year', '#new_username']
             };
             $('.example4').pwstrength(options4);
@@ -619,4 +760,40 @@ require_once "../../functions/account-verifier.php";
 			
 		});
 
+<<<<<<< HEAD
 	</script>	
+=======
+	</script>	
+
+	<script>
+// Back to top
+var amountScrolled = 200;
+var amountScrolledNav = 25;
+
+$(window).scroll(function() {
+  if ( $(window).scrollTop() > amountScrolled ) {
+    $('button.back-to-top').addClass('show');
+  } else {
+    $('button.back-to-top').removeClass('show');
+  }
+});
+
+$('button.back-to-top').click(function() {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+// Ignore this
+// This is just for content manipulation
+var skeleton = '<div class="skeleton"><div class="skeleton-wrapper"><div class="skeleton-wrapper-inner"><div class="skeleton-wrapper-body"><div class="skeleton-avatar"></div><div class="skeleton-author"></div><div class="skeleton-label"></div><div class="skeleton-content-1"></div><div class="skeleton-content-2"></div><div class="skeleton-content-3"></div></div></div></div></div>';
+for(var i=0;i<10;i++){
+  $('#content').append(skeleton); 
+}
+
+// Add waves effect
+Waves.attach('button.back-to-top', 'waves-effect');
+Waves.init();
+</script>
+>>>>>>> denver

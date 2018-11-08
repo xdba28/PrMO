@@ -4,6 +4,7 @@
 
 namespace Composer\Autoload;
 
+<<<<<<< HEAD
 class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
 {
     public static $files = array (
@@ -11,6 +12,11 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         '6b06ce8ccf69c43a60a1e48495a034c9' => __DIR__ . '/..' . '/react/promise-timer/src/functions.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+=======
+class ComposerStaticInite2042d15309cbf4411d5f062a7fcd32e
+{
+    public static $files = array (
+>>>>>>> denver
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
         '21a5860fbef5be28db5ddfbc3cca67c4' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acos.php',
         '1546e3f9d127f2a9bb2d1b6c31c26ef1' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/acosh.php',
@@ -53,6 +59,10 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         '883af48563631547925fa4c3b48ead07' => __DIR__ . '/..' . '/markbaker/complex/classes/src/operations/multiply.php',
         'f190e3308e6ca23234a2875edc985c03' => __DIR__ . '/..' . '/markbaker/complex/classes/src/operations/divideby.php',
         'ac9e33ce6841aa5bf5d16d465a2f03a7' => __DIR__ . '/..' . '/markbaker/complex/classes/src/operations/divideinto.php',
+<<<<<<< HEAD
+=======
+        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
+>>>>>>> denver
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -60,6 +70,7 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             'Zend\\Escaper\\' => 13,
         ),
+<<<<<<< HEAD
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -82,10 +93,18 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
+=======
+        'P' => 
+        array (
+            'Pusher\\' => 7,
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
+>>>>>>> denver
             'PhpOffice\\PhpWord\\' => 18,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PhpOffice\\Common\\' => 17,
         ),
+<<<<<<< HEAD
         'M' => 
         array (
             'MyApp\\' => 6,
@@ -94,6 +113,8 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             'GuzzleHttp\\Psr7\\' => 16,
         ),
+=======
+>>>>>>> denver
         'C' => 
         array (
             'Complex\\' => 8,
@@ -105,6 +126,7 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
         ),
+<<<<<<< HEAD
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -152,14 +174,25 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         'Ratchet\\' => 
         array (
             0 => __DIR__ . '/..' . '/cboden/ratchet/src/Ratchet',
+=======
+        'Pusher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pusher/pusher-php-server/src',
+>>>>>>> denver
         ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
+<<<<<<< HEAD
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+=======
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+>>>>>>> denver
         ),
         'PhpOffice\\PhpWord\\' => 
         array (
@@ -173,6 +206,7 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
+<<<<<<< HEAD
         'MyApp\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -181,12 +215,15 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
+=======
+>>>>>>> denver
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
     );
 
+<<<<<<< HEAD
     public static $prefixesPsr0 = array (
         'E' => 
         array (
@@ -214,15 +251,26 @@ class ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce
         'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
         'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
         'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
+=======
+    public static $classMap = array (
+        'FPDF' => __DIR__ . '/..' . '/setasign/fpdf/fpdf.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
+>>>>>>> denver
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+<<<<<<< HEAD
             $loader->prefixLengthsPsr4 = ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit42a4bcc26ef48a77e395e60cd5be19ce::$classMap;
+=======
+            $loader->prefixLengthsPsr4 = ComposerStaticInite2042d15309cbf4411d5f062a7fcd32e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite2042d15309cbf4411d5f062a7fcd32e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite2042d15309cbf4411d5f062a7fcd32e::$classMap;
+>>>>>>> denver
 
         }, null, ClassLoader::class);
     }

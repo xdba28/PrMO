@@ -320,7 +320,11 @@ class OLE
 
                     break;
                 default:
+<<<<<<< HEAD
                     continue;
+=======
+                    break;
+>>>>>>> denver
             }
             fseek($fh, 1, SEEK_CUR);
             $pps->Type = $type;

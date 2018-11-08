@@ -5,11 +5,10 @@
 
     $units = $guest->AllUnits();
 
-
     if (Input::exists()){
-        if(Token::check(Input::get('token'))){
+		
+        if(Token::check('termsToken', Input::get('termsToken'))){
             //allow to submit the form
-
             $validate = new Validate();
             $validation = $validate->check($_POST, array(
 
@@ -57,11 +56,8 @@
 					'required' => true
 				]				
             ));
-    
             if($validation->passed()){
-
                 $salt = Hash::salt(32);
-
                 try{
 
                     $guest->request('account_requests', array(
@@ -76,10 +72,13 @@
                         'designation' => Input::get('unit'),
                         'username' => Input::get('userName'),
                         'userpassword' => Input::get('password'),
-						'submitted' => date('Y-m-d H:i:s')
+						'submitted' => date('Y-m-d H:i:s'),
+						'specific_office' => Input::get('specific_office'),
+						'job_title' => Input::get('jobtitle')
 
                     ));
                     
+				
                     Session::flash('request_success', 'Your requests has been successfuly submited.');
                     Redirect::To('index');
 
@@ -91,7 +90,8 @@
               foreach($validation->errors() as $error){
                   echo $error,'<br>';
               }
-        
+			  
+			  die("error");        
             }               
         }
             
@@ -186,52 +186,49 @@
         <div class="wrapper wrapper-content animated fadeInRight">
 
             <div class="row">
-                <div class="col-lg-12">
-				
+                     <div class="col-lg-12">
                     <div class="ibox">
-					
                         <div class="ibox-title">
                             <h5>Wizard with Validation</h5>
-
                         </div>
-						
                         <div class="ibox-content">
-						
                             <h2>
-                                Account Request Form
+                                 Account Request Form
                             </h2>
                             <p>
-                                Fill Up the fields with correct and accurate data.        
+                                Fill Up the fields with correct and accurate data.
                             </p>
                             <div class="alert alert-info">
                                 Your account requests will be validated by the Procurement Management office to assure the eligibility of the requestor, this process only requires a minimum amount of time.
                                 We will send your Login information through your provided email address as soon as it is validated by our incharge personnel.
                             </div>
-
-
-                            <form id="form" class="wizard-big" method="POST">
 							
+                            <form id="form" action="" class="wizard-big" method="POST" enctype="multipart/form-data">
                                 <h1>Profile</h1>
                                 <fieldset>
                                     <h2>Profile Information</h2>
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="form-group" id="popOver" data-trigger="hover" title="Instruction" data-placement="right" data-content="You should also include second name if any.">
+                                            <div class="form-group" id="popOver" data-trigger="hover" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
                                                 <label>First name *</label>
-                                                <input id="name" name="name" type="text" class="form-control required">
+                                                <input id="name" name="name" type="text" class="form-control ">
                                             </div>
-                                            <div class="form-group" id="popOver1" data-trigger="hover" title="Instruction" data-placement="right" data-content="Middle name should be complete and not just initials.">
+                                            <div class="form-group" id="popOver1" data-trigger="hover" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
                                                 <label>Middle name *</label>
-                                                <input id="midlename" name="midlename" type="text" class="form-control required">
+                                                <input id="midlename" name="midlename" type="text" class="form-control ">
                                             </div>											
                                             <div class="form-group">
                                                 <label>Last name *</label>
-                                                <input id="surname" name="surname" type="text" class="form-control required">
+                                                <input id="surname" name="surname" type="text" class="form-control">
                                             </div>
-                                            <div class="form-group"  id="popOver2" data-trigger="hover" title="Instruction" data-placement="right" data-content="Eg. Jr, Sr, II, III">
+                                            <div class="form-group"  id="popOver2" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you">
                                                 <label>Extension name </label>
                                                 <input id="extname" name="extname" type="text" class="form-control">
-                                            </div>										
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Job title</label>
+                                                <input id="jobtitle" name="jobtitle" type="text" class="form-control ">
+                                            </div>												
 											
                                         </div>
                                         <div class="col-lg-6">
@@ -251,18 +248,22 @@
                                                         }
                                                     ?>
 												</select>
-                                            </div>											
+                                            </div>			
+											<div class="form-group"  id="popOver3" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you.">
+                                                <label>Specific Office</label>
+                                                <input id="specific_office" name="specific_office" type="text" d class="form-control">
+                                            </div>									
                                             <div class="form-group">
                                                 <label>Phone No. *</label>
-                                                <input id="contact" name="contact" type="text" data-mask="9999 999 9999" class="form-control required">
+                                                <input id="contact" name="contact" type="text" data-mask="9999 999 9999" class="form-control ">
                                             </div>										
                                             <div class="form-group">
                                                 <label>Email *</label>
-                                                <input id="email" name="email" type="text" class="form-control required email">
+                                                <input id="email" name="email" type="text" class="form-control">
                                             </div>    
                                             <div class="form-group">
                                                 <label>Employee No. *</label>
-                                                <input id="emp_id" name="emp_id" type="text" class="form-control required">
+                                                <input id="emp_id" name="emp_id" type="text" class="form-control ">
                                             </div>											
                                         </div>
                                         
@@ -301,18 +302,18 @@
                                 <fieldset>
                                     <h2>Terms and Conditions</h2>
                                     <input id="acceptTerms" name="acceptTerms" type="checkbox" class="required"> <label for="acceptTerms">I agree with the Terms and Conditions.</label>
-                                    <input type="hidden" name="token" value="<?php echo Token::generate();?>">       
+                                    <input type="hidden" name="termsToken" value="<?php echo Token::generate('termsToken');?>">  
                                 </fieldset>
 
                                 <h1>Finish</h1>
                                 <fieldset>
                                     <center><h2 style="margin-top:220px">You can expect for your Login information with a maximum of 1 Working day.</h2></center>
                                 </fieldset>
-								
                             </form>
                         </div>
                     </div>
-                </div>				
+                </div>
+
             </div>
         </div>
         <div class="footer">
@@ -469,6 +470,10 @@
 		$(document).ready(function () {
 			$('#popOver2').popover();
 		});
+
+		$(document).ready(function () {
+			$('#popOver3').popover();
+		});		
 	</script>
 
 

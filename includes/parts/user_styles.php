@@ -1,9 +1,22 @@
 <!--Bootstrap CSS-->
 <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
 <!--Font-Awesome CSS-->
+<<<<<<< HEAD
+=======
+<!-- <link href="../../assets/font-awesome-52/css/fontawesome.css" rel="stylesheet">
+<link href="../../assets/font-awesome-52/css/solid.css" rel="stylesheet">
+<link href="../../assets/font-awesome/themify-icons/themify-icons.css" rel="stylesheet"> -->
+
+<link href="../../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+>>>>>>> denver
 <link href="../../assets/font-awesome-52/css/fontawesome.css" rel="stylesheet">
 <link href="../../assets/font-awesome-52/css/solid.css" rel="stylesheet">
+<<<<<<< HEAD
 <link href="../../assets/font-awesome/themify-icons/themify-icons.css" rel="stylesheet">
+=======
+<link href="../../assets/font-awesome-52/css/regular.css" rel="stylesheet">
+<link href="../../assets/font-awesome-52/css/brands.css" rel="stylesheet">
+>>>>>>> denver
 <!--Default CSS-->
 <link href="../../assets/css/animate.css" rel="stylesheet">
 <link href="../../assets/css/style.css" rel="stylesheet">
@@ -44,12 +57,27 @@
 <link href="../../assets/css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet">
 <!-- Ladda style -->
 <link href="../../assets/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+<<<<<<< HEAD
+=======
+<!-- FooTable -->
+<link href="../../assets/css/plugins/footable/footable.core.css" rel="stylesheet">
+>>>>>>> denver
 
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
 
 <!-- Sweet Alert -->
+<<<<<<< HEAD
 <link href="../../assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <!-- Toastr -->
 <link href="../../assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+=======
+<link href="../../assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- Toastr -->
+<link rel="stylesheet" href="../../assets/css/plugins/toastr/toastr.min.css">
+
+
+<meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'))?>">
+>>>>>>> denver

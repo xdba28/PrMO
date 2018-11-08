@@ -152,6 +152,7 @@ class RowIterator implements \Iterator
 
     /**
      * Set the iterator to its previous value.
+<<<<<<< HEAD
      *
      * @throws PhpSpreadsheetException
      */
@@ -161,6 +162,11 @@ class RowIterator implements \Iterator
             throw new PhpSpreadsheetException("Row is already at the beginning of range ({$this->startRow} - {$this->endRow})");
         }
 
+=======
+     */
+    public function prev()
+    {
+>>>>>>> denver
         --$this->position;
     }
 
@@ -171,6 +177,10 @@ class RowIterator implements \Iterator
      */
     public function valid()
     {
+<<<<<<< HEAD
         return $this->position <= $this->endRow;
+=======
+        return $this->position <= $this->endRow && $this->position >= $this->startRow;
+>>>>>>> denver
     }
 }

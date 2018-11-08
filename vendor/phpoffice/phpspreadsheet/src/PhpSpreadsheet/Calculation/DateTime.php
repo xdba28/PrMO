@@ -70,7 +70,11 @@ class DateTime
                 (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC)) {
                 return Functions::VALUE();
             }
+<<<<<<< HEAD
             if ((is_object($dateValue)) && ($dateValue instanceof \DateTimeImmutable)) {
+=======
+            if ((is_object($dateValue)) && ($dateValue instanceof \DateTimeInterface)) {
+>>>>>>> denver
                 $dateValue = Date::PHPToExcel($dateValue);
             } else {
                 $saveReturnDateType = Functions::getReturnDateType();
@@ -765,6 +769,55 @@ class DateTime
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * DAYS.
+     *
+     * Returns the number of days between two dates
+     *
+     * Excel Function:
+     *        DAYS(endDate, startDate)
+     *
+     * @category Date/Time Functions
+     *
+     * @param \DateTimeImmutable|float|int|string $endDate Excel date serial value (float),
+     * PHP date timestamp (integer), PHP DateTime object, or a standard date string
+     * @param \DateTimeImmutable|float|int|string $startDate Excel date serial value (float),
+     * PHP date timestamp (integer), PHP DateTime object, or a standard date string
+     *
+     * @return int|string Number of days between start date and end date or an error
+     */
+    public static function DAYS($endDate = 0, $startDate = 0)
+    {
+        $startDate = Functions::flattenSingleValue($startDate);
+        $endDate = Functions::flattenSingleValue($endDate);
+
+        $startDate = self::getDateValue($startDate);
+        if (is_string($startDate)) {
+            return Functions::VALUE();
+        }
+
+        $endDate = self::getDateValue($endDate);
+        if (is_string($endDate)) {
+            return Functions::VALUE();
+        }
+
+        // Execute function
+        $PHPStartDateObject = Date::excelToDateTimeObject($startDate);
+        $PHPEndDateObject = Date::excelToDateTimeObject($endDate);
+
+        $diff = $PHPStartDateObject->diff($PHPEndDateObject);
+        $days = $diff->days;
+
+        if ($diff->invert) {
+            $days = -$days;
+        }
+
+        return $days;
+    }
+
+    /**
+>>>>>>> denver
      * DAYS360.
      *
      * Returns the number of days between two dates based on a 360-day year (twelve 30-day months),

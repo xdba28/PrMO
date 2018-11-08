@@ -82,7 +82,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Dashboard</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 
@@ -130,6 +130,7 @@
 			
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
+<<<<<<< HEAD
                 <div class="middle-box text-center animated fadeInRightBig">
                     <h3 class="font-bold">This is page content</h3>
                     <div class="error-desc">
@@ -138,6 +139,12 @@
                         <br/><a href="" data-toggle="modal" data-target="#new-user-modal"  class="btn btn-primary m-t">Dashboard</a>
                     </div>
                 </div>
+=======
+            <div class="row ">
+
+			
+            </div>
+>>>>>>> denver
             </div>
 			<!-- Main Content End -->
 			

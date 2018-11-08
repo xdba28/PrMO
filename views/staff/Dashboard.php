@@ -19,7 +19,11 @@
             array_push($myArray, $val);
         }
     
+<<<<<<< HEAD
         $commonFields =  "'". implode("', '", $myArray) ."'";
+=======
+        $commonFields =  ","." '". implode("', '", $myArray) ."'";
+>>>>>>> denver
 
     if(Input::exists()){
         if(Token::check("passwordToken", Input::get('passwordToken'))){
@@ -112,8 +116,13 @@
 			
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
+<<<<<<< HEAD
                 <div class="col-sm-4">
                     <h2>This is main title</h2>
+=======
+                <div class="col-sm-12">
+                    <h2>Staff</h2>
+>>>>>>> denver
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
@@ -123,15 +132,19 @@
                         </li>
                     </ol>
                 </div>
+<<<<<<< HEAD
                 <div class="col-sm-8">
                     <div class="title-action">
                     <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
                 </div>
+=======
+>>>>>>> denver
             </div>
 			
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
+<<<<<<< HEAD
                 <div class="middle-box text-center animated fadeInRightBig">
                     <h3 class="font-bold">Staff</h3>
                     <div class="error-desc">
@@ -140,6 +153,21 @@
                         <br/><a href="Dashboard.php" class="btn btn-primary m-t">Dashboard</a>
                     </div>
                 </div>
+=======
+				<div class="middle-box text-center animated fadeInRightBig">
+						<form action="Dashboard.php" method="GET" enctype="multipart/form-data">
+							<input type="text" required name="sample">
+							<input type="submit">
+						</form><br>
+						<!-- <h3 class="font-bold">Staff</h3>
+						<div class="error-desc">
+							You can create here any grid layout you want. And any variation layout you imagine:) Check out
+							main dashboard and other site. It use many different layout.
+							<br/><a href="Dashboard" class="btn btn-primary m-t">Dashboard</a>
+						</div> -->
+
+				</div>
+>>>>>>> denver
             </div>
 			<!-- Main Content End -->
 			
@@ -151,9 +179,16 @@
     </div>
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
+<<<<<<< HEAD
 	<!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+=======
+<!-- Password meter -->
+	<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+	<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	
+>>>>>>> denver
 	<script>	
 		$(document).ready(function(){
            // Example 4 password meter
@@ -168,9 +203,19 @@
 
             options4.common = {
 
+<<<<<<< HEAD
 				
                 zxcvbn: true,
                 zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku', <?php echo $commonFields;?>],
+=======
+                zxcvbn: true,
+				zxcvbnTerms: ['asdasdasd', 'shogun', 'bushido', 'daisho', 'seppuku' <?php 
+					if(isset($commonFields)) echo $commonFields;
+					else{
+						echo  $commonFields = '';
+					}
+				?>],
+>>>>>>> denver
                 userInputs: ['#year', '#new_username']
             };
             $('.example4').pwstrength(options4);
@@ -190,7 +235,10 @@
 
 			password.onchange = validatePassword;
 			confirm_password.onkeyup = validatePassword;						
+<<<<<<< HEAD
 			
+=======
+>>>>>>> denver
 		})
 	
 	</script>

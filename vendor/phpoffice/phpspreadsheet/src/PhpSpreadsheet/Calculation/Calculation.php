@@ -650,6 +650,14 @@ class Calculation
             'functionCall' => [DateTime::class, 'DAYOFMONTH'],
             'argumentCount' => '1',
         ],
+<<<<<<< HEAD
+=======
+        'DAYS' => [
+            'category' => Category::CATEGORY_DATE_AND_TIME,
+            'functionCall' => [DateTime::class, 'DAYS'],
+            'argumentCount' => '2',
+        ],
+>>>>>>> denver
         'DAYS360' => [
             'category' => Category::CATEGORY_DATE_AND_TIME,
             'functionCall' => [DateTime::class, 'DAYS360'],
@@ -3478,6 +3486,7 @@ class Calculation
                     $testPrevOp = $stack->last(1);
                     if ($testPrevOp['value'] == ':') {
                         $startRowColRef = $output[count($output) - 1]['value'];
+<<<<<<< HEAD
                         $rangeWS1 = '';
                         if (strpos('!', $startRowColRef) !== false) {
                             list($rangeWS1, $startRowColRef) = explode('!', $startRowColRef);
@@ -3491,6 +3500,17 @@ class Calculation
                         }
                         if ($rangeWS2 != '') {
                             $rangeWS2 .= '!';
+=======
+                        list($rangeWS1, $startRowColRef) = Worksheet::extractSheetTitle($startRowColRef, true);
+                        if ($rangeWS1 != '') {
+                            $rangeWS1 .= '!';
+                        }
+                        list($rangeWS2, $val) = Worksheet::extractSheetTitle($val, true);
+                        if ($rangeWS2 != '') {
+                            $rangeWS2 .= '!';
+                        } else {
+                            $rangeWS2 = $rangeWS1;
+>>>>>>> denver
                         }
                         if ((is_int($startRowColRef)) && (ctype_digit($val)) &&
                             ($startRowColRef <= 1048576) && ($val <= 1048576)) {
@@ -3663,6 +3683,7 @@ class Calculation
                         break;
                     //    Binary Operators
                     case ':':            //    Range
+<<<<<<< HEAD
                         $sheet1 = $sheet2 = '';
                         if (strpos($operand1Data['reference'], '!') !== false) {
                             list($sheet1, $operand1Data['reference']) = explode('!', $operand1Data['reference']);
@@ -3674,6 +3695,19 @@ class Calculation
                         } else {
                             $sheet2 = $sheet1;
                         }
+=======
+                        if (strpos($operand1Data['reference'], '!') !== false) {
+                            list($sheet1, $operand1Data['reference']) = Worksheet::extractSheetTitle($operand1Data['reference'], true);
+                        } else {
+                            $sheet1 = ($pCellParent !== null) ? $pCellWorksheet->getTitle() : '';
+                        }
+
+                        list($sheet2, $operand2Data['reference']) = Worksheet::extractSheetTitle($operand2Data['reference'], true);
+                        if (empty($sheet2)) {
+                            $sheet2 = $sheet1;
+                        }
+
+>>>>>>> denver
                         if ($sheet1 == $sheet2) {
                             if ($operand1Data['reference'] === null) {
                                 if ((trim($operand1Data['value']) != '') && (is_numeric($operand1Data['value']))) {
@@ -3941,9 +3975,13 @@ class Calculation
                     }
 
                     //    Process the argument with the appropriate function call
+<<<<<<< HEAD
                     if ($passCellReference) {
                         $args[] = $pCell;
                     }
+=======
+                    $args = $this->addCellReference($args, $passCellReference, $functionCall, $pCell);
+>>>>>>> denver
 
                     if (!is_array($functionCall)) {
                         foreach ($args as &$arg) {
@@ -4435,4 +4473,37 @@ class Calculation
 
         return $returnValue;
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Add cell reference if needed while making sure that it is the last argument.
+     *
+     * @param array $args
+     * @param bool $passCellReference
+     * @param array|string $functionCall
+     * @param null|Cell $pCell
+     *
+     * @return array
+     */
+    private function addCellReference(array $args, $passCellReference, $functionCall, Cell $pCell = null)
+    {
+        if ($passCellReference) {
+            if (is_array($functionCall)) {
+                $className = $functionCall[0];
+                $methodName = $functionCall[1];
+
+                $reflectionMethod = new \ReflectionMethod($className, $methodName);
+                $argumentCount = count($reflectionMethod->getParameters());
+                while (count($args) < $argumentCount - 1) {
+                    $args[] = null;
+                }
+            }
+
+            $args[] = $pCell;
+        }
+
+        return $args;
+    }
+>>>>>>> denver
 }

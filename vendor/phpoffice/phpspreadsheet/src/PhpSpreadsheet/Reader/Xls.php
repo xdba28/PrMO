@@ -1127,7 +1127,11 @@ class Xls extends BaseReader
                             // TODO: Why is there no BSE Index? Is this a new Office Version? Password protected field?
                             // More likely : a uncompatible picture
                             if (!$BSEindex) {
+<<<<<<< HEAD
                                 continue;
+=======
+                                continue 2;
+>>>>>>> denver
                             }
 
                             $BSECollection = $escherWorkbook->getDggContainer()->getBstoreContainer()->getBSECollection();
@@ -1213,7 +1217,11 @@ class Xls extends BaseReader
                             // $range should look like one of these
                             //        Foo!$C$7:$J$66
                             //        Bar!$A$1:$IV$2
+<<<<<<< HEAD
                             $explodes = explode('!', $range); // FIXME: what if sheetname contains exclamation mark?
+=======
+                            $explodes = Worksheet::extractSheetTitle($range, true);
+>>>>>>> denver
                             $sheetName = trim($explodes[0], "'");
                             if (count($explodes) == 2) {
                                 if (strpos($explodes[1], ':') === false) {
@@ -1243,8 +1251,13 @@ class Xls extends BaseReader
                             // $range should look like this one of these
                             //        Sheet!$A$1:$B$65536
                             //        Sheet!$A$1:$IV$2
+<<<<<<< HEAD
                             $explodes = explode('!', $range);
                             if (count($explodes) == 2) {
+=======
+                            if (strpos($range, '!') !== false) {
+                                $explodes = Worksheet::extractSheetTitle($range, true);
+>>>>>>> denver
                                 if ($docSheet = $this->spreadsheet->getSheetByName($explodes[0])) {
                                     $extractedRange = $explodes[1];
                                     $extractedRange = str_replace('$', '', $extractedRange);
@@ -1270,9 +1283,14 @@ class Xls extends BaseReader
                 }
             } else {
                 // Extract range
+<<<<<<< HEAD
                 $explodes = explode('!', $definedName['formula']);
 
                 if (count($explodes) == 2) {
+=======
+                if (strpos($definedName['formula'], '!') !== false) {
+                    $explodes = Worksheet::extractSheetTitle($definedName['formula'], true);
+>>>>>>> denver
                     if (($docSheet = $this->spreadsheet->getSheetByName($explodes[0])) ||
                         ($docSheet = $this->spreadsheet->getSheetByName(trim($explodes[0], "'")))) {
                         $extractedRange = $explodes[1];
@@ -4688,7 +4706,11 @@ class Xls extends BaseReader
                     $offset += 4;
                     // offset: var; size: $us; character array of the URL, no Unicode string header, always 16-bit characters, zero-terminated
                     $url = self::encodeUTF16(substr($recordData, $offset, $us - 2), false);
+<<<<<<< HEAD
                     $nullOffset = strpos($url, 0x00);
+=======
+                    $nullOffset = strpos($url, chr(0x00));
+>>>>>>> denver
                     if ($nullOffset) {
                         $url = substr($url, 0, $nullOffset);
                     }

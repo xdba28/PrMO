@@ -85,6 +85,7 @@
 				return $this->db->results();
 			}
 		}
+<<<<<<< HEAD
 
 		//xhr-req-approve.php
 		public function get($name, $fields = array()){
@@ -93,6 +94,22 @@
 			}else return false;
 		}
 
+=======
+
+		//xhr-req-approve.php
+		public function get($name, $fields = array()){
+			if($this->db->get($name, $fields)){
+				return $this->db->first();
+			}else return false;
+		}
+
+		public function delPersn($table, $where = array()){
+			if($this->db->delete($table, $where)){
+				return true;
+			}else return false;
+		}
+
+>>>>>>> denver
         public function personnels(){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`
@@ -118,7 +135,39 @@
             ")) {
                 return $this->db->first();
             }
+<<<<<<< HEAD
         }        
+=======
+		}
+		
+		public function userOverview(){
+			if($this->db->query_builder("SELECT 
+			ID, office_name, acronym, campus, note, verifier, approving, COUNT(edr_id) as 'registered_users', (SELECT COUNT(*) FROM `enduser`) as 'overall_users'
+			FROM
+			`units`, `enduser`
+			WHERE
+			units.ID = enduser.edr_designated_office
+			GROUP BY ID")){
+				return $this->db->results();
+			}
+		}
+
+		public function unitUsers($unit){
+			if($this->db->query_builder("SELECT 
+			account_id, username, userpassword, newAccount , edr_designated_office, current_specific_office
+			
+			FROM 
+			`enduser`, `edr_account` 
+			
+			WHERE
+			enduser.edr_id = edr_account.account_id AND
+			edr_designated_office = '{$unit}'
+			")){
+				return $this->db->results();
+			}
+
+		}
+>>>>>>> denver
 		
         public function registered_users(){
             if($this->db->query_builder("SELECT * FROM `edr_account` WHERE 1")) {
@@ -141,6 +190,36 @@
         
         public function fullname(){
             $user = Session::get($this->sessionName);
+<<<<<<< HEAD
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+        }
+        
+        public function fullnameOf($ID){
+            $user = $ID;
+
+            $data = $this->db->get('personnel', array('prnl_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->prnl_ext_name == 'XXXXX'){
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname;
+                    }else{
+                        $fullname = $temp->prnl_fname .' '.$temp->prnl_mname.' '.$temp->prnl_lname.' '.$temp->prnl_ext_name;
+=======
 
             $data = $this->db->get('personnel', array('prnl_id', '=', $user));
                 if($data->count()){
@@ -175,13 +254,38 @@
                 }
 
             return false;
+		}
+	
+		public function fullnameOfEnduser($ID){
+            $user = $ID;
+
+            $data = $this->db->get('enduser', array('edr_id', '=', $user));
+                if($data->count()){
+                    $temp = $data->first();
+                    
+                    if($temp->edr_ext_name == 'XXXXX'){
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
+                    }else{
+                        $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
+>>>>>>> denver
+                    }
+                   
+                    return $fullname;
+                }
+
+            return false;
+<<<<<<< HEAD
         } 
+=======
+        }
+>>>>>>> denver
         
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
                 throw new Exception("Error Updating Request", 1);
             }
         }
+<<<<<<< HEAD
 
 		public function startTrans(){
 			$this->db->startTrans();
@@ -191,6 +295,17 @@
 			$this->db->endTrans();
 		}
 
+=======
+
+		public function startTrans(){
+			$this->db->startTrans();
+		}
+
+		public function endTrans(){
+			$this->db->endTrans();
+		}
+
+>>>>>>> denver
         public function data(){
             return $this->data;
         }

@@ -3,7 +3,11 @@
 PhpSpreadsheet introduced many breaking changes by introducing
 namespaces and renaming some classes. To help you migrate existing
 project, a tool was written to replace all references to PHPExcel
+<<<<<<< HEAD
 classes to their new names. But they are also manual changes that
+=======
+classes to their new names. But there are also manual changes that
+>>>>>>> denver
 need to be done.
 
 ## Automated tool

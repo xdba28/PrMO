@@ -1,7 +1,6 @@
 <?php
-
+	date_default_timezone_set('Asia/Manila');
     session_start();
-    date_default_timezone_set('Asia/Manila');
 
     $GLOBALS['config'] = [
         'mysql'     =>[
@@ -22,6 +21,8 @@
     //accounttype is the identifier if the account is new or not
     //usertype determines if the account is personnel or standard user account
 
+	// vendor notif
+	require_once "../../vendor/autoload.php";
 
 
     spl_autoload_register(function($class){
@@ -29,7 +30,9 @@
     });
 
 
-        require_once "../../functions/sanitize.php";
+		require_once "../../functions/sanitize.php";
+		require_once "../../functions/notif.php";
+
 
 
         if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))){
@@ -39,8 +42,6 @@
             $hash = Cookie::get($cookie_name);
             $hashCheck =  DB::getInstance()->get('users_session', array('hash', '=', $hash));
 
-            // echo $hashCheck->first()->hash, "<br>";   //check if the current hash in the database matches the cookie in the browser
-            // echo $hash;
 
             if($hashCheck->count()){    //chech if there is a result from the hashCheck execution
                  $user = new User($hashCheck->first()->user_id);
