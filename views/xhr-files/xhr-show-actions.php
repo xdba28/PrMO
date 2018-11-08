@@ -23,9 +23,15 @@ else{
 		$actionsData = json_decode($json,true);
 
 		$availableActions = $actionsData['actionsByMop'][$mop][$standing];
-		
 
-		$data = ['success' => true, 'fetchedResult' => $availableActions];
+		$issue = $user->checkProjectIssue($_POST['ref']);
+		if(!empty($issue) && $issue !== false){
+			$PreEvalIssue = true;
+		}else{
+			$PreEvalIssue = false;
+		}
+
+		$data = ['success' => true, 'fetchedResult' => $availableActions, 'issue' => $PreEvalIssue];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}

@@ -24,7 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Projects</title>
+    <title>PrMO OPPTS | Projects Details</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 
@@ -58,8 +58,11 @@
                         <li class="breadcrumb-item">
                             <a href="#">Projects</a>
                         </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Current Projects</a>
+                        </li>
                         <li class="breadcrumb-item active">
-                            <strong>Current Projects</strong>
+                            <strong>Project Details</strong>
                         </li>
                     </ol>
                 </div>
@@ -217,7 +220,7 @@
                                 <div class="col-lg-12">
                                     <dl class="row mb-0">
                                         <div class="col-sm-2 text-sm-right">
-                                            <dt>Completed:</dt>
+                                            <dt>Completion:</dt>
                                         </div>
                                         <div class="col-sm-10 text-sm-left">
                                             <dd>
@@ -340,7 +343,11 @@
 														$announcementClass = 'ti-medall text-info';
 														$newRemarks = $remarksParts[2];
 														break;
-													
+													case 'SOLVE':
+														$remarksParts =  explode('^', $detail->remarks);
+														$announcementClass = 'far fa-thumbs-up text-success';
+														$newRemarks = $remarksParts[2];
+														break;													
 													default:
 														$announcementClass = "ti-announcement  text-warning";
 														$newRemarks=$detail->remarks;
@@ -389,34 +396,31 @@
             </div>
             <div class="col-lg-3">
                 <div class="wrapper wrapper-content project-manager">
-                    <h4>Project description</h4>
-                    <img src="img/zender_logo.png" class="img-fluid">
+                    <h4>Project Documents</h4>
+                    <!-- <img src="img/zender_logo.png" class="img-fluid"> -->
                     <p class="small">
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look
-                        even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing
+                        Project documents that are viewable and downloadable here are for viewing purposes only, also not all procurement documents that are related to this project are shown for it is exclusively viewable only for the PrMO personnels.
                     </p>
-                    <p class="small font-bold">
+                    <!-- <p class="small font-bold">
                         <span><i class="fa fa-circle text-warning"></i> High priority</span>
-                    </p>
-                    <h5>Project tag</h5>
+                    </p> -->
+                    <!-- <h5>Project tag</h5>
                     <ul class="tag-list" style="padding: 0">
                         <li><a href=""><i class="fa fa-tag"></i> Zender</a></li>
                         <li><a href=""><i class="fa fa-tag"></i> Lorem ipsum</a></li>
                         <li><a href=""><i class="fa fa-tag"></i> Passages</a></li>
                         <li><a href=""><i class="fa fa-tag"></i> Variations</a></li>
-                    </ul>
-                    <h5>Project files</h5>
+                    </ul> -->
+                    <h5>Project files (Enduser Copy)</h5>
                     <ul class="list-unstyled project-files">
-                        <li><a href=""><i class="fa fa-file"></i> Project_document.docx</a></li>
-                        <li><a href=""><i class="fa fa-file-picture-o"></i> Logo_zender_company.jpg</a></li>
-                        <li><a href=""><i class="fa fa-stack-exchange"></i> Email_from_Alex.mln</a></li>
-                        <li><a href=""><i class="fa fa-file"></i> Contract_20_11_2014.docx</a></li>
+                        <li><a href=""><i class="far fa-file-word" style="font-size:16px; color:#2a5696"></i> sample_document.docx</a></li>
+                        <li><a href=""><i class="far fa-file-pdf" style="font-size:16px; color:#d3241b"></i> sample_document.pdf</a></li>
                     </ul>
-                    <div class="text-center m-t-md">
+                    <!-- <div class="text-center m-t-md">
                         <a href="#" class="btn btn-xs btn-primary">Add files</a>
                         <a href="#" class="btn btn-xs btn-primary">Report contact</a>
 
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

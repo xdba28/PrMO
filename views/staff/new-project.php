@@ -64,6 +64,13 @@
 
 			));
 
+			$staff->register('project_logs', array(
+				'referencing_to' => $project_ref_no,
+				'remarks' => "project {$project_ref_no} queued to outgoing documents for pre-procurement evaluation.",
+				'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
+				'type' =>  'IN'
+			));
+
 			$staff->register('notifications', array(
 				'recipient' => $_POST['enduser'],
 				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",

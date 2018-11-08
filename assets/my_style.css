@@ -552,8 +552,10 @@ li {
 
   
   #weather {
-	margin: auto;
+	/* margin: auto; */
 	max-width: 632px;
+	/* padding-left: 15px; */
+	
   }
   
   #setting {
@@ -712,3 +714,14 @@ li {
     background-color: #66CCFF;
     border-color: #bee5eb;
 }
+
+.evening-bg {
+    background-color: #5e0636 !important;
+    color: #ffffff;
+}
+
+.afternoon-bg {
+    background-color: #31b9ef !important;
+    color: #ffffff;
+}
+

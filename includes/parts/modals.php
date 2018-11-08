@@ -1,11 +1,9 @@
 <script>
-	function ModalSubmit(id){
+	function ModalSubmit(id, modal){
 		var DataModal = $(`#${id}`).serialize();
-		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
-			// code
 			do: function(res){
-				console.log(res);
+				$(`#${modal}`).modal('hide');
 				swal({
 					title: "Action successful!",
 					text: "Project Updated.",
@@ -206,8 +204,8 @@
       <div class="modal-body">
 
 		<!-- asdasdsa -->
-		<form id="FormSearchModal" class="search"><span id="RefSearch"></span>
-		<input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
+		<form id="FormSearchModal" class="search" action="search-results" method="GET"><span id="RefSearch"></span>
+		<input type="search" name="q" placeholder="Title, Keyword, Reference No." autocomplete="off" required="required"/>
 		<button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="search" height="42" width="42"></button>
 		</form><br>
 
@@ -331,23 +329,23 @@
 
 							<div class="form-group">
 								<label class="font-bold my-blue">Evaluator's Comment</label>
+								<div dataFor="pre-proc-eval-issue">
+
 								
+								</div>
 								
-											<?php
-												
-											?>
 											
 												<!-- if this project has no record of "ISSUE^pre procurement evaluation" in the project logs show this -->
-												<div class="checkbox checkbox-danger" style="padding-left:5px">
+												<!-- <div class="checkbox checkbox-danger" style="padding-left:5px">
 													<input id="checkbox1" type="checkbox" name="issue">
 													<label for="checkbox1" class="text-warning font-italic">
 														Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
 													</label>
-												</div>
+												</div> -->
 
 												
 												<!-- if this project has a record of "ISSUE^pre procurement evaluation" in the project logs show this -->												
-                                                <div class="radio radio-danger" style="padding-left:5px">
+                                                <!-- <div class="radio radio-danger" style="padding-left:5px">
                                                     <input type="radio" name="issue_again" id="radio1" value="option1">
                                                     <label for="radio1" class="text-warning">
                                                         Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
@@ -358,7 +356,7 @@
                                                     <label for="radio2" class="text-info">
                                                         Check this if this evaluation is a resolution from the previous evaluation issue.
                                                     </label>
-                                                </div>
+                                                </div> -->
                                       
 
 
@@ -373,7 +371,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="ModalSubmit('PreprocModal')">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="ModalSubmit('PreprocModal', 'pre-proc-evaluation')">Submit</button>
       </div>
     </div>
   </div>

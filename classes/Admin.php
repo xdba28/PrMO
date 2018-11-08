@@ -91,10 +91,59 @@
 
             return false;
 		}
+
+		public function searchProject($key){
+
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE project_ref_no LIKE '%{$key}%' OR project_title LIKE '%{$key}%'")){
+				return $this->db->results();
+			}
+			return false;
+
+		}
+
+		public function logLastUpdated($ID){ //to get the data when the last update of the project
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' GROUP BY ID ORDER BY logdate DESC")){
+				return $this->db->first();
+			}
+			return false;
+		}
+
+		//project details important updates
+		public function importantUpdates($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}	
+		
+		public function projectHistory($originRefno, $currentRefno){
+
+			$noOfOrigin = count($originRefno);
+
+			if($noOfOrigin > 1){
+					$imploded = implode("' OR referencing_to = '", $originRefno);
+					$filteredSql = "referencing_to ='" .$imploded. "'";
+			}else{
+				$filteredSql = "referencing_to = '{$originRefno[0]}'";
+			}
+
+			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
+			FROM `projects`, `project_logs`
+			WHERE $filteredSql OR
+			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
+			")){
+				return $this->db->results();
+			}
+
+			return false;
+		}
 		
 		public function dashboard_procurement_entries($option){
-
-
 
 			switch ($option) {
 				case 'year':
@@ -309,6 +358,16 @@
 				'count' => $nofitCount
 			];
 			return $notif;
+		}
+
+		// modal pre procurement evaluation registration
+		public function checkProjectIssue($id){
+			if($this->db->query_builder("SELECT remarks FROM project_logs 
+			WHERE remarks LIKE '%ISSUE%' AND referencing_to = '{$id}'")){
+				return $this->db->results();
+			}else{
+				return false;
+			}
 		}
 
         public function register($table, $fields = array()){

@@ -241,9 +241,11 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
                     }else{
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
-                    }
+					}
+					
+					$forGreetings = $temp->edr_fname.' '.$temp->edr_lname;
                    
-					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title];
+					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title, "2" => $forGreetings];
 					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
                    
                     return $json;
@@ -404,9 +406,10 @@
 		}
 
 		public function logLastUpdated($ID){ //to get the data when the last update of the project
-			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' ORDER BY logdate DESC LIMIT 1")){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' GROUP BY ID ORDER BY logdate DESC")){
 				return $this->db->first();
 			}
+			return false;
 		}
 		
 		public function like($table, $column, $particular){

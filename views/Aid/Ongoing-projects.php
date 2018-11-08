@@ -77,7 +77,7 @@
 					<div class="col-lg-12">
 						<div class="ibox ">
 							<div class="ibox-title">
-								<h5>Custom responsive table </h5>
+								<h5>Complete Ongoing Projects</h5>
 							</div>
 							<div class="ibox-content">
 								<div class="row">
@@ -165,13 +165,13 @@
 					</div>
 					
 				
-					<button data-toggle="modal" data-target="#test-modal">Button</button>
+				
 
 				</div>
 
             </div>
 			<!-- Main Content End -->
-			
+			<button class="back-to-top" type="button"></button>
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
