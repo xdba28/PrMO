@@ -70,7 +70,15 @@
 			return true;
         }
 
-
+		public function get($table, $where){
+			if($this->db->get($table, $where)){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+			return false;
+		}	
 
         public function selectAll($table){
             if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {

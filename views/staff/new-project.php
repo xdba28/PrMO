@@ -10,6 +10,13 @@
        Redirect::To('../../blyte/acc3ss');
         die();
 	}
+
+	// notif(json_encode(array(
+	// 	'receiver' => '2015-11583',
+	// 	'message' => "Project Ref: asd is now registered as asd",
+	// 	'date' => 'asdasd',
+	// 	'href' => "project-details?refno=asdasd"
+	// )));
 	
 	if(Input::exists()){
 		if(Token::check("newProject", Input::get('newProject'))){
@@ -26,74 +33,74 @@
 
 			try{
 
-			$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
-			$mydate= explode("/", Input::get('implementation'));
-			$finalDate = $mydate[2]."-".$mydate[1]."-".$mydate[0];
+				$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
+				$mydate= explode("/", Input::get('implementation'));
+				$finalDate = $mydate[2]."-".$mydate[1]."-".$mydate[0];
 
-			$staff->startTrans(); //start transaction
+				$staff->startTrans(); //start transaction
 
-			$staff->register('projects', array(
-				'request_origin' => $requestOrigin_encoded,
-				'project_ref_no' => $project_ref_no,
-				'project_title' => Input::get('title'),
-				'ABC' => Input::get('ABC'),
-				'MOP' => 'TBE',
-				'type' => 'single',
-				'end_user' => $enduser_encoded,
-				'project_status' => 'PROCESSING',
-				'workflow'	=> 'For evaluation of technical working group',
-				'date_registered' => Date::translate('test', 'now'),
-				'implementation_date' => $finalDate
-			));
+				$staff->register('projects', array(
+					'request_origin' => $requestOrigin_encoded,
+					'project_ref_no' => $project_ref_no,
+					'project_title' => Input::get('title'),
+					'ABC' => Input::get('ABC'),
+					'MOP' => 'TBE',
+					'type' => 'single',
+					'end_user' => $enduser_encoded,
+					'project_status' => 'PROCESSING',
+					'workflow'	=> 'For evaluation of technical working group',
+					'date_registered' => Date::translate('test', 'now'),
+					'implementation_date' => $finalDate
+				));
 
-			$staff->register('project_logs', array(
-				'referencing_to' => $form_ref_no,
-				'remarks' => "project request {$form_ref_no} registered as a single project with the reference no of {$project_ref_no}.",
-				'logdate' => Date::translate('test', 'now'),
-				'type' =>  'IN'
-			));
+				$staff->register('project_logs', array(
+					'referencing_to' => $form_ref_no,
+					'remarks' => "project request {$form_ref_no} registered as a single project with the reference no of {$project_ref_no}.",
+					'logdate' => Date::translate('test', 'now'),
+					'type' =>  'IN'
+				));
 
-			$staff->register('outgoing', array(
+				$staff->register('outgoing', array(
 
-				'project' =>  $project_ref_no,
-				'transmitting_to' => 'TWG',
-				'specific_office' => 'TWG',
-				'remarks' => 'none',
-				'transactions' => 'EVALUATION',
-				'date_registered' => Date::translate('test', 'now')
+					'project' =>  $project_ref_no,
+					'transmitting_to' => 'TWG',
+					'specific_office' => 'TWG',
+					'remarks' => 'none',
+					'transactions' => 'EVALUATION',
+					'date_registered' => Date::translate('test', 'now')
 
-			));
+				));
 
-			$staff->register('project_logs', array(
-				'referencing_to' => $project_ref_no,
-				'remarks' => "project {$project_ref_no} queued to outgoing documents for pre-procurement evaluation.",
-				'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
-				'type' =>  'IN'
-			));
+				$staff->register('project_logs', array(
+					'referencing_to' => $project_ref_no,
+					'remarks' => "project {$project_ref_no} queued to outgoing documents for pre-procurement evaluation.",
+					'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
+					'type' =>  'IN'
+				));
 
-			$staff->register('notifications', array(
-				'recipient' => $_POST['enduser'],
-				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-				'datecreated' => Date::translate('test', 'now'),
-				'seen' => 0,
-				'href' => "project-details?refno={$project_ref_no}"
-			));
+				$staff->register('notifications', array(
+					'recipient' => $_POST['enduser'],
+					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'datecreated' => Date::translate('test', 'now'),
+					'seen' => 0,
+					'href' => "project-details?refno={$project_ref_no}"
+				));
 
-			$staff->endTrans(); //commit
+				$staff->endTrans(); //commit
 
-			Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
-			notif(json_encode(array(
-				'receiver' => $_POST['enduser'],
-				'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-				'date' => Date::translate(Date::translate('test', 'now'), '1'),
-				'href' => "project-details?refno={$project_ref_no}"
-			)));
-			Redirect::To('new-project');
-			exit();
-			
-			//disable the "register" now button in the new-project page to prevent any data discrepancy
-			//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
-			//send SMS notifications
+				Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
+				notif(json_encode(array(
+					'receiver' => $_POST['enduser'],
+					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno={$project_ref_no}"
+				)));
+				Redirect::To('new-project');
+				exit();
+				
+				//disable the "register" now button in the new-project page to prevent any data discrepancy
+				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
+				//send SMS notifications
 
 			}catch(Execption $e){
 				die($e->getMessage());

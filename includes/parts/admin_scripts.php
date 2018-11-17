@@ -345,10 +345,20 @@ require_once "../../functions/account-verifier.php";
 									icon = "fas fa-chess-pawn";
 									cardAction = `data-toggle="modal" data-target="#returning" data-dismiss="modal"`;
 									break;
-							
+								case "Proceed to resorting unavailable items from DBMPS for canvass":
+									classtype = "lazur-bg"
+									icon = "fas fa-chess-pawn";
+									cardAction = `href="resort-items?q=${reference}"`;
+									break;
+								case "Dismiss Project for all items are available in DBM":
+									classtype = "yellow-bg"
+									icon = "fas fa-check";
+									cardAction = `href="#"`;
+									break;								
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
+									cardAction = ``;
 									break;
 							}
 							
@@ -476,15 +486,6 @@ require_once "../../functions/account-verifier.php";
 					updOut = true;
 				}
 			});
-
-			var tst_rdy = '<?php 
-				if(Session::exists('toust')) echo Session::flash('toust');
-				else echo "0";
-			?>';
-
-			if(tst_rdy !== "0")
-			toastr.success(tst_rdy);
-
 		});
 		// END OF CUSTOM GLOBAL SCRIPTS
 		</script>
@@ -713,8 +714,19 @@ require_once "../../functions/account-verifier.php";
 	</script>
 
 	<script>
+		const DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+		});
+
 		$(function(){
-			var DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			var DataTables_userOverview = $('#DataTables_userOverview').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
 					customize: function (win){
@@ -724,7 +736,7 @@ require_once "../../functions/account-verifier.php";
 					}
 				}]
 			});
-			var DataTables_userOverview = $('#DataTables_userOverview').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			var DataTables_overallLogs = $('#DataTables_overallLogs').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
 					customize: function (win){

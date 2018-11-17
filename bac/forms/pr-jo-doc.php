@@ -10,13 +10,12 @@ else{
 	die();
 }
 
-// if(Session::exists("Request")){
-// 	$REQ = Session::flash('Request');
-// }else{
-// 	exit();
-// }
-// $REQUEST = explode(":", $REQ);
-$REQ = "PR2018-7JFC40:PR";
+if(Session::exists("Request")){
+	$REQ = Session::flash('Request');
+}else{
+	exit();
+}
+// $REQ = "PR2018-7JFC40:PR";
 $REQUEST = explode(":", $REQ);
 $ProjectData = $user->Doc_projData($REQ);
 $UserData = $user->user_data($ProjectData->requested_by);
@@ -179,16 +178,16 @@ $table->addCell(3600);
 $table->addCell(3600)->addText("Approved by:", ['size' => 10], $thPragr);
 
 $table->addRow(43.2);
-$table->addCell(3600)->addText($UserData->edr_fname." ".$UserData->edr_mname." ".$UserData->edr_lname, ['size' => 12, 'bold' => true], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($UserData->edr_fname." ".$UserData->edr_mname." ".$UserData->edr_lname), ['size' => 12, 'bold' => true], $thPragr);
 $table->addCell(3600);
-$table->addCell(3600)->addText($ProjectData->approved_by, ['size' => 12, 'bold' => true], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($ProjectData->approved_by), ['size' => 12, 'bold' => true], $thPragr);
 
 $appJob = $user->get("units", array("office_name", "=" , $OFFICE));
 
 $table->addRow(43.2);
-$table->addCell(3600)->addText($UserData->edr_job_title, ['size' => 11], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($UserData->edr_job_title), ['size' => 11], $thPragr);
 $table->addCell(3600);
-$table->addCell(3600)->addText($appJob->approving_position, ['size' => 11], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($appJob->approving_position), ['size' => 11], $thPragr);
 
 $section->addTextBreak(3);
 
@@ -201,9 +200,9 @@ if($ProjectData->verified_by !== "No data available" && $ProjectData->noted_by !
 	$table->addCell(3600)->addText("Approved by:", ['size' => 10], $thPragr);
 
 	$table->addRow(43.2);
-	$table->addCell(3600)->addText($ProjectData->verified_by, ['size' => 12, 'bold' => true], $thPragr);
+	$table->addCell(3600)->addText(htmlspecialchars($ProjectData->verified_by), ['size' => 12, 'bold' => true], $thPragr);
 	$table->addCell(3600);
-	$table->addCell(3600)->addText($ProjectData->noted_by, ['size' => 12, 'bold' => true], $thPragr);
+	$table->addCell(3600)->addText(htmlspecialchars($ProjectData->noted_by), ['size' => 12, 'bold' => true], $thPragr);
 }
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');

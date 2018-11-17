@@ -297,81 +297,6 @@
 </body>
 <script>
 
-	function reloadTable(d){
-		SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
-			outgoing: d
-		}, {
-			do: function(res){
-				swal({
-					title: "Success!",
-					text: "Document(s) successfully logged out.",
-					type: "success"
-				});
-
-				if(res.twg !== null){
-					DataTable_Twg.clear().draw();
-					res.twg.forEach(function(e, i){
-						DataTable_Twg.row.add([
-							`<input type="checkbox" data="twg" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-							e.title,
-							'TWG',
-							'TWG',
-							e.date_registered
-						]);
-					});
-					DataTable_Twg.draw();							
-				}else{
-					DataTable_Twg.clear().draw();
-				}
-
-				if(res.sign !== null){
-					DataTable_Signiture.clear().draw();
-					res.sign.forEach(function(e, i){
-						DataTable_Signiture.row.add([
-							`<input type="checkbox" data="out" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-							e.title,
-							e.transmitting_to,
-							e.specific_office,
-							e.date_registered
-						]);
-					});
-					DataTable_Signiture.draw();
-				}else{
-					DataTable_Signiture.clear().draw();
-				}
-
-
-				if(res.gen !== null){
-					DataTable_GenDoc.clear().draw();
-					res.gen.forEach(function(e, i){
-						DataTable_GenDoc.row.add([
-							`<input type="checkbox" data="gen" class="i-checks" name="input[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-							e.title,
-							e.transmitting_to,
-							e.specific_office,
-							e.date_registered
-						]);
-					});
-					DataTable_GenDoc.draw();
-				}else{
-					DataTable_GenDoc.clear().draw();
-				}
-
-
-				if(res.forEval.bool){
-					res.forEval.data.forEach(function(e, i){
-						window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
-					});
-				}
-				
-				$('.i-checks').iCheck({
-					checkboxClass: 'icheckbox_square-green',
-					radioClass: 'iradio_square-green'
-				});
-			}
-		});
-	}
-
 	$(document).ready(function(){
 		var DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
@@ -405,6 +330,104 @@
 					}
 				}]
 		});
+
+		function reloadTable(d){
+			SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
+				outgoing: d
+			}, {
+				do: function(res){
+					swal({
+						title: "Success!",
+						text: "Document(s) successfully logged out.",
+						type: "success"
+					});
+
+					if(res.twg !== null){
+						DataTable_Twg.clear().draw();
+						res.twg.forEach(function(e, i){
+							DataTable_Twg.row.add([
+								`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+								'TWG',
+								'TWG',
+								e.date_registered
+							]);
+						});
+						DataTable_Twg.draw();							
+					}else{
+						DataTable_Twg.clear().draw();
+					}
+
+					if(res.sign !== null){
+						DataTable_Signiture.clear().draw();
+						res.sign.forEach(function(e, i){
+							DataTable_Signiture.row.add([
+								`<input type="checkbox" data="out" class="i-checks" name="sign[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+								e.transmitting_to,
+								e.specific_office,
+								e.date_registered
+							]);
+						});
+						DataTable_Signiture.draw();
+					}else{
+						DataTable_Signiture.clear().draw();
+					}
+
+					if(res.gen !== null){
+						DataTable_GenDoc.clear().draw();
+						res.gen.forEach(function(e, i){
+							DataTable_GenDoc.row.add([
+								`<input type="checkbox" data="gen" class="i-checks" name="general[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+								e.transmitting_to,
+								e.specific_office,
+								e.transaction,
+								e.remark,
+								e.date_registered
+							]);
+						});
+						DataTable_GenDoc.draw();
+					}else{
+						DataTable_GenDoc.clear().draw();
+					}
+
+					if(res.updateDoc !== null){
+						DataTables_DocUpdate.clear().draw();
+						res.updateDoc.forEach(function(e, i){
+							DataTables_DocUpdate.row.add([
+								`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+								'TWG',
+								'TWG',
+								e.date_registered
+							]);
+						});
+						DataTables_DocUpdate.draw();
+					}else{
+						DataTables_DocUpdate.clear().draw();
+					}
+
+					if(res.forEval.bool){
+						swal({
+							title: "Evaluation form downloading",
+							text: "Download of Pre-procurement evaluation form will start shortly.",
+							type: "info"
+						});
+						setTimeout(function(){
+							res.forEval.data.forEach(function(e, i){
+								window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+							});
+						}, 3500);
+					}
+					
+					$('.i-checks').iCheck({
+						checkboxClass: 'icheckbox_square-green',
+						radioClass: 'iradio_square-green'
+					});
+				}
+			});
+		}
 		
 		$('#tOut').on('click', function(e){
 			var data_twg = [];

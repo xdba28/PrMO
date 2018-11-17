@@ -17,22 +17,22 @@ if($admin->isLoggedIn()){
 			$admin->startTrans();
 
 			foreach ($_POST['col'] as $v) {
-				if($v['note'] !== "") $note = htmlspecialchars_decode($v['note']);
+				if($v['note'] !== "") $note = htmlspecialchars($v['note']);
 				else $note = 'unset';
 
-				if($v['n_pos'] !== "") $note_pos = htmlspecialchars_decode($v['n_pos']);
+				if($v['n_pos'] !== "") $note_pos = htmlspecialchars($v['n_pos']);
 				else $note_pos = 'unset';
 
-				if($v['verify'] !== "") $verify = htmlspecialchars_decode($v['verify']);
+				if($v['verify'] !== "") $verify = htmlspecialchars($v['verify']);
 				else $verify = 'unset';
 
-				if($v['v_pos'] !== "") $verify_pos = htmlspecialchars_decode($v['v_pos']);
+				if($v['v_pos'] !== "") $verify_pos = htmlspecialchars($v['v_pos']);
 				else $verify_pos = 'unset';
 
-				if($v['approve'] !== "") $approve = htmlspecialchars_decode($v['approve']);
+				if($v['approve'] !== "") $approve = htmlspecialchars($v['approve']);
 				else $approve = 'unset';
 
-				if($v['a_pos'] !== "") $approve_pos = htmlspecialchars_decode($v['a_pos']);
+				if($v['a_pos'] !== "") $approve_pos = htmlspecialchars($v['a_pos']);
 				else $approve_pos = 'unset';
 
 

@@ -10,8 +10,6 @@
        Redirect::To('../../index');
         die();
     }
-    
-
 
 ?>
 

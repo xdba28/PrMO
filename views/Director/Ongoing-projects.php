@@ -24,7 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Procurement Aid</title>
+    <title>PrMO OPPTS | Ongoing Projects</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -38,7 +38,7 @@
 			<div class="sidebar-collapse">
 				<ul class="nav metismenu" id="side-menu">
 					<?php include '../../includes/parts/side_nav_header.php'; ?>
-					<?php include '../../includes/parts/aid_side_nav.php'; ?>
+					<?php include '../../includes/parts/director_side_nav.php'; ?>
 				</ul>
 
 			</div>
@@ -134,21 +134,25 @@
 											<td><?php echo $count;?></td>
 											<td><?php echo $project->project_ref_no;?></td>
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
-											<td>
-											<?php 
-
-												$decodedEndusers = json_decode($project->end_user, true);
-												$namesArray = array();
-
-													foreach ($decodedEndusers as $empID) {
-														array_push($namesArray, $user->fullnameOfEnduser($empID));
-														
-													}
-												$enduserNames =  implode(", ", $namesArray);
-												echo $enduserNames;
+												<td>
+													<?php
 													
-											?></td>
-											<td><?php echo $currentWork;?></td>
+													// echo $project->end_user;
+													$displayEndusers = array();
+
+													$endusersDecoded = json_decode($project->end_user);
+														foreach($endusersDecoded as $singleUser){
+															$enduserFullname = $user->fullnameOfEnduser($singleUser);
+															array_push($displayEndusers, $enduserFullname);
+														}
+
+													$finalUsers =  implode(", ", $displayEndusers);
+													echo $finalUsers;
+													?>
+
+													
+												</td>
+												<td><?php echo $currentWork;?></td>
 											<td><?php echo $project->ABC;?></td>
 											<td class="project-completion">
 												<small>Completion with: <?php echo $accomplishment;?>%</small>
@@ -156,7 +160,7 @@
 													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar"></div>
 												</div>
 											</td>
-											<td><button class="btn btn-success btn-outline" type="button" data-toggle="modal" data-target="#actionsModal" data-reference="<?php echo $project->project_ref_no;?>"><i class="fas fa-project-diagram"></i> View Options</button></td>
+											<td><a href="project-details?refno=<?php echo $project->project_ref_no;?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a></td>
 										</tr>
 										<?php
 											}

@@ -244,7 +244,7 @@
 											<thead>
 											<tr>
 												<th>Select</th>
-												<th>Line</th>
+												<th>Item</th>
 												<th>Stock No.</th>
 												<th>Unit</th>
 												<th>Description</th>

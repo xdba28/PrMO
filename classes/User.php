@@ -432,12 +432,15 @@
             }
 		}		
 
-		public function get($table, $where){	
+		public function get($table, $where){
 			if($this->db->get($table, $where)){
-				return $this->db->first();
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
 			}
 			return false;
-		}		
+		}			
 		
 		public function getAll($table, $where){	
 			if($this->db->get($table, $where)){

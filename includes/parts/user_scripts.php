@@ -100,7 +100,7 @@ require_once "../../functions/account-verifier.php";
 <!-- Denver's Custom JS -->
 <script src="../../includes/js/custom.js"></script>
 <script>
-	var audio = new Audio('../../assets/audio/definite.mp3');
+	const audio = new Audio('../../assets/audio/definite.mp3');
 	
 	$(function(){
 		// Enable pusher logging - don't include this in production
@@ -111,19 +111,33 @@ require_once "../../functions/account-verifier.php";
 			forceTLS: true
 		});
 
+		const title = document.querySelector('title').innerText;
+		const NotifCount = document.getElementById('NotifCount');
+		function titleChange(){
+			if(NotifCount.innerText === ''){
+				document.querySelector('title').innerText = title;
+			}else{
+				let count = parseFloat(NotifCount.innerText);
+				let new_title = `(${count}) ${title}`;
+				document.querySelector('title').innerText = new_title;
+			}		
+		}
+		titleChange();
+
 		var Notif_channel = Notif.subscribe('notif');
 		Notif_channel.bind('update', function(data){
 			let msg = JSON.parse(data);
 			if(msg.receiver === $('meta[name="auth"]').attr('content')){
 				$('#message').remove();
 				$('#NotifCount').show();
-				let NotifCount = document.getElementById('NotifCount');
+				
 				if(NotifCount.innerText === ''){
 					NotifCount.innerText = 1;
 				}else{
 					let add = parseFloat(NotifCount.innerText) + 1;
 					NotifCount.innerText = (add).toFixed(0);
 				}
+				titleChange();
 				
 				if(typeof msg.href !== 'undefined'){
 					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
@@ -160,6 +174,7 @@ require_once "../../functions/account-verifier.php";
 					if(res.success){
 						$('#NotifCount').hide();
 						document.getElementById('NotifCount').innerText = '';
+						titleChange();
 					}
 				}
 			}, false, {
@@ -177,7 +192,6 @@ require_once "../../functions/account-verifier.php";
 
 	});
 </script>
-
 
 <script>
     $(document).ready(function(){

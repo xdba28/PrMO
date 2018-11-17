@@ -136,6 +136,8 @@
 					$monthEntries = $user->dashboard_procurement_entries('month');
 					$weekEntries = $user->dashboard_procurement_entries('week');
 					$dayEntries = $user->dashboard_procurement_entries('day');
+					
+
 				?>
 
 				<div class="row col-lg-12 ">
@@ -189,7 +191,7 @@
 									<h1 class="no-margins"><?php echo $monthEntries[0];?></h1>
 									<small>Total Entries</small>
 										<?php
-											if($monthEntries[1] == "No Comparison Data available from previous year."){
+											if($monthEntries[1] == "No Comparison Data available from previous month."){
 										?>	
 											
 										<div class="stat-percent font-bold text-danger"><small><?php echo $monthEntries[1];?></small></div><br><br>
