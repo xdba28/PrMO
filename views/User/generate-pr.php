@@ -26,6 +26,7 @@
 			
 							'form_ref_no' => $form_ref_no,
 							'title' => Input::get('title'),
+							'purpose' => Input::get('purpose'),
 							'requested_by' => Session::get(Config::get('session/session_name')),
 							'noted_by' => Input::get('noted'),
 							'verified_by' => Input::get('verified'),
@@ -99,6 +100,7 @@
 		
 						'form_ref_no' => $form_ref_no,
 						'title' => Input::get('title'),
+						'purpose' => Input::get('purpose'),
 						'requested_by' => Session::get(Config::get('session/session_name')),
 						'noted_by' => Input::get('noted'),
 						'verified_by' => Input::get('verified'),
@@ -183,7 +185,7 @@
 
 	<script>
 		function form(){
-			$('div.row.ibox-content').toggleClass('sk-loading');
+			$('div.ibox-content').toggleClass('sk-loading');
 			swal({
 				title: "Success!",
 				text: "Request form will be downloaded shortly.",
@@ -235,203 +237,213 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
+            <div class="wrapper wrapper-content animated fadeInUp">
 					<!-- Content here-->
 
-			<div class="wrapper wrapper-content animated fadeInRight">
-				<div class="row ibox-content">
-					<div class="sk-spinner sk-spinner-double-bounce">
-							<div class="sk-double-bounce1"></div>
-							<div class="sk-double-bounce2"></div>
-					</div>					
-					<div class="col-lg-12">
-						<div class="tabs-container">
-							<ul class="nav nav-tabs">
-								<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Project &nbsp&nbsp<i class="ti-folder" style="font-size:18px"></i></a></li>
-								<li><a class="nav-link" data-toggle="tab" href="#tab-2">Particulars &nbsp&nbsp<i class="ti-pencil-alt" style="font-size:18px"></i></a></li>
-								<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
-							</ul>
-							<div class="tab-content">
-								<div><form id="pr_form" method="POST" onsubmit="form()"></div>
-								
-								<div id="tab-1" class="tab-pane active">
-									<div class="panel-body">
-									   <h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Project Information</h2>
-									  
-
-										<p>Specify the required fields to generate the Purchase Request Form that suits your need.</p>
-										<div class="row">
-											<div class="col-lg-7">
-												<div class="form-group">
-													<label>Project title *</label>
-													<input id="title" name="title" type="text" class="form-control" form="pr_form" required>
-												</div>
-												<div class="form-group">
-													<label>Overall Estimated Cost *</label>
-													<input id="estimated_cost" name="estimated_cost" type="text" class="form-control" form="pr_form" required>
-												</div>
-												<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="right" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
-													<label class="font-normal"></label>
-													<div>
-														<select data-placeholder="Choose Category" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form">															
-															<option value="Common Office Supplies">Common Office Supplies</option>
-															<option value="Paper Materials & Products">Paper Materials & Products</option>          
-															<option value="Hardware Supplies">Hardware Supplies</option>
-															<option value="Sporting Supplies">Sporting Supplies</option>
-															<option value="Common Janitorial/Cleaning Supplies">Common Janitorial/Cleaning Supplies</option>
-															<option value="IT Supplies">IT Supplies</option>
-															<option value="Laboratory Supplies">Laboratory Supplies</option>
-															<option value="Computer Supplies">Computer Supplies</option>
-														</select>
-													</div>
-												</div>
-											</div>
-											<div class="col-lg-3">
-												<div class="text-center">
-													<div style="margin-left: 100px">
-														<i class="ti-layout-tab" style="font-size: 180px;color: #FFD700 "></i>
-													</div>
-												</div>
-											</div>
-											<div class="col-lg-7">
-												<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>				
-											</div>												
-										</div>
-
-									</div>	
-								</div>
-								<div id="tab-2" class="tab-pane">
-									<div class="panel-body">
-										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Particulars Setting</h2>
-										<p>List all your item needed to the corresponding fields.</p>
-
-										<div class="row">
-											<div class="col-lg-12" id="stp-2">
-											<div class="ibox">
-												<div class="ibox-title">
-													<div class="project-alert alert-warning">
-														<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L0-title" form="pr_form" readonly></h5>
-													</div>
-													<div class="add-project">
-													<div class="btn-group">
-														<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Specify specific No. of Rows</button>
-														<ul class="dropdown-menu">
-															<li><input type="number" id="rowCount" class="form-control" min="1"></li>
-														</ul>
-													</div>													
-														<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
-													</div>
-												</div>
-												<div class="ibox-content">
-													<table class="table table-bordered">
-														<thead>
-														<tr>
-															<th class="center">Stock No.</th>
-															<th class="center">Unit</th>
-															<th class="center">Item Description</th>
-															<th class="center">Quantity</th>
-															<th class="center">Unit Cost</th>
-															<th class="center">Total Cost</th>
-														</tr>
-														</thead>
-														<tbody id="pr-tbl-static">
-															<tr id="pr-0-r-0">
-																<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
-																<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
-																<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
-																<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
-																<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
-																<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
-															</tr>
-														</tbody>
-															<tr>
-																<td></td>
-																<td></td>
-																<td></td>
-																<td></td>
-																<td>Total Lot Cost: </td>
-																<td><input type="number" step=".01" class="form-control" name="L0-TLC" readonly form="pr_form" required></td>
-															</tr>
-													</table>
-													<div style="text-align: right">
-														<button type="button" data="del" data-list="pr-0-r-0" class="btn btn-danger btn-rounded btn-outline">Delete Last Row <i class="ti ti-minus" style="font-weight:900"></i></button>
-													</div>
-												</div>
-											</div>
-											</div>		
-											<div class="col-lg-12">
-												<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
-											</div>											
-										</div>
-									</div>
-									
-									
-									
-								</div>
-								<div id="tab-3" class="tab-pane">
-									<div class="panel-body">
-										   <h2><a style="color:#2a9c97">Step 3 of  &nbsp3</a><br>Project Signatories</h2>
-
-											<p>Specify all signatories to finalized this form.</p>
-											
-											<div class="row">
-											<?php
-												$enduserData = $user->get('enduser', array('edr_id', '=', $user->data()->account_id));
-												$enduserUnitData = $user->get('units', array('ID', '=', $enduserData->edr_designated_office));
-												$signatories = array();
-												foreach ($enduserUnitData as $key => $value) {
-													if($value == "unset"){
-														$signatories[$key] = "No data available";
-													}else{
-														$signatories[$key] = $value;
-													}
-												}
-
-												// echo "<pre>",print_r($signatories),"</pre>";
-											?>
-												<div class="col-lg-7">
-													<div class="form-group">
-														<label>End User *</label>
-														<input id="enduser" name="enduser" type="text" value="<?php echo $currentUser[0];?>" class="form-control" readonly form="pr_form" required>
-													</div>
-													<div class="form-group">
-														<label>Noted By *</label>
-														<input id="noted" name="noted" type="text" value="<?php echo $signatories['note'];?>" class="form-control" form="pr_form" readonly>
-													</div>
-													<div class="form-group">
-														<label>Verified By *</label>
-														<input id="verified" name="verified" type="text" value="<?php echo $signatories['verifier'];?>" class="form-control" form="pr_form" readonly>
-													</div>
-													<div class="form-group">
-														<label>Aproved By *</label>
-														<input id="approved" name="approved" type="text" value="<?php echo $signatories['approving'];?>" class="form-control" form="pr_form" readonly>
-													</div>													
-												</div>
-												<div class="col-lg-3">
-													<div class="text-center">
-														<div style="margin-left: 100px;  margin-top:20px">
-															<i class="ti-user" style="font-size: 180px;color: #FFD700;"></i>
-														</div>
-													</div>
-												</div>	
-												<div class="col-md-7">
-													<input type="text" name="prToken" value="<?php echo Token::generate("prToken");?>" hidden form="pr_form">
-													<input type="text"  id="row_count" name="row_count" class="form-control" hidden readonly form="pr_form">
-													<input type="text"  id="lot_count" name="lot_count" class="form-control" hidden readonly form="pr_form">	
-
-													<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
-													<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
-												</div>
-											</div>											
-									</div>
-								</div>
-								
-							</div>
-						</div>
-					</div>
+				<div class="row">
 				
-				</div><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br><br>
-			</div>
+						<div class="col-lg-12 animated fadeInRight">
+							<div class="ibox myShadow">
+								<div class="ibox-content">
+									<div class="sk-spinner sk-spinner-double-bounce">
+											<div class="sk-double-bounce1"></div>
+											<div class="sk-double-bounce2"></div>
+									</div>									
+									<div class="tabs-container">
+										<ul class="nav nav-tabs">
+											<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Project &nbsp&nbsp<i class="ti-folder" style="font-size:18px"></i></a></li>
+											<li><a class="nav-link" data-toggle="tab" href="#tab-2">Particulars &nbsp&nbsp<i class="ti-pencil-alt" style="font-size:18px"></i></a></li>
+											<li><a class="nav-link" data-toggle="tab" href="#tab-3">Signatories &nbsp&nbsp<i class="ti-user" style="font-size:18px"></i></a></li>
+										</ul>
+										<div class="tab-content">
+											<div><form id="pr_form" method="POST" onsubmit="form()"></div>
+											
+											<div id="tab-1" class="tab-pane active">
+												<div class="panel-body">
+												   <h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Project Information</h2>
+												  
+												   <div class="alert alert-success">
+												   Note: If your Project has multiple separated Purchase Requests or Job Orders, you and worry free to merge your requests forms in the system, our personnel incharge would be the one to merge Purchase requests and Joborder to one single project.
+												   </div>
+
+													<p>Specify the required fields to generate the Purchase Request Form that suits your need.</p><br>
+													<div class="row">
+														<div class="col-lg-7">
+															<div class="form-group">
+																<label>Request title *</label>
+																<input id="title" name="title" type="text" class="form-control" form="pr_form" required>
+															</div>
+															<div class="form-group">
+																<label>Purpose *</label>
+																<input id="purpose" name="purpose" type="text" class="form-control" form="pr_form" required>
+															</div>
+															<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="right" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
+																<label class="font-normal">Category(-ies)</label>
+																<div>
+																	<select data-placeholder="Choose Category or Lots needed" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form">															
+																		<option value="Common Office Supplies">Common Office Supplies</option>
+																		<option value="Paper Materials & Products">Paper Materials & Products</option>          
+																		<option value="Hardware Supplies">Hardware Supplies</option>
+																		<option value="Sporting Supplies">Sporting Supplies</option>
+																		<option value="Common Janitorial/Cleaning Supplies">Common Janitorial/Cleaning Supplies</option>
+																		<option value="ICT Supplies">ICT Supplies</option>
+																		<option value="Laboratory Supplies">Laboratory Supplies</option>
+																		<option value="Computer Supplies">Computer Supplies</option>
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-3">
+															<div class="text-center">
+																<div style="margin-left: 100px">
+																	<i class="ti-layout-tab" style="font-size: 180px;color: #FFD700 "></i>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-7">
+															<a id="#tab-1" href="#tab-1" data="tab" class="btn btn-primary pull-right">Next</a>				
+														</div>												
+													</div>
+
+												</div>	
+											</div>
+											<div id="tab-2" class="tab-pane">
+												<div class="panel-body">
+													<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Particulars Setting</h2>
+													<p>List all your item needed to the corresponding fields.</p>
+
+													<div class="row">
+														<div class="col-lg-12" id="stp-2">
+														<div class="ibox">
+															<div class="ibox-title">
+																<div class="project-alert alert-warning">
+																	<h5>Below is the item list for uncategorized Purchase Request<input type="text" hidden name="L0-title" form="pr_form" readonly></h5>
+																</div>
+																<div class="add-project">
+																<div class="btn-group">
+																	<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-rounded btn-outline">Specify specific No. of Rows</button>
+																	<ul class="dropdown-menu">
+																		<li><input type="number" id="rowCount" class="form-control" min="1"></li>
+																	</ul>
+																</div>													
+																	<button type="button" data-type="lst-add" id="pr-static" class="btn btn-success btn-rounded btn-outline">Add Listing <i class="ti ti-plus" style="font-weight:900"></i></button>
+																</div>
+															</div>
+															<div class="ibox-content">
+																<table class="table table-bordered">
+																	<thead>
+																	<tr>
+																		<th class="center">Stock No.</th>
+																		<th class="center">Unit</th>
+																		<th class="center">Item Description</th>
+																		<th class="center">Quantity</th>
+																		<th class="center">Unit Cost</th>
+																		<th class="center">Total Cost</th>
+																	</tr>
+																	</thead>
+																	<tbody id="pr-tbl-static">
+																		<tr id="pr-0-r-0">
+																			<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
+																			<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+																			<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
+																			<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
+																			<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
+																			<td class="right"><input type="number" step=".01" data="Tsct" data-cnt="pr-0-Tsct-lst-0" name="L0-Tcst-0" class="form-control" min="0.01" readonly form="pr_form" required></td>																
+																		</tr>
+																	</tbody>
+																		<tr>
+																			<td></td>
+																			<td></td>
+																			<td></td>
+																			<td></td>
+																			<td>Total Lot Cost: </td>
+																			<td><input type="number" step=".01" class="form-control" name="L0-TLC" readonly form="pr_form" required></td>
+																		</tr>
+																</table>
+																<div style="text-align: right">
+																	<button type="button" data="del" data-list="pr-0-r-0" class="btn btn-danger btn-rounded btn-outline">Delete Last Row <i class="ti ti-minus" style="font-weight:900"></i></button>
+																</div>
+															</div>
+														</div>
+														</div>		
+														<div class="col-lg-12">
+															<a id="#tab-2" href="#tab-2" data="tab" class="btn btn-primary pull-right" style="margin-right: 20px">Next</a>								
+														</div>											
+													</div>
+												</div>
+												
+												
+												
+											</div>
+											<div id="tab-3" class="tab-pane">
+												<div class="panel-body">
+													   <h2><a style="color:#2a9c97">Step 3 of  &nbsp3</a><br>Project Signatories</h2>
+
+														<p>Specify all signatories to finalized this form.</p>
+														
+														<div class="row">
+														<?php
+															$enduserData = $user->get('enduser', array('edr_id', '=', $user->data()->account_id));
+															$enduserUnitData = $user->get('units', array('ID', '=', $enduserData->edr_designated_office));
+															$signatories = array();
+															foreach ($enduserUnitData as $key => $value) {
+																if($value == "unset"){
+																	$signatories[$key] = "No data available";
+																}else{
+																	$signatories[$key] = $value;
+																}
+															}
+
+															// echo "<pre>",print_r($signatories),"</pre>";
+														?>
+															<div class="col-lg-7">
+																<div class="form-group">
+																	<label>End User *</label>
+																	<input id="enduser" name="enduser" type="text" value="<?php echo $currentUser[0];?>" class="form-control" readonly form="pr_form" required>
+																</div>
+																<div class="form-group">
+																	<label>Noted By *</label>
+																	<input id="noted" name="noted" type="text" value="<?php echo $signatories['note'];?>" class="form-control" form="pr_form" readonly>
+																</div>
+																<div class="form-group">
+																	<label>Verified By *</label>
+																	<input id="verified" name="verified" type="text" value="<?php echo $signatories['verifier'];?>" class="form-control" form="pr_form" readonly>
+																</div>
+																<div class="form-group">
+																	<label>Aproved By *</label>
+																	<input id="approved" name="approved" type="text" value="<?php echo $signatories['approving'];?>" class="form-control" form="pr_form" readonly>
+																</div>													
+															</div>
+															<div class="col-lg-3">
+																<div class="text-center">
+																	<div style="margin-left: 100px;  margin-top:20px">
+																		<i class="ti-user" style="font-size: 180px;color: #FFD700;"></i>
+																	</div>
+																</div>
+															</div>	
+															<div class="col-md-7">
+																<input type="text" name="prToken" value="<?php echo Token::generate("prToken");?>" hidden form="pr_form">
+																<input type="text"  id="row_count" name="row_count" class="form-control" hidden readonly form="pr_form">
+																<input type="text"  id="lot_count" name="lot_count" class="form-control" hidden readonly form="pr_form">	
+
+																<button class="btn btn-primary btn-outline pull-right" type="submit" form="pr_form">Finish</button>
+																<a href="Dashboard"><button type="button" class="btn btn-danger btn-outline pull-right" style="margin-right:5px">Cancel</button></a>
+															</div>
+														</div>											
+												</div>
+											</div>
+											
+										</div>
+									</div>								
+								</div>		
+								
+
+							</div>
+						</div> 
+					
+					<br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br><br>
+					
+				</div>
 
 			
             </div>

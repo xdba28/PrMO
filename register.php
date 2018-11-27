@@ -74,7 +74,7 @@
                         'userpassword' => Input::get('password'),
 						'submitted' => date('Y-m-d H:i:s'),
 						'specific_office' => Input::get('specific_office'),
-						'job_title' => Input::get('jobtitle')
+						'jobtitle' => Input::get('jobtitle')
 
                     ));
                     
@@ -209,11 +209,11 @@
                                     <h2>Profile Information</h2>
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="form-group" id="popOver" data-trigger="hover" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
+                                            <div class="form-group" id="popOver" data-trigger="active" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
                                                 <label>First name *</label>
                                                 <input id="name" name="name" type="text" class="form-control ">
                                             </div>
-                                            <div class="form-group" id="popOver1" data-trigger="hover" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
+                                            <div class="form-group" id="popOver1" data-trigger="active" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
                                                 <label>Middle name *</label>
                                                 <input id="midlename" name="midlename" type="text" class="form-control ">
                                             </div>											
@@ -221,7 +221,7 @@
                                                 <label>Last name *</label>
                                                 <input id="surname" name="surname" type="text" class="form-control">
                                             </div>
-                                            <div class="form-group"  id="popOver2" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you">
+                                            <div class="form-group"  id="popOver2" data-trigger="active" title="Instruction" data-placement="top" data-content="Eg. Jr, Sr, II, III. Leave it blank if not applicable.">
                                                 <label>Extension name </label>
                                                 <input id="extname" name="extname" type="text" class="form-control">
                                             </div>

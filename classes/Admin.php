@@ -91,10 +91,71 @@
 
             return false;
 		}
+
+		public function like($table, $column, $key){
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE {$column} LIKE '%{$key}%'")){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+
+			return false;
+		}
+
+		//using like
+		public function searchProject($key){
+
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE project_ref_no LIKE '%{$key}%' OR project_title LIKE '%{$key}%'")){
+				return $this->db->results();
+			}
+			return false;
+
+		}
+
+		public function logLastUpdated($ID){ //to get the data when the last update of the project
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' GROUP BY ID ORDER BY logdate DESC")){
+				return $this->db->first();
+			}
+			return false;
+		}
+
+		//project details important updates
+		public function importantUpdates($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}	
+		
+		public function projectHistory($originRefno, $currentRefno){
+
+			$noOfOrigin = count($originRefno);
+
+			if($noOfOrigin > 1){
+					$imploded = implode("' OR referencing_to = '", $originRefno);
+					$filteredSql = "referencing_to ='" .$imploded. "'";
+			}else{
+				$filteredSql = "referencing_to = '{$originRefno[0]}'";
+			}
+
+			if($this->db->query_builder("SELECT referencing_to, remarks, logdate, project_logs.type
+			FROM `projects`, `project_logs`
+			WHERE $filteredSql OR
+			referencing_to = '{$currentRefno}' GROUP BY ID ORDER BY logdate DESC
+			")){
+				return $this->db->results();
+			}
+
+			return false;
+		}
 		
 		public function dashboard_procurement_entries($option){
-
-
 
 			switch ($option) {
 				case 'year':
@@ -300,9 +361,9 @@
 
 		public function listNotification(){
             $user = Session::get($this->sessionName);
-			$this->db->query_builder("SELECT message, datecreated, seen, href FROM notifications WHERE recipient = '{$user}' ORDER BY ID DESC");
+			$this->db->query_builder("SELECT message, datecreated, seen, href FROM `notifications` WHERE recipient = '{$user}' ORDER BY ID DESC");
 			$notifList = $this->db->results();
-			$this->db->query_builder("SELECT COUNT(seen) as seen FROM notifications WHERE recipient = '{$user}' and seen = '0'");
+			$this->db->query_builder("SELECT COUNT(seen) as seen FROM `notifications` WHERE recipient = '{$user}' and seen = '0'");
 			$nofitCount = $this->db->first();
 			$notif = [
 				'list' => $notifList,
@@ -311,9 +372,84 @@
 			return $notif;
 		}
 
+		// re-sort project
+		public function projectDetails($id){
+			$this->db->query_builder("SELECT request_origin, project_title, ABC, MOP, end_user FROM `projects` WHERE project_ref_no = '{$id}'");
+			$project = $this->db->first();
+
+			$pj_id = json_decode($project->request_origin);
+
+			foreach($pj_id as $val){
+				$this->db->query_builder("SELECT request_origin, lot_id, lot_title, lot_cost, note, type FROM `project_request_forms`, `lots`
+					WHERE project_request_forms.form_ref_no = lots.request_origin
+					AND request_origin = '{$val}'");
+				$pj_details = $this->db->results();
+
+				$lot = null;
+				foreach($pj_details as $a){
+					if($a->type === "PR"){
+						$this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
+							FROM `lot_content_for_pr`, `lots`
+							WHERE lot_content_for_pr.lot_id_origin = lots.lot_id
+							AND lot_id_origin = '{$a->lot_id}'");
+						$lot_details = $this->db->results();
+
+						$type = $a->type;
+	
+						$l_details = null;
+						foreach($lot_details as $b){
+							$l_details[] = [
+								'stock_no' => $b->stock_no,
+								'unit'=> $b->unit,
+								'desc' => $b->item_description,
+								'qty' => $b->quantity,
+								'uCost' => $b->unit_cost,
+								'tCost' => $b->total_cost
+							];
+						}
+					}elseif($a->type === "JO"){
+						$this->db->query_builder("SELECT header, tags
+							FROM `lot_content_for_jo`, `lots`
+							WHERE lot_content_for_jo.lot_id_origin = lots.lot_id
+							AND lot_id_origin = '{$a->lot_id}'");
+						$lot_details = $this->db->results();
+
+						$type = $a->type;
+	
+						$l_details = null;
+						foreach($lot_details as $b){
+							$l_details[] = [
+								'header' => $b->header,
+								'tags' => $b->tags
+							];
+						}
+					}
+
+					$lot[] = [
+						'l_id' => $a->lot_id,
+						'l_title' => $a->lot_title,
+						'l_cost' => $a->lot_cost,
+						'l_note' =>$a->note,
+						'lot_items' => $l_details
+					];
+				}
+	
+				$details[] = [
+					'type' => $type,
+					'refno' => $id,
+					'req_origin' => $val,
+					'title' => $project->project_title,
+					'MOP' => $project->MOP,
+					'ABC' => $project->ABC,
+					'lots' => $lot
+				];
+			}
+			return $details;
+		}
+
 		// modal pre procurement evaluation registration
 		public function checkProjectIssue($id){
-			if($this->db->query_builder("SELECT remarks FROM project_logs 
+			if($this->db->query_builder("SELECT remarks FROM `project_logs`
 			WHERE remarks LIKE '%ISSUE%' AND referencing_to = '{$id}'")){
 				return $this->db->results();
 			}else{
@@ -339,7 +475,10 @@
 		
 		public function get($table, $where){
 			if($this->db->get($table, $where)){
-				return $this->db->first();
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
 			}
 			return false;
 		}	

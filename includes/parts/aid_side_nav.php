@@ -15,7 +15,8 @@
     <a href="#"><i class="far fa-folder-open side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level collapse">
         <li><a href="Ongoing-projects">Ongoing Projects</a></li>
-        <li><a href="Paused-projects">On hold Projects</a></li>				
+        <li><a href="Paused-projects">Paused Projects</a></li>
+		<li><a href="Revision-requests">Revision Requests <span class="label label-info float-right" style="color:black; font-weight:200px">62</span></a></li>
     </ul>
 </li>
 

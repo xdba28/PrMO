@@ -345,10 +345,20 @@ require_once "../../functions/account-verifier.php";
 									icon = "fas fa-chess-pawn";
 									cardAction = `data-toggle="modal" data-target="#returning" data-dismiss="modal"`;
 									break;
-							
+								case "Proceed to resorting unavailable items from DBMPS for canvass":
+									classtype = "lazur-bg"
+									icon = "fas fa-chess-pawn";
+									cardAction = `href="resort-items?q=${reference}"`;
+									break;
+								case "Dismiss Project for all items are available in DBM":
+									classtype = "yellow-bg"
+									icon = "fas fa-check";
+									cardAction = `href="#"`;
+									break;								
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
+									cardAction = ``;
 									break;
 							}
 							
@@ -367,16 +377,19 @@ require_once "../../functions/account-verifier.php";
 							</a>`;
 							if(res.issue){
 								$('[dataFor="pre-proc-eval-issue"]').html(`
+								<div class="alert alert-danger">
+									This project has a previous issue with technical member's evaluation. Choose below from the options if this issue has been resolved or not.
+								</div>								
 								<div class="radio radio-danger" style="padding-left:5px">
-									<input type="radio" name="issue_again" id="radio1" value="option1">
-									<label for="radio1" class="text-warning">
-										Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
+									<input type="radio" name="resolution" id="radio1" value="no" required>
+									<label for="radio1" class="text-danger">
+										Check this if you consider this comment as another issue to be resolved or cleared by the enduser.
 									</label>
 								</div>
 								<div class="radio radio-info" style="padding-left:5px">
-									<input type="radio" name="resolution" id="radio2" value="option2">
-									<label for="radio2" class="text-info">
-										Check this if this evaluation is a resolution from the previous evaluation issue.
+									<input type="radio" name="resolution" id="radio2" value="yes" required >
+									<label for="radio2" class="text-success">
+										Check this if this re-evaluation is a resolution from the previous evaluation issue.
 									</label>
 								</div>`);
 							}else{
@@ -473,15 +486,6 @@ require_once "../../functions/account-verifier.php";
 					updOut = true;
 				}
 			});
-
-			var tst_rdy = '<?php 
-				if(Session::exists('toust')) echo Session::flash('toust');
-				else echo "0";
-			?>';
-
-			if(tst_rdy !== "0")
-			toastr.success(tst_rdy);
-
 		});
 		// END OF CUSTOM GLOBAL SCRIPTS
 		</script>
@@ -710,17 +714,19 @@ require_once "../../functions/account-verifier.php";
 	</script>
 
 	<script>
+		const DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+		});
+
 		$(function(){
-			var DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
-			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
-				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
-					customize: function (win){
-						$(win.document.body).addClass('white-bg');
-						$(win.document.body).css('font-size', '10px');
-						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-					}
-				}]
-			});
+
 			var DataTables_userOverview = $('#DataTables_userOverview').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
@@ -731,13 +737,36 @@ require_once "../../functions/account-verifier.php";
 					}
 				}]
 			});
+
+			var DataTables_overallLogs = $('#DataTables_overallLogs').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+					customize: function (win){
+						$(win.document.body).addClass('white-bg');
+						$(win.document.body).css('font-size', '10px');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}]
+			});
+
+			// var DataTables_updateRequests = $('#DataTables_updateRequests').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			// buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			// 	{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+			// 		customize: function (win){
+			// 			$(win.document.body).addClass('white-bg');
+			// 			$(win.document.body).css('font-size', '10px');
+			// 			$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+			// 		}
+			// 	}]
+			// });
+
 		});
 	</script>
 
 	<script> //search script
 		$(function(){
 			$('#FormSearchModal').submit(function(e) {
-				e.preventDefault();
+				// e.preventDefault(); this shit prevents the form from submitting
 				if ($(this).hasClass('active')) 
 				$(this).removeClass('active');
 			});

@@ -92,3 +92,17 @@ async function sweet(param = {}, code = {
 		Err.f(res);
 	}
 }
+
+function escapeHtml(text){
+	var map = {
+	  '&': '&amp;',
+	  '<': '&lt;',
+	  '>': '&gt;',
+	  '"': '&quot;',
+	  "'": '&#039;'
+	};
+  
+	return text.replace(/[&<>"']/g, function(m){
+		return map[m];
+	});
+}

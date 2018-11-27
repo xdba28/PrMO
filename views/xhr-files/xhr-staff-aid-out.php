@@ -9,8 +9,6 @@ else{
 	die();
 }
 
-	// sample data from post - -> > array('GSD2018-4', GSD2018-5)
-
 	if(!empty($_POST))
 	{
 		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
@@ -67,8 +65,6 @@ else{
 				
 			}
 
-
-
 			$user->endTrans();
 
 		}catch(Exception $e){
@@ -82,6 +78,7 @@ else{
 		$outData = NULL;
 		$signiture = NULL;
 		$gen = NULL;
+		$updateDoc = NULL;
 
 		$outgoing = $user->selectAll('outgoing');
 		if(!empty($outgoing)){
@@ -117,6 +114,8 @@ else{
 							'title' => $project->project_title,
 							'transmitting_to' => $unit->office_name,
 							'specific_office' => $document->specific_office,
+							'transaction' => $document->transactions,
+							'remark' => $document->remarks,					
 							'date_registered' => Date::translate($document->date_registered, 1)
 						];
 						break;
@@ -124,17 +123,25 @@ else{
 			}
 		}
 
-		// echo "<pre>".print_r($outData)."</pre>";
-		// echo "<hr>";
-		// echo "<pre>".print_r($signiture)."</pre>";
-		// echo "<hr>";
-		// echo "<pre>".print_r($gen)."</pre>";
+		$released = $user->selectAll('outgoing_register');
+		if(!empty($released)){
+			foreach($released as $a){
+				$project = $user->get('projects', array('project_ref_no', '=', $a->project));
+
+				$updateDoc[] = [
+					'project' => $a->project,
+					'title' => $project->project_title,
+					'date_registered' => Date::translate($a->date_registered, 1)
+				];
+			}
+		}
 		
 		$data = [
 			'success' => true, 
 			'twg' => $outData,
 			'sign' => $signiture,
 			'gen' => $gen,
+			'updateDoc' => $updateDoc,
 			'forEval' => [
 				'bool' => $eval, 
 				'data' => $_POST['outgoing']

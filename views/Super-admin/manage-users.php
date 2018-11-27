@@ -248,23 +248,24 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
-                                   placeholder="Search in table">
+                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter" placeholder="Search in table">
                             <table class="footable table table-stripped toggle-arrow-tiny" data-filter=#filter>
+							
                                 <thead>
-                                <tr>
+									<tr>
 
-                                    <th data-toggle="true">Name</th>
-                                    <th>Office</th>
-                                    <th>Position</th>
-                                    <th data-hide="all">Employee ID</th>
-                                    <th data-hide="all">Email</th>
-                                    <th data-hide="all">Phone</th>
-                                    <th data-hide="all">Phase</th>
-                                    <th data-hide="all">Account Status</th>
-                                    <th>Action</th>
-                                </tr>
+										<th data-toggle="true">Name</th>
+										<th>Office</th>
+										<th>Position</th>
+										<th data-hide="all">Employee ID</th>
+										<th data-hide="all">Email</th>
+										<th data-hide="all">Phone</th>
+										<th data-hide="all">Phase</th>
+										<th data-hide="all">Account Status</th>
+										<th>Action</th>
+									</tr>
                                 </thead>
+								
                                 <tbody>
                                 <?php
 
@@ -317,12 +318,13 @@
                                 
                                 ?>
                                 </tbody>
+								
                                 <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        <ul class="pagination float-right"></ul>
-                                    </td>
-                                </tr>
+									<tr>
+										<td colspan="5">
+											<ul class="pagination float-right"></ul>
+										</td>
+									</tr>
                                 </tfoot>
                             </table>
 

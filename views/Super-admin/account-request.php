@@ -13,7 +13,7 @@
 
 	$e = "";
 
-    $user = $user->profile(Session::get(Config::get('session/session_name')));
+    //$user = $user->profile(Session::get(Config::get('session/session_name')));
 
 	$sa = new Super_admin();
 	$requests = $sa->requests();

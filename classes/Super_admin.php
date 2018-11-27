@@ -87,11 +87,15 @@
 		}
 
 		//xhr-req-approve.php
-		public function get($name, $fields = array()){
-			if($this->db->get($name, $fields)){
-				return $this->db->first();
-			}else return false;
-		}
+		public function get($table, $where){
+			if($this->db->get($table, $where)){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+			return false;
+		}	
 
 		public function delPersn($table, $where = array()){
 			if($this->db->delete($table, $where)){

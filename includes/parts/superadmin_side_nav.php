@@ -5,7 +5,7 @@
                     <a href="#"><i class="ti-panel side"></i> <span class="nav-label">System Settings</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="college-units">College / Units</a></li>
-						<li><a href="">Commitee</a></li>					
+						<li><a href="commitee">Commitee</a></li>					
                     </ul>
                 </li>	
                 <li>

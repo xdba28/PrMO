@@ -241,9 +241,11 @@
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname;
                     }else{
                         $fullname = $temp->edr_fname .' '.$temp->edr_mname.' '.$temp->edr_lname.' '.$temp->edr_ext_name;
-                    }
+					}
+					
+					$forGreetings = $temp->edr_fname.' '.$temp->edr_lname;
                    
-					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title];
+					$myArray = ["0" => $fullname, "1" => $temp->edr_job_title, "2" => $forGreetings];
 					$json =  json_encode($myArray, JSON_FORCE_OBJECT);
                    
                     return $json;
@@ -329,12 +331,12 @@
 
 
 		//used for PR and JO lots
-		public function updateLots($lot, $origin, $costNote){
-			if($this->db->query_builder("UPDATE lots SET lot_cost = '{$costNote[0]}', note = '{$costNote[1]}' WHERE request_origin = '{$origin}' AND lot_no = '{$lot}'")){
-				return true;
-			}
-			return false;
-		}
+		// public function updateLots($lot, $origin, $costNote){
+		// 	if($this->db->query_builder("UPDATE lots SET lot_cost = '{$costNote[0]}', note = '{$costNote[1]}' WHERE request_origin = '{$origin}' AND lot_no = '{$lot}'")){
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
 
 		// used for recomputing PR lots costs
 		public function recompute($origin, $lot){
@@ -403,10 +405,34 @@
 			
 		}
 
+		//used to validated if the requests form(PR / JO still has any items on it or any items from each lot.)
+		public function checkItems($refno, $lot, $type){
+
+			if($type === 'JO'){
+				$endTable = 'lot_content_for_jo';
+			}else if($type === 'PR'){
+				$endTable = 'lot_content_for_pr';
+			}
+
+			if($this->db->query_builder("SELECT COUNT(ID) as 'result' FROM `project_request_forms`, `lots`, `{$endTable}` WHERE
+				project_request_forms.form_ref_no = lots.request_origin AND
+				lots.lot_id =  {$endTable}.lot_id_origin AND
+				form_ref_no = '{$refno}' AND
+				lot_no = '{$lot}'")){
+					if($this->db->count()){
+						//return true;
+						return $this->db->first();
+					}
+				}
+			return false;
+
+		}
+
 		public function logLastUpdated($ID){ //to get the data when the last update of the project
-			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' ORDER BY logdate DESC LIMIT 1")){
+			if($this->db->query_builder("SELECT *, COUNT(*) as 'result' FROM `project_logs` WHERE referencing_to = '{$ID}' GROUP BY ID ORDER BY logdate DESC")){
 				return $this->db->first();
 			}
+			return false;
 		}
 		
 		public function like($table, $column, $particular){
@@ -423,22 +449,36 @@
             return true;
 		}
 
+		public function delete($table, $where){
+			if(!$this->db->delete($table, $where)){
+				throw new Exception("Error Deletion Request", 1);
+				return false;
+			}
+			return true;
+		}
+
 		public function selectAll($table){
             if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
                 return $this->db->results();
             }
 		}		
 
-		public function get($table, $where){	
+		public function get($table, $where){
 			if($this->db->get($table, $where)){
-				return $this->db->first();
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
 			}
 			return false;
-		}		
+		}			
 		
 		public function getAll($table, $where){	
 			if($this->db->get($table, $where)){
-				return $this->db->results();
+				if($this->db->count()){
+					return $this->db->results();
+				}
+				return false;
 			}
 			return false;
 		}

@@ -11,7 +11,9 @@
     color: #3399FF;
 }
 
-
+.modal-expanded {
+    max-width: 1050px;
+  }
 
 .pull-right {
     float: right!important;
@@ -552,8 +554,10 @@ li {
 
   
   #weather {
-	margin: auto;
+	/* margin: auto; */
 	max-width: 632px;
+	/* padding-left: 15px; */
+	
   }
   
   #setting {
@@ -707,8 +711,20 @@ li {
   /* #009bdf -> BUblue */
 
 
+
 .alert-info {
     color: black;
     background-color: #66CCFF;
     border-color: #bee5eb;
 }
+
+.evening-bg {
+    background-color: #333e7d !important;
+    color: #ffffff;
+}
+
+.afternoon-bg {
+    background-color: #31b9ef !important;
+    color: #ffffff;
+}
+

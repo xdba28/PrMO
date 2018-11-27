@@ -110,7 +110,7 @@
 													<span class="label label-warning"><?php echo $data->acronym;?></span>
 												</td>
 												<td class="project-title">
-													<a href="project_detail.html"><?php echo $data->office_name;?></a>
+													<a><?php echo $data->office_name;?></a>
 													<br/>
 													<small><?php echo $data->campus;?> Campus</small>
 												</td>

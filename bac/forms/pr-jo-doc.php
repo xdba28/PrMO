@@ -10,13 +10,13 @@ else{
 	die();
 }
 
-// if(Session::exists("Request")){
-// 	$REQ = Session::flash('Request');
-// }else{
-// 	exit();
-// }
-// $REQUEST = explode(":", $REQ);
-$REQ = "PR2018-7JFC40:PR";
+if(Session::exists("Request")){
+	$REQ = Session::flash('Request');
+}else{
+	Redirect::To('../../index');
+	exit();
+}
+// $REQ = "PR2018-40B973:PR";
 $REQUEST = explode(":", $REQ);
 $ProjectData = $user->Doc_projData($REQ);
 $UserData = $user->user_data($ProjectData->requested_by);
@@ -28,9 +28,11 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 
 $OFFICE = htmlspecialchars(htmlspecialchars_decode($UserData->office_name, ENT_QUOTES));
 
+// default style
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 72, 'after' => 72]]);
 $phpWord->setDefaultFontName('Arial');
 $phpWord->setDefaultFontSize(10);
+// paper dimensions
 $section = $phpWord->addSection([
 	'marginTop' => 720,
 	'marginBottom' => 720,
@@ -39,12 +41,16 @@ $section = $phpWord->addSection([
 	'headerHeight' => 360,
 	'footerHeight' => 0
 ]);
+
+// header
 $header = $section->addHeader();
 $header->firstPage();
 $hPragr =  ['alignment' => 'center'];
 $header->addText("Republic of the Philippines", ['name' => 'Arial', 'size' => 10], $hPragr);
 $header->addText("BICOL UNIVERSITY", ['name' => 'Arial', 'size' => 10, 'bold' => true], $hPragr);
 $header->addText($OFFICE, ['name' => 'Arial', 'size' => 9], $hPragr);
+
+
 $section->addTextBreak(1);
 if($REQUEST[1] === 'PR') $section->addText("Purchase Request", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
 elseif($REQUEST[1] === 'JO') $section->addText("Job Order", ['size' => 12, 'bold' => true], ['alignment' => 'center']);
@@ -62,6 +68,8 @@ $thStyle = ['bold' => true, 'size' => 10];
 $thPragr = ['alignment' => 'center'];
 $trStyle = ['size' => 10];
 
+
+// table
 if($REQUEST[1] === 'PR')
 {
 	if($NumLots->lot_no == '101' && $NumLots->lot_title == 'static lot')
@@ -93,8 +101,8 @@ if($REQUEST[1] === 'PR')
 		foreach($NumLots as $lot)
 		{
 			$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
-			$table->addRow(43.2);
-			$table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$lot->lot_no.": ".$lot->lot_title, ['bold' => true, 'size' => 10], $thPragr);
+			// $table->addRow(43.2);
+			// $table->addCell(10800, ['gridSpan' => 6])->addText("Lot ".$lot->lot_no.": ".$lot->lot_title, ['bold' => true, 'size' => 10], $thPragr);
 			$table->addRow(43.2);
 			$table->addCell(1152)->addText("Stock No.", $thStyle, $thPragr);
 			$table->addCell(864)->addText("Unit of Issue", $thStyle, $thPragr);
@@ -171,6 +179,8 @@ elseif($REQUEST[1] === 'JO')
 
 $section->addTextBreak(1);
 
+
+// signatories
 $table = $section->addTable(['borderColor' => '#FFFFFF', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
 
 $table->addRow(43.2);
@@ -179,16 +189,16 @@ $table->addCell(3600);
 $table->addCell(3600)->addText("Approved by:", ['size' => 10], $thPragr);
 
 $table->addRow(43.2);
-$table->addCell(3600)->addText($UserData->edr_fname." ".$UserData->edr_mname." ".$UserData->edr_lname, ['size' => 12, 'bold' => true], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($UserData->edr_fname." ".$UserData->edr_mname." ".$UserData->edr_lname), ['size' => 12, 'bold' => true], $thPragr);
 $table->addCell(3600);
-$table->addCell(3600)->addText($ProjectData->approved_by, ['size' => 12, 'bold' => true], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($ProjectData->approved_by), ['size' => 12, 'bold' => true], $thPragr);
 
 $appJob = $user->get("units", array("office_name", "=" , $OFFICE));
 
 $table->addRow(43.2);
-$table->addCell(3600)->addText($UserData->edr_job_title, ['size' => 11], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($UserData->edr_job_title), ['size' => 11], $thPragr);
 $table->addCell(3600);
-$table->addCell(3600)->addText($appJob->approving_position, ['size' => 11], $thPragr);
+$table->addCell(3600)->addText(htmlspecialchars($appJob->approving_position), ['size' => 11], $thPragr);
 
 $section->addTextBreak(3);
 
@@ -201,13 +211,13 @@ if($ProjectData->verified_by !== "No data available" && $ProjectData->noted_by !
 	$table->addCell(3600)->addText("Approved by:", ['size' => 10], $thPragr);
 
 	$table->addRow(43.2);
-	$table->addCell(3600)->addText($ProjectData->verified_by, ['size' => 12, 'bold' => true], $thPragr);
+	$table->addCell(3600)->addText(htmlspecialchars($ProjectData->verified_by), ['size' => 12, 'bold' => true], $thPragr);
 	$table->addCell(3600);
-	$table->addCell(3600)->addText($ProjectData->noted_by, ['size' => 12, 'bold' => true], $thPragr);
+	$table->addCell(3600)->addText(htmlspecialchars($ProjectData->noted_by), ['size' => 12, 'bold' => true], $thPragr);
 }
 
+
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-ob_clean();
 // $objWriter->save('C:/Users/Denver/Desktop/PR-JO.docx');
 $objWriter->save("php://output");
 exit();

@@ -1,6 +1,8 @@
 <?php
 require_once('../../core/init.php');
 
+header("Content-type:application/json");
+
 $admin = new Admin(); 
 
 if($admin->isLoggedIn()){
@@ -51,20 +53,17 @@ if($admin->isLoggedIn()){
 		}catch(Exception $e){
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
-			header("Content-type:application/json");
 			echo json_encode($data);
 			// log files
 		}
 		
 
 		$data = ['success' => true];
-		header("Content-type:application/json");
 		echo json_encode($data);
 	}
 	else
 	{
 		$data = ['success' => false];
-		header("Content-type:application/json");
 		echo json_encode($data);
 	}
 

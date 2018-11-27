@@ -26,7 +26,8 @@
 
 	<script>
 
-		var SampleData = [
+		const SampleData = [
+			
 			<?php
 			$units = $user->selectAll('units');
 			foreach ($units as $unit) {
@@ -122,7 +123,7 @@
 
                                 </tbody>
                             </table>
-						<button class="btn btn-outline btn-danger btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
+						<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
                         </div>
                     </div>
                 

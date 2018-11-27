@@ -3,11 +3,11 @@
 <!--Font-Awesome CSS-->
 
 <link href="../../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
-<link href="../../assets/font-awesome-52/css/fontawesome.css" rel="stylesheet">
+<link href="../../assets/fontawesome-free-5.5.0/css/fontawesome.css" rel="stylesheet">
 <link href="../../assets/font-awesome/themify-icons/themify-icons.css" rel="stylesheet">
-<link href="../../assets/font-awesome-52/css/solid.css" rel="stylesheet">
-<link href="../../assets/font-awesome-52/css/regular.css" rel="stylesheet">
-<link href="../../assets/font-awesome-52/css/brands.css" rel="stylesheet">
+<link href="../../assets/fontawesome-free-5.5.0/css/solid.css" rel="stylesheet">
+<link href="../../assets/fontawesome-free-5.5.0/css/regular.css" rel="stylesheet">
+<link href="../../assets/fontawesome-free-5.5.0/css/brands.css" rel="stylesheet">
 
 <!--Default CSS-->
 <link href="../../assets/css/animate.css" rel="stylesheet">

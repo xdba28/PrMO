@@ -204,8 +204,8 @@
       <div class="modal-body">
 
 		<!-- asdasdsa -->
-		<form id="FormSearchModal" class="search"><span id="RefSearch"></span>
-		<input type="search" name="q" placeholder="Enter Reference No." autocomplete="off" required="required"/>
+		<form id="FormSearchModal" class="search" action="search-results" method="GET"><span id="RefSearch"></span>
+		<input type="search" name="q" placeholder="Title, Keyword, Reference No." autocomplete="off" required="required"/>
 		<button type="submit"><img src="../../assets/pics/flaticons/search.png" alt="search" height="42" width="42"></button>
 		</form><br>
 
@@ -248,44 +248,67 @@
 </div>
 
 <!-- myforms?q=PROJECT-ID -->
-<div id="userEdit" class="modal fade bd-example-modal-lg" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+<div id="userEdit" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-expanded">
 		<div class="modal-content">
 		
 			<div class="modal-header">
 				<h3 class="modal-title">Update Project Details</h3>
-				<button type="button" dataFor="userEditClose" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>			
 			</div>
 			<div class="modal-body">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="ibox">
-							<div class="ibox-content">
-		
-								<div class="table-responsive">
-									<form id="userEditForm">
-										<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
+				<div class="col-lg-12 animated fadeInRight" id="userEditContent">
 
-										</table>
-									</form>
-									<div class="btn-group pull-right" style="margin-right:15px">
-										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
-											<i class="far fa-edit"></i>
-											<span>Update</span>&nbsp;
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
-			</div>				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
+					<i class="far fa-edit"></i>
+					<span>Update</span>&nbsp;
+				</button>
+			</div>					
 		</div>
 	</div>
 </div>
 
+<div class="modal fade" id="userEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" dataFor="userEditClose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+	  	<div class="row">
+			<div class="col-lg-12">
+				<div class="table-responsive">
+					<form id="userEditForm">
+						<table class="table table-striped table-bordered table-hover" id="userEditTable">
+
+						</table>
+					</form>
+					<div class="btn-group pull-right" style="margin-right:15px">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
+				<i class="far fa-edit"></i>
+				<span>Update</span>&nbsp;
+			</button> 
+	  </div>
+    </div>
+  </div>
+</div>
 <!-- pre procurement evaluation registration -->
 
 <div class="modal fade" id="pre-proc-evaluation" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
@@ -375,5 +398,180 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- testing -->
+<div id="testing" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-expanded">
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<h3 class="modal-title">Update Project Details</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>			
+			</div>
+			<div class="modal-body">
+				
+					<div class="col-lg-12 animated fadeInRight">
+
+								<div id="part1">
+									<div class="row">
+										<div class="col-sm-8 m-b-xs">
+											<h4 style="color: #F37123">Items selected from lot no: 1<h4>
+										</div>
+										<div class="col-sm-4">
+											<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon">₱</span>
+												</div>
+												<input type="text" placeholder="New Estimated lot cost" class="form-control">
+											</div>
+											
+										</div>
+									</div>
+									<div class="table-responsive">
+										<table class=" table table-bordered">
+											<thead>
+											<tr>
+
+												<th>#</th>
+												<th>Reference </th>
+												<th>Title </th>
+													
+													<th data-hide="all">Enduser/s</th>
+													<th data-hide="all">Current Work</th>
+												
+												<th>ABC</th>
+												<th>Progress </th>
+												<th>Actions </th>
+											</tr>
+											</thead>
+											<tbody>
+					
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>										
+
+											</tbody>
+										
+										</table>
+																		
+									</div>								
+								</div>
+								<div id="part2">
+									<div class="row">
+										<div class="col-sm-8 m-b-xs">
+											<h4 style="color: #F37123">Items selected from lot no: 2<h4>
+										</div>
+										<div class="col-sm-4">
+											<div class="input-group m-b" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+												<div class="input-group-prepend">
+													<span class="input-group-addon">₱</span>
+												</div>
+												<input type="text" placeholder="New Estimated lot cost" class="form-control">
+											</div>
+											
+										</div>
+									</div>
+									<div class="table-responsive">
+										<table class=" table table-bordered">
+											<thead>
+											<tr>
+
+												<th>#</th>
+												<th>Reference </th>
+												<th>Title </th>
+													
+													<th data-hide="all">Enduser/s</th>
+													<th data-hide="all">Current Work</th>
+												
+												<th>ABC</th>
+												<th>Progress </th>
+												<th>Actions </th>
+											</tr>
+											</thead>
+											<tbody>
+					
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>
+											<tr>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+												<td>testing</td>
+											</tr>												
+
+											</tbody>
+										
+										</table>
+																		
+									</div>								
+								</div>
+								<div id="purpose">
+									
+								</div>	
+
+					</div>
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
+					<i class="far fa-edit"></i>
+					<span>Update</span>&nbsp;
+				</button>
+			</div>					
+		</div>
+	</div>
 </div>
 

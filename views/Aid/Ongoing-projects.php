@@ -71,13 +71,13 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="wrapper wrapper-content animated fadeInUp">
 				<div class="row">
 
-					<div class="col-lg-12">
+					<div class="col-lg-12 animated fadeInRight">
 						<div class="ibox ">
 							<div class="ibox-title">
-								<h5>Custom responsive table </h5>
+								<h5>Complete Ongoing Projects</h5>
 							</div>
 							<div class="ibox-content">
 								<div class="row">
@@ -134,7 +134,20 @@
 											<td><?php echo $count;?></td>
 											<td><?php echo $project->project_ref_no;?></td>
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
-											<td><?php echo $project->end_user;?></td>
+											<td>
+											<?php 
+
+												$decodedEndusers = json_decode($project->end_user, true);
+												$namesArray = array();
+
+													foreach ($decodedEndusers as $empID) {
+														array_push($namesArray, $user->fullnameOfEnduser($empID));
+														
+													}
+												$enduserNames =  implode(", ", $namesArray);
+												echo $enduserNames;
+													
+											?></td>
 											<td><?php echo $currentWork;?></td>
 											<td><?php echo $project->ABC;?></td>
 											<td class="project-completion">
@@ -165,13 +178,13 @@
 					</div>
 					
 				
-					<button data-toggle="modal" data-target="#test-modal">Button</button>
+				
 
 				</div>
 
             </div>
 			<!-- Main Content End -->
-			
+			<button class="back-to-top" type="button"></button>
             <div class="footer">
 				<?php include '../../includes/parts/footer.php'; ?>
             </div>
