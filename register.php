@@ -1,5 +1,5 @@
 <?php
-    require_once 'core/outer-init.php';
+	require_once 'core/outer-init.php';
 
     $guest = new Guest();
 
@@ -55,10 +55,13 @@
 				'contact' => [                    
 					'required' => true
 				]				
-            ));
+			));
+			
             if($validation->passed()){
                 $salt = Hash::salt(32);
                 try{
+
+					$guest->startTrans();
 
                     $guest->request('account_requests', array(
 
@@ -74,13 +77,33 @@
                         'userpassword' => Input::get('password'),
 						'submitted' => date('Y-m-d H:i:s'),
 						'specific_office' => Input::get('specific_office'),
-						'job_title' => Input::get('jobtitle')
+						'jobtitle' => Input::get('jobtitle')
 
-                    ));
-                    
+					));
+					
+					$guest->request('notifications', array(
+						'recipient' => "163-141",
+						'message' => "A new account request has been made.",
+						'datecreated' => Date::translate('test', 'now'),
+						'seen' => 0,
+						'href' => "account-request"
+					));
+
+					$guest->endTrans();
 				
-                    Session::flash('request_success', 'Your requests has been successfuly submited.');
-                    Redirect::To('index');
+					Session::flash('request_success', 'Your requests has been successfuly submited.');
+					
+					notif(json_encode(array(
+						'receiver' => "163-141",
+						'message' => "A new account request has been made.",
+						'date' => Date::translate(Date::translate('test', 'now'), '1'),
+						'href' => "account-request"
+					)), true);
+
+					// sms
+
+					Redirect::To('index');
+					exit();
 
                 }catch(Exception $e){
                     die($e->getMessage());
@@ -209,11 +232,11 @@
                                     <h2>Profile Information</h2>
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="form-group" id="popOver" data-trigger="hover" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
+                                            <div class="form-group" id="popOver" data-trigger="active" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
                                                 <label>First name *</label>
                                                 <input id="name" name="name" type="text" class="form-control ">
                                             </div>
-                                            <div class="form-group" id="popOver1" data-trigger="hover" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
+                                            <div class="form-group" id="popOver1" data-trigger="active" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
                                                 <label>Middle name *</label>
                                                 <input id="midlename" name="midlename" type="text" class="form-control ">
                                             </div>											
@@ -221,7 +244,7 @@
                                                 <label>Last name *</label>
                                                 <input id="surname" name="surname" type="text" class="form-control">
                                             </div>
-                                            <div class="form-group"  id="popOver2" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you">
+                                            <div class="form-group"  id="popOver2" data-trigger="active" title="Instruction" data-placement="top" data-content="Eg. Jr, Sr, II, III. Leave it blank if not applicable.">
                                                 <label>Extension name </label>
                                                 <input id="extname" name="extname" type="text" class="form-control">
                                             </div>
@@ -259,7 +282,7 @@
                                             </div>										
                                             <div class="form-group">
                                                 <label>Email *</label>
-                                                <input id="email" name="email" type="text" class="form-control">
+                                                <input id="email" name="email" type="email" class="form-control">
                                             </div>    
                                             <div class="form-group">
                                                 <label>Employee No. *</label>

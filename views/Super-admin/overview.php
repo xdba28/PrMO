@@ -110,7 +110,7 @@
 													<span class="label label-warning"><?php echo $data->acronym;?></span>
 												</td>
 												<td class="project-title">
-													<a href="project_detail.html"><?php echo $data->office_name;?></a>
+													<a><?php echo $data->office_name;?></a>
 													<br/>
 													<small><?php echo $data->campus;?> Campus</small>
 												</td>
@@ -153,7 +153,7 @@
                 <div class="col-lg-12  animated fadeInRight">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h5>Showing All Registered Accounts from <a style="color:#3399FF"><?php echo Input::get('unit');?></a></h5>
+                        <h5>Showing All Registered Accounts from <a style="color:#3399FF"><?php echo Input::get('	');?></a></h5>
                         <div class="ibox-tools">
 							<a href ="overview" class="btn btn-info btn-rounded btn-outline btn-xs" style="color:black"><i class="ti-angle-double-left"></i> Back to Overview</a>
                         </div>
@@ -178,12 +178,11 @@
 							$user = new Super_admin();
 							
 							$unitAccounts =  $user->unitUsers(Input::get('q'));
-
-							// echo "<pre>",print_r($unitAccounts),"</pre>";
 							
 							foreach ($unitAccounts as $account) {
 								if(isset($count)){$count++;}else{$count=1;}
-
+								// echo "<pre>",print_r($account),"</pre>";
+								$enduser = $user->get('enduser', array('edr_id', '=', $account->account_id));
 						?>
 							<tr class="gradeX">
 								<td><?php echo $count;?></td>
@@ -195,7 +194,7 @@
 									<div class="btn-group">
 										<button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
 										<ul class="dropdown-menu">
-											<li><a class="dropdown-item" href="">Reset Password</a></li>
+											<li><a class="dropdown-item" data-toggle="modal" data-phone="<?php echo $enduser->phone;?>" data-target="#resetPassword" data-id="<?php echo $account->account_id;?>" data-office="<?php echo Input::get('unit'), " - ", $account->current_specific_office; ?>" data-name="<?php echo $user->fullnameOfEnduser($account->account_id);?>">Reset Password</a></li>
 											<li class="dropdown-divider"></li>
 											<li><a class="dropdown-item" href="#">other option</a></li>
 										</ul>

@@ -95,12 +95,15 @@
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno={$project_ref_no}"
 				)));
-				Redirect::To('new-project');
-				exit();
+
 				
 				//disable the "register" now button in the new-project page to prevent any data discrepancy
 				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 				//send SMS notifications
+
+
+				Redirect::To('new-project');
+				exit();
 
 			}catch(Execption $e){
 				die($e->getMessage());
@@ -199,6 +202,7 @@
 	
 					if(!$valid){
 						include('../../includes/errors/404.php');
+						echo"<br><br><br><br><br><br>";
 						exit();						
 					}
 
@@ -343,7 +347,7 @@
 							<!-- <span class="text-muted small float-right">
 									Last Refresh: <i class="fa fa-clock"></i>
 							</span> -->
-							<h2>Unregistered Projects</h2>
+							<h2>Available Request Forms</h2>
 							<p>
 								You can search a Purchase request or Job order by its title or end user's name. But it is adviced to search through its Reference number indicated in the printed hard copy of the actual Purchase request or Job order form.
 							</p>
@@ -362,7 +366,7 @@
 								<div id="tab-1" class="tab-pane active">
 									<div class="full-height-scroll">
 										<div class="table-responsive">
-											<table class="footable table table-striped table-hover" data-filter=#filter>
+											<table class="footable table table-striped table-hover" data-filter="#filter">
 												<tr>
 													<th>Reference No.</th>
 													<th>End User</th>
@@ -544,7 +548,8 @@
 					});
 				}
 				$('#popOver0').on('click', function(){
-					window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
+					// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
+					window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
 				});
 			});
 

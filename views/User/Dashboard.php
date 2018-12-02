@@ -126,67 +126,67 @@
 			
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
-            <div class="row ">
-				<?php
-					$now = date('H');
-					
-					if($now < 12){
-						echo '
-				<div class="col-lg-6">
-					<div class="widget style1 yellow-bg">
-						<div class="row">
-							<div class="col-2">
-								<i class="fa fa-sun fa-5x"></i>
-							</div>
-							<div class="col-10">
-								<h3 class="">Good Morning ,</h3>
-								<h2 class="font-bold">'.$currentUser[2].'</h2>
-							</div>
-						</div>
-					</div>
-				</div>						
-						';
-					}else if(($now == 12) || ($now < 18)){
-						echo '
-				<div class="col-lg-6">
-					<div class="widget style1 afternoon-bg">
-						<div class="row">
-							<div class="col-2">
-								<i class="fas fa-cloud-sun fa-5x"></i>
-							</div>
-							<div class="col-10">
-								<h3 class="">Good Afternoon ,</h3>
-								<h2 class="font-bold">'.$currentUser[2].'</h2>
-							</div>
-						</div>
-					</div>
-				</div>						
+				<div class="row ">
+					<?php
+						$now = date('H');
 						
-						';
-					}else{
-						echo '
-						
-				<div class="col-lg-6">
-					<div class="widget style1 evening-bg">
-						<div class="row">
-							<div class="col-2">
-								<i class="fas fa-cloud-moon fa-5x"></i>
-							</div>
-							<div class="col-10">
-								<h3 class="">Good Evening ,</h3>
-								<h2 class="font-bold">'.$currentUser[2].'</h2>
+						if($now < 12){
+							echo '
+					<div class="col-lg-6">
+						<div class="widget style1 yellow-bg">
+							<div class="row">
+								<div class="col-2">
+									<i class="fa fa-sun fa-5x"></i>
+								</div>
+								<div class="col-10">
+									<h3 class="">Good Morning ,</h3>
+									<h2 class="font-bold">'.$currentUser[2].'</h2>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>						
-						';
-					}
-				?>
+					</div>						
+							';
+						}else if(($now == 12) || ($now < 18)){
+							echo '
+					<div class="col-lg-6">
+						<div class="widget style1 afternoon-bg">
+							<div class="row">
+								<div class="col-2">
+									<i class="fas fa-cloud-sun fa-5x"></i>
+								</div>
+								<div class="col-10">
+									<h3 class="">Good Afternoon ,</h3>
+									<h2 class="font-bold">'.$currentUser[2].'</h2>
+								</div>
+							</div>
+						</div>
+					</div>						
+							
+							';
+						}else{
+							echo '
+							
+					<div class="col-lg-6">
+						<div class="widget style1 evening-bg">
+							<div class="row">
+								<div class="col-2">
+									<i class="fas fa-cloud-moon fa-5x"></i>
+								</div>
+								<div class="col-10">
+									<h3 class="">Good Evening ,</h3>
+									<h2 class="font-bold">'.$currentUser[2].'</h2>
+								</div>
+							</div>
+						</div>
+					</div>						
+							';
+						}
+					?>
 
 
 
-			
-            </div>
+				
+				</div>
             </div>
 			<!-- Main Content End -->
 			

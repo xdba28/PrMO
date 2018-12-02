@@ -15,7 +15,16 @@ else{
 
 		$project = $user->get('projects', array('project_ref_no', '=', $refno));
 		$standing=$project->accomplished;
-		$mop=$project->MOP;
+
+		if(strpos($project->MOP, ',')){
+			$mop = "Mixed";
+		}else{
+			$mop = $project->MOP;
+		}
+
+		// revise this logic
+		//if mop has , return
+
 
 		//get the json file
 		$json = file_get_contents('../xhr-files/jsonsteps.json');
@@ -31,7 +40,9 @@ else{
 			$PreEvalIssue = false;
 		}
 
-		$data = ['success' => true, 'fetchedResult' => $availableActions, 'issue' => $PreEvalIssue];
+		$formData = $user->projectDetails($refno);
+
+		$data = ['success' => true, 'fetchedResult' => $availableActions, 'issue' => $PreEvalIssue, 'formData' => $formData];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}

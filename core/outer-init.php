@@ -18,14 +18,16 @@
             'cookie_name' => 'hash',
             'cookie_expiry' => 604800
         ]
-    ];
-
+	];
+	
+	require_once "vendor/autoload.php";
 
     spl_autoload_register(function($class){
         require_once "classes/{$class}.php";
     });
 
-        require_once "functions/sanitize.php";
+		require_once "functions/sanitize.php";
+		require_once "functions/notif.php";
 
         if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))){
             //echo 'User asked to be Remembered<br>';

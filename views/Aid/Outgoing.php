@@ -289,7 +289,6 @@
 
         </div>
     </div>
-
     <?php include '../../includes/parts/admin_scripts.php'; ?>
     <!-- Page-Level Scripts -->
 
@@ -298,38 +297,6 @@
 <script>
 
 	$(document).ready(function(){
-		var DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
-			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
-				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
-					customize: function (win){
-						$(win.document.body).addClass('white-bg');
-						$(win.document.body).css('font-size', '10px');
-						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-					}
-				}]
-		});
-
-		var DataTable_Signiture = $('#DataTable_Signiture').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
-			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
-				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
-					customize: function (win){
-						$(win.document.body).addClass('white-bg');
-						$(win.document.body).css('font-size', '10px');
-						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-					}
-				}]
-		});
-
-		var DataTable_GenDoc = $('#DataTable_GenDoc').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
-			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
-				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
-					customize: function (win){
-						$(win.document.body).addClass('white-bg');
-						$(win.document.body).css('font-size', '10px');
-						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-					}
-				}]
-		});
 
 		function reloadTable(d){
 			SendDoSomething("POST", "../xhr-files/xhr-staff-aid-out.php", {
@@ -347,7 +314,7 @@
 						res.twg.forEach(function(e, i){
 							DataTable_Twg.row.add([
 								`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-								e.title,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
 								'TWG',
 								'TWG',
 								e.date_registered
@@ -363,7 +330,7 @@
 						res.sign.forEach(function(e, i){
 							DataTable_Signiture.row.add([
 								`<input type="checkbox" data="out" class="i-checks" name="sign[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-								e.title,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
 								e.transmitting_to,
 								e.specific_office,
 								e.date_registered
@@ -374,13 +341,12 @@
 						DataTable_Signiture.clear().draw();
 					}
 
-
 					if(res.gen !== null){
 						DataTable_GenDoc.clear().draw();
 						res.gen.forEach(function(e, i){
 							DataTable_GenDoc.row.add([
 								`<input type="checkbox" data="gen" class="i-checks" name="general[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
-								e.title,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
 								e.transmitting_to,
 								e.specific_office,
 								e.transaction,
@@ -391,6 +357,22 @@
 						DataTable_GenDoc.draw();
 					}else{
 						DataTable_GenDoc.clear().draw();
+					}
+
+					if(res.updateDoc !== null){
+						DataTables_DocUpdate.clear().draw();
+						res.updateDoc.forEach(function(e, i){
+							DataTables_DocUpdate.row.add([
+								`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+								'TWG',
+								'TWG',
+								e.date_registered
+							]);
+						});
+						DataTables_DocUpdate.draw();
+					}else{
+						DataTables_DocUpdate.clear().draw();
 					}
 
 					if(res.forEval.bool){

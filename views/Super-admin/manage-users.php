@@ -248,32 +248,32 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
-                                   placeholder="Search in table">
+                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter" placeholder="Search in table">
                             <table class="footable table table-stripped toggle-arrow-tiny" data-filter=#filter>
+							
                                 <thead>
-                                <tr>
+									<tr>
 
-                                    <th data-toggle="true">Name</th>
-                                    <th>Office</th>
-                                    <th>Position</th>
-                                    <th data-hide="all">Employee ID</th>
-                                    <th data-hide="all">Email</th>
-                                    <th data-hide="all">Phone</th>
-                                    <th data-hide="all">Phase</th>
-                                    <th data-hide="all">Account Status</th>
-                                    <th>Action</th>
-                                </tr>
+										<th data-toggle="true">Name</th>
+										<th>Office</th>
+										<th>Position</th>
+										<th data-hide="all">Employee ID</th>
+										<th data-hide="all">Email</th>
+										<th data-hide="all">Phone</th>
+										<th data-hide="all">Phase</th>
+										<th data-hide="all">Account Status</th>
+										<th>Action</th>
+									</tr>
                                 </thead>
+								
                                 <tbody>
                                 <?php
 
                                     foreach($PersonnelInfo as $data){
-
                                         if($data->prnl_ext_name == 'XXXXX'){
                                             $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname;
                                         }else{
-                                            $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname." ".$data->prnl_ext_name.".";
+                                            $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname." ".$data->prnl_ext_name;
                                         }
 
                                         if($data->status == "ACTIVATED"){
@@ -302,7 +302,7 @@
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" href="?q='.$data->prnl_id.'">Update Info</a></li>
-                                                            <li><a class="dropdown-item" href="#">Reset Password</a></li>
+                                                            <li><a class="dropdown-item" data-toggle="modal" data-name="'.$fullname.'" data-phone="'.$data->phone.'" data-target="#resetPassword" data-id="'.$data->prnl_id.'" data-office="'.$data->office_name.'">Reset Password</a></li>
                                                             <li class="dropdown-divider"></li>
                                                             <li><a class="dropdown-item nicecolor" href="#">'.$option.'</a></li>
                                                         </ul>
@@ -317,12 +317,13 @@
                                 
                                 ?>
                                 </tbody>
+								
                                 <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        <ul class="pagination float-right"></ul>
-                                    </td>
-                                </tr>
+									<tr>
+										<td colspan="5">
+											<ul class="pagination float-right"></ul>
+										</td>
+									</tr>
                                 </tfoot>
                             </table>
 

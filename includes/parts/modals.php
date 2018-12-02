@@ -1,6 +1,7 @@
 <script>
 	function ModalSubmit(id, modal){
 		var DataModal = $(`#${id}`).serialize();
+		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
 			do: function(res){
 				$(`#${modal}`).modal('hide');
@@ -248,40 +249,28 @@
 </div>
 
 <!-- myforms?q=PROJECT-ID -->
-<div id="userEdit" class="modal fade bd-example-modal-lg" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+<div id="userEdit" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-expanded">
 		<div class="modal-content">
 		
 			<div class="modal-header">
 				<h3 class="modal-title">Update Project Details</h3>
-				<button type="button" dataFor="userEditClose" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>			
 			</div>
 			<div class="modal-body">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="ibox">
-							<div class="ibox-content">
-		
-								<div class="table-responsive">
-									<form id="userEditForm">
-										<table class="table table-striped table-bordered table-hover" dataFor="userEdit">
+				<div class="col-lg-12 animated fadeInRight" id="userEditContent">
 
-										</table>
-									</form>
-									<div class="btn-group pull-right" style="margin-right:15px">
-										<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
-											<i class="far fa-edit"></i>
-											<span>Update</span>&nbsp;
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
-			</div>				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" dataFor="userEditSubmit">
+					<i class="far fa-edit"></i>
+					<span>Update</span>&nbsp;
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -289,7 +278,7 @@
 <!-- pre procurement evaluation registration -->
 
 <div class="modal fade" id="pre-proc-evaluation" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
-  <div class="modal-dialog  modal-lg" role="document">
+  <div class="modal-dialog  modal-expanded" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation result Registration</h3>
@@ -311,7 +300,14 @@
 								<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
 							</div>
 							<div class="form-group">
-								<label class="font-bold my-blue">Mode of Procurement</label>
+							
+								 <div class="i-checks">
+									<label class="font-bold my-blue" id="pre-eval-whole">
+										<input type="radio" value="whole" checked name="a"> &nbsp;Mode of Procurement
+									</label>
+									<a class="font-bold my-blue" style="color:black">(As a whole project)</a>
+								 </div>
+								 
 								<div class="input-group date">
 									<span class="input-group-addon"><i class="fa fa-list"></i></span>
 									<select class="form-control m-b" name="MOP">
@@ -326,41 +322,21 @@
                                     </select>
 								</div>
 							</div>
+							
+							<div class="i-checks">
+								<label class="font-bold my-blue" id="pre-eval-individial">
+									<input type="radio" value="perItem" name="a">  Individual Listing of MOPs 
+								</label>
+								<a class="font-bold my-blue" style="color:black">(Identify individual Mode of Procurement)</a>
+								
+							</div><br>
+							<div id="pre-eval-formData" class="animated fadeInRight" style="display:none;">
 
+							</div>
 							<div class="form-group">
 								<label class="font-bold my-blue">Evaluator's Comment</label>
 								<div dataFor="pre-proc-eval-issue">
-
-								
 								</div>
-								
-											
-												<!-- if this project has no record of "ISSUE^pre procurement evaluation" in the project logs show this -->
-												<!-- <div class="checkbox checkbox-danger" style="padding-left:5px">
-													<input id="checkbox1" type="checkbox" name="issue">
-													<label for="checkbox1" class="text-warning font-italic">
-														Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
-													</label>
-												</div> -->
-
-												
-												<!-- if this project has a record of "ISSUE^pre procurement evaluation" in the project logs show this -->												
-                                                <!-- <div class="radio radio-danger" style="padding-left:5px">
-                                                    <input type="radio" name="issue_again" id="radio1" value="option1">
-                                                    <label for="radio1" class="text-warning">
-                                                        Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
-                                                    </label>
-                                                </div>
-                                                <div class="radio radio-info" style="padding-left:5px">
-                                                    <input type="radio" name="resolution" id="radio2" value="option2">
-                                                    <label for="radio2" class="text-info">
-                                                        Check this if this evaluation is a resolution from the previous evaluation issue.
-                                                    </label>
-                                                </div> -->
-                                      
-
-
-								
 									<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
 							</div>
 						</div>
@@ -371,9 +347,37 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="ModalSubmit('PreprocModal', 'pre-proc-evaluation')">Submit</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="ModalSubmit('PreprocModal', 'pre-proc-evaluation')">Submit</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- reset password  / Super admin -->
+		<div class="modal inmodal" id="resetPassword" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+			<div class="modal-content animated bounceIn">
+					<div class="modal-header">
+						<img src="../../assets/pics/resetPassword.png" height="100" width="100">
+						<h4 class="modal-title">Modal title</h4>
+						<small id="office" class="font-bold">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
+					</div>
+					<div class="modal-body">
+						<div class="well">
+							<h3><i class="fas fa-info"></i>
+								Reminder
+							</h3>
+							New Password will be sent automatically to user's registered number. <a id="phone" class="font-bold" style="color:#438CFC; font-size:20px">default</a>
+						</div><br>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fas fa-lock"></i></span><input type="text" class="form-control" placeholder="New Password">
+							</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-primary">Reset</button>
+					</div>
+				</div>
+			</div>
+		</div>
 

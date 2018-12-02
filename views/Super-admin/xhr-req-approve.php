@@ -50,8 +50,7 @@ try
 		'group_' => 1
 	));
 
-	//send sms to enduser that his/her account is already created with the password $temporaryPassword
-
+	//send sms to enduser that his/her account is already created with the One-time password
 	$sa->delPersn("account_requests", array("employee_id", "=", $r->employee_id));
 	
 	$sa->endTrans();

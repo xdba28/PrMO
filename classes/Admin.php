@@ -92,6 +92,18 @@
             return false;
 		}
 
+		// mosty used to check if a PR/JO form is already registered as a project
+		public function like($table, $column, $key){
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE {$column} LIKE '%{$key}%'")){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+			return false;
+		}
+
+		//using like
 		public function searchProject($key){
 
 			if($this->db->query_builder("SELECT * FROM `projects` WHERE project_ref_no LIKE '%{$key}%' OR project_title LIKE '%{$key}%'")){
@@ -360,7 +372,7 @@
 			return $notif;
 		}
 
-		// re-sort project
+		// resort-items project
 		public function projectDetails($id){
 			$this->db->query_builder("SELECT request_origin, project_title, ABC, MOP, end_user FROM `projects` WHERE project_ref_no = '{$id}'");
 			$project = $this->db->first();
@@ -376,7 +388,7 @@
 				$lot = null;
 				foreach($pj_details as $a){
 					if($a->type === "PR"){
-						$this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
+						$this->db->query_builder("SELECT ID, stock_no, unit, item_description, quantity, unit_cost, total_cost 
 							FROM `lot_content_for_pr`, `lots`
 							WHERE lot_content_for_pr.lot_id_origin = lots.lot_id
 							AND lot_id_origin = '{$a->lot_id}'");
@@ -387,6 +399,7 @@
 						$l_details = null;
 						foreach($lot_details as $b){
 							$l_details[] = [
+								'id' => $b->ID,
 								'stock_no' => $b->stock_no,
 								'unit'=> $b->unit,
 								'desc' => $b->item_description,
@@ -396,7 +409,7 @@
 							];
 						}
 					}elseif($a->type === "JO"){
-						$this->db->query_builder("SELECT header, tags
+						$this->db->query_builder("SELECT ID, header, tags
 							FROM `lot_content_for_jo`, `lots`
 							WHERE lot_content_for_jo.lot_id_origin = lots.lot_id
 							AND lot_id_origin = '{$a->lot_id}'");
@@ -407,6 +420,7 @@
 						$l_details = null;
 						foreach($lot_details as $b){
 							$l_details[] = [
+								'id' => $b->ID,
 								'header' => $b->header,
 								'tags' => $b->tags
 							];
@@ -444,6 +458,32 @@
 				return false;
 			}
 		}
+
+		public function getContent($refno, $type, $lot){
+			if($type == "PR"){
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot', lot_title, ID as 'identifier', lot_id_origin, stock_no, unit, item_description, quantity, unit_cost, total_cost
+				FROM
+				`lots`, `lot_content_for_pr`
+				WHERE
+				lots.lot_id = lot_content_for_pr.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}else{
+				if($this->db->query_builder("SELECT lot_id, ID, lot_no as 'from_lot',  lot_title, ID as 'identifier', lot_id_origin, header, tags, note, lot_cost
+				FROM
+				`lots`, `lot_content_for_jo`
+				WHERE
+				lots.lot_id = lot_content_for_jo.lot_id_origin AND
+				request_origin = '{$refno}' AND
+				lot_no = '{$lot}'
+				")){
+					return $this->db->results();
+				}
+			}
+		}//for fetching lot content
 
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){

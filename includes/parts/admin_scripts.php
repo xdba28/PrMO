@@ -101,6 +101,7 @@ require_once "../../functions/account-verifier.php";
 <script src="../../includes/js/custom.js"></script>
 <script>
 	const audio = new Audio('../../assets/audio/definite.mp3');
+	// const audio = new Audio('../../assets/audio/Badger Scream.mp3');
 
 	$(function(){
 		// Enable pusher logging - don't include this in production
@@ -163,9 +164,7 @@ require_once "../../functions/account-verifier.php";
 					}
 				}
 			}, false, {
-				f: function(){
-					
-				}
+				f: function(){}
 			});
 		});
 
@@ -175,6 +174,53 @@ require_once "../../functions/account-verifier.php";
 			}, 300);
 		});
 
+	});
+</script>
+
+<script>
+	// outgoing data tables
+	const DataTable_Twg = $('#DataTable_Twg').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+	});
+
+	const DataTable_Signiture = $('#DataTable_Signiture').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+	});
+
+	const DataTable_GenDoc = $('#DataTable_GenDoc').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+	});
+
+	const DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+	buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+		{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+			customize: function (win){
+				$(win.document.body).addClass('white-bg');
+				$(win.document.body).css('font-size', '10px');
+				$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+			}
+		}]
 	});
 </script>
 
@@ -245,13 +291,103 @@ require_once "../../functions/account-verifier.php";
 													type: "info"
 												});
 											}else if(res.value !== "undefined"){
-												SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+												SendDoSomething("POST", "../xhr-files/staff-aid-upd-log.php", {
 													outgoing: updLog,
 													action: LogType,
 													remarks: res.value
 												}, {
-													title: "Success!",
-													text: "Document(s) successfully updated."
+													do: function(res){
+														swal({
+															title: "Success!",
+															text: "Document(s) successfully updated.",
+															type: "success"
+														});
+														
+														if(res.twg !== null){
+															DataTable_Twg.clear().draw();
+															res.twg.forEach(function(e, i){
+																DataTable_Twg.row.add([
+																	`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+																	`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+																	'TWG',
+																	'TWG',
+																	e.date_registered
+																]);
+															});
+															DataTable_Twg.draw();							
+														}else{
+															DataTable_Twg.clear().draw();
+														}
+
+														if(res.sign !== null){
+															DataTable_Signiture.clear().draw();
+															res.sign.forEach(function(e, i){
+																DataTable_Signiture.row.add([
+																	`<input type="checkbox" data="out" class="i-checks" name="sign[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+																	`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+																	e.transmitting_to,
+																	e.specific_office,
+																	e.date_registered
+																]);
+															});
+															DataTable_Signiture.draw();
+														}else{
+															DataTable_Signiture.clear().draw();
+														}
+
+														if(res.gen !== null){
+															DataTable_GenDoc.clear().draw();
+															res.gen.forEach(function(e, i){
+																DataTable_GenDoc.row.add([
+																	`<input type="checkbox" data="gen" class="i-checks" name="general[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+																	`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+																	e.transmitting_to,
+																	e.specific_office,
+																	e.transaction,
+																	e.remark,
+																	e.date_registered
+																]);
+															});
+															DataTable_GenDoc.draw();
+														}else{
+															DataTable_GenDoc.clear().draw();
+														}
+
+														if(res.updateDoc !== null){
+															DataTables_DocUpdate.clear().draw();
+															res.updateDoc.forEach(function(e, i){
+																DataTables_DocUpdate.row.add([
+																	`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+																	`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+																	'TWG',
+																	'TWG',
+																	e.date_registered
+																]);
+															});
+															DataTables_DocUpdate.draw();
+														}else{
+															DataTables_DocUpdate.clear().draw();
+														}
+
+														if(res.forEval.bool){
+															swal({
+																title: "Evaluation form downloading",
+																text: "Download of Pre-procurement evaluation form will start shortly.",
+																type: "info"
+															});
+															setTimeout(function(){
+																res.forEval.data.forEach(function(e, i){
+																	window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+																});
+															}, 3500);
+														}
+														
+														$('.i-checks').iCheck({
+															checkboxClass: 'icheckbox_square-green',
+															radioClass: 'iradio_square-green'
+														});
+
+													}
 												});
 											}
 										}
@@ -282,14 +418,106 @@ require_once "../../functions/account-verifier.php";
 											type: "info"
 										});
 									}else if(res.value !== "undefined"){
-										SendDoNothing("POST", "../xhr-files/staff-aid-upd-log.php", {
+										SendDoSomething("POST", "../xhr-files/staff-aid-upd-log.php", {
 											outgoing: updLog,
 											action: LogType,
-											remarks: res
+											remarks: res.value
 										}, {
-											title: "Success!",
-											text: "Document(s) successfully updated."
+											do: function(res){
+												swal({
+													title: "Success!",
+													text: "Document(s) successfully updated.",
+													type: "success"
+												});
+												
+												if(res.twg !== null){
+													DataTable_Twg.clear().draw();
+													res.twg.forEach(function(e, i){
+														DataTable_Twg.row.add([
+															`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+															`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+															'TWG',
+															'TWG',
+															e.date_registered
+														]);
+													});
+													DataTable_Twg.draw();							
+												}else{
+													DataTable_Twg.clear().draw();
+												}
+
+												if(res.sign !== null){
+													DataTable_Signiture.clear().draw();
+													res.sign.forEach(function(e, i){
+														DataTable_Signiture.row.add([
+															`<input type="checkbox" data="out" class="i-checks" name="sign[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+															`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+															e.transmitting_to,
+															e.specific_office,
+															e.date_registered
+														]);
+													});
+													DataTable_Signiture.draw();
+												}else{
+													DataTable_Signiture.clear().draw();
+												}
+
+												if(res.gen !== null){
+													DataTable_GenDoc.clear().draw();
+													res.gen.forEach(function(e, i){
+														DataTable_GenDoc.row.add([
+															`<input type="checkbox" data="gen" class="i-checks" name="general[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+															`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+															e.transmitting_to,
+															e.specific_office,
+															e.transaction,
+															e.remark,
+															e.date_registered
+														]);
+													});
+													DataTable_GenDoc.draw();
+												}else{
+													DataTable_GenDoc.clear().draw();
+												}
+
+												if(res.updateDoc !== null){
+													DataTables_DocUpdate.clear().draw();
+													res.updateDoc.forEach(function(e, i){
+														DataTables_DocUpdate.row.add([
+															`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
+															`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
+															'TWG',
+															'TWG',
+															e.date_registered
+														]);
+													});
+													DataTables_DocUpdate.draw();
+												}else{
+													DataTables_DocUpdate.clear().draw();
+												}
+
+												if(res.forEval.bool){
+													swal({
+														title: "Evaluation form downloading",
+														text: "Download of Pre-procurement evaluation form will start shortly.",
+														type: "info"
+													});
+													setTimeout(function(){
+														res.forEval.data.forEach(function(e, i){
+															window.open(`../../bac/forms/pre-eval-form.php?g=${e}`);
+														});
+													}, 3500);
+												}
+												
+												$('.i-checks').iCheck({
+													checkboxClass: 'icheckbox_square-green',
+													radioClass: 'iradio_square-green'
+												});
+
+											}
 										});
+
+										// reload pages		
 									}
 								}
 							});
@@ -316,6 +544,8 @@ require_once "../../functions/account-verifier.php";
 				var reference = button.data('reference') // Extract info from data-* attributes
 				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+				var form_data = null;
 
 				SendDoSomething("POST", "../xhr-files/xhr-show-actions.php", {
 					ref:reference
@@ -375,6 +605,7 @@ require_once "../../functions/account-verifier.php";
 									</div>
 								</div>
 							</a>`;
+
 							if(res.issue){
 								$('[dataFor="pre-proc-eval-issue"]').html(`
 								<div class="alert alert-danger">
@@ -403,6 +634,74 @@ require_once "../../functions/account-verifier.php";
 							}
 						}
 						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
+
+						console.log(res.formData);
+						$('#pre-eval-formData').html('');
+						res.formData.forEach(function(e, i){
+							if(e.type === "PR"){
+								$('#pre-eval-formData').append(`<div class="table-responsive">
+								<table class="table table-bordered"><thead><tr>
+									<th>Origin</th>
+									<th>Stock No.</th>
+									<th>Unit</th>
+									<th>Description</th>
+									<th>Mode of Procurement</th>
+								</tr></thead>
+								<tbody preEval="tbody-${i}">
+								</tbody></table></div><br>`);
+							}else if(e.type === "JO"){
+								$('#pre-eval-formData').append(`<div class="table-responsive">
+								<table class="table table-bordered"><thead><tr>
+									<th>Origin</th>
+									<th>List Title</th>
+									<th>Tags</th>
+									<th>Mode of Procurement</th>
+								</tr></thead>
+								<tbody preEval="tbody-${i}">
+								</tbody></table></div><br>`);							
+							}
+							
+							e.lots.forEach(function(e1, i1){
+								e1.lot_items.forEach(function(e2, i2){
+									if(e.type === "PR"){
+										$(`[preEval="tbody-${i}"]`).append(`<tr>
+											<td>${e.req_origin} - ${e1.l_title}</td>
+											<td>${e2.stock_no}</td>
+											<td>${e2.unit}</td>
+											<td>${e2.desc}</td><td>
+											<input type="text" name="item[]" value="${e.type}-${e1.l_id}-${e2.id}" hidden>
+											<select class="form-control m-b" name="individialMOP[]">
+												<option value="">Choose...</option>
+												<option value="Public Bidding">Public Bidding</option>
+												<option value="SVP">Small Value Procurement</option>
+												<option value="Direct Contracting">Direct Contracting</option>
+												<option value="Negociated Procurement">Negociated Procurement</option>
+												<option value="Shopping">Shopping</option>
+												<option value="Repeat Order">Repeat Order</option>
+												<option value="Limited Source Bidding">Limited Source Bidding</option>
+											</select>
+											</td></tr>`);
+									}else if(e.type === "JO"){
+										$(`[preEval="tbody-${i}"]`).append(`<tr>
+											<td>${e.req_origin} - ${e1.l_title}</td>
+											<td>${e2.header}</td>
+											<td>${e2.tags}</td><td>
+											<input type="text" name="item[]" value="${e.type}-${e1.l_id}-${e2.id}" hidden>
+											<select class="form-control m-b" name="individialMOP[]">
+												<option value="">Choose...</option>
+												<option value="Public Bidding">Public Bidding</option>
+												<option value="SVP">Small Value Procurement</option>
+												<option value="Direct Contracting">Direct Contracting</option>
+												<option value="Negociated Procurement">Negociated Procurement</option>
+												<option value="Shopping">Shopping</option>
+												<option value="Repeat Order">Repeat Order</option>
+												<option value="Limited Source Bidding">Limited Source Bidding</option>
+											</select>
+											</td></tr>`);
+									}
+								});
+							});
+						});
 					}
 				}, false, {
 					f: function(){
@@ -419,7 +718,35 @@ require_once "../../functions/account-verifier.php";
 				modal.find('.modal-title').text('Available Actions to Project ' + reference);
 				//modal.find('.modal-body input').val(reference);
 				document.getElementById("projectReference").value = reference;
+
+				$('#pre-eval-individial').on('click', function(){
+					$('#pre-eval-formData').removeClass('fadeOutLeft').addClass('fadeInRight').attr('style', '');
+					$('[name="MOP"]').prop('disabled', true).val('');
+				});
+
+				$('#pre-eval-whole').on('click', function(){
+					$('#pre-eval-formData').removeClass('fadeInRight').addClass('fadeOutLeft');
+					$('[name="MOP"]').prop('disabled', false);
+					setTimeout(function(){
+						$('#pre-eval-formData').attr('style', 'display:none');
+					}, 500);
+				});
+
 			});
+			
+			//superadmin reset password
+			$('#resetPassword').on('show.bs.modal', function (event) {
+			  var button = $(event.relatedTarget) // Button that triggered the modal
+			  var recipient = button.data('name') // Extract info from data-* attributes
+			  var office = button.data('office')
+			  var id = button.data('id')
+			  var phone = button.data('phone')
+			  var modal = $(this)
+
+			  modal.find('#phone').html(phone)
+			  modal.find('.modal-title').html('Reset Account Password <br> <a style="color:#06425C">' + recipient + '</a>')
+			  modal.find('#office').html(office)
+			})
 		
 			
 			//outgoing documents table collapse all div
@@ -714,18 +1041,8 @@ require_once "../../functions/account-verifier.php";
 	</script>
 
 	<script>
-		const DataTables_DocUpdate = $('#DataTables_DocUpdate').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
-		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
-			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
-				customize: function (win){
-					$(win.document.body).addClass('white-bg');
-					$(win.document.body).css('font-size', '10px');
-					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-				}
-			}]
-		});
-
 		$(function(){
+
 			var DataTables_userOverview = $('#DataTables_userOverview').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
@@ -736,6 +1053,7 @@ require_once "../../functions/account-verifier.php";
 					}
 				}]
 			});
+
 			var DataTables_overallLogs = $('#DataTables_overallLogs').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
 			buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
 				{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
@@ -746,6 +1064,18 @@ require_once "../../functions/account-verifier.php";
 					}
 				}]
 			});
+
+			// var DataTables_updateRequests = $('#DataTables_updateRequests').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			// buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			// 	{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+			// 		customize: function (win){
+			// 			$(win.document.body).addClass('white-bg');
+			// 			$(win.document.body).css('font-size', '10px');
+			// 			$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+			// 		}
+			// 	}]
+			// });
+
 		});
 	</script>
 
