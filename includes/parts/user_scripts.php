@@ -199,6 +199,20 @@ require_once "../../functions/account-verifier.php";
 		var path = window.location.pathname.split("/");
 		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
 		var sLink = ['Dashboard'];
+		var higherLevelpages = [
+			{pages: ['project-details'], link: 'current-projects'}
+		];
+
+		var highlevelpage = higherLevelpages.find(function(e1){
+			return e1.pages.find(function(e2){
+				return e2 === path[path.length - 1]
+			});
+		});
+
+		if(typeof highlevelpage !== "undefined"){
+			link = document.querySelector(`[href="${highlevelpage.link}"]`);
+		}
+
 		switch (path[path.length - 1]){
 			case sLink.find(function(el){
 				return path[path.length - 1] === el
@@ -211,7 +225,6 @@ require_once "../../functions/account-verifier.php";
 				link.parentNode.setAttribute("class", "active");
 				break;
 		}
-
 
         $("#wizard").steps();
         $("#form").steps({

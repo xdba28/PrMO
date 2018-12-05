@@ -92,7 +92,6 @@
 							if($project){
 								
 								$projectDetails = $user->projectDetails($refno);
-								//echo "<pre>",print_r($projectDetails),"</pre>";
 									
 					?>
 					<div class="col-lg-12 animated fadeInRight">
@@ -100,7 +99,7 @@
 							<div class="ibox-title">
 								<h5>Content of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
-							<div class="ibox-content">
+							<div class="ibox-content"><button data-toggle="modal" data-target="#summary">try</button>
 								<h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Items Selection</h2>
 								<div class="row">
 									<div class="col-sm-9">
@@ -156,7 +155,7 @@
 
 												<tr>
 													<td style="text-align:center;">
-														<input type="checkbox" class="i-checks" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent);?>'>
+														<input type="checkbox" class="i-checks" mop="<?php echo $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'] ?>" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent);?>'>
 													</td>
 													<td><?php echo $itemCount;?></td>
 													<td>
@@ -220,7 +219,7 @@
 													?>												
 															<tr>
 																<td style="text-align:center;">
-																	<input type="checkbox" class="i-checks" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent)."{|}".$lot['l_cost'];?>'>
+																	<input type="checkbox" class="i-checks" mop="<?php echo $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'] ?>" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent)."{|}".$lot['l_cost'];?>'>
 																</td>
 																<th><?php echo $itemCount;?></th>
 																<th><?php echo $lotCount;?> - <?php echo $lot['l_title'];?></th>
@@ -388,6 +387,16 @@
 
 	$(function(){
 
+		const mop_peritem = <?php 
+			if($project->mop_peritem === NULL){
+				echo "''";
+			}else{
+				echo $project->mop_peritem;
+			}
+		?>;
+
+		console.log(mop_peritem);
+
 		$("#test").click(function(){
 			// shine
 			$("#c1").addClass("shine-me");
@@ -403,19 +412,32 @@
 		$('#bResort').on('click', function(){
 			let rItems = $('input[type="checkbox"]:checked');
 			let canvassCount = $('#canvassCount').val();
+			let moparray = [];
 
-			if(rItems.length !== 0 && canvassCount !== "" && canvassCount !== "0"){
 				let count = 0;
 				let prT_header = false;
 				let lotCounter = [];
 				
-				$('#step1').attr('style', 'display:none;');
-				$('#step2').attr('style', '');
+				// $('#step1').attr('style', 'display:none;');
+				// $('#step2').attr('style', '');
 				$('#backbtn').attr('style', '');
 				$('#pr-content').html('');
 				$('#jo-content').html('');
 
 				rItems.each(function(i, e){
+
+					let mode = Object.keys(mop_peritem).find(function(e1){
+						return mop_peritem[e1].find(function(e2){
+							return e.getAttribute('mop') === e2
+						});
+					});
+
+					if(typeof mode !== "undefined"){
+						if(moparray.indexOf(mode) === -1){
+							moparray.push(mode);
+						}
+					}
+
 					let rDetails = e.getAttribute('data').split('{|}');
 					let rSpec = JSON.parse(rDetails[2]);
 					switch(rDetails[0]){
@@ -470,23 +492,10 @@
 							break;
 					}
 				});
-			}else{
-				if(rItems.length === 0){
-					swal({
-						title: "No selected item!",
-						text: "Please select an item.",
-						type: "error",
-						confirmButtonColor: "#DD6B55"
-					});
-				}else if(canvassCount === "" || canvassCount === "0"){
-					swal({
-						title: "Canvass forms needed!",
-						text: "Please indicate the number of canvass forms needed.",
-						type: "error",
-						confirmButtonColor: "#DD6B55"
-					});
-				}
-			}
+
+			console.log(moparray);
+			$('#MOPCount').text(moparray.length);
+			$('#summary').modal('show');
 		});
 
 		$('#backbtn').on('click', function(){

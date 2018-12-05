@@ -11,13 +11,104 @@
         die();
 	}
 
-	if(!empty($_POST)){
-		foreach($_POST['project'] as $id){
-			echo $id . "<br>";
+	if(Input::exists()){
+		if(Token::check("newConsolidatedProject", Input::get('newConsolidatedProject'))){
+				
+	
+			$staff = new Staff();
+			$form_ref_no = Input::get('q');
+
+			// $enduser = ["0" => $_POST['enduser']];
+			// $enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
+			// $form = ["0" => $form_ref_no];
+			echo "<pre>",print_r($_POST['endusers']),"</pre>";
+			echo "<pre>",print_r($_POST),"</pre>";
+			die('yourehre');
+			$requestOrigin_encoded = json_encode($form, JSON_FORCE_OBJECT);
+
+
+			try{
+
+				$project_ref_no = StringGen::projectRefno('GDS'); //gds here should be dynamic for expansion, place type picker
+				$mydate= explode("/", Input::get('implementation'));
+				$finalDate = $mydate[2]."-".$mydate[1]."-".$mydate[0];
+
+				$staff->startTrans(); //start transaction
+
+				$staff->register('projects', array(
+					'request_origin' => $requestOrigin_encoded,
+					'project_ref_no' => $project_ref_no,
+					'project_title' => Input::get('title'),
+					'ABC' => Input::get('ABC'),
+					'MOP' => 'TBE',
+					'type' => 'single',
+					'end_user' => $enduser_encoded,
+					'project_status' => 'PROCESSING',
+					'workflow'	=> 'For evaluation of technical working group',
+					'date_registered' => Date::translate('test', 'now'),
+					'implementation_date' => $finalDate
+				));
+
+				$staff->register('project_logs', array(
+					'referencing_to' => $form_ref_no,
+					'remarks' => "project request {$form_ref_no} registered as a single project with the reference no of {$project_ref_no}.",
+					'logdate' => Date::translate('test', 'now'),
+					'type' =>  'IN'
+				));
+
+				$staff->register('outgoing', array(
+
+					'project' =>  $project_ref_no,
+					'transmitting_to' => 'TWG',
+					'specific_office' => 'TWG',
+					'remarks' => 'none',
+					'transactions' => 'EVALUATION',
+					'date_registered' => Date::translate('test', 'now')
+
+				));
+
+				$staff->register('project_logs', array(
+					'referencing_to' => $project_ref_no,
+					'remarks' => "project {$project_ref_no} queued to outgoing documents for pre-procurement evaluation.",
+					'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
+					'type' =>  'IN'
+				));
+
+				$staff->register('notifications', array(
+					'recipient' => $_POST['enduser'],
+					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'datecreated' => Date::translate('test', 'now'),
+					'seen' => 0,
+					'href' => "project-details?refno={$project_ref_no}"
+				));
+
+				$staff->endTrans(); //commit
+
+				Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
+				notif(json_encode(array(
+					'receiver' => $_POST['enduser'],
+					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno={$project_ref_no}"
+				)));
+
+				
+				//disable the "register" now button in the new-project page to prevent any data discrepancy
+				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
+				//send SMS notifications
+
+
+				Redirect::To('new-project');
+				exit();
+
+			}catch(Execption $e){
+				die($e->getMessage());
+			}
+
+
 		}
-		// echo "<pre>".print_r($_POST)."</pre>";
-		die();
 	}
+
 
 
 ?>
@@ -78,7 +169,7 @@
                             <a href="#">Projects</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>New Project</strong>
+                            <strong>New Consolidated Project</strong>
                         </li>
                     </ol>
                 </div>
@@ -93,16 +184,181 @@
             <div class="wrapper wrapper-content animated fadeInUp">
 			
 			<?php
-				if(isset($_GET['q'])){
+				if(isset($_POST['forms'])){
 
-					//$admin = new admin();
+					$admin = new admin();
+					$counter = 0;
 					//$request = $admin->get('project_request_forms', array('form_ref_no', '=', $_GET['q']));
 					//$enduser = $admin->get('enduser', array('edr_id', '=', $request->requested_by));
 					//$office = $admin->get('units', array('ID', '=', $enduser->edr_designated_office));
 					//echo "<pre>",print_r($request), "</pre>";
 			?>
 						
-						<!-- page content of registration for consolidated projects -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Forms Details</h5>
+                        </div>
+                        <div>
+                            <div class="ibox-content no-padding border-left-right">
+                                <img alt="image" class="img-fluid" src="../../assets/pics/profile-bg.png">
+                            </div>
+                            <div class="ibox-content profile-content">
+								<h5 class="text-danger">
+                                    Related PR / JO Forms
+                                </h5>							
+                                <!-- <h3>asdasd asdad </h3> -->
+								<div class="ibox-content">
+									<?php
+										$overallCost = 0;
+										$enduserNames = [];
+
+											foreach ($_POST['forms'] as $form) {
+												$popOver = "popOver".$counter;
+												$formInfo =  $user->get('project_request_forms', array('form_ref_no', '=', $form));
+												$formLots = $user->getAll('lots', array('request_origin', '=', $form));
+
+													$totalCost = 0;
+													foreach ($formLots as $lot) {
+														$totalCost += $lot->lot_cost;
+													}
+
+												$overallCost += $totalCost;
+												$enduserNames = array_merge($enduserNames, array($formInfo->requested_by => $user->fullnameOfEnduser($formInfo->requested_by)));
+									?>
+									<ul>
+
+										<li><button type="button" class="btn btn-success btn-xs btn-rounded btn-outline" id="<?php echo $popOver;?>" data-trigger="hover" title="Title" data-placement="right" data-content="<?php echo $formInfo->title;?>"><?php echo $form;?></button>
+											<ul>
+												<li style="margin-left:17px"><span class="badge badge-info">Enduser</span> <i class="fas fa-caret-right"></i> <?php echo $user->fullnameOfEnduser($formInfo->requested_by);?></li>
+												<li style="margin-left:17px"><span class="badge badge-info">Purpose</span> <i class="fas fa-caret-right"></i> <i>"<?php echo $formInfo->purpose;?>"</i></li>
+												<li style="margin-left:17px"><span class="badge badge-danger">Total / Est Cost</span> <i class="fas fa-caret-right"></i> 	<b>&#x20b1; <?php echo number_format($totalCost, 2);?></b></li>
+											</ul>
+										</li>
+
+									</ul><br>
+									<?php
+										$counter++;
+										}
+
+										// echo "<pre>",print_r($enduserNames),"</pre>";
+									?>
+								</div>
+
+								<h5 class="text-danger">
+                                   Project Summary
+                                </h5>
+
+								<div class="">
+										<p class="inline"><i class="fas fa-hand-holding-usd" style="font-size:18px;"></i> Total Cost <i class="fas fa-caret-right"></i> <b class="text-danger">&#x20b1;<?php echo number_format($overallCost, 2);?></b></p>
+										<br>
+										<p class="inline"><i class="fas fa-users" style="font-size:18px;">
+											</i> Enduser/s <i class="fas fa-caret-down"></i> 
+											<?php echo '<ul><li style="margin-left:50px">'.implode('</li> <li style="margin-left:50px">', $enduserNames).'</li></ul>';?>
+										</p>
+										<br>																									
+								</div>								
+								<!-- <h5 class="text-navy">
+                                    About the Enduser
+                                </h5>
+
+								
+								
+                                <h5 class="text-navy">
+                                    something
+                                </h5>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
+                                </p>
+                                <div class="row m-t-lg">
+                                    <div class="col-md-4">
+                                        <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
+                                        <h5><strong>10</strong> Requests</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="line">5,3,9,6,5,9,7,3,5,2</span>
+                                        <h5><strong>8</strong> Success</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
+                                        <h5><strong>2</strong> Failure</h5>
+                                    </div>
+                                </div> -->
+                            </div>
+						</div>
+					</div>
+                </div>
+                <div class="col-md-8">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>New Consolidated Project</h5>
+                        </div>
+                        <div class="ibox-content">
+						    <h2>
+                                Project checklist
+                            </h2>
+                            <p class="alert alert-info">Please do verify the following requirements to be valid and correct based on the actual submission of project requirements.</p>						
+							<div class="row">
+								
+									<div class="col-sm-6 b-r"> 
+										<form id="new-project" method="POST" action="">								
+                                        <div class="checkbox checkbox-info checkbox-success">
+                                            <input id="checkbox1" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
+                                            <label for="checkbox1">
+                                                CAF (Certificate of Availability of Funds) is valid and correct.
+                                            </label>
+                                        </div>
+                                        <div class="checkbox checkbox-info checkbox-success">
+                                            <input id="checkbox2" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
+                                            <label for="checkbox2">
+                                               PPMP/APP/Suplemental documents are attached and validated by the personnel incharge in the PRMO.
+                                            </label>
+                                        </div>											
+                                        <div class="checkbox checkbox-info checkbox-success">
+                                            <input id="checkbox3" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
+                                            <label for="checkbox3">
+                                                Complete documents that the office may reqiure and necessary under specific conditions applied.
+                                            </label>
+                                        </div>
+										<div class="form-group mt-20">
+											<label for="ABC" class="form-label">ABC</label> <input type="number" min="<?php echo $overallCost;?>" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
+										</div>				
+										<div class="form-group" id="data_2" >
+											<label class="font-normal">Implementation date</label>
+											<div class="input-group date" id="popOver0" data-trigger="hover" title="Instructions" data-placement="top" data-content="If the project has multiple implementation date, register closest date.">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implementation" class="form-control" value="" required>
+											</div>
+										</div>
+
+										
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="title" class="my-blue">Project title</label> <textarea name="title" id="title" placeholder="New Project Title" class="form-control" rows="10" required></textarea>
+										</div>	
+											<input type="text" name="newConsolidatedProject" value="<?php echo Token::generate('newConsolidatedProject');?>" hidden readonly>
+											<?php
+
+												$endusersId = array_values(array_flip($enduserNames));
+												$jsonNames = json_encode($endusersId, JSON_FORCE_OBJECT);
+											
+											?>
+											<input type="text" id="hiddenIds" name="endusers" value="" hidden readonly>
+										
+									</div>	
+									<div class="col-lg-12">
+									
+										<button class="btn btn-primary btn-rounded pull-right" type="submit" form="new-project">Submit</button>
+										<a href="new-consolidated-project" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>
+										</form>	
+									</div>
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>	
 			
 			<?php
 				}else{
@@ -226,7 +482,27 @@
         </div>
     </div>
 
+
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>	
+
+	<script>
+			var endusersArray = [];
+			endusersArray.push(
+
+				<?php
+					echo "'".implode("', '", $endusersId)."'";
+					
+				?>
+
+			);
+
+
+				console.log(endusersArray);
+			$('#hiddenIds').val(JSON.stringify(endusersArray)); //store array
+
+			 var value = $('#hiddenIds').val(); //retrieve array
+			 value = JSON.parse(value);	
+	</script>	
 	<script>
 
 	$(document).ready(function(){
@@ -248,7 +524,7 @@
 					var user = el.req_by.split(":");
 					var data_tmp = `
 					<tr>
-						<td style="text-align:center"><input type="checkbox" class="i-checks" name="project[]" value="${el.id}"></td>
+						<td style="text-align:center"><input type="checkbox" class="i-checks" name="forms[]" value="${el.id}"></td>
 						<td dataFor="active"><a href="#${el.id}" class="client-link">${el.id}</a></td>
 						<td>${user[1]}</td>
 						<td><i class="fa fa-clock"></i> ${el.date_created}</td>

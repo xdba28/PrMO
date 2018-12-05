@@ -741,6 +741,32 @@
 					confirmButtonText: "Proceed",
 					allowOutsideClick: false
 				}).then(function(r){
+					act = 'delete';
+					let array = [];
+					let lot = [];
+					let sweetHtml = '';
+					$('.i-checks:checked').each(function(i){
+						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
+
+						if(typeof lot.find(function(el){
+							let inx = el.split('blyt322');
+							return inx[0] == obj.lot
+						}) === 'undefined'){
+							if(ProjType === "PR"){
+								lot.push(`${obj.lot}blyt322${obj.lot_id}`);
+							}else if(ProjType === "JO"){
+								lot.push(`${obj.lot}blyt322${obj.lot_id}blyt322${obj.lot_cost}`);
+								sweetHtml += `<br>
+								New Lot ${obj.lot} Cost: <input type="number" name="joNewLotCost[]">
+								`;
+							}
+						}
+
+					});
+					DeleteData.items = array;
+					DeleteData.lotref = lot;
+
 					if(r.value){
 						sweet({
 							title: 'Reason for deletetion',
@@ -748,10 +774,34 @@
 							showCancelButton: true,
 							confirmButtonText: "Submit",
 							allowOutsideClick: false,
-							html: '<input type="text" class="form-control" name="pr-jo-del">',
+							html: 'Reason: <input type="text" name="pr-jo-del">'+sweetHtml,
 							focusConfirm: false,
 							preConfirm: function(){
-								return document.querySelector('[name="pr-jo-del"]').value;
+								let reason = document.querySelector('[name="pr-jo-del"]').value;
+								if(ProjType === "PR"){
+									if(reason !== ""){
+										return escapeHtml(reason);
+									}else{
+										return false;
+									}
+								}else if(ProjType === "JO"){
+									let sweetArray = [];
+									if(reason === ""){
+										return false;
+									}
+									for (const i of document.querySelectorAll('[name="joNewLotCost[]"]')){
+										if(i.value !== ""){
+											sweetArray.push(escapeHtml(i.value));
+										}else{
+											return false;
+										}
+									}
+									let sweetObj = {
+										reason:  escapeHtml(reason),
+										joNewLotCost: sweetArray
+									}
+									return sweetObj;
+								}
 							}
 						}, {
 							do: function(res){
@@ -762,46 +812,12 @@
 										type: "info"
 									});
 								}else if(res.value !== "undefined"){
-									act = 'delete';
-									if(ProjType === "PR"){
-										let array = [];
-										let lot = [];
-										$('.i-checks:checked').each(function(i){
-											obj = JSON.parse($(this).attr('details'));
-											array.push(obj);
 
-											if(typeof lot.find(function(el){
-												let inx = el.split('blyt322');
-												return inx[0] == obj.lot
-											}) === 'undefined'){
-												lot.push(`${obj.lot}blyt322${obj.lot_id}`);
-											}
-
-										});
-										DeleteData.items = array;
-										DeleteData.lotref = lot;
-									}else if(ProjType === "JO"){
-										let array = [];
-										let lot = [];
-										$('.i-checks:checked').each(function(i){
-											obj = JSON.parse($(this).attr('details'));
-											array.push(obj);
-											
-											if(typeof lot.find(function(el){
-												let inx = el.split('blyt322');
-												return inx[0] == obj.lot
-											}) === 'undefined'){
-												lot.push(`${obj.lot}blyt322${obj.lot_id}blyt322${obj.lot_cost}`);
-											}
-										});
-										DeleteData.items = array;
-										DeleteData.lotref = lot;
-									}
 
 									SendDoSomething("POST", "xhr-item-update.php", {
 										del: DeleteData,
 										action: act,
-										remark: escapeHtml(res.value)
+										remark: res.value
 									}, {
 										do: function(d){
 											if(d.delLot){
@@ -874,7 +890,12 @@
 				html: '<input type="text" class="form-control" name="pr-jo-update">',
 				focusConfirm: false,
 				preConfirm: function(){
-					return document.querySelector('[name="pr-jo-update"]').value;
+					let reason = document.querySelector('[name="pr-jo-update"]').value;
+					if(reason === ""){
+						return false;
+					}else{
+						return reason;
+					}
 				}
 			}, {
 				do: function(res){

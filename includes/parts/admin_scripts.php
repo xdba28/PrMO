@@ -230,8 +230,22 @@ require_once "../../functions/account-verifier.php";
 		$(function(){
 			// side nav active
 			var path = window.location.pathname.split("/");
-			var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+			var link = document.querySelector(`[href="${path[path.length - 1]}"]`);
 			var sLink = ['Dashboard', 'Calendar'];
+			var higherLevelpages = [
+				{pages: ['resort-items'], link: 'Ongoing-projects'}
+			];
+
+			var highlevelpage = higherLevelpages.find(function(e1){
+				return e1.pages.find(function(e2){
+					return e2 === path[path.length - 1]
+				});
+			});
+
+			if(typeof highlevelpage !== "undefined"){
+				link = document.querySelector(`[href="${highlevelpage.link}"]`);
+			}
+
 			switch (path[path.length - 1]){
 				case sLink.find(function(el){
 					return path[path.length - 1] === el
@@ -244,7 +258,7 @@ require_once "../../functions/account-verifier.php";
 					link.parentNode.setAttribute("class", "active");
 					break;
 			}
-		
+					
 			// modal
 			$('[log="upd"]').on('click', function(){
 				var updLog = [];
@@ -280,7 +294,12 @@ require_once "../../functions/account-verifier.php";
 										`,
 										focusConfirm: false,
 										preConfirm: function(){
-											return document.querySelector('[name="LogRem"]').value
+											let reason = document.querySelector('[name="LogRem"]').value;
+											if(reason === ""){
+												return false;
+											}else{
+												return escapeHtml(reason);
+											}
 										}
 									}, {
 										do: function(res){

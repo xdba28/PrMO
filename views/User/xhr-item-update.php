@@ -11,6 +11,7 @@ if($user->isLoggedIn()){
 }
 
 	echo "<pre>",print_r($_POST),"</pre>";
+	die();
 
 	foreach ($_POST['del']['lotref'] as $ref) {
 		$test = explode('blyt322', $ref);

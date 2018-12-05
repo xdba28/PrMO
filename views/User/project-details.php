@@ -205,8 +205,15 @@
 												
 												$forms = json_decode($project->request_origin, true);
 												
+												//$test = '<a value="something" href="my-forms?q='.implode('"></a>, <a href="my-forms?q=', $forms).'"></a>';
+												//echo $test;
+												$comaCounter = 1;
 												foreach($forms as $individualOrigin => $value){
-													echo '<a href="my-forms?q='.$value.'">'.$value.'</a><strong>, </strong>';
+													echo '<a href="my-forms?q='.$value.'">'.$value.'</a>';
+													if($comaCounter < (count($forms))){
+														echo '<a style="font-size:16px; color:red"> / </a>';
+													}
+													$comaCounter++;
 												}
 												
 											

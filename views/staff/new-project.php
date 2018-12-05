@@ -172,7 +172,7 @@
                             <a href="#">Projects</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>New Project</strong>
+                            <strong>New Single Project</strong>
                         </li>
                     </ol>
                 </div>
@@ -246,9 +246,9 @@
 
 								
 								
-                                <h5 class="text-navy">
+                                <!-- <h5 class="text-navy">
                                     something
-                                </h5>
+                                </h5> 
                                 <p>
                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
                                 </p>
@@ -265,7 +265,7 @@
                                         <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
                                         <h5><strong>2</strong> Failure</h5>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 						</div>
 					</div>
@@ -273,7 +273,7 @@
                 <div class="col-md-8">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>New Project</h5>
+                            <h5>New Single Project</h5>
                         </div>
                         <div class="ibox-content">
 						    <h2>
@@ -469,6 +469,12 @@
 			});
 		}
 
+		$('#popOver0').on('click', function(){
+			// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
+			window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
+		});
+
+
 		function start(){
 			$('#nwprj-tbl-data').html('');
 			OBJ.forEach(function(el, index){
@@ -547,10 +553,6 @@
 						type: "error"
 					});
 				}
-				$('#popOver0').on('click', function(){
-					// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
-					window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
-				});
 			});
 
 			$('.ladda-button').ladda();

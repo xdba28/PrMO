@@ -381,3 +381,61 @@
 			</div>
 		</div>
 
+<!-- publication summary -->
+<div id="summary" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<h3 class="modal-title">Publication & BAC Resolution Summary</h3>		
+			</div>
+			<div class="modal-body">
+					<div class="row">
+
+							<div class="col-lg-6">
+								<div class="widget style1 lazur-bg">
+									<div class="row">
+										<div class="col-4">
+											<i class="fa fa-envelope-o fa-5x"></i>
+										</div>
+										<div class="col-8 text-right">
+											<span> No of MOPs Classified </span>
+											<h2 class="font-bold" id="MOPCount"></h2>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="widget style1 lazur-bg">
+									<div class="row">
+										<div class="col-4">
+											<i class="fa fa-envelope-o fa-5x"></i>
+										</div>
+										<div class="col-8 text-right">
+											<span>Pair of bac reson & publication</span>
+											<h2 class="font-bold">4</h2>
+										</div>
+									</div>
+								</div>
+							</div>						
+
+					</div>
+					
+					<div class="row">
+						<h1>Clickable divs to view publication and reso</h1>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary btn-rounded btn-outline">
+					<i class="fas fa-print"></i>
+					<span>Print Now</span>&nbsp;
+				</button>
+				<button type="button" class="btn btn-success btn-rounded btn-outline">
+					<i class="far fa-save"></i>
+					<span>Save and print Later</span>&nbsp;
+				</button>
+				<button type="button" class="btn btn-danger btn-rounded btn-outline" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
