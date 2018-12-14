@@ -1,5 +1,6 @@
 <?php
 require_once('../../core/init.php');
+header("Content-type:application/json");
 
 $user = new Admin(); 
 
@@ -18,6 +19,7 @@ else{
 		$releasedBy = $user->fullnameOf(Session::get(Config::get('session/session_name')));
 		$outgoing = $_POST['outgoing'];
 		$action = $_POST['action'];
+		$eval = false;
 		if(isset($_POST['remarks'])){
 			$updateRemark = $_POST['remarks'];
 		}
@@ -170,20 +172,91 @@ else{
 		}catch(Exception $e){
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
-			header("Content-type:application/json");
 			echo json_encode($data);
+			exit();
 			// log files
 		}
-		
 
-		$data = ['success' => true];
-		header("Content-type:application/json");
+
+
+		$outData = NULL;
+		$signiture = NULL;
+		$gen = NULL;
+		$updateDoc = NULL;
+
+		$outgoing = $user->selectAll('outgoing');
+		if(!empty($outgoing)){
+			foreach($outgoing as $document){
+				switch($document->transactions){
+					case "EVALUATION":
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$outData[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
+
+					case "SIGNATURES":
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+						$signiture[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'transmitting_to' => $unit->office_name,
+							'specific_office' => $document->specific_office,
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
+
+					default:
+						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
+						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+
+						$gen[] = [
+							'project' => $document->project,
+							'title' => $project->project_title,
+							'transmitting_to' => $unit->office_name,
+							'specific_office' => $document->specific_office,
+							'transaction' => $document->transactions,
+							'remark' => $document->remarks,					
+							'date_registered' => Date::translate($document->date_registered, 1)
+						];
+						break;
+				}
+			}
+		}
+
+		$released = $user->selectAll('outgoing_register');
+		if(!empty($released)){
+			foreach($released as $a){
+				$project = $user->get('projects', array('project_ref_no', '=', $a->project));
+
+				$updateDoc[] = [
+					'project' => $a->project,
+					'title' => $project->project_title,
+					'date_registered' => Date::translate($a->date_registered, 1)
+				];
+			}
+		}
+		
+		$data = [
+			'success' => true, 
+			'twg' => $outData,
+			'sign' => $signiture,
+			'gen' => $gen,
+			'updateDoc' => $updateDoc,
+			'forEval' => [
+				'bool' => $eval, 
+				'data' => $_POST['outgoing']
+			]
+		];
+
 		echo json_encode($data);
 	}
 	else
 	{
 		$data = ['success' => false];
-		header("Content-type:application/json");
 		echo json_encode($data);
 	}
 

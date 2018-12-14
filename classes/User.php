@@ -125,81 +125,90 @@
             }
         }
         
-        // pr-jo-doc.php
-        public function Doc_projData($REQ){
-            $REQ = explode(":", $REQ);
-            if($REQ[1] === "PR"){
-                if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
-                FROM `project_request_forms`, `lots`, `lot_content_for_pr`
-                WHERE project_request_forms.form_ref_no = lots.request_origin 
-                AND lots.lot_id = lot_content_for_pr.lot_id_origin 
-                AND form_ref_no = '$REQ[0]'")){
-                    return $this->db->first();
-                }
-            }elseif($REQ[1] === "JO"){
-                if($this->db->query_builder("SELECT form_ref_no, title, requested_by, date_created, noted_by, verified_by, approved_by
-                FROM `project_request_forms`, `lots`, `lot_content_for_jo`
-                WHERE project_request_forms.form_ref_no = lots.request_origin 
-                AND lots.lot_id = lot_content_for_jo.lot_id_origin 
-                AND form_ref_no = '$REQ[0]'")){
-                    return $this->db->first();
-                }
-            }
-        }
-        // pr-jo-doc.php
-        public function user_data($ID){
-            if($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
-                        edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
-                FROM `enduser`, `units`
-                WHERE enduser.edr_designated_office = units.ID AND edr_id = '$ID'")){
-                return $this->db->first();
-            }
-        }
+		// request-gen.php PRINTING OF REQUEST FORM
+		public function requestDetails($id){
+			$this->db->query_builder("SELECT form_ref_no, title, purpose, requested_by, date_created FROM `project_request_forms` WHERE form_ref_no = '{$id}'");
+			$project = $this->db->first();
 
-        // pr-jo-doc.php
-        public function PRJO_num_lots($REQ){
-            $REQ = explode(":", $REQ);
-            if($REQ[1] === "PR"){
-                if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost
-                FROM `project_request_forms`, `lots`, `lot_content_for_pr`
-                WHERE project_request_forms.form_ref_no = lots.request_origin
-                AND lots.lot_id = lot_content_for_pr.lot_id_origin
-                AND form_ref_no = '$REQ[0]'
-                GROUP BY lot_id_origin")){
-                    return $this->db->results();
-                }
-            }elseif($REQ[1] === "JO"){
-                if($this->db->query_builder("SELECT form_ref_no, lot_no, lot_title, count(ID) as 'number_of_items', lot_cost, note
-                FROM `project_request_forms`, `lots`, `lot_content_for_jo`
-                WHERE project_request_forms.form_ref_no = lots.request_origin
-                AND lots.lot_id = lot_content_for_jo.lot_id_origin
-                AND form_ref_no = '$REQ[0]'
-                GROUP BY lot_id_origin")){
-                    return $this->db->results();
-                }
-            }
-        }
-        // pr-jo-doc.php
-        public function PRJO_itemsPerLot($ID, $LOT_NO, $REQ){
-            if($REQ === "PR"){
-                if($this->db->query_builder("SELECT stock_no, unit, item_description, quantity, unit_cost, total_cost 
-                FROM `lot_content_for_pr`, `lots`, `project_request_forms`
-                WHERE project_request_forms.form_ref_no = lots.request_origin
-                AND lots.lot_id = lot_content_for_pr.lot_id_origin
-                AND form_ref_no = '$ID'
-                AND lot_no = '$LOT_NO'")){
-                    return $this->db->results();
-                }
-            }elseif($REQ === "JO"){
-                if($this->db->query_builder("SELECT header, tags
-                FROM `lot_content_for_jo`, `lots`, `project_request_forms`
-                WHERE project_request_forms.form_ref_no = lots.request_origin
-                AND lots.lot_id = lot_content_for_jo.lot_id_origin
-                AND form_ref_no = '$ID'
-                AND lot_no = '$LOT_NO'")){
-                    return $this->db->results();
-                }
-            }
+			$this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
+				edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
+				FROM `enduser`, `units`
+				WHERE enduser.edr_designated_office = units.ID AND edr_id = '{$project->requested_by}'");
+			$enduserDetails = (array) $this->db->first();
+
+			$this->db->get("units", array("office_name", "=", $enduserDetails['office_name']));
+			$officeSignatories = (array) $this->db->first();
+
+			$enduserDetails['signatories'] = $officeSignatories;
+
+			
+			$this->db->query_builder("SELECT request_origin, lot_id, lot_title, lot_cost, note, type FROM `project_request_forms`, `lots`
+				WHERE project_request_forms.form_ref_no = lots.request_origin
+				AND request_origin = '{$project->form_ref_no}'");
+			$pj_details = $this->db->results();
+
+			$lot = null;
+			foreach($pj_details as $a){
+				if($a->type === "PR"){
+					$this->db->query_builder("SELECT ID, stock_no, unit, item_description, quantity, unit_cost, total_cost 
+						FROM `lot_content_for_pr`, `lots`
+						WHERE lot_content_for_pr.lot_id_origin = lots.lot_id
+						AND lot_id_origin = '{$a->lot_id}'");
+					$lot_details = $this->db->results();
+
+					$type = $a->type;
+
+					$l_details = null;
+					foreach($lot_details as $b){
+						$l_details[] = [
+							'id' => $b->ID,
+							'stock_no' => $b->stock_no,
+							'unit'=> $b->unit,
+							'desc' => $b->item_description,
+							'qty' => $b->quantity,
+							'uCost' => $b->unit_cost,
+							'tCost' => $b->total_cost
+						];
+					}
+				}elseif($a->type === "JO"){
+					$this->db->query_builder("SELECT ID, header, tags
+						FROM `lot_content_for_jo`, `lots`
+						WHERE lot_content_for_jo.lot_id_origin = lots.lot_id
+						AND lot_id_origin = '{$a->lot_id}'");
+					$lot_details = $this->db->results();
+
+					$type = $a->type;
+
+					$l_details = null;
+					foreach($lot_details as $b){
+						$l_details[] = [
+							'id' => $b->ID,
+							'header' => $b->header,
+							'tags' => $b->tags
+						];
+					}
+				}
+
+				$lot[] = [
+					'l_id' => $a->lot_id,
+					'l_title' => $a->lot_title,
+					'l_cost' => $a->lot_cost,
+					'l_note' =>$a->note,
+					'lot_items' => $l_details
+				];
+			}
+
+			$details = [
+				'type' => $type,
+				'refno' => $id,
+				'title' => $project->title,
+				'lots' => $lot,
+				'purpose' => $project->purpose,
+				'end_user' => $enduserDetails,
+				'date' => $project->date_created
+			];
+			
+			return $details;
 		}
 		
 		public function listNotification(){
@@ -436,10 +445,24 @@
 		}
 		
 		public function like($table, $column, $particular){
-			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE $column LIKE '{$particular}'")){
-				return $this->db->results();
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE $column LIKE '%{$particular}%'")){
+				if($this->db->count()){
+					return $this->db->results();
+				}
+				return false;
 			}
+			return false;
 		}
+
+		public function isProject($table, $column, $particular){
+			if($this->db->query_builder("SELECT * FROM `{$table}` WHERE $column LIKE '%{$particular}%'")){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+			return false;
+		}		
 
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
@@ -457,6 +480,7 @@
 			return true;
 		}
 
+		// select all from the table
 		public function selectAll($table){
             if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
                 return $this->db->results();
@@ -473,7 +497,8 @@
 			return false;
 		}			
 		
-		public function getAll($table, $where){	
+		// select all from table with given wheres
+		public function getAll($table, $where){
 			if($this->db->get($table, $where)){
 				if($this->db->count()){
 					return $this->db->results();
@@ -482,6 +507,7 @@
 			}
 			return false;
 		}
+
 
         public function exist(){
             return (!empty($this->data)) ? true : false;

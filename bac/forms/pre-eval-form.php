@@ -11,9 +11,9 @@ else{
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-$documentProtection = $phpWord->getSettings()->getDocumentProtection();
-$documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
-$documentProtection->setPassword('PrMO');
+// $documentProtection = $phpWord->getSettings()->getDocumentProtection();
+// $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
+// $documentProtection->setPassword('PrMO');
 
 
 $REQ = $_GET['g'];

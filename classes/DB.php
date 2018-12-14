@@ -148,7 +148,10 @@
 
 //==============================FOUR ESSENTIAL FUNCTIONS END============================
 
-
+	// basic counting
+	public function basic_count($table,$where){
+		return $this->action("SELECT count(*) as 'counted_result'",$table,$where);
+	}
 
 
 

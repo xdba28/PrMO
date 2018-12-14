@@ -13,6 +13,13 @@ if($user->isLoggedIn()){
 	echo "<pre>",print_r($_POST),"</pre>";
 	die();
 
+	foreach ($_POST['del']['lotref'] as $ref) {
+		$test = explode('blyt322', $ref);
+		echo "<pre>",print_r($test),"</pre>";
+	}
+	
+	die();
+
 	if(!empty($_POST)){
 		
 		try{
@@ -134,7 +141,6 @@ if($user->isLoggedIn()){
 
 						}else if($_POST['orig']['type'] == "JO"){
 							#register request
-							echo "UPDATE_->RECEIVED->JO";
 
 							$user->startTrans();
 
@@ -166,7 +172,7 @@ if($user->isLoggedIn()){
 
 					if($_POST['del']['status'] == "unreceived"){
 					// deletion process for unreceived form
-					
+
 					$user->startTrans();
 						if($_POST['del']['type'] == "PR"){
 							#direct delete

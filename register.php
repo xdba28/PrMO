@@ -1,5 +1,5 @@
 <?php
-    require_once 'core/outer-init.php';
+	require_once 'core/outer-init.php';
 
     $guest = new Guest();
 
@@ -55,10 +55,13 @@
 				'contact' => [                    
 					'required' => true
 				]				
-            ));
+			));
+			
             if($validation->passed()){
                 $salt = Hash::salt(32);
                 try{
+
+					$guest->startTrans();
 
                     $guest->request('account_requests', array(
 
@@ -76,11 +79,31 @@
 						'specific_office' => Input::get('specific_office'),
 						'jobtitle' => Input::get('jobtitle')
 
-                    ));
-                    
+					));
+					
+					$guest->request('notifications', array(
+						'recipient' => "163-141",
+						'message' => "A new account request has been made.",
+						'datecreated' => Date::translate('test', 'now'),
+						'seen' => 0,
+						'href' => "account-request"
+					));
+
+					$guest->endTrans();
 				
-                    Session::flash('request_success', 'Your requests has been successfuly submited.');
-                    Redirect::To('index');
+					Session::flash('request_success', 'Your requests has been successfuly submited.');
+					
+					notif(json_encode(array(
+						'receiver' => "163-141",
+						'message' => "A new account request has been made.",
+						'date' => Date::translate(Date::translate('test', 'now'), '1'),
+						'href' => "account-request"
+					)), true);
+
+					// sms
+
+					Redirect::To('index');
+					exit();
 
                 }catch(Exception $e){
                     die($e->getMessage());
@@ -259,7 +282,7 @@
                                             </div>										
                                             <div class="form-group">
                                                 <label>Email *</label>
-                                                <input id="email" name="email" type="text" class="form-control">
+                                                <input id="email" name="email" type="email" class="form-control">
                                             </div>    
                                             <div class="form-group">
                                                 <label>Employee No. *</label>

@@ -80,10 +80,10 @@
 
 				$staff->register('notifications', array(
 					'recipient' => $_POST['enduser'],
-					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'message' => "Project request form {$form_ref_no} is now registered as {$project_ref_no}",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
-					'href' => "project-details?refno={$project_ref_no}"
+					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				));
 
 				$staff->endTrans(); //commit
@@ -93,14 +93,17 @@
 					'receiver' => $_POST['enduser'],
 					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
-					'href' => "project-details?refno={$project_ref_no}"
+					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				)));
-				Redirect::To('new-project');
-				exit();
+
 				
 				//disable the "register" now button in the new-project page to prevent any data discrepancy
 				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 				//send SMS notifications
+
+
+				Redirect::To('new-project');
+				exit();
 
 			}catch(Execption $e){
 				die($e->getMessage());
@@ -169,7 +172,7 @@
                             <a href="#">Projects</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>New Project</strong>
+                            <strong>New Single Project</strong>
                         </li>
                     </ol>
                 </div>
@@ -199,6 +202,7 @@
 	
 					if(!$valid){
 						include('../../includes/errors/404.php');
+						echo"<br><br><br><br><br><br>";
 						exit();						
 					}
 
@@ -242,9 +246,9 @@
 
 								
 								
-                                <h5 class="text-navy">
+                                <!-- <h5 class="text-navy">
                                     something
-                                </h5>
+                                </h5> 
                                 <p>
                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
                                 </p>
@@ -261,7 +265,7 @@
                                         <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
                                         <h5><strong>2</strong> Failure</h5>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 						</div>
 					</div>
@@ -269,7 +273,7 @@
                 <div class="col-md-8">
                     <div class="ibox ">
                         <div class="ibox-title">
-                            <h5>New Project</h5>
+                            <h5>New Single Project</h5>
                         </div>
                         <div class="ibox-content">
 						    <h2>
@@ -343,7 +347,7 @@
 							<!-- <span class="text-muted small float-right">
 									Last Refresh: <i class="fa fa-clock"></i>
 							</span> -->
-							<h2>Unregistered Projects</h2>
+							<h2>Available Request Forms</h2>
 							<p>
 								You can search a Purchase request or Job order by its title or end user's name. But it is adviced to search through its Reference number indicated in the printed hard copy of the actual Purchase request or Job order form.
 							</p>
@@ -362,7 +366,7 @@
 								<div id="tab-1" class="tab-pane active">
 									<div class="full-height-scroll">
 										<div class="table-responsive">
-											<table class="footable table table-striped table-hover" data-filter=#filter>
+											<table class="footable table table-striped table-hover" data-filter="#filter">
 												<tr>
 													<th>Reference No.</th>
 													<th>End User</th>
@@ -465,6 +469,12 @@
 			});
 		}
 
+		$('#popOver0').on('click', function(){
+			// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
+			window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
+		});
+
+
 		function start(){
 			$('#nwprj-tbl-data').html('');
 			OBJ.forEach(function(el, index){
@@ -543,9 +553,6 @@
 						type: "error"
 					});
 				}
-				$('#popOver0').on('click', function(){
-					window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
-				});
 			});
 
 			$('.ladda-button').ladda();

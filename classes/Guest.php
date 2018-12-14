@@ -31,8 +31,15 @@
 
         public function data(){
             return $this->data();
-        }
+		}
+		
+		public function startTrans(){
+			$this->db->startTrans();
+		}
 
+		public function endTrans(){
+			$this->db->endTrans();
+		}
 
     }
 

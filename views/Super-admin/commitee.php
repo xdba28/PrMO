@@ -11,6 +11,22 @@
         die();
 	}
 
+	if(!empty($_POST)){
+		$user->startTrans();
+
+		$user->register('commitee', array(
+			'name' => Input::get('full'),
+			'position' => Input::get('position'),
+			'type' => Input::get('type'),
+			'unit_office' => Input::get('office')
+		));
+
+		$user->endTrans();
+
+		$responce = "Succesfully added commitee member.";
+		unset($_POST);
+	}
+
 
 ?>
 <!DOCTYPE html>
@@ -24,8 +40,14 @@
     <title>PrMO OPPTS | Overview</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 	<script>
-		const SampleData = [
-			<?php
+		var responce = '<?php 
+			if(isset($responce)){
+				echo $responce;
+			}else{
+				echo "";
+			}
+		?>';
+		const SampleData = [<?php
 			$units = $user->selectAll('commitee');
 			foreach ($units as $unit) {
 				$office = $user->get('units', array('ID', '=', $unit->unit_office));
@@ -36,31 +58,40 @@
 				}
 				switch($unit->type){
 					case "GEN":
-						$type = "General";
-						break;
-					case "INF":
-						$type = "Infrastructure";
+						$type = 1;
 						break;
 					case "GDS":
-						$type = "Goods and Services";
+						$type = 2;
+						break;
+					case "INF":
+						$type = 3;
 						break;
 					default:
 						break;
 				}
-				echo '
-					{
-						no: "'.$count.'",
-						name: "'.$unit->name.'",
-						position: "'.$unit->position.'",
-						type: "'.$type.'",
-						unit_office: "'.$office->office_name.'"
-					},
-					';
-				}
-		?>
-		];
-	</script>
+				echo '{
+					id: "'.$unit->ID.'",
+					no: "'.$count.'",
+					name: "'.$unit->name.'",
+					position: "'.$unit->position.'",
+					type: '.$type.',
+					unit_office: '.$office->ID.'
+				},';
+			}
+		?>];
 
+	const officeNames = [<?php
+		$offices = $user->selectAll('units');
+		foreach($offices as $off){
+			echo '{value: '.$off->ID.', text: "'.$off->office_name.'"},';
+		}
+	?>];
+	</script>
+	<style>
+		.none{
+			display: none;
+		}
+	</style>
 </head>
 <body class="fixed-navigation">
     <div id="wrapper">
@@ -82,13 +113,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>User Overview</h2>
+                    <h2>Commitee Settings</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Users</a>
+                            <a href="#">System Settings</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Overview</strong>
+                            <strong>Commitee</strong>
                         </li>
                     </ol>
                 </div>
@@ -119,18 +150,72 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-									<th>Name</th>
                                     <th>Position</th>
+									<th>Name</th>
                                     <th>type</th>
-                                    <th>Unit / Office<th>
+                                    <th>Unit / Office</th>
                                 </tr>
                                 </thead>
                                 <tbody id="t-data">
 
                                 </tbody>
                             </table>
+						<button class="btn btn-outline btn-success btn-rounded" id="btnAdd">Add Commitee</button>
 						<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
                         </div>
+
+						<div class="ibox-content animated fadeInDown none" id="addCommitee">
+							
+							<div class="row">
+									
+								<div class="col-sm-6 b-r">
+									<form id="profile" role="form" method="POST" enctype="multipart/form-data">
+									<div class="form-group mt-20">
+										<label class="form-label" for="full">Full Name</label>
+										<input id="full" name="full" class="form-input" type="text" required>
+									</div>										
+									<div class="form-group mt-20">
+										<label>Type</label>
+										<select class="form-control m-b" name="type" required>
+											<option value=""></option>
+											<option value="GEN">General</option>
+											<option value="GDS">Goods and Services</option>
+											<option value="INF">Infrastructure</option>
+										</select>
+									</div>										
+								</div>
+								<div class="col-sm-6"> 												
+									<div class="form-group">
+										<label>Office / Unit</label>
+										<select class="form-control m-b required chosen-select" name="office" required>
+											<option>Select... </option>
+											<?php
+												foreach($offices as $off){
+													echo '<option value="'.$off->ID.'">'.$off->office_name.'</option>';
+												}
+											?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Position</label>		
+										<select name="position" class="form-control m-b" required>
+											<option></option>
+											<option value="BAC Chairperson">BAC Chairperson</option>
+											<option value="Vice Chairman">Vice Chairman</option>
+											<option value="BAC Member">BAC Member</option>
+											<option value="Technical Working Group">Technical Working Group</option>
+										</select>										
+									</div>           									
+									</form>							
+								</div>
+								<div class="col-lg-12">
+									<button class="btn btn-primary btn-rounded pull-right" type="submit" form="profile">Submit</button>
+								</div>									
+							</div>
+
+						</div>
+						
+						
                     </div>
                 
 					
@@ -156,7 +241,15 @@
 
 </body>
 <script>
-$(document).ready(function () {
+$(document).ready(function(){
+
+	if(responce !== ''){
+		swal({
+			title: "Success!",
+			text: responce,
+			type: "success"
+		});
+	}
 
 	var Edit = [];
 
@@ -164,53 +257,111 @@ $(document).ready(function () {
 
 	SampleData.forEach(function(e, i){
 		let num = 0;
+		let type = '';
 		switch(e.type){
-			case "General":
-				num = 3;
-				break;
-			case "Infrastructure":
-				num = 2;
-				break;
-			case "Goods and Services":
+			case 1:
 				num = 1;
+				type = "General";
+				break;
+			case 2:
+				num = 2;
+				type = "Goods and Services";
+				break;
+			case 3:
+				num = 3;
+				type = "Infrastructure";
 				break;
 			default:
+				type = "unset";
 				break;
 		}
+
+		let officeName = officeNames.find(function(el){
+			return e.unit_office === el.value
+		});
+
+
 		let temp = `
 		<tr>
 			<td>
-				<strong style="color:#009bdf">${e.name}</strong>
+				<strong style="color:#F37123">${e.position}</strong>
 			</td>
 			<td>
-				<a href="#" data-name="pos" data-pk="${e.no}" data-type="text" dataFor="edit"> ${e.position} </a>
+				<a href="#" data-name="name" data-pk="${e.no}" data-type="text" dataFor="edit"> ${e.name} </a>
 			</td>
 			<td>
-				<a href="#" data-name="type" c="${i}" data-pk="${e.no}" data-type="select" dataFor="edit"> ${e.type} </a>
+				<a href="#" data-name="type" bac_type="${i}" data-pk="${e.no}" data-type="select"> ${type} </a>
 			</td>
 			<td>
-				<a href="#" data-name="unit_office" data-pk="${e.no}" data-type="text" dataFor="edit"> ${e.unit_office} </a>
+				<a href="#" data-name="unit_office" office="${i}" data-pk="${e.no}" data-type="select"> ${officeName.text} </a>
 			</td>
 		<tr>`;
 		$('#t-data').append(temp);
 
-		$(`[c="${i}"]`).editable({
+		$(`[bac_type="${i}"]`).editable({
 			value: num,
 			source: [
-				{value: 1, text: "Goods and Services"},
-				{value: 2, text: "Infrastructure"},
-				{value: 3, text: "General"}
-			]
+				{value: 1, text: "General"},
+				{value: 2, text: "Goods and Services"},
+				{value: 3, text: "Infrastructure"}
+			],
+			success: function(r, v){
+				let curElem = $(this);
+				let prop = curElem.attr('data-name');
+				let n = SampleData.find(function(el){
+					return el.no === curElem.attr('data-pk');
+				});
+
+				let inx = SampleData.indexOf(n);
+				SampleData[inx][prop] = v;
+
+				let editData = Edit.find(function(el){
+					return el.no === SampleData[inx].no
+				});
+				
+				if(typeof editData === 'undefined'){
+					Edit.push(SampleData[inx]);
+				}else{
+					Edit.splice(Edit.indexOf(editData), 1);
+					Edit.push(SampleData[inx]);
+				}
+			}
+		});
+
+		$(`[office="${i}"]`).editable({
+			value: e.unit_office,
+			source: officeNames,
+			success: function(r, v){
+				let curElem = $(this);
+				let prop = curElem.attr('data-name');
+				let n = SampleData.find(function(el){
+					return el.no === curElem.attr('data-pk');
+				});
+
+				let inx = SampleData.indexOf(n);
+				SampleData[inx][prop] = v;
+
+				let editData = Edit.find(function(el){
+					return el.no === SampleData[inx].no
+				});
+				
+				if(typeof editData === 'undefined'){
+					Edit.push(SampleData[inx]);
+				}else{
+					Edit.splice(Edit.indexOf(editData), 1);
+					Edit.push(SampleData[inx]);
+				}
+			}
 		});
 	});
 
 
 	$('[dataFor="edit"]').editable({
 		success: function(r, v){
-			let _ = $(this);
-			let prop = _.attr('data-name');
+			let curElem = $(this);
+			let prop = curElem.attr('data-name');
 			let n = SampleData.find(function(el){
-				return el.no === _.attr('data-pk');
+				return el.no === curElem.attr('data-pk');
 			});
 
 			let inx = SampleData.indexOf(n);
@@ -226,18 +377,32 @@ $(document).ready(function () {
 				Edit.splice(Edit.indexOf(editData), 1);
 				Edit.push(SampleData[inx]);
 			}
-
 		}
 	});
 
 	$('#save').on('click', function(){
-		SendDoNothing("POST", 'xhr-update-signatory.php', {
-			col: Edit
-		}, {
-			title: 'Success!',
-			text: 'Successfully updated signatories.'
-		});
+		if(Edit.length !== 0){
+			SendDoNothing("POST", 'xhr-update-commitee.php', {
+				col: Edit
+			}, {
+				title: 'Success!',
+				text: 'Successfully updated commitee.'
+			});
+		}else{
+			swal({
+				title: "Invalid action!",
+				text: "No data edited.",
+				confirmButtonColor: "#DD6B55",
+				type: "error"
+
+			});
+		}
 	});
+
+	$('#btnAdd').on('click', function(){
+		$('#addCommitee').toggleClass('none');
+	});
+
 });
 </script>
 </html>

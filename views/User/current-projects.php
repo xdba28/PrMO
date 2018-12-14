@@ -127,7 +127,7 @@
 											</td>
 
 											<td class="project-actions">
-												<a href="project-details?refno=<?php echo$request->project_ref_no;?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>
+												<a href="project-details?refno=<?php echo base64_encode($request->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>
 											</td>
 										</tr>
 

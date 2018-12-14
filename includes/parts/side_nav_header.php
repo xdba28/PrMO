@@ -25,6 +25,6 @@
 	</div>
 	<div class="logo-element">
 	<!-- <i class="fab fa-500px" style="font-size:40px; color:red"></i> -->
-	<img src="../../assets/pics/flaticons/grim.png" alt="" height="42" width="42">
+	<img src="../../assets/pics/flaticons/035-user.png" alt="" height="42" width="42">
 	</div>
 </li>

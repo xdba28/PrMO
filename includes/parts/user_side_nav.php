@@ -5,7 +5,8 @@
 	<a href="#"><i class="far fa-folder-open side"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
 	<ul class="nav nav-second-level collapse">
 		<li><a href="current-projects">Current Projects</a></li>	
-		<li><a href="my-forms">Forms Created</a></li>								
+		<li><a href="my-forms">Forms Created</a></li>
+		<li><a href="revision-request">Revisions Requests</a></li>
 	</ul>
 </li>
 <li>

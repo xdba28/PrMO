@@ -143,17 +143,17 @@
 											if($request->status == "unreceived"){
 												$displayStatus = '<span class="status-text status-green">Unreceived</span>';
 												$actionButton  = '<div class="btn-group">
-																	 <a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
+																	 <a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
 																	 <a class="btn btn-warning btn-sm btn-rounded btn-outline">Delete</a>                             
 																 </div>';
 
 											}else{
 												if($user->isEvaluated($request->form_ref_no)){
 													$displayStatus = '<span class="status-text status-red">Evaluation Passed</span>';
-													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+													$actionButton = '<a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
 												}else{
 													$displayStatus = '<span class="status-text status-orange">Received</span>';
-													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+													$actionButton = '<a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
 												}
 												
 											}
@@ -185,7 +185,7 @@
 								
 							}else{
 								
-								$refno = $_GET['q'];
+								$refno = base64_decode($_GET['q']);
 								$admin = new Admin();
 								$valid_request = $admin->selectAll("project_request_forms");
 			
@@ -211,6 +211,58 @@
 								$numberOfLots = $user->numberOfLots($refno);
 								$lots =  $numberOfLots->numberOfLots;
 								$transition =  "animated fadeInLeft";
+								
+								$formInfo =  $user->get('project_request_forms', array('form_ref_no', '=', $refno));
+								$isProject = $user->isProject('projects', 'request_origin', $refno);
+								if($isProject){
+									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
+									$addionalContent = '
+										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
+											<p style="margin-left:20px"><u><b><a href="project-details?refno='.$isProject->project_ref_no.'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
+										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
+											<small>'.$accomplishment.'%</small>
+											<div class="progress progress-mini">
+												<div style="width:'.$accomplishment.'%;" class="progress-bar"></div>
+											</div><p><b>'.$isProject->workflow.'</b></p>
+									';
+								}else{
+									$addionalContent = '';
+								}
+								
+								$lotCosts = $user->getAll('lots', array('request_origin', '=', $refno));
+								$infoTotalLotCost = 0;
+								foreach($lotCosts as $cost){
+									$infoTotalLotCost += $cost->lot_cost;
+								}
+								
+								echo '
+									<div class="col-lg-12">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<i class="fa fa-info-circle"></i> Info Panel
+												<a href ="my-forms" class="btn btn-default btn-rounded  btn-xs pull-right" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
+											</div>
+											<div class="panel-body">
+												<div class="row">
+													<div class="col-sm-6 b-r"> 
+														<h4 class="text-left" style="color: #F37123">Form Reference</h4>
+															<p style="margin-left:20px;"><b>'.$refno.'</b></p>
+														<h4 class="text-left" style="color: #F37123">Status</h4>
+															<p style="margin-left:20px"><b>'.strtoupper($formInfo->status).'</b></p>
+														<h4 class="text-left" style="color: #F37123">Total Request Cost</h4>
+															<h3 style="margin-left:20px"><i>&#x20b1; '.number_format($infoTotalLotCost ,2).'</i></h3>		
+													</div>
+													<div class="col-sm-6">
+													'.$addionalContent.'
+													</div>
+												</div>
+									
+												
+											</div>
+
+										</div>
+									</div>								
+								';
 								for($x = 0; $x<$lots; $x++){
 									if(($numberOfLots->numberOfLots == 1) && ($numberOfLots->lot_no == '101')){
 										$currentLot = '101';
@@ -228,17 +280,6 @@
 								<div class="ibox myShadow">
 									<div class="ibox-title">
 										<h5><?php echo $showLot, " - ", $content[0]->lot_title;?></h5>
-										<div class="ibox-tools">
-											<a class="collapse-link">
-												<a href ="my-forms" class="btn btn-info btn-rounded btn-outline btn-xs" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
-												<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-													<i class="fa fa-wrench"></i>
-												</a>
-												<ul class="dropdown-menu dropdown-user">
-													<li><a href="#" class="dropdown-item">Delete Lot</a></li>
-												</ul>												
-											</a>
-										</div>
 									</div>
 									<div class="ibox-content">
 										<table class="table table-bordered table-hover">
@@ -257,6 +298,8 @@
 											<tbody>
 											<?php
 												$line = 1;
+												//echo "<pre>",print_r($content),"</pre>";
+												$showTotalLotCost = 0;
 												foreach($content as $detail){
 													$item_details = [
 														'lot' => $currentLot,
@@ -270,6 +313,8 @@
 														'tCost' => $detail->total_cost
 													];
 													
+													$showTotalLotCost = $showTotalLotCost + $detail->total_cost;
+													
 											?>
 											<tr>
 												<td style="text-align:center;">
@@ -281,15 +326,20 @@
 												<td class="tddescription"><?php echo $detail->item_description; ?></td>
 												<td><?php echo $detail->quantity; ?></td>
 												<td><?php echo $detail->unit_cost; ?></td>
-												<td><?php echo $detail->total_cost; ?></td>
+												<td>&#x20b1; <?php echo number_format($detail->total_cost,2); ?></td>
 											</tr>
 
 											<?php
 												$line++;
 												}
+												echo '<tr>
+														<td colspan="7" style="text-align:center; background-color:#4ac24a; color:black">Total Lot Cost</td>
+														<td style="background-color:#fa4711; color:white">&#x20b1; '.number_format($showTotalLotCost,2).'</td>
+													</tr>';
 											?>
 											</tbody>
 										</table>
+										
 
 									</div>
 								</div>
@@ -299,90 +349,165 @@
 							<?php
 									}
 								}else if($type == "JO"){
+									
+									
 									$user = new User();
 									$numberOfLots = $user->numberOfLots($refno);
 									$lots =  $numberOfLots->numberOfLots;
 									$transition =  "animated fadeInLeft";
+
+								$formInfo =  $user->get('project_request_forms', array('form_ref_no', '=', $refno));
+								$isProject = $user->isProject('projects', 'request_origin', $refno);
+								if($isProject){
+									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
+									$addionalContent = '
+										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
+											<p style="margin-left:20px"><u><b>'.$isProject->project_ref_no.' - '.$isProject->project_title.'</b></u></p>
+										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
+											<small>'.$accomplishment.'%</small>
+											<div class="progress progress-mini">
+												<div style="width:'.$accomplishment.'%;" class="progress-bar"></div>
+											</div><p><b>'.$isProject->workflow.'</b></p>
+									';
+								}else{
+									$addionalContent = '';
+								}
+								
+								$lotCosts = $user->getAll('lots', array('request_origin', '=', $refno));
+								$infoTotalLotCost = 0;
+								foreach($lotCosts as $cost){
+									$infoTotalLotCost += $cost->lot_cost;
+								}
+								
+								echo '
+									<div class="col-lg-12">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<i class="fa fa-info-circle"></i> Info Panel
+												<a href ="my-forms" class="btn btn-default btn-rounded  btn-xs pull-right" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
+											</div>
+											<div class="panel-body">
+												<div class="row">
+													<div class="col-sm-6 b-r"> 
+														<h4 class="text-left" style="color: #F37123">Form Reference</h4>
+															<p style="margin-left:20px;"><b>'.$refno.'</b></p>
+														<h4 class="text-left" style="color: #F37123">Status</h4>
+															<p style="margin-left:20px"><b>'.strtoupper($formInfo->status).'</b></p>
+														<h4 class="text-left" style="color: #F37123">Total Request Cost</h4>
+															<h3 style="margin-left:20px"><i>&#x20b1; '.number_format($infoTotalLotCost ,2).'</i></h3>		
+													</div>
+													<div class="col-sm-6">
+													'.$addionalContent.'
+													</div>
+												</div>
+									
+												
+											</div>
+
+										</div>
+									</div>								
+								';									
+									
 									for($x = 0; $x<$lots; $x++){
 										$currentLot = $x + 1;
 										$content = $user->getContent($refno, $type, $currentLot);
 										$transition = ($transition == "animated fadeInRight") ? $transition = "animated fadeInLeft" : $transition = "animated fadeInRight";
+										
+									
 							?>
 
-                <div class="col-lg-12 <?php echo $transition;?>">
-                    <div class="ibox myShadow">
-                        <div class="ibox-title">
-                            <h5>Lot <?php echo $currentLot;?> - <?php echo $content[0]->lot_title;?></h5>
+								<div class="col-lg-12 <?php echo $transition;?>">
+									<div class="ibox myShadow">
+										<div class="ibox-title">
+											<h5>Lot <?php echo $currentLot;?> - <?php echo $content[0]->lot_title;?></h5>
 
-                            <div class="ibox-tools">
-								<a href ="my-forms" class="btn btn-info btn-rounded btn-outline btn-xs" style="color:black"><i class="ti-angle-double-left"></i> Back to My Forms</a>
-								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-									<i class="fa fa-wrench"></i>
-								</a>
-								<ul class="dropdown-menu dropdown-user">
-									<li><a href="#" class="dropdown-item">Delete Lot</a></li>
-								</ul>								
-                            </div>
-                        </div>
-                        <div class="ibox-content">
+										</div>
+										<div class="ibox-content">
+											<div class="row">
+												<div class="col-lg-4">
+													<h4 class="text-left" style="color: #F37123">Lot Estimated Cost</h4>
+													<div class="widget style1 lazur-bg">
+														<div class="row vertical-align">
+															<div class="col-1">												
+																<a class="fa fa-3x" style="font-weight:400; color:#3f4141">&#x20b1;</a>
+															</div>
+															<div class="col-10">
+																<h2 class="font-bold" style="color:#3f4141"><?php echo number_format($content[0]->lot_cost,2);?></h2>
+															</div>
+														</div>
+													</div>
+												</div>	
+												<div class="col-lg-8">
+													<h4 class="text-left" style="color: #F37123">Lot Comment</h4>
+													<div class="widget style1 yellow-bg">
+														<div class="row vertical-align">
+															<div class="col-1">												
+																<i class="ti-bookmark-alt fa-3x" style="color:#"></i>
+															</div>
+															<div class="col-10">
+																<p style="color:#3f4141; font-size:15px"><i>"<?php echo $content[0]->note;?>".</i></p>
+															</div>
+														</div>
+													</div>
+												</div>													
+											</div>
 
-                            <table class="footable table table-stripped toggle-arrow-tiny">
-                                <thead>
-                                <tr>
-									<th>Select</th>
-                                    <th>List Title</th>
-                                    <th>Lot Estimated Cost</th>
-                                    <th>Tags</th>
-                                    <th>Notes</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+											<table class="footable table table-stripped toggle-arrow-tiny">
+												<thead>
+												<tr>
+													<th>Select</th>
+													<th>List Title</th>
+													<th>Tags</th>
+												</tr>
+												</thead>
+												<tbody>
 
-									<?php
-										foreach($content as $detail){
-											$item_details = [
-												'lot' => $currentLot,
-												'lot_id' => $detail->lot_id,
-												'item_id' => $detail->ID,
-												'header' => $detail->header,
-												'lot_cost' => $detail->lot_cost,
-												'tags' => str_replace(",", ", ", $detail->tags),
-												'notes' => $detail->note
-											];
-									?>
-										<tr>
-											<td style="text-align:center;">
-												<input type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
-											</td>
-											<td><?php echo $detail->header;?></td>
-											<td><?php echo $detail->lot_cost;?></td>
-											<td><?php echo str_replace(",", ", ", $detail->tags);?></td>
-											<td><?php echo $detail->note;?></td>
-										</tr>
-									<?php
-										}
-									?>
+													<?php
+														foreach($content as $detail){
+															$item_details = [
+																'lot' => $currentLot,
+																'lot_id' => $detail->lot_id,
+																'item_id' => $detail->ID,
+																'header' => $detail->header,
+																'lot_cost' => $detail->lot_cost,
+																'tags' => str_replace(",", ", ", $detail->tags),
+																'notes' => $detail->note
+															];
+													?>
+														<tr>
+															<td style="text-align:center;">
+																<input type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
+															</td>
+															<td><?php echo $detail->header;?></td>
+															<td><?php echo str_replace(",", ", ", $detail->tags);?></td>
+														</tr>
+													<?php
+														}
+													?>
 
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        <ul class="pagination float-right"></ul>
-                                    </td>
-                                </tr>
-                                </tfoot>
-                            </table>
+												</tbody>
+												<tfoot>
+												<tr>
+													<td colspan="5">
+														<ul class="pagination float-right"></ul>
+													</td>
+												</tr>
+												</tfoot>
+											</table>
 
-                        </div>
-                    </div>
-                </div>
+										</div>
+									</div>
+								</div>
 
 							<?php
 									}
 								}
 								
 								if($user->isEvaluated($refno)){
-									//do nothing
+									echo'
+
+									
+									';
 								}else{
 								echo '<br>
 								<div style="margin-left:72%">
@@ -415,8 +540,11 @@
 	
 	document.addEventListener('DOMContentLoaded', function(){
 		<?php
+			// if(Session::exists("Request")){
+			// echo "window.open('../../bac/forms/pr-jo-doc');";
+			// }
 			if(Session::exists("Request")){
-			echo "window.open('../../bac/forms/pr-jo-doc');";
+			echo "window.open('../../bac/forms/request-gen');";
 			}
 		?>
 		var ProjType = '<?php 
@@ -613,6 +741,32 @@
 					confirmButtonText: "Proceed",
 					allowOutsideClick: false
 				}).then(function(r){
+					act = 'delete';
+					let array = [];
+					let lot = [];
+					let sweetHtml = '';
+					$('.i-checks:checked').each(function(i){
+						obj = JSON.parse($(this).attr('details'));
+						array.push(obj);
+
+						if(typeof lot.find(function(el){
+							let inx = el.split('blyt322');
+							return inx[0] == obj.lot
+						}) === 'undefined'){
+							if(ProjType === "PR"){
+								lot.push(`${obj.lot}blyt322${obj.lot_id}`);
+							}else if(ProjType === "JO"){
+								lot.push(`${obj.lot}blyt322${obj.lot_id}blyt322${obj.lot_cost}`);
+								sweetHtml += `<br>
+								New Lot ${obj.lot} Cost: <input type="number" name="joNewLotCost[]">
+								`;
+							}
+						}
+
+					});
+					DeleteData.items = array;
+					DeleteData.lotref = lot;
+
 					if(r.value){
 						sweet({
 							title: 'Reason for deletetion',
@@ -620,10 +774,34 @@
 							showCancelButton: true,
 							confirmButtonText: "Submit",
 							allowOutsideClick: false,
-							html: '<input type="text" class="form-control" name="pr-jo-del">',
+							html: 'Reason: <input type="text" name="pr-jo-del">'+sweetHtml,
 							focusConfirm: false,
 							preConfirm: function(){
-								return document.querySelector('[name="pr-jo-del"]').value;
+								let reason = document.querySelector('[name="pr-jo-del"]').value;
+								if(ProjType === "PR"){
+									if(reason !== ""){
+										return escapeHtml(reason);
+									}else{
+										return false;
+									}
+								}else if(ProjType === "JO"){
+									let sweetArray = [];
+									if(reason === ""){
+										return false;
+									}
+									for (const i of document.querySelectorAll('[name="joNewLotCost[]"]')){
+										if(i.value !== ""){
+											sweetArray.push(escapeHtml(i.value));
+										}else{
+											return false;
+										}
+									}
+									let sweetObj = {
+										reason:  escapeHtml(reason),
+										joNewLotCost: sweetArray
+									}
+									return sweetObj;
+								}
 							}
 						}, {
 							do: function(res){
@@ -634,44 +812,12 @@
 										type: "info"
 									});
 								}else if(res.value !== "undefined"){
-									act = 'delete';
-									if(ProjType === "PR"){
-										let array = [];
-										let lot = [];
-										$('.i-checks:checked').each(function(i){
-											obj = JSON.parse($(this).attr('details'));
-											array.push(obj);
-											
-											if(typeof lot.find(function(el){
-												return el === obj.lot
-											}) === 'undefined'){
-												lot.push(`${obj.lot}blyt322${obj.lot_id}`);
-											}
 
-										});
-										DeleteData.items = array;
-										DeleteData.lotref = lot;
-									}else if(ProjType === "JO"){
-										let array = [];
-										let lot = [];
-										$('.i-checks:checked').each(function(i){
-											obj = JSON.parse($(this).attr('details'));
-											array.push(obj);
-											
-											if(typeof lot.find(function(el){
-												return el === obj.lot
-											}) === 'undefined'){
-												lot.push(`${obj.lot}blyt322${obj.lot_id}blyt322${obj.lot_cost}`);
-											}
-										});
-										DeleteData.items = array;
-										DeleteData.lotref = lot;
-									}
 
-									SendDoSomething("POST", "xhr-item-update1.php", {
+									SendDoSomething("POST", "xhr-item-update.php", {
 										del: DeleteData,
 										action: act,
-										remark: escapeHtml(res.value)
+										remark: res.value
 									}, {
 										do: function(d){
 											if(d.delLot){
@@ -744,7 +890,12 @@
 				html: '<input type="text" class="form-control" name="pr-jo-update">',
 				focusConfirm: false,
 				preConfirm: function(){
-					return document.querySelector('[name="pr-jo-update"]').value;
+					let reason = document.querySelector('[name="pr-jo-update"]').value;
+					if(reason === ""){
+						return false;
+					}else{
+						return reason;
+					}
 				}
 			}, {
 				do: function(res){
@@ -758,6 +909,7 @@
 						if(act === 'update'){
 							if(ProjType === "PR"){
 								let editArray = [];
+								let newLotCost = [];
 								OriginalData.items.forEach(function(e, i){
 									editArray.push({
 										lot: escapeHtml($(`[name="lot-${i}"]`).val()),
@@ -770,7 +922,12 @@
 										totalCost: escapeHtml($(`[name="totalCost-${i}"]`).val())
 									});
 								});
+								OriginalData.lotref.forEach(function(e, i){
+									let newlotref = e.split('blyt322');
+									newLotCost.push(`${newlotref[0]}blyt322${newlotref[1]}`);
+								});
 								EditData.items = editArray;
+								EditData.affectedLots = newLotCost;
 							}else if(ProjType === "JO"){
 								let editArray = [];
 								let newLotCost = [];

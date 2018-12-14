@@ -270,11 +270,10 @@
                                 <?php
 
                                     foreach($PersonnelInfo as $data){
-
                                         if($data->prnl_ext_name == 'XXXXX'){
                                             $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname;
                                         }else{
-                                            $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname." ".$data->prnl_ext_name.".";
+                                            $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname." ".$data->prnl_ext_name;
                                         }
 
                                         if($data->status == "ACTIVATED"){
@@ -303,7 +302,7 @@
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" href="?q='.$data->prnl_id.'">Update Info</a></li>
-                                                            <li><a class="dropdown-item" href="#">Reset Password</a></li>
+                                                            <li><a class="dropdown-item" data-toggle="modal" data-name="'.$fullname.'" data-phone="'.$data->phone.'" data-target="#resetPassword" data-id="'.$data->prnl_id.'" data-office="'.$data->office_name.'">Reset Password</a></li>
                                                             <li class="dropdown-divider"></li>
                                                             <li><a class="dropdown-item nicecolor" href="#">'.$option.'</a></li>
                                                         </ul>

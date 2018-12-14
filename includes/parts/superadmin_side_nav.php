@@ -13,7 +13,7 @@
                     <ul class="nav nav-second-level collapse">
 						<li><a href="overview">Overview</a></li>
                         <li><a href="manage-users">Admin Level</a></li>
-						<li><a href="">Standard Users</a></li>
+						<li><a href="standard-users">Standard Users</a></li>
 						<li><a href="new-user">Register Personnel</a></li>					
                     </ul>
                 </li>		

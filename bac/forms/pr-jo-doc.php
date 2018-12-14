@@ -4,19 +4,19 @@ require_once "../../core/init.php";
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 $user = new User();
 
-if($user->isLoggedIn());
-else{
-	Redirect::To('../../index');
-	die();
-}
+// if($user->isLoggedIn());
+// else{
+// 	Redirect::To('../../index');
+// 	die();
+// }
 
-if(Session::exists("Request")){
-	$REQ = Session::flash('Request');
-}else{
-	Redirect::To('../../index');
-	exit();
-}
-// $REQ = "PR2018-40B973:PR";
+// if(Session::exists("Request")){
+// 	$REQ = Session::flash('Request');
+// }else{
+// 	Redirect::To('../../index');
+// 	exit();
+// }
+$REQ = "JO2018-C6D3DH:JO";
 $REQUEST = explode(":", $REQ);
 $ProjectData = $user->Doc_projData($REQ);
 $UserData = $user->user_data($ProjectData->requested_by);

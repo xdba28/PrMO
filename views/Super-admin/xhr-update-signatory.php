@@ -1,6 +1,5 @@
 <?php
 require_once('../../core/init.php');
-
 header("Content-type:application/json");
 
 $admin = new Admin(); 
@@ -19,23 +18,18 @@ if($admin->isLoggedIn()){
 			$admin->startTrans();
 
 			foreach ($_POST['col'] as $v) {
-				if($v['note'] !== "") $note = htmlspecialchars($v['note']);
-				else $note = 'unset';
 
-				if($v['n_pos'] !== "") $note_pos = htmlspecialchars($v['n_pos']);
-				else $note_pos = 'unset';
+				$note = ($v['note'] !== "") ? htmlspecialchars($v['note']) : 'unset';
 
-				if($v['verify'] !== "") $verify = htmlspecialchars($v['verify']);
-				else $verify = 'unset';
+				$note_pos = ($v['n_pos'] !== "") ? htmlspecialchars($v['n_pos']) : 'unset';
 
-				if($v['v_pos'] !== "") $verify_pos = htmlspecialchars($v['v_pos']);
-				else $verify_pos = 'unset';
+				$verify = ($v['verify'] !== "") ? htmlspecialchars($v['verify']) : 'unset';
 
-				if($v['approve'] !== "") $approve = htmlspecialchars($v['approve']);
-				else $approve = 'unset';
+				$verify_pos = ($v['v_pos'] !== "") ? htmlspecialchars($v['v_pos']) : 'unset';
 
-				if($v['a_pos'] !== "") $approve_pos = htmlspecialchars($v['a_pos']);
-				else $approve_pos = 'unset';
+				$approve = ($v['approve'] !== "") ? htmlspecialchars($v['approve']) : 'unset';
+
+				$approve_pos = ($v['a_pos'] !== "") ? htmlspecialchars($v['a_pos']) : 'unset';
 
 
 				$admin->update('units', 'acronym', $v['acronym'], array(
@@ -54,6 +48,7 @@ if($admin->isLoggedIn()){
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			echo json_encode($data);
+			exit();
 			// log files
 		}
 		

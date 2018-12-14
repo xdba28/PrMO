@@ -1,7 +1,5 @@
 <?php
-
 require_once('../../core/init.php');
-
 header("Content-type:application/json");
 
 $admin = new Admin(); 
@@ -13,39 +11,38 @@ if($admin->isLoggedIn()){
 	die();
 }
 
-
 if(!empty($_POST))
 {
 	try{
 		$admin->startTrans();
 
-		foreach ($_POST['col'] as $v) {
-			if($v['note'] !== "") $note = htmlspecialchars($v['note']);
-			else $note = 'unset';
+		foreach ($_POST['col'] as $v){
 
-			if($v['n_pos'] !== "") $note_pos = htmlspecialchars($v['n_pos']);
-			else $note_pos = 'unset';
+			$name = ($v['name'] !== "") ? htmlspecialchars($v['name']) : 'unset';
+			$position = ($v['position'] !== "") ? htmlspecialchars($v['position']) : 'unset';
 
-			if($v['verify'] !== "") $verify = htmlspecialchars($v['verify']);
-			else $verify = 'unset';
+			$office_id = $admin->get('units', array('ID', '=', $v['unit_office']));
 
-			if($v['v_pos'] !== "") $verify_pos = htmlspecialchars($v['v_pos']);
-			else $verify_pos = 'unset';
+			switch($v['type']){
+				case 1:
+					$type = "GEN";
+					break;
+				case 2:
+					$type = "GDS";
+					break;
+				case 3:
+					$type = "INF";
+					break;
+				default:
+					$type = "unset";
+					break;
+			}
 
-			if($v['approve'] !== "") $approve = htmlspecialchars($v['approve']);
-			else $approve = 'unset';
-
-			if($v['a_pos'] !== "") $approve_pos = htmlspecialchars($v['a_pos']);
-			else $approve_pos = 'unset';
-
-
-			$admin->update('units', 'acronym', $v['acronym'], array(
-				'note' => $note,
-				'note_position' => $note_pos,
-				'verifier' => $verify,
-				'verifier_position' => $verify_pos,
-				'approving' => $approve,
-				'approving_position' => $approve_pos
+			$admin->update('commitee', 'ID', $v['id'], array(
+				'name' => $name,
+				'position' => $position,
+				'type' => $type,
+				'unit_office' => $office_id->ID
 			));
 		}
 
@@ -55,9 +52,10 @@ if(!empty($_POST))
 		$e->getMessage()."A Fatal Error Occured";
 		$data = ['success' => 'error', 'codeError' => $e];
 		echo json_encode($data);
+		exit();
 		// log files
 	}
-	
+
 	$data = ['success' => true];
 	echo json_encode($data);
 }
@@ -66,4 +64,6 @@ else
 	$data = ['success' => false];
 	echo json_encode($data);
 }
+
+
 ?>

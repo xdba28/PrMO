@@ -314,56 +314,57 @@
 							
 						?>
 						
-                <div class="ibox ">
-                    <div class="ibox-title">
-                        <h5>Todays Weather Status</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-								<div id="top">
-								  <div class="location"><?php echo $WeatherphpObj['query']['results']['channel']['location']['city'],", ",$WeatherphpObj['query']['results']['channel']['location']['country'];?></div>
-								  <div class="time"><?php echo $WeatherphpObj['query']['results']['channel']['lastBuildDate'];?></div>
-								  <div class="status"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['text'];?></div>
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>Todays Weather Status</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link">
+										<i class="fa fa-chevron-up"></i>
+									</a>
 								</div>
+							</div>
+							<div class="ibox-content">
+										<div id="top">
+										  <div class="location"><?php echo $WeatherphpObj['query']['results']['channel']['location']['city'],", ",$WeatherphpObj['query']['results']['channel']['location']['country'];?></div>
+										  <div class="time"><?php echo $WeatherphpObj['query']['results']['channel']['lastBuildDate'];?></div>
+										  <div class="status"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['text'];?></div>
+										</div>
 
-								<div id="left-information">
-								  <img src="../../assets/weather/png/<?php echo weatherConditionIcon($WeatherphpObj['query']['results']['channel']['item']['condition']['code']); ?>.png" alt="status" class="thumbnail" />
-								  <div class="temperature"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['temp'];?></div>
-								  <div class="unit">°C</div>
-								</div>
+										<div id="left-information">
+										  <img src="../../assets/weather/png/<?php echo weatherConditionIcon($WeatherphpObj['query']['results']['channel']['item']['condition']['code']); ?>.png" alt="status" class="thumbnail" />
+										  <div class="temperature"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['temp'];?></div>
+										  <div class="unit">°C</div>
+										</div>
 
-								<div id="right-information">
-								  <span>Humidity: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['humidity'];?>%</span><br/>
-								  <span>Pressure: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['pressure'], " ",$WeatherphpObj['query']['results']['channel']['units']['pressure'];?></span><br/>
-								  <span>Wind speed: <?php echo $WeatherphpObj['query']['results']['channel']['wind']['speed'], " ",$WeatherphpObj['query']['results']['channel']['units']['speed'];?></span>
-								</div>
+										<div id="right-information">
+										  <span>Humidity: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['humidity'];?>%</span><br/>
+										  <span>Pressure: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['pressure'], " ",$WeatherphpObj['query']['results']['channel']['units']['pressure'];?></span><br/>
+										  <span>Wind speed: <?php echo $WeatherphpObj['query']['results']['channel']['wind']['speed'], " ",$WeatherphpObj['query']['results']['channel']['units']['speed'];?></span>
+										</div>
 
-								<div id="forecast">
-									  <ul>
-											<?php
-												for($x = 0; $x<7; $x++){
-													$conditionCode = $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['code'];
+										<div id="forecast">
+											  <ul>
+													<?php
+														for($x = 0; $x<7; $x++){
+															$conditionCode = $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['code'];
 
-													$displayIcon = weatherConditionIcon($conditionCode);
-											?>
-											<li>
-											<div><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['day'];?></div>
-											<img src="../../assets/weather/png/<?php echo $displayIcon; ?>.png" alt="icon" height="32" width="32"/>
-											<b><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['high'];?>°</b> <?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['low'];?>°
-											</li>
-											<?php
-												}
-											?>
-									  </ul>
-								</div>
-                    </div>
-                </div>						
+															$displayIcon = weatherConditionIcon($conditionCode);
+													?>
+													<li>
+													<div><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['day'];?></div>
+													<img src="../../assets/weather/png/<?php echo $displayIcon; ?>.png" alt="icon" height="32" width="32"/>
+													<b><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['high'];?>°</b> <?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['low'];?>°
+													</li>
+													<?php
+														}
+													?>
+											  </ul>
+										</div>
+							</div>
+						</div>						
 						
 					</div>
+					
 				</div>
 
 

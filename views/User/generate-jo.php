@@ -14,7 +14,7 @@
 	if(Input::exists()){
 	
 		if(Token::check("joToken",Input::get('joToken'))){
-			
+
 			try{				
 				//register project details in "project_request_forms"table
 				$current_year = date('Y');
@@ -84,7 +84,7 @@
 					}
 		
 					//proceed to printing the actual form						
-					Session::flash('Request', $form_ref_no.":PR");
+					Session::flash('Request', $form_ref_no.":JO");
 					sleep(3);
 					Redirect::To('my-forms');
 					exit();

@@ -1,11 +1,20 @@
 <?php
 require_once "../../core/init.php";
-
+$admin = new Admin();
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+$id = base64_decode($_GET['rq']);
+
+$req_details = $admin->projectDetails($id);
+
+echo "<pre>".print_r($req_details)."</pre>";
+die();
+
 
 // $documentProtection = $phpWord->getSettings()->getDocumentProtection();
 // $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
 // $documentProtection->setPassword('PrMO');
+
 
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 0, 'after' => 0]]);
 $phpWord->setDefaultFontName('Arial');

@@ -120,7 +120,7 @@ require_once "../../functions/account-verifier.php";
 				let count = parseFloat(NotifCount.innerText);
 				let new_title = `(${count}) ${title}`;
 				document.querySelector('title').innerText = new_title;
-			}		
+			}
 		}
 		titleChange();
 
@@ -139,7 +139,7 @@ require_once "../../functions/account-verifier.php";
 				}
 				titleChange();
 				
-				if(typeof msg.href !== 'undefined'){
+				if(msg.href !== undefined){
 					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
 					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
 					<li class="dropdown-divider"></li>`);
@@ -160,8 +160,7 @@ require_once "../../functions/account-verifier.php";
 					"showEasing": "swing",
 					"hideEasing": "linear",
 					"showMethod": "fadeIn",
-					"hideMethod": "fadeOut",
-					"escapeHtml": true
+					"hideMethod": "fadeOut"
 				}
 				toastr.info(msg.date, msg.message);
 			}
@@ -200,6 +199,20 @@ require_once "../../functions/account-verifier.php";
 		var path = window.location.pathname.split("/");
 		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
 		var sLink = ['Dashboard'];
+		var higherLevelpages = [
+			{pages: ['project-details'], link: 'current-projects'}
+		];
+		toggleGreetings();
+		var highlevelpage = higherLevelpages.find(function(e1){
+			return e1.pages.find(function(e2){
+				return e2 === path[path.length - 1]
+			});
+		});
+
+		if(highlevelpage !== undefined){
+			link = document.querySelector(`[href="${highlevelpage.link}"]`);
+		}
+
 		switch (path[path.length - 1]){
 			case sLink.find(function(el){
 				return path[path.length - 1] === el
@@ -212,7 +225,6 @@ require_once "../../functions/account-verifier.php";
 				link.parentNode.setAttribute("class", "active");
 				break;
 		}
-
 
         $("#wizard").steps();
         $("#form").steps({
