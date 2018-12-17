@@ -182,7 +182,7 @@
 				</div>
 				<?php
 				}else{
-					$reference =  $_GET['q'];
+					$reference =  base64_decode($_GET['q']);
 
 					$request = $user->get('form_update_requests', array('ID', '=', $reference));
 

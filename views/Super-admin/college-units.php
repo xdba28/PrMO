@@ -21,7 +21,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Overview</title>
+    <title>PrMO OPPTS | Colleges and Units</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
@@ -72,13 +72,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>User Overview</h2>
+                    <h2>Colleges and Units Setting</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Users</a>
+                            <a href="#">System Settings</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Overview</strong>
+                            <strong>Colleges and Units</strong>
                         </li>
                     </ol>
                 </div>

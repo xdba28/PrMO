@@ -21,7 +21,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Overview</title>
+    <title>PrMO OPPTS | Committee</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 	<script>
 		const SampleData = [<?php
@@ -86,13 +86,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>User Overview</h2>
+                    <h2>Committee Settings</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Users</a>
+                            <a href="#">System Settings</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Overview</strong>
+                            <strong>Committee</strong>
                         </li>
                     </ol>
                 </div>
@@ -113,19 +113,19 @@
                     
 					<div class="ibox myShadow">
                         <div class="ibox-title">
-                            <h5>College and Office Unit Settings </h5>
+                            <h5>Bicol Univerity Bids and Awards Committee</h5>
 
                         </div>
                         <div class="ibox-content">
-							<div class="alert alert-info">
-                               Here you can edit the default data per College / Office Unit like the personnel incharge of noting, verifying, and approving the Purchase Requests or Job Orders. Click on the underlined field to edit. After finalizing all your changes click the "Save Changes" button at the bottom-right of this page.
+							<div class="alert alert-success">
+                               Here you can edit / update data of each member of the Bids and Awards Committee.
                             </div>
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th>Position</th>
-									<th>Name</th>
-                                    <th>type</th>
+									<th>Full Name</th>
+                                    <th>Specification</th>
                                     <th>Unit / Office</th>
                                 </tr>
                                 </thead>

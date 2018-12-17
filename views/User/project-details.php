@@ -80,8 +80,8 @@
 				
 				<?php
 					if(isset($_GET['refno'])){
-						$refno = $_GET['refno'];
-
+						$refno = base64_decode($_GET['refno']);
+						
 						$user = new User();
 						$projects = $user->selectAll("projects");
 
@@ -209,7 +209,7 @@
 												//echo $test;
 												$comaCounter = 1;
 												foreach($forms as $individualOrigin => $value){
-													echo '<a href="my-forms?q='.$value.'">'.$value.'</a>';
+													echo '<a href="my-forms?q='.base64_encode($value).'">'.$value.'</a>';
 													if($comaCounter < (count($forms))){
 														echo '<a style="font-size:16px; color:red"> / </a>';
 													}

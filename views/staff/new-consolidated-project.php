@@ -11,20 +11,24 @@
         die();
 	}
 
+
 	if(Input::exists()){
 		if(Token::check("newConsolidatedProject", Input::get('newConsolidatedProject'))){
 				
 	
 			$staff = new Staff();
 			$form_ref_no = Input::get('q');
+	
+			$origins = json_decode($_POST['origins'], true);
+			$originsEncoded = json_encode($origins, JSON_FORCE_OBJECT);
+			//echo "<pre>",print_r($test),"</pre>";
+			// foreach ($origins as $value) {
+			// 	echo $value;
+			// }
+			// echo "<pre>",print_r($originsEncoded),"</pre>";
+			// echo "<pre>",print_r($_POST),"</pre>";
+			// die('yourehre');
 
-			// $enduser = ["0" => $_POST['enduser']];
-			// $enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
-			// $form = ["0" => $form_ref_no];
-			echo "<pre>",print_r($_POST['endusers']),"</pre>";
-			echo "<pre>",print_r($_POST),"</pre>";
-			die('yourehre');
-			$requestOrigin_encoded = json_encode($form, JSON_FORCE_OBJECT);
 
 
 			try{
@@ -36,25 +40,53 @@
 				$staff->startTrans(); //start transaction
 
 				$staff->register('projects', array(
-					'request_origin' => $requestOrigin_encoded,
+					'request_origin' => $originsEncoded,
 					'project_ref_no' => $project_ref_no,
 					'project_title' => Input::get('title'),
 					'ABC' => Input::get('ABC'),
 					'MOP' => 'TBE',
-					'type' => 'single',
-					'end_user' => $enduser_encoded,
+					'type' => 'consolidated',
+					'end_user' => $_POST['endusers'],
 					'project_status' => 'PROCESSING',
 					'workflow'	=> 'For evaluation of technical working group',
 					'date_registered' => Date::translate('test', 'now'),
 					'implementation_date' => $finalDate
 				));
 
-				$staff->register('project_logs', array(
-					'referencing_to' => $form_ref_no,
-					'remarks' => "project request {$form_ref_no} registered as a single project with the reference no of {$project_ref_no}.",
-					'logdate' => Date::translate('test', 'now'),
-					'type' =>  'IN'
-				));
+				$formCount = 1;
+				$formlimit = count($origins);
+				foreach ($origins as $form) {
+
+					$staff->register('project_logs', array(
+						'referencing_to' => $form,
+						'remarks' => "project request form {$form} was linked to a newly registered consolidated project with the project reference {$project_ref_no}.",
+						'logdate' => Date::translate('test', 'now'),
+						'type' =>  'IN'
+					));
+
+					$staff->register('notifications', array(
+						'recipient' => $_POST['endusers'],
+						'message' => "Project request form {$form} was linked to a newly registered consolidated project with the project reference {$project_ref_no}.",
+						'datecreated' => Date::translate('test', 'now'),
+						'seen' => 0,
+						'href' => "project-details?refno=".base64_encode($project_ref_no)
+					));
+
+					notif(json_encode(array(
+						'receiver' => $_POST['enduser'],
+						'message' => "Project request form {$form} was linked to a newly registered consolidated project with the project reference {$project_ref_no}.",
+						'date' => Date::translate(Date::translate('test', 'now'), '1'),
+						'href' => "project-details?refno=".base64_encode($project_ref_no)
+					)));
+					
+					if($formlimit === $formCount){
+						$MessageText .= $form." ";
+					}else{
+						$MessageText .= $form.", ";
+					}
+
+					$formCount++;
+				}
 
 				$staff->register('outgoing', array(
 
@@ -74,31 +106,18 @@
 					'type' =>  'IN'
 				));
 
-				$staff->register('notifications', array(
-					'recipient' => $_POST['enduser'],
-					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-					'datecreated' => Date::translate('test', 'now'),
-					'seen' => 0,
-					'href' => "project-details?refno={$project_ref_no}"
-				));
 
-				$staff->endTrans(); //commit
 
-				Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
-				notif(json_encode(array(
-					'receiver' => $_POST['enduser'],
-					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-					'date' => Date::translate(Date::translate('test', 'now'), '1'),
-					'href' => "project-details?refno={$project_ref_no}"
-				)));
+				$staff->endTrans(); //commit 
+
+
+				Session::flash("ProjRegMult", "Project request forms: ".$MessageText."successfully registered as a consolidated project with project reference no. ".$project_ref_no);
 
 				
-				//disable the "register" now button in the new-project page to prevent any data discrepancy
-				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
 				//send SMS notifications
 
 
-				Redirect::To('new-project');
+				Redirect::To('new-consolidated-project');
 				exit();
 
 			}catch(Execption $e){
@@ -132,9 +151,9 @@
 		$staff = new Staff();
 		echo json_encode($staff->allPRJO_req_detail());		
 		?>;
-		// var ProjReg = '<?php 
-		// if(Session::exists("ProjReg")) echo Session::flash("ProjReg");
-		// else echo "";
+		var ProjReg = '<?php 
+		if(Session::exists("ProjRegMult")) echo Session::flash("ProjRegMult");
+		else echo "";
 		?>';
 		console.log(OBJ);
 	</script>
@@ -302,7 +321,9 @@
 							<div class="row">
 								
 									<div class="col-sm-6 b-r"> 
-										<form id="new-project" method="POST" action="">								
+										<form id="new-project" name="register" method="POST" action="">
+										<input type="text" name="origins" value='<?php echo json_encode($_POST['forms'])?>' hidden>
+
                                         <div class="checkbox checkbox-info checkbox-success">
                                             <input id="checkbox1" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
                                             <label for="checkbox1">
@@ -344,7 +365,7 @@
 												$jsonNames = json_encode($endusersId, JSON_FORCE_OBJECT);
 											
 											?>
-											<input type="text" id="hiddenIds" name="endusers" value="" hidden readonly>
+											<input type="text" name="endusers" value='<?php echo $jsonNames;?>' hidden readonly>
 										
 									</div>	
 									<div class="col-lg-12">
@@ -383,7 +404,7 @@
 								</span>
 							</div>
 							<div class="clients-list">
-								<form action="" method="POST" name="form" enctype="multipart/form-data">
+								<form action="" method="POST" name="select" enctype="multipart/form-data">
 									<span class="float-right small"><button type="submit" id="" class="btn btn-primary btn-sm"><i class="fas fa-list-ol" style="font-size:18px"></i> Register Selected forms</button></span>
 									<ul class="nav nav-tabs">
 										<li><a class="nav-link active" data-toggle="tab" href="#tab-1"><i class="fa fa-info-circle"></i> Requests</a></li>                             
@@ -486,36 +507,34 @@
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>	
 
 	<script>
-			var endusersArray = [];
-			endusersArray.push(
+			// var endusersArray = [];
+			// endusersArray.push(
 
 				<?php
-					echo "'".implode("', '", $endusersId)."'";
+					// echo "'".implode("', '", $endusersId)."'";
 					
 				?>
 
-			);
+			// );
 
 
-				console.log(endusersArray);
-			$('#hiddenIds').val(JSON.stringify(endusersArray)); //store array
+			// 	console.log(endusersArray);
+			// $('#hiddenIds').val(JSON.stringify(endusersArray)); //store array
 
-			 var value = $('#hiddenIds').val(); //retrieve array
-			 value = JSON.parse(value);	
+			//  var value = $('#hiddenIds').val(); //retrieve array
+			//  value = JSON.parse(value);	
 	</script>	
 	<script>
 
 	$(document).ready(function(){
 
-		// if(ProjReg !== ""){
-		// 	var ProjRegMesg = ProjReg.split("|");
-		// 	var ProjRegDetail = ProjRegMesg[1].split(":");
-		// 	swal({
-		// 		title: ProjRegMesg[0],
-		// 		text: `Ref no: ${ProjRegDetail[1]} is now registered as Project ${ProjRegDetail[0]}`,
-		// 		type: 'success'
-		// 	});
-		// }
+		if(ProjReg !== ""){
+			swal({
+				title: "Projects successfully registered!",
+				text: ProjReg,
+				type: 'success'
+			});
+		}
 
 		function start(){
 			$('#nwprj-tbl-data').html('');
@@ -657,17 +676,38 @@
 			}, true)
 		}, 60000);
 
-		$(document.form).on('submit', function(){
+		$(document.select).on('submit', function(){
 			let boolean = null;
-			$('.i-checks:checked').each(function(i, e){
-				let sel_id = OBJ.find(function(el){
-					return el.id === e.value
-				});
+			let selected = $('.i-checks:checked');
+			if(selected.length >= 2){
+				selected.each(function(i, e){
+					let sel_id = OBJ.find(function(el){
+						return el.id === e.value
+					});
 
-				if(sel_id.log_exist === false){
-					boolean = false;
+					if(sel_id.log_exist === false){
+						boolean = false;
+					}
+				});
+			}else{
+				if(selected.length === 0){
+					swal({
+						title: "Action invalid!",
+						text: "Please select a request form",
+						confirmButtonColor: "#DD6B55",
+						type: "error"
+					});
+				}else{
+					swal({
+						title: "Action invalid!",
+						text: "Please select more than 1 request forms.",
+						confirmButtonColor: "#DD6B55",
+						type: "error"
+					});
 				}
-			});
+				return false;
+			}
+
 			if(boolean === false){
 				swal({
 					title: "Unreceived project in selection!",

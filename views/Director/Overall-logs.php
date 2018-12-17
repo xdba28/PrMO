@@ -69,11 +69,11 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
+            <div class="wrapper wrapper-content animated fadeInUp">
 			
 		
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 animated fadeInRight">
                 <div class="ibox myShadow">
                     <div class="ibox-title">
                         <h5>Overall Procurement Logs</h5>

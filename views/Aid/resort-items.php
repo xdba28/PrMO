@@ -85,9 +85,15 @@
 				
 					<?php
 						if(isset($_GET['q'])){
-							$refno = $_GET['q'];
+							$refno = base64_decode($_GET['q']);
 							
 							$project = $user->get('projects', array('project_ref_no', '=', $refno));
+
+							if($project->mop_peritem === NULL){
+								$ModeOfProcurement = $project->MOP;
+							}else{
+								$ModeOfProcurement = json_decode($project->mop_peritem);
+							}
 							
 							if($project){
 								
@@ -99,20 +105,14 @@
 							<div class="ibox-title">
 								<h5>Content of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
-							<div class="ibox-content"><button data-toggle="modal" data-target="#summary">try</button>
+							<div class="ibox-content">
 								<h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Items Selection</h2>
 								<div class="row">
-									<div class="col-sm-9">
-										<div class="alert alert-danger">
+									<div class="col-sm-12">
+										<div class="alert alert-success">
 											Choose from the following items below you wish to be resorted for canvass. 
 											<br><code>Note: Refer from the DBMPS checklist if applicable.</code>
 										</div>										
-									</div>
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label style="color:red">Number of Canvass forms needed *</label>
-											<input type="number" min="1" id="canvassCount" placeholder="Important" class="form-control">
-										</div>								
 									</div>
 							
 								</div>
@@ -130,6 +130,7 @@
 											<tr>
 												<th>Select</th>
 												<th>Item</th>
+												<th>MOP</th>
 												<th>From lot</th>
 												<th>Stock No.</th>
 												<th>Unit</th>
@@ -150,14 +151,30 @@
 													//inner loop
 													foreach($lot['lot_items'] as $lotContent){
 														$itemCount++;
+
+														$prMOPDetails = $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'];
+														$prItemDetails = base64_encode($details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent));
+
+														if($project->mop_peritem !== NULL){
+															foreach($ModeOfProcurement as $key => $itemMode){
+																foreach($itemMode as $item){
+																	if($item === $prMOPDetails){
+																		$itemSpecificMode = $key;
+																	}
+																}
+															}
+														}else{
+															$itemSpecificMode = $ModeOfProcurement;
+														}
 											
 											?>
 
 												<tr>
 													<td style="text-align:center;">
-														<input type="checkbox" class="i-checks" mop="<?php echo $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'] ?>" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent);?>'>
+														<input type="checkbox" class="i-checks" data-mop="<?php echo base64_encode($itemSpecificMode); ?>" data-item='<?php echo $prItemDetails; ?>'>
 													</td>
 													<td><?php echo $itemCount;?></td>
+													<td><?php echo $itemSpecificMode;?></td>
 													<td>
 														<?php 
 															if($lot['l_title'] === "static lot"){
@@ -197,6 +214,7 @@
 													<tr>
 														<th>Select</th>
 														<th>Item</th>
+														<th>MOP</th>
 														<th>From lot</th>													
 														<th>List Title</th>
 														<th>Tags</th>
@@ -215,13 +233,29 @@
 															//inner loop
 															foreach($lot['lot_items'] as $lotContent){
 																$itemCount++;
-													
+															
+																$joMOPdetail = $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'];
+																$joitemDetails = base64_encode($details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent)."{|}".$lot['l_cost']);
+
+																if($project->mop_peritem !== NULL){
+																	foreach($ModeOfProcurement as $key => $itemMode){
+																		foreach($itemMode as $item){
+																			if($item === $joMOPdetail){
+																				$itemSpecificMode = $key;
+																			}
+																		}
+																	}
+																}else{
+																	$itemSpecificMode = $ModeOfProcurement;
+																}		
+																
 													?>												
 															<tr>
 																<td style="text-align:center;">
-																	<input type="checkbox" class="i-checks" mop="<?php echo $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'] ?>" data='<?php echo $details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent)."{|}".$lot['l_cost'];?>'>
+																	<input type="checkbox" class="i-checks" data-mop="<?php echo base64_encode($itemSpecificMode);?>" data-item='<?php echo $joitemDetails;?>'>
 																</td>
 																<th><?php echo $itemCount;?></th>
+																<td><?php echo $itemSpecificMode ?></td>
 																<th><?php echo $lotCount;?> - <?php echo $lot['l_title'];?></th>
 																<td><?php echo $lotContent['header'];?></td>
 																<td><?php echo $lotContent['tags'];?></td>
@@ -303,17 +337,26 @@
 							<form method="POST" action="">
 							<div class="ibox-content">
 								<div class="row">
-									<div class="col-md-9">
+									<div class="col-md-6">
 										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Items Resorting</h2>
 									</div>
 									<div class="col-md-3">
 										<div class="btn-group pull-right" style="margin-right:15px">
-											<button type="button" class="btn btn-info btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="fas fa-chess-pawn" style="font-size: 1.7em; color:#514e4e"></i> <span>Actions / Options</span>&nbsp;&nbsp;</button>
-											<ul class="dropdown-menu">
-												<li><a class="dropdown-item" log="upd" action="1" href="#"><i class="fas fa-check green side"></i> Action 1</a></li>
-												<li><a class="dropdown-item" log="upd" action="1" href="#"><i class="fas fa-check green side"></i> Action 2</a></li>
-												<li><a class="dropdown-item" log="upd" action="1" href="#"><i class="fas fa-check green side"></i> Action 3 </a></li>
+											<button type="button" class="btn btn-info btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="fas fa-chess-pawn" style="font-size: 1.7em; color:#514e4e"></i> <span>Selected Items Options</span>&nbsp;&nbsp;</button>
+											<ul class="dropdown-menu" id="CanvassDropDown">
+											</ul>
 										</div>
+									</div>									
+									<div class="col-md-3">
+										<div class="form-group">
+											<label style="color:red">Number of Canvass forms needed *</label>
+											<input type="number" min="1" max="30" id="canvassCount" placeholder="Important" class="form-control">
+										</div>								
+									</div>
+									<div class="col-md-12">
+										<div class="alert alert-success">
+											<i class="fas fa-info"></i> After Submiting and Finishing this form <strong>BAC Resolution Recommending Mode of Procurement</strong>, <strong>Publication</strong>, And <strong>Canvass Forms</strong> created will be automatically printed respectively.
+										</div>										
 									</div>									
 								</div>
 								<div id="pr-content">
@@ -329,7 +372,7 @@
 							<div class="ibox-footer col-lg-12">
 								<span class="float-right">
 									<button type="button" id="backbtn" class="btn btn-rounded btn-primary" style="display:none;"><i class="ti-angle-double-left"></i> Back</button>
-									<button type="submit" class="btn btn-rounded btn-primary">Submit <i class="ti-angle-double-right"></i></button>
+									<button type="submit" class="btn btn-rounded btn-primary">Submit and Finish <i class="ti-angle-double-right"></i></button>
 								</span>
 								<div class="col-lg-10">
 								In this part, You can now rearrange all selected items from part 1 to be canvassed. You can merge them in a single lot or rearrange it to single canvass per item.
@@ -344,8 +387,8 @@
 								<h2>Canvass list</h2>
 								<p  style="margin-top:-12px">Items being sorted is organized and grouped here.</p>
 							</div>
-							<div class="">
-								<div id="c1" class="widget lazur-bg text-center">
+							<div id="CanvassList" class="animated fadeInUp" style="display:none">
+								<!-- <div id="c1" class="widget lazur-bg text-center shine-me">
 									<h4>Canvass 1</h4>
 									<div class="m-b-md">
 										<h1 class="m-s">451226 items</h1>
@@ -364,7 +407,7 @@
 										<h1 class="m-s">456 items</h1>
 										<small>Bicol feed delights catering services</small>
 									</div>
-								</div>									
+								</div>									 -->
 							</div>								
 						</div>
 					</div>
@@ -387,23 +430,16 @@
 
 	$(function(){
 
-		const mop_peritem = <?php 
-			if($project->mop_peritem === NULL){
-				echo "''";
-			}else{
-				echo $project->mop_peritem;
-			}
-		?>;
+		const mop = '<?php echo $project->MOP;?>';
 
-		console.log(mop_peritem);
 
-		$("#test").click(function(){
-			// shine
-			$("#c1").addClass("shine-me");
-			setTimeout(function(){
-				$("#c1").removeClass("shine-me");
-			}, 500);
-		});
+		// $("#test").click(function(){
+		// 	// shine
+		// 	$("#c1").addClass("shine-me");
+		// 	setTimeout(function(){
+		// 		$("#c1").removeClass("shine-me");
+		// 	}, 500);
+		// });
 
 		setTimeout(function(){
 			$('#minimizer').trigger('click');
@@ -411,92 +447,144 @@
 		
 		$('#bResort').on('click', function(){
 			let rItems = $('input[type="checkbox"]:checked');
-			let canvassCount = $('#canvassCount').val();
-			let moparray = [];
+			if(rItems.length !== 0){
 
-				let count = 0;
-				let prT_header = false;
-				let lotCounter = [];
-				
-				// $('#step1').attr('style', 'display:none;');
-				// $('#step2').attr('style', '');
-				$('#backbtn').attr('style', '');
-				$('#pr-content').html('');
-				$('#jo-content').html('');
+				$('[data-resort-items="files"]').html('');
 
-				rItems.each(function(i, e){
+				if(mop === "" || mop.includes(',')){
+					let moparray = [];
+					rItems.each(function(i, e){
+						let elementMode = atob(e.dataset.mop);
 
-					let mode = Object.keys(mop_peritem).find(function(e1){
-						return mop_peritem[e1].find(function(e2){
-							return e.getAttribute('mop') === e2
-						});
-					});
-
-					if(typeof mode !== "undefined"){
-						if(moparray.indexOf(mode) === -1){
-							moparray.push(mode);
+						if(moparray.indexOf(elementMode) === -1){
+							moparray.push(elementMode);
 						}
-					}
-
-					let rDetails = e.getAttribute('data').split('{|}');
-					let rSpec = JSON.parse(rDetails[2]);
-					switch(rDetails[0]){
-						case "PR":
-							if(!prT_header){
-								$('#pr-content').html(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
-									<th>Lot Origin</th><th style="text-align:center;">New Lot</th><th>Stock No</th>
-									<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th>
-								</tr></thead><tbody id="pr-detail"></tbody></table></div><br>`);
-								prT_header = true;
-							}
-
-							$('#pr-detail').append(`<tr>
-								<td>${rDetails[1]}</td>
-								<td>
-								<select id="lot-${count}" name="new-lot-${count}" class="form-control">
-									<option value="Common Office Supplies">Common Office Supplies</option>
-									<option value="Paper Materials & Products">Paper Materials & Products</option>          
-									<option value="Hardware Supplies">Hardware Supplies</option>
-									<option value="Sporting Supplies">Sporting Supplies</option>
-									<option value="Common Janitorial/Cleaning Supplies">Common Janitorial/Cleaning Supplies</option>
-									<option value="ICT Supplies">ICT Supplies</option>
-									<option value="Laboratory Supplies">Laboratory Supplies</option>
-									<option value="Computer Supplies">Computer Supplies</option>
-								</select>
-								</td>
-								<td>${rSpec.stock_no}</td>
-								<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
-								<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
-								<input type="hidden" value='${JSON.stringify(rSpec)}' name="item_details-${count}">
-									</tr>`);
-							$(`#lot-${count}`).val(rDetails[1]);
-							count++;
-							break;
-						case "JO":
-							$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
-								<th>Lot Origin</th><th style="text-align:center;">New Lot</th><th>List Title</th>
-								<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
-							</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
-							
-							$(`#jo-detail-${count}`).append(`<tr><td>${rDetails[1]}</td>
-								<td><input type="text" class="form-control"></td>
-								<td>${rSpec.header}</td>
-								<td>${rSpec.tags}</td>
-								<td>${rDetails[3]}</td>
-								<td><input type="hidden" value='${JSON.stringify(rSpec)}' name="item_details-${count}">
-								</td></tr>`);
-							$(`#lot-${count}`).val(rDetails[1]);
-							count++;
-							break;
-						default:
-							break;
-					}
+						
+					});
+					
+					moparray.forEach(function(e, i){
+						$('[data-resort-items="files"]').append(`
+							<div class="my-file-box">
+								<div class="file">
+									<a href="#">
+										<span class="corner"></span>
+										<div class="icon">
+											<i class="fas fa-file-pdf"></i>
+										</div>
+										<div class="file-name">
+											BAC Reso-Recommending & Publication ${e}.pdf
+											<div class="dropdown">
+												<a href="#" class="toggle-dropdown" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+												<ul class="dropdown-menu">
+													<input type="text" class="form-control" placeholder="Classification">
+												</ul>
+											</div>												
+										</div>
+									</a>
+								</div>
+							</div>`);
+					});
+					$('#MOPCount').text(moparray.length);
+					$('#MOPCountMult').text(moparray.length * 2);
+				}else{
+					$('[data-resort-items="files"]').append(`
+						<div class="my-file-box">
+							<div class="file">
+								<a href="#">
+									<div class="icon">
+										<i class="fas fa-file-pdf"></i>
+									</div>
+									<div class="file-name">
+										BAC Reso-Recommending & Publication ${mop}.pdf
+										<div class="dropdown">
+											<a href="#" class="toggle-dropdown" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+											<ul class="dropdown-menu">
+												<input type="text" class="form-control" placeholder="Classification">
+											</ul>
+										</div>								
+									</div>							
+								</a>
+							</div>
+						</div>`);
+					$('#MOPCount').text(mop);
+					$('#MOPCountMult').text(2);
+				}
+				$('#summary').modal('show');
+			}else{
+				swal({
+					title: "Action invalid!",
+					text: "Please select an item",
+					confirmButtonColor: "#DD6B55",
+					type: "error"
 				});
-
-			console.log(moparray);
-			$('#MOPCount').text(moparray.length);
-			$('#summary').modal('show');
+			}
 		});
+
+		$('#resort-savePrint').on('click', function(){
+			let rItems = $('input[type="checkbox"]:checked');
+			let count = 0;
+			let prT_header = false;
+			
+			$('#pr-content').html('');
+			$('#jo-content').html('');
+
+			rItems.each(function(i, e){
+				let rDetails = atob(e.dataset.item).split('{|}');
+				let rSpec = JSON.parse(rDetails[2]);
+				switch(rDetails[0]){
+					case "PR":
+						if(!prT_header){
+							$('#pr-content').html(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
+								<th>MOP</th><th>Select</th><th>Lot Origin</th><th>Stock No</th>
+								<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th>
+							</tr></thead><tbody id="pr-detail"></tbody></table></div><br>`);
+							prT_header = true;
+						}
+
+						$('#pr-detail').append(`<tr>
+							<td style="text-align:center;"><input type="checkbox" data-cvn="step2" class="i-checks"></td>
+							<td>${atob(e.dataset.mop)}</td>
+							<td>${rDetails[1]}</td>
+							<td>${rSpec.stock_no}</td>
+							<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
+							<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
+							<input type="hidden" value='${JSON.stringify(rSpec)}' name="item_details-${count}">
+								</tr>`);
+						$(`#lot-${count}`).val(rDetails[1]);
+						break;
+					case "JO":
+						$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
+							<th>Select</th><th>MOP</th><th>Lot Origin</th>
+							<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
+						</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
+						
+						$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" class="i-checks"></td>
+							<td>${atob(e.dataset.mop)}</td>
+							<td>${rDetails[1]}</td>
+							<td>${rSpec.header}</td>
+							<td>${rSpec.tags}</td>
+							<td>${rDetails[3]}</td>
+							<td><input type="hidden" value='${JSON.stringify(rSpec)}' name="item_details-${count}">
+							</td></tr>`);
+						$(`#lot-${count}`).val(rDetails[1]);
+						break;
+					default:
+						break;
+				}
+				count++;
+			});
+
+			$('.i-checks').iCheck({
+				checkboxClass: 'icheckbox_square-green',
+				radioClass: 'iradio_square-green'
+			});
+
+			$('#step1').attr('style', 'display:none;');
+			$('#step2').attr('style', '');
+			$('#backbtn').attr('style', '');
+
+		});
+
 
 		$('#backbtn').on('click', function(){
 			$('#step1').attr('style', '');
@@ -504,6 +592,61 @@
 			$(this).attr('style', 'display:none');
 		});
 
+		$('#canvassCount').on('change', function(){
+			var CanvasObject = [];
+			let elem_CanvassList = $('#CanvassList');
+			let elem_CanvassDropDown = $('#CanvassDropDown');
+
+			elem_CanvassList.attr('style', 'display:none');
+			elem_CanvassList.html('');
+			elem_CanvassDropDown.html('');
+
+			for(let i = 1 ; $(this).val() >= i ; i++){
+				elem_CanvassList.append(`
+					<div class="widget lazur-bg text-center">
+						<h4>Canvass ${i}</h4>
+						<div class="m-b-md">
+							<h1 class="m-s">0 items</h1>
+							<small>Bicol feed delights catering services</small>
+						</div>
+					</div>`);
+
+				elem_CanvassDropDown.append(`<li>
+					<a class="dropdown-item" data-canv-no="${i}" href="#">
+					<i class="fas fa-check green side"></i> Canvas ${i}</a>
+				</li>`);
+
+
+				CanvasObject.push({no: i});
+
+				$(`[data-canv-no="${i}"]`).on('click', function(){
+					let cvnsItemSel = $('[data-cvn="step2"]:checked');
+					if(cvnsItemSel.length !== 0){
+
+						// cvnsItemSel.each(function(i, e){
+						// 	// data handling 
+						// });
+						
+						
+						
+					}else{
+						swal({
+							title: "Action invalid!",
+							text: "Please select an item",
+							confirmButtonColor: "#DD6B55",
+							type: "error"
+						});
+					}
+				});
+
+			}
+
+			setTimeout(function(){
+				elem_CanvassList.attr('style', '');
+			}, 50);
+
+
+		});
 
 
 	});

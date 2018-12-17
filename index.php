@@ -23,6 +23,7 @@
                  $login = $user->login(Input::get('username'), Input::get('password'), $remember);
 
                  if($login){
+					 Session::flash('greet', 'this is my greetings');
                      Redirect::To('views/User/Dashboard');
                  }else{
                      Session::flash('incorrect', 'Incorrect Username or Password');

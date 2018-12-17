@@ -485,6 +485,27 @@
 			}
 		}//for fetching lot content
 
+		public function evaluation($ID){
+			if($this->db->query_builder("SELECT *, DATEDIFF(implementation_date, date_registered) as 'remaining_days' FROM `projects` WHERE proposed_evaluator = '{$ID}' AND accomplished < 3")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+			}
+			return false;
+		}
+
+		public function count($table, $where){
+			if($this->db->basic_count($table, $where)){
+				if($this->db->count()){
+					return $this->db->first();
+				}
+				return false;
+			}
+			return false;
+		}
+
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
 				throw new Exception('There was a problem registering data', 1);

@@ -115,6 +115,19 @@
                 return $this->db->results();
             }
         }
+		
+		public function standardUsers(){
+            if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, edr_ext_name, edr_email, phone, office_name, edr_job_title, group_id, name, permission
+			FROM `enduser`, `units`, `edr_account`, `group`
+
+            WHERE
+            enduser.edr_designated_office = units.ID AND
+            enduser.edr_id = edr_account.account_id AND
+            edr_account.group_ = group.group_id
+            ")) {
+                return $this->db->results();
+            }			
+		}
 
         public function personnelData($ID){
             if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status

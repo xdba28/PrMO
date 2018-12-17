@@ -80,8 +80,12 @@
                         case 'Staff':
                             header('Location: ../views/Staff/Dashboard'); 
                             exit();
+						break;
+						
+                        case 'Technical Member':
+                            header('Location: ../views/Technical-member/'); 
+                            exit();
                         break;
-
                     }
 
                 }else{

@@ -221,28 +221,31 @@
                             <p>
                                 Fill Up the fields with correct and accurate data.
                             </p>
-                            <div class="alert alert-info">
-                                Your account requests will be validated by the Procurement Management office to assure the eligibility of the requestor, this process only requires a minimum amount of time.
-                                We will send your Login information through your provided email address as soon as it is validated by our incharge personnel.
+                           
+                                
+                         							
+                            <div class="alert alert-success">
+                                Your account requests will be validated by the Procurement Management office to assure the eligibility of the requestor.
+                                The system will send your Login information through your provided phone number as soon as it is validated by our incharge personnel.
                             </div>
 							
                             <form id="form" action="" class="wizard-big" method="POST" enctype="multipart/form-data">
                                 <h1>Profile</h1>
                                 <fieldset>
-                                    <h2>Profile Information</h2>
+                                    <h2>Profile Information</h2><code>Fields labeled with asterisk(*) are required.</code>
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group" id="popOver" data-trigger="active" title="Instruction" data-placement="top" data-content="You should also include second name if any.">
                                                 <label>First name *</label>
-                                                <input id="name" name="name" type="text" class="form-control ">
+                                                <input id="name" name="name" type="text" class="form-control" required>
                                             </div>
                                             <div class="form-group" id="popOver1" data-trigger="active" title="Instruction" data-placement="top" data-content="Middle name should be complete and not just initials.">
                                                 <label>Middle name *</label>
-                                                <input id="midlename" name="midlename" type="text" class="form-control ">
+                                                <input id="midlename" name="midlename" type="text" class="form-control" required>
                                             </div>											
                                             <div class="form-group">
                                                 <label>Last name *</label>
-                                                <input id="surname" name="surname" type="text" class="form-control">
+                                                <input id="surname" name="surname" type="text" class="form-control" required>
                                             </div>
                                             <div class="form-group"  id="popOver2" data-trigger="active" title="Instruction" data-placement="top" data-content="Eg. Jr, Sr, II, III. Leave it blank if not applicable.">
                                                 <label>Extension name </label>
@@ -250,7 +253,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Job title</label>
-                                                <input id="jobtitle" name="jobtitle" type="text" class="form-control ">
+                                                <input id="jobtitle" name="jobtitle" type="text" class="form-control" required>
                                             </div>												
 											
                                         </div>
@@ -274,19 +277,22 @@
                                             </div>			
 											<div class="form-group"  id="popOver3" data-trigger="hover" title="Note" data-placement="top" data-content="The specified Office / Department will be the transmitting location whenever we have document to be delivered with regards to you.">
                                                 <label>Specific Office</label>
-                                                <input id="specific_office" name="specific_office" type="text" d class="form-control">
+                                                <input id="specific_office" name="specific_office" type="text" d class="form-control" required>
                                             </div>									
                                             <div class="form-group">
                                                 <label>Phone No. *</label>
-                                                <input id="contact" name="contact" type="text" data-mask="9999 999 9999" class="form-control ">
+                                                
+												<div class="input-group">
+													<span class="input-group-addon">+63</span><input id="contact" name="contact" type="text" data-mask="9999999999" class="form-control" required>
+												</div>												
                                             </div>										
                                             <div class="form-group">
                                                 <label>Email *</label>
-                                                <input id="email" name="email" type="email" class="form-control">
+                                                <input id="email" name="email" type="email" class="form-control" required>
                                             </div>    
                                             <div class="form-group">
                                                 <label>Employee No. *</label>
-                                                <input id="emp_id" name="emp_id" type="text" class="form-control ">
+                                                <input id="emp_id" name="emp_id" type="text" class="form-control" required>
                                             </div>											
                                         </div>
                                         

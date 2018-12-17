@@ -14,7 +14,7 @@
 	if(Input::exists()){
 	
 		if(Token::check("joToken",Input::get('joToken'))){
-			
+
 			try{				
 				//register project details in "project_request_forms"table
 				$current_year = date('Y');

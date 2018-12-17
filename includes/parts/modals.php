@@ -391,38 +391,92 @@
 			</div>
 			<div class="modal-body">
 					<div class="row">
-
 							<div class="col-lg-6">
-								<div class="widget style1 lazur-bg">
+								<div class="widget style1 lazur-bg" style="height:110px">
 									<div class="row">
 										<div class="col-4">
-											<i class="fa fa-envelope-o fa-5x"></i>
+											<i class="fas fa-file-contract fa-5x"></i>
 										</div>
 										<div class="col-8 text-right">
-											<span> No of MOPs Classified </span>
+											<span>Mode of Procurement Classified</span>
 											<h2 class="font-bold" id="MOPCount"></h2>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-lg-6">
-								<div class="widget style1 lazur-bg">
+								<div class="widget style1 yellow-bg" style="height:110px">
 									<div class="row">
 										<div class="col-4">
-											<i class="fa fa-envelope-o fa-5x"></i>
+											<i class="far fa-copy fa-5x"></i>
 										</div>
 										<div class="col-8 text-right">
-											<span>Pair of bac reson & publication</span>
-											<h2 class="font-bold">4</h2>
+											<span>Pair of BAC Resolution & Publication</span>
+											<h2 class="font-bold" id="MOPCountMult"></h2>
 										</div>
 									</div>
 								</div>
 							</div>						
 
 					</div>
-					
+					<!-- here is the clickable grids for viewing --><hr>
 					<div class="row">
-						<h1>Clickable divs to view publication and reso</h1>
+					
+						<div class="col-lg-12">
+							   <div class="alert alert-success">
+									<i class="fas fa-info"></i> Click on the pdf icon to preview document.
+							   </div>
+							   <div data-resort-items="files">
+								   <!-- <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_Direct Contracting.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>
+
+								   <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_SVP.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>
+
+								   <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_Shopping.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>							 -->
+							   </div>
+					
+						</div>
 					</div>
 			</div>
 			<div class="modal-footer">
@@ -430,7 +484,7 @@
 					<i class="fas fa-print"></i>
 					<span>Print Now</span>&nbsp;
 				</button>
-				<button type="button" class="btn btn-success btn-rounded btn-outline">
+				<button id="resort-savePrint" data-dismiss="modal" type="button" class="btn btn-success btn-rounded btn-outline">
 					<i class="far fa-save"></i>
 					<span>Save and print Later</span>&nbsp;
 				</button>

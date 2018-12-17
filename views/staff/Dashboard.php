@@ -128,16 +128,13 @@
 			<!-- Main Content -->
             <div class="wrapper wrapper-content">
 				<div class="middle-box text-center animated fadeInRightBig">
-						<form action="Dashboard.php" method="GET" enctype="multipart/form-data">
-							<input type="text" required name="sample">
-							<input type="submit">
-						</form><br>
-						<!-- <h3 class="font-bold">Staff</h3>
+
+						<h3 class="font-bold">Staff</h3>
 						<div class="error-desc">
 							You can create here any grid layout you want. And any variation layout you imagine:) Check out
 							main dashboard and other site. It use many different layout.
 							<br/><a href="Dashboard" class="btn btn-primary m-t">Dashboard</a>
-						</div> -->
+						</div>
 
 				</div>
             </div>

@@ -480,6 +480,7 @@
 			return true;
 		}
 
+		// select all from the table
 		public function selectAll($table){
             if($this->db->query_builder("SELECT * FROM `{$table}` WHERE 1")) {
                 return $this->db->results();
@@ -496,7 +497,8 @@
 			return false;
 		}			
 		
-		public function getAll($table, $where){	
+		// select all from table with given wheres
+		public function getAll($table, $where){
 			if($this->db->get($table, $where)){
 				if($this->db->count()){
 					return $this->db->results();
@@ -505,6 +507,7 @@
 			}
 			return false;
 		}
+
 
         public function exist(){
             return (!empty($this->data)) ? true : false;

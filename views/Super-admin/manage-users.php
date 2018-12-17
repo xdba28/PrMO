@@ -71,7 +71,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Dashboard v.3</title>
+    <title>INSPINIA | Admins</title>
 	<?php include "../../includes/parts/admin_styles.php";?>
 	<script>
 		var PersUpdate = '<?php 
@@ -102,13 +102,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>Users Management</h2>
+                    <h2>Admin Accounts Management</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Users</a>
+                            <a href="#">User Accounts</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Manage Users</strong>
+                            <strong>Admins</strong>
                         </li>
                     </ol>
                 </div>
@@ -131,8 +131,8 @@
 
 			?>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="ibox ">
+                <div class="col-md-4 animated fadeInLeft">
+                    <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>Profile General details</h5>
                         </div>
@@ -154,33 +154,13 @@
 								</div>								
 
 								
-								
-                                <h5>
-                                    About me
-                                </h5>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
-                                </p>
-                                <div class="row m-t-lg">
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>169</strong> Posts</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="line">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>28</strong> Following</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
-                                        <h5><strong>240</strong> Followers</h5>
-                                    </div>
-                                </div>
+
                             </div>
 						</div>
 					</div>
                 </div>
-                <div class="col-md-8">
-                    <div class="ibox ">
+                <div class="col-md-8 animated fadeInRight">
+                    <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>Update Form</h5>
                         </div>
@@ -236,8 +216,8 @@
 			?>	
 			
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox ">
+                <div class="col-lg-12 animated fadeInRight">
+                    <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>Personnel Accounts</h5>
 
@@ -260,7 +240,7 @@
 										<th data-hide="all">Employee ID</th>
 										<th data-hide="all">Email</th>
 										<th data-hide="all">Phone</th>
-										<th data-hide="all">Phase</th>
+										
 										<th data-hide="all">Account Status</th>
 										<th>Action</th>
 									</tr>
@@ -295,7 +275,7 @@
                                                 <td>'.$data->prnl_id.'</td>
                                                 <td>'.$data->prnl_email.'</td>
                                                 <td>'.$data->phone.'</td>
-                                                <td>'.$data->prnl_assigned_phase.'</td>
+                                                
                                                 <td><b><a  class="'.$color.'">'.$data->status.'</a></b></td>
                                                 <td>
                                                     <div class="btn-group">
@@ -344,156 +324,7 @@
 			</div>
 
         </div>
-        <div id="right-sidebar">
-            <div class="sidebar-container">
 
-                <ul class="nav nav-tabs navs-3">
-
-                    <ul class="nav nav-tabs navs-2">
-                        <li>
-                            <a class="nav-link active" data-toggle="tab" href="#tab-3"> Settings </a>
-                        </li>					
-                        <li>
-                            <a class="nav-link" data-toggle="tab" href="#tab-2"> Projects </a>
-                        </li>
-                    </ul>
-
-                <div class="tab-content">
-
-
-                    <div id="tab-3" class="tab-pane active">
-
-                        <div class="sidebar-title">
-                            <h3><i class="fa fa-gears"></i> Settings</h3>
-                            <small><i class="fa fa-tim"></i> You have 14 projects. 10 not completed.</small>
-                        </div>
-
-                        <div class="setings-item">
-                    <span>
-                        Show notifications
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example">
-                                    <label class="onoffswitch-label" for="example">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Disable Chat
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" checked class="onoffswitch-checkbox" id="example2">
-                                    <label class="onoffswitch-label" for="example2">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Enable history
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example3">
-                                    <label class="onoffswitch-label" for="example3">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Show charts
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example4">
-                                    <label class="onoffswitch-label" for="example4">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Offline users
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example5">
-                                    <label class="onoffswitch-label" for="example5">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Global search
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example6">
-                                    <label class="onoffswitch-label" for="example6">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Update everyday
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example7">
-                                    <label class="onoffswitch-label" for="example7">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-content">
-                            <h4>Settings</h4>
-                            <div class="small">
-                                I belive that. Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                And typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                            </div>
-                        </div>
-
-                    </div>
-                    <div id="tab-2" class="tab-pane">
-
-                        <div class="sidebar-title">
-                            <h3> <i class="fa fa-cube"></i> Latest projects</h3>
-                            <small><i class="fa fa-tim"></i> You have 14 projects. 10 not completed.</small>
-                        </div>
-
-
-
-                    </div>				
-                </div>
-
-            </div>
-
-
-
-        </div>
     </div>
 
 	<?php include "../../includes/parts/admin_scripts.php"?>

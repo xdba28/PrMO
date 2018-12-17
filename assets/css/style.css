@@ -1289,7 +1289,7 @@ body.canvas-menu .logo-element {
 }
 body.mini-navbar .nav-header {
   padding: 0;
-  background-color: #1ab394;
+  /* background-color: #1ab394; */
 }
 body.canvas-menu .nav-header {
   padding: 33px 25px;
@@ -4373,7 +4373,7 @@ samp {
 }
 body {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #2f4050;
+  background-color: #1f253d;
   font-size: 13px;
   color: #676a6c;
   overflow-x: hidden;
@@ -9552,4 +9552,22 @@ body.md-skin {
   #page-wrapper {
     margin: 0;
   }
+}
+
+/* klorofil file info */
+.file-name span {
+    display: block;
+    margin: 3px 0;
+}
+
+.file-name .dropdown {
+    position: absolute;
+    right: -2px;
+    top: 82%;
+    margin-top: -11px;
+}
+.file-name .toggle-dropdown {
+    padding: 0 10px;
+    color: #a3a3a3;
+    font-size: 20px;
 }

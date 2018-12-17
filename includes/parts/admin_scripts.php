@@ -231,7 +231,7 @@ require_once "../../functions/account-verifier.php";
 			// side nav active
 			var path = window.location.pathname.split("/");
 			var link = document.querySelector(`[href="${path[path.length - 1]}"]`);
-			var sLink = ['Dashboard', 'Calendar'];
+			var sLink = ['Dashboard', 'Calendar', 'Reports', 'evaluation'];
 			var higherLevelpages = [
 				{pages: ['resort-items'], link: 'Ongoing-projects'}
 			];
@@ -567,7 +567,7 @@ require_once "../../functions/account-verifier.php";
 				var form_data = null;
 
 				SendDoSomething("POST", "../xhr-files/xhr-show-actions.php", {
-					ref:reference
+					ref: reference
 				}, {
 					do:function(res){
 						let availableActions = res.fetchedResult;
@@ -597,7 +597,7 @@ require_once "../../functions/account-verifier.php";
 								case "Proceed to resorting unavailable items from DBMPS for canvass":
 									classtype = "lazur-bg"
 									icon = "fas fa-chess-pawn";
-									cardAction = `href="resort-items?q=${reference}"`;
+									cardAction = `href="resort-items?q=${btoa(reference)}"`;
 									break;
 								case "Dismiss Project for all items are available in DBM":
 									classtype = "yellow-bg"
@@ -1025,7 +1025,7 @@ require_once "../../functions/account-verifier.php";
 			$('.footable2').footable();
 			
 			$("#typeahead").typeahead({
-				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
+				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff", "Technical Member"]
 			});
 		
 

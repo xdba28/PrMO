@@ -143,17 +143,17 @@
 											if($request->status == "unreceived"){
 												$displayStatus = '<span class="status-text status-green">Unreceived</span>';
 												$actionButton  = '<div class="btn-group">
-																	 <a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
+																	 <a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
 																	 <a class="btn btn-warning btn-sm btn-rounded btn-outline">Delete</a>                             
 																 </div>';
 
 											}else{
 												if($user->isEvaluated($request->form_ref_no)){
 													$displayStatus = '<span class="status-text status-red">Evaluation Passed</span>';
-													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+													$actionButton = '<a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
 												}else{
 													$displayStatus = '<span class="status-text status-orange">Received</span>';
-													$actionButton = '<a href="my-forms?q='.$request->form_ref_no.'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
+													$actionButton = '<a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>';
 												}
 												
 											}
@@ -185,7 +185,7 @@
 								
 							}else{
 								
-								$refno = $_GET['q'];
+								$refno = base64_decode($_GET['q']);
 								$admin = new Admin();
 								$valid_request = $admin->selectAll("project_request_forms");
 			
@@ -218,7 +218,7 @@
 									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
 									$addionalContent = '
 										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
-											<p style="margin-left:20px"><u><b>'.$isProject->project_ref_no.' - '.$isProject->project_title.'</b></u></p>
+											<p style="margin-left:20px"><u><b><a href="project-details?refno='.$isProject->project_ref_no.'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
 										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
 											<small>'.$accomplishment.'%</small>
 											<div class="progress progress-mini">
@@ -438,7 +438,7 @@
 													</div>
 												</div>	
 												<div class="col-lg-8">
-													<h4 class="text-left" style="color: #F37123">Lot Comment</h4>
+													<h4 class="text-left" style="color: #F37123">Lot Notes</h4>
 													<div class="widget style1 yellow-bg">
 														<div class="row vertical-align">
 															<div class="col-1">												

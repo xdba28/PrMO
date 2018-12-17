@@ -11,14 +11,16 @@
         die();
 	}
 
-	// notif(json_encode(array(
-	// 	'receiver' => '2015-11583',
-	// 	'message' => "Project Ref: asd is now registered as asd",
-	// 	'date' => 'asdasd',
-	// 	'href' => "project-details?refno=asdasd"
-	// )));
+	
+	
+	
+
+	
+	
+	
 	
 	if(Input::exists()){
+
 		if(Token::check("newProject", Input::get('newProject'))){
 				
 	
@@ -49,6 +51,7 @@
 					'end_user' => $enduser_encoded,
 					'project_status' => 'PROCESSING',
 					'workflow'	=> 'For evaluation of technical working group',
+					'proposed_evaluator' => Input::get('proposed_evaluator'),
 					'date_registered' => Date::translate('test', 'now'),
 					'implementation_date' => $finalDate
 				));
@@ -59,8 +62,9 @@
 					'logdate' => Date::translate('test', 'now'),
 					'type' =>  'IN'
 				));
-
-				$staff->register('outgoing', array(
+				
+				//remove this
+				/*$staff->register('outgoing', array(
 
 					'project' =>  $project_ref_no,
 					'transmitting_to' => 'TWG',
@@ -69,21 +73,21 @@
 					'transactions' => 'EVALUATION',
 					'date_registered' => Date::translate('test', 'now')
 
-				));
+				));*/
 
 				$staff->register('project_logs', array(
 					'referencing_to' => $project_ref_no,
-					'remarks' => "project {$project_ref_no} queued to outgoing documents for pre-procurement evaluation.",
+					'remarks' => "project details of {$project_ref_no} was sent to technical member for pre-procurement evaluation.",
 					'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
-					'type' =>  'IN'
+					'type' =>  'OUT'
 				));
 
 				$staff->register('notifications', array(
 					'recipient' => $_POST['enduser'],
-					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+					'message' => "Project request form {$form_ref_no} is now registered as {$project_ref_no}",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
-					'href' => "project-details?refno={$project_ref_no}"
+					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				));
 
 				$staff->endTrans(); //commit
@@ -93,7 +97,7 @@
 					'receiver' => $_POST['enduser'],
 					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
-					'href' => "project-details?refno={$project_ref_no}"
+					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				)));
 
 				
@@ -125,7 +129,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Single Project</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -166,7 +170,7 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>Project Registration</h2>
+                    <h2>Single Project Registration</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">Projects</a>
@@ -245,27 +249,6 @@
 								</div>								
 
 								
-								
-                                <!-- <h5 class="text-navy">
-                                    something
-                                </h5> 
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
-                                </p>
-                                <div class="row m-t-lg">
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>10</strong> Requests</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="line">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>8</strong> Success</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
-                                        <h5><strong>2</strong> Failure</h5>
-                                    </div>
-                                </div> -->
                             </div>
 						</div>
 					</div>
@@ -284,19 +267,19 @@
 								
 									<div class="col-sm-6 b-r"> 
 										<form id="new-project" method="POST" action="">								
-                                        <div class="checkbox checkbox-info checkbox-circle">
+                                        <div class="checkbox checkbox-success checkbox">
                                             <input id="checkbox1" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
                                             <label for="checkbox1">
                                                 CAF (Certificate of Availability of Funds) is valid and correct.
                                             </label>
                                         </div>
-                                        <div class="checkbox checkbox-info checkbox-circle">
+                                        <div class="checkbox checkbox-success checkbox">
                                             <input id="checkbox2" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
                                             <label for="checkbox2">
                                                PPMP/APP/Suplemental documents are attached and validated by the personnel incharge in the PRMO.
                                             </label>
                                         </div>											
-                                        <div class="checkbox checkbox-info checkbox-circle">
+                                        <div class="checkbox checkbox-success checkbox">
                                             <input id="checkbox3" type="checkbox" required oninvalid="this.setCustomValidity('This checklist must be followed ')"oninput="this.setCustomValidity('')">
                                             <label for="checkbox3">
                                                 Complete documents that the office may reqiure and necessary under specific conditions applied.
@@ -316,8 +299,27 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="title" class="my-blue">Project title</label> <textarea name="title" id="title" class="form-control" rows="10" required><?php echo $request->title;?></textarea>
-										</div>	
+											<label class="font-normal">Choose Evaluator</label>
+											<div>
+												<select data-placeholder="Choose..." name="proposed_evaluator" class="chosen-select"  style="display:none;" tabindex="2" required>
+													
+													<option value=""></option>
+													<?php
+														$technicalMembers = $user->getAll('prnl_account', array('group_', '=', 7));
+															foreach($technicalMembers as $member){
+																echo '<option value="'.$member->account_id.'">'.$user->fullnameOf($member->account_id).'</option>';
+															}
+														
+														
+														
+													?>
+												</select>
+											</div>
+										</div>											
+										<div class="form-group">
+											<label for="title" class="my-blue">Project title</label>
+											<textarea name="title" id="title" class="form-control" rows="10" required><?php echo $request->title;?></textarea>
+										</div>								
 											<input type="text" name="newProject" value="<?php echo Token::generate('newProject');?>" hidden readonly>
 											<input type="text" name="enduser" value="<?php echo $request->requested_by;?>" hidden readonly>
 										
