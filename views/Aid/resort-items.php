@@ -13,20 +13,99 @@
 
 	if(!empty($_POST)){
 
-		echo "<pre>".print_r(json_decode($_POST['canvass'], true))."</pre>";
+		$range = range('A', 'Z');
+		$canvassFormCount = 0;
 
-		echo "<hr>";
+		$canvass = json_decode($_POST['canvass'], true);
 
-		foreach(json_decode($_POST['canvass'], true) as $canvass){
+		$user->startTrans();
 
-			foreach($canvass['items'] as $item){
+		foreach($canvass['forms'] as $form){
 
-				echo "<pre>".print_r(json_decode($item['details'], true))."</pre>";
+			$user->register('canvass_forms', array(
+				'gds_reference' => $canvass['gds'],
+				'type' => $form['type'],
+				'form_count' => $range[$canvassFormCount]
+			));
+
+			$canvassForm = $user->get('canvass_forms', array('gds_reference', '=', $canvass['gds']));
+
+			foreach($form['items'] as $item){
+
+				if($form['type'] === 'PR'){
+
+					$user->register('canvass_items_pr', array(
+						'canvass_forms_id' => $canvassForm->id,
+						'stock_no' => $item['details']['stock_no'],
+						'unit' => $item['details']['unit'],
+						'item_description' => $item['details']['desc'],
+						'quantity' => $item['details']['qty'],
+						'unit_cost' => $item['details']['uCost'],
+						'total_cost' => $item['details']['tCost']
+					));
+
+				}elseif($form['type'] === 'JO'){
+					
+					$user->register('canvass_items_jo', array(
+						'canvass_forms_id' => $canvassForm->id,
+						'header' => $item['details']['header'],
+						'tags' => $item['details']['tags']
+					));
+
+				}
 
 			}
+
+			$canvassFormCount++;
 		}
 
+		foreach($canvass['noMop'] as $mode){
+
+			$user->register('publication', array(
+				'gds_reference' => $canvass['gds'],
+				'MOP' => $mode['mode']
+			));
+
+			$publicationID = $user->projectPublication($canvass['gds'], $mode['mode']);
+
+			foreach($mode['lot_titles'] as $prop){
+
+				$user->register('publication_lots', array(
+					'publication_id' => $publicationID,
+					'title' => $prop['title'],
+					'cost' => $prop['cost']
+				));
+
+			}
+
+		}
+
+		// update steps
+		
+		//get the json file for step details
+		$json = file_get_contents('../xhr-files/jsonsteps.json');
+		//Decode JSON
+		$stepsStructure = json_decode($json,true);
+
+		$updateProject = $user->get('projects', array('project_ref_no', '=', $canvass['gds']));
+
+		if($updateProject->mop_peritem === NULL){
+
+			// get MOP and update the appropriate workflow and accomplishment
+
+		}else{
+	
+			$user->update('projects', 'project_ref_no', $canvass['gds'], array(
+				'accomplished' => '4',
+				'workflow' => "Canvassing"
+			));
+
+		}
+
+		$user->endTrans();
+
 		die();
+
 	}
    
 
@@ -167,7 +246,7 @@
 														$itemCount++;
 
 														$prMOPDetails = $details['type'].'-'.$lot['l_id'].'-'.$lotContent['id'];
-														$prItemDetails = base64_encode($details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent));
+														$prItemDetails = base64_encode($details['type']."{|}".$lot['l_title']."{|}".json_encode($lotContent)."{|}".$lot['l_cost']);
 
 														if($project->mop_peritem !== NULL){
 															foreach($ModeOfProcurement as $key => $itemMode){
@@ -348,7 +427,7 @@
 							<div class="ibox-title">
 								<h5>Items rearrangement for canvass of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
-							<form method="POST" action="">
+							<form method="POST" action="" name="canvass">
 							<div class="ibox-content">
 								<div class="row">
 									<div class="col-md-6">
@@ -403,8 +482,10 @@
 							<div class="">
 								<h2>Canvass list</h2>
 								<p  style="margin-top:-12px">Items being sorted is organized and grouped here.</p>
+								<br>
 							</div>
 							<div id="CanvassList" class="animated fadeInUp" style="display:none">
+								
 								<!-- <div id="c1" class="widget lazur-bg text-center shine-me">
 									<h4>Canvass 1</h4>
 									<div class="m-b-md">
@@ -470,13 +551,27 @@
 	$(function(){
 		const mop = '<?php echo $project->MOP;?>;';
 
-		// $("#test").click(function(){
-		// 	// shine
-			// $("#c1").addClass("shine-me");
-			// setTimeout(function(){
-			// 	$("#c1").removeClass("shine-me");
-			// }, 500);
-		// });
+		var Canvass = {
+			gds: '<?php echo $project->project_ref_no?>',
+			forms: []
+		};
+
+		// var Canvass = {
+		// 	title: '<?php 
+			// echo $project->project_title;
+			?>',
+		// 	gds: '<?php 
+		// echo $project->project_ref_no?>',
+		// 	abc: <?php 
+		// echo $project->ABC;?>,
+		// 	requested_by: <?php 
+		// echo $project->end_user;?>,
+		// 	evaluator: '<?php
+		//  echo $project->evaluator;?>',
+		// 	forms: []
+		// };
+
+		var SelectedItems = [];
 
 		setTimeout(function(){
 			$('#minimizer').trigger('click');
@@ -495,12 +590,36 @@
 					$('#MOPCount').html('');
 
 					rItems.each(function(i, e){
+						let itemDetail = atob(e.dataset.item).split('{|}')
 						let elementMode = atob(e.dataset.mop);
-						if(moparray.indexOf(elementMode) === -1){
-							moparray.push(elementMode);
+
+						// find obj with an MOP of elementMode
+						let index_obj = moparray.find(function(el){
+							return el.mode === elementMode 
+						});
+
+						if(index_obj === undefined){
+
+							moparray.push({
+								mode: elementMode,
+								lot_titles: [{title: itemDetail[1], cost: itemDetail[3]}]
+							});
+
+						}else{
+
+							// NOTE add lot title total cost
+
+							// add lot title to obj with the same MOP
+							let index_array = moparray.indexOf(index_obj);
+							if(moparray[index_array].lot_titles.indexOf(itemDetail[1]) === -1){
+
+								moparray[index_array].lot_titles.push({title: itemDetail[1], cost: itemDetail[3]});
+							}
 						}
-						
+
 					});
+					
+					Canvass.noMop = moparray;
 					
 					moparray.forEach(function(e, i){
 						$('[data-resort-items="files"]').append(`
@@ -550,6 +669,8 @@
 						</div>`);
 					$('#MOPCount').text(mop);
 					$('#MOPCountMult').text(2);
+
+					Canvass.noMop = mop;
 				}
 				$('#summary').modal('show');
 			}else{
@@ -560,21 +681,29 @@
 					type: "error"
 				});
 			}
+
 		});
 
+
 		$('#resort-savePrint').on('click', function(){
+
+			SelectedItems = [];
+
 			let rItems = $('[data-cvn="step1"]:checked');
 			let count = 0;
 			let prT_header = false;
-			var SelectedItems = [];
 
 			$('#pr-content').html('');
 			$('#jo-content').html('');
 
-			rItems.each(function(i, e){
+			rItems.each(function step2(i, e){
 				let rDetails = atob(e.dataset.item).split('{|}');
 				let rSpec = JSON.parse(rDetails[2]);
-				SelectedItems.push({item: rSpec, mop: atob(e.dataset.mop), ref: atob(e.dataset.ref)});
+				let cur_mop = atob(e.dataset.mop);
+
+				// append selected items
+				SelectedItems.push(atob(e.dataset.ref));
+
 				switch(rDetails[0]){
 					case "PR":
 						if(!prT_header){
@@ -586,7 +715,7 @@
 						}
 
 						$('#pr-detail').append(`<tr>
-							<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" class="i-checks"></td>
+							<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}"  class="i-checks"></td>
 							<td>${atob(e.dataset.mop)}</td>
 							<td>${rDetails[1]}</td>
 							<td>${rSpec.stock_no}</td>
@@ -601,7 +730,7 @@
 							<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
 						</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
 						
-						$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" class="i-checks"></td>
+						$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" class="i-checks"></td>
 							<td>${atob(e.dataset.mop)}</td>
 							<td>${rDetails[1]}</td>
 							<td>${rSpec.header}</td>
@@ -616,7 +745,6 @@
 				count++;
 			});
 
-			console.log(canvassItems);
 
 			$('.i-checks').iCheck({
 				checkboxClass: 'icheckbox_square-green',
@@ -634,14 +762,13 @@
 			$('#step1').attr('style', '');
 			$('#step2').attr('style', 'display:none');
 			$(this).attr('style', 'display:none');
-
-			
 		});
 
+
 		$('#canvassCount').on('change', function(){
+			$('#resort-savePrint').trigger('click');
 			let color = ['lazur', 'yellow', 'red'];
-			let count = 0;
-			var CanvassObject = [];
+			let count = 0, canvassObject = [];
 			let elem_CanvassList = $('#CanvassList');
 			let elem_CanvassDropDown = $('#CanvassDropDown');
 
@@ -655,6 +782,7 @@
 						<h4>Canvass ${i + 1}</h4>
 						<div class="m-b-md">
 							<h1 class="m-s" data-canv-itemCount="${i}">0 item</h1>
+							<!-- <input type="text" class="form-control form-control-sm" placeholder="Lot Name"> -->
 						</div>
 					</div>`);
 
@@ -669,38 +797,51 @@
 					<i class="fas fa-check green side"></i> Canvas ${i + 1}</a>
 				</li>`);
 
-
-				CanvassObject.push({no: i, items: []});
+				// Canvass.forms.push({no: i, items: [], type: ""});
+				canvassObject.push({no: i, items: [], type: ""});
 
 				$(`[data-canv-no="${i}"]`).on('click', function(){
-					let C_elem = $(this);
+					let C_elem = $(this), text;
 					let cvnsItemSel = $('[data-cvn="step2"]:checked');
-					let canvassItems = [], text;
+					let C_elem_attr = C_elem.attr('data-canv-no');
 
 					if(cvnsItemSel.length !== 0){
 
 						cvnsItemSel.each(function(i, e){
 							let dataset_ref_decode = atob(e.dataset.ref);
+							let lot_details = atob(e.dataset.lot).split('{|}');
 
-							// add in CanvassObject
 
-							canvassItems.push({ref: dataset_ref_decode, details: atob(e.dataset.details)});
+							// listing of items per canvass
+							// Canvass.forms[C_elem_attr].items.push({
+							// 	ref: dataset_ref_decode, 
+							// 	details: JSON.parse(atob(e.dataset.details))
+							// });
 
-							e.parentNode.parentNode.parentNode.remove();
-
-							// remove in SelectedItems
-
-							let a = SelectedItems.find(function(el){
-								el.ref === dataset_ref_decode
+							canvassObject[C_elem_attr].items.push({
+								ref: dataset_ref_decode, 
+								details: JSON.parse(atob(e.dataset.details))
 							});
 
 
+
+							// Canvass.forms[C_elem_attr].type = lot_details[0];
+							canvassObject[C_elem_attr].type = lot_details[0];
+							
+							// remove from SelectedItems
+							SelectedItems.splice(SelectedItems.indexOf(dataset_ref_decode), 1);
+
+
+
+							e.parentNode.parentNode.parentNode.remove();
 						});
-						CanvassObject[$(this).attr('data-canv-no')].items = canvassItems;
-						if(canvassItems.length === 1){
-							text = `${canvassItems.length} item`;
+						
+						Canvass.forms = canvassObject;
+
+						if(Canvass.forms[C_elem_attr].items.length === 1){
+							text = `${Canvass.forms[C_elem_attr].items.length} item`;
 						}else{
-							text = `${canvassItems.length} items`;
+							text = `${Canvass.forms[C_elem_attr].items.length} items`;
 						}
 
 						$(`[data-canv-itemCount="${i}"]`).text(text);
@@ -708,6 +849,7 @@
 						setTimeout(function(){
 							$(`[data-canv-modal="${i}"]`).removeClass("shine-me");
 						}, 500);
+
 
 					}else{
 						swal({
@@ -718,16 +860,24 @@
 						});
 					}
 
-					$('[name="canvass"]').val(JSON.stringify(CanvassObject));
+				
+					console.log(Canvass);
+
+
+					$('[name="canvass"]').val(JSON.stringify(Canvass));
 				});
 
 				$(`[data-canv-modal="${i}"]`).on('click', function(){
-					CanvassObject[$(this).attr('data-canv-modal')].items.forEach(function(e, i){
-						console.log(JSON.parse(e.details));
+					
+					console.log(Canvass.forms[$(this).attr('data-canv-modal')].items);
+					// CanvassObject[$(this).attr('data-canv-modal')].items.forEach(function(e, i){
+					// 	console.log(JSON.parse(e.details));
 
-						// append in modal
+					// 	// append in modal
 
-					});
+					// });
+
+					$('[name="canvass"]').val(JSON.stringify(Canvass));
 				});
 
 			}
@@ -738,6 +888,18 @@
 
 		});
 
+		$(document.canvass).on('submit', function(){
+			console.log(SelectedItems);
+			if(SelectedItems.length !== 0){
+				swal({
+					title: "Action invalid!",
+					text: "There are items with no assigned Canvass form.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"
+				})
+				return false;
+			}
+		});
 
 	});
 </script>

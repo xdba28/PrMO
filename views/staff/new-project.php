@@ -411,7 +411,7 @@
 												<h2> </h2>
 											</p>
 											
-											<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver0" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
+											<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
 											<!-- <a href="" class="btn btn-primary btn-sm btn-block" id="registerNow"><i class="fa fa-download"></i> Register Now</a> -->
 											<a id="btnlink" ><button class="btn btn-primary btn-sm btn-block mt-10" id="registerNow"><i class="fa fa-download"></i> Register Now</button></a>
 							
@@ -469,7 +469,7 @@
 			});
 		}
 
-		$('#popOver0').on('click', function(){
+		$('#popOver').on('click', function(){
 			// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
 			window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
 		});
@@ -572,7 +572,6 @@
 							swal({
 								title: 'Project Received!',
 								text: `You can now register ${SendBtn.attr("proj")} as a new project.`,
-								confirmButtonColor: "#DD6B55",
 								type: 'success',
 								timer: 13000
 							});

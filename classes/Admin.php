@@ -449,12 +449,11 @@
 			return $details;
 		}
 
-		public function projectPublication($id){
-			$this->db->query_builder("SELECT request_origin, project_title, ABC, MOP 
-									FROM `projects` WHERE project_ref_no = {$id}");
+		public function projectPublication($gds, $mode){
+			$this->db->query_builder("SELECT id FROM publication 
+					WHERE gds_reference = '{$gds}' AND MOP = '{$mode}'");
 			$requests = $this->db->first();
-
-			return $requests;
+			return $requests->id;
 		}
 
 		// modal pre procurement evaluation registration
