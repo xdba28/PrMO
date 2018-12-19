@@ -553,6 +553,17 @@ require_once "../../functions/account-verifier.php";
 				}
 			});
 			// modal
+
+			// twg evaluation result modal
+			$('#twgEvaluation').on('show.bs.modal', function (event) {
+			var button1 = $(event.relatedTarget) // Button that triggered the modal
+			var toevaluate = button1.data('toevaluate') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var evalmodal = $(this)
+			// evalmodal.find('#test11').val(toevaluate);
+			 document.getElementById("test11").value = toevaluate;
+			})			
 		
 			//available actions modal
 			$('#actionsModal').on('show.bs.modal', function (event) {
@@ -1460,6 +1471,13 @@ $(window).scroll(function() {
 });
 
 $('button.back-to-top').click(function() {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+$('button.static-back-to-top').click(function() {
   $('html, body').animate({
     scrollTop: 0
   }, 800);

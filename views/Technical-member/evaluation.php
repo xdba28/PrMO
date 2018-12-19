@@ -145,13 +145,15 @@
 
 
 			<?php
-					$refno = base64_decode($_GET['q']);			
-					$project = $user->get('projects', array('project_ref_no', '=', $refno));
-					
-					if(!$project){
-						include('../../includes/errors/404.php');
-						echo"<br><br><br><br><br><br>";						
-					}else{
+			
+			
+					if( (isset($_GET['q'])) && (!empty($_GET['q'])) ){
+							$refno = base64_decode($_GET['q']);
+							$project = $user->get('projects', array('project_ref_no', '=', $refno));
+							
+							if($project){
+								
+							
 			?>
 
 				<div class="container">
@@ -370,23 +372,51 @@
 				</div>
 				
 			<?php
+							}else{
+								include('../../includes/errors/404.php');
+								echo"<br><br><br><br><br><br>";
+							}
+					}else{
+								include('../../includes/errors/404.php');
+								echo"<br><br><br><br><br><br>";
 					}
 				
 			?>
         </div>
-		<button class="back-to-top" type="button"></button>		
-        <div class="footer">
+
+
+		<div class="radial">
+		  <a href="./#evaluation-list" class="fas fa-angle-double-left fa-2x" title="Back to Evaluation List" id="fa-1"></a>
+		  <button class="far fa-edit fa-2x" data-toggle="modal" data-target="#twgEvaluation" data-toevaluate="<?php echo $refno;?>" title="Register Comment and MOP" id="fa-2"></button>
+		  <button class="fas fa-chevron-up static-back-to-top fa-2x" title="Back to Top" id="fa-3"></button>
+		  <button class="fab">
+			<div class="fas fa-plus fa-2x" id="plus"></div>
+		  </button>
+		</div>
+		
+		<!--<button class="back-to-top" type="button"></button>		-->
+        <div class="footer" style="z-index:1">
 			<?php include '../../includes/parts/footer.php'; ?>
         </div>
 
         </div>
-        </div>
+    </div>
 
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
 <!-- Password meter -->
 	<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 	<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	
+	<script>
+$(document).ready(function(){
+  $('.radial').hover (function(){
+    $('.radial').toggleClass('open');
+  });
+});
+
+	</script>
+
 	<script>
 		function openPanel(targetPannel) {
 			$(targetPannel).trigger('click');

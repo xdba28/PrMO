@@ -281,7 +281,7 @@
   <div class="modal-dialog  modal-expanded" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation result Registration</h3>
+        <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation Result Registration</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -348,6 +348,67 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="ModalSubmit('PreprocModal', 'pre-proc-evaluation')">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- pre procurement evaluation registration from twg-->
+
+<div class="modal fade" id="twgEvaluation" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="evaluationTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-expanded" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="evaluationTitle">Pre-Procurement Evaluation Result Registration</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+			<form id="twgPreprocModal" method="POST" enctype="multipart/form-data" role="form">
+				<div class="row" id="">
+					<div class="col-sm-12">
+						<div class="form-group"> 
+							<label for="projectReference" class="font-bold my-blue">Project Reference no.</label>
+							<input type="text" class="form-control" id="test11" name="projectReference" required autocomplte="off" Readonly>
+						</div>						
+						<div class="form-group">
+							<label for="evaluator" class="form-label">Evaluator</label>
+							<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
+						</div>
+						<div class="form-group">
+													 
+							<div class="input-group date">
+								<span class="input-group-addon"><i class="fa fa-list"></i></span>
+								<select class="form-control m-b" name="MOP">
+									<option value="">Choose...</option>
+									<option value="Public Bidding">Public Bidding</option>
+									<option value="SVP">Small Value Procurement</option>
+									<option value="Direct Contracting">Direct Contracting</option>
+									<option value="Negociated Procurement">Negociated Procurement</option>
+									<option value="Shopping">Shopping</option>
+									<option value="Repeat Order">Repeat Order</option>
+									<option value="Limited Source Bidding">Limited Source Bidding</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="font-bold my-blue">Evaluator's Comment</label>
+							<div dataFor="pre-proc-eval-issue">
+							</div>
+								<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
+						</div>
+					</div>
+				</div>
+				<input type="text" hidden value="PreprocResult" name="action">
+			</form>	
+	  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
       </div>
     </div>
   </div>

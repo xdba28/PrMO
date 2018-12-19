@@ -1182,3 +1182,121 @@ hr[role="tournament6"]::before {
     margin: -10px 0px 0px -22px;
     content: "";
 }
+
+
+/* action buttons for twg evaluation */
+
+
+
+button:focus {
+  outline: 0;
+}
+
+.radial {
+    z-index: 2;
+    width: 55px;
+    height: 55px;
+    position: fixed;
+    right: 27px;
+    bottom: 28px;
+    background: #3b3335;
+    border-radius: 50%;
+    transition: all 0.5s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fab {
+  border: none;
+  color: white;
+  background-color: #f8ac59;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  transition: all 0.5s;
+}
+.fab:hover {
+  background-color: #f30053;
+}
+
+.fa-search:before {
+	/* content: "\f002"; */
+	display:hidden;
+}
+
+#plus {
+  transition: all 0.5s;
+  margin-top: 7px;
+}
+
+#fa-1, #fa-2, #fa-3 {
+  position: fixed;
+  background: transparent;
+  border: none;
+  right: 35px;
+  bottom: 35px;
+  transition: all 0.5s;
+  color: white;
+
+  /* position: fixed;
+  background: transparent;
+  border: none;
+  right: 25px;
+  bottom: 25px;
+  transition: all 0.5s;
+  color: white;
+  display: none; */
+}
+#fa-1:hover, #fa-2:hover, #fa-3:hover {
+  tansition-delay: 0s;
+  color: #f30053;
+}
+
+.radial.open {
+  /* height: 400px;
+  width: 400px;
+  right: -125px;
+  bottom: -125px; */
+
+
+  /* height: 250px;
+  width: 250px;
+  right: -50px;
+  bottom: -50px; */
+
+  height: 200px;
+  width: 200px;
+  right: -45px;
+  bottom: -50px;
+}
+.radial.open .fab {
+  background-color: #f30053;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+.radial.open #plus {
+  -webkit-transform: rotateZ(135deg) translate(-1px, 3px);
+          transform: rotateZ(135deg) translate(-1px, 3px);
+}
+.radial.open #fa-1 {
+	right: -15px;
+    bottom: 25px;
+  transition-delay: 0s;
+  -webkit-transform: translate(-110px, 10px);
+          transform: translate(-110px, 10px);
+}
+.radial.open #fa-2 {
+    right: 5px;
+    bottom: -10px;
+  transition-delay: 0.1s;
+  -webkit-transform: translate(-85px, -85px);
+          transform: translate(-85px, -85px);
+}
+.radial.open #fa-3 {
+    right: 50px;
+    bottom: -10px;
+  transition-delay: 0.2s;
+  -webkit-transform: translate(10px, -110px);
+          transform: translate(10px, -110px);
+}
