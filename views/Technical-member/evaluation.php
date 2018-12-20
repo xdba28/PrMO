@@ -25,7 +25,24 @@
     <title>PrMO OPPTS | Evaluation</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
+	<script>
+		// this is a boolean variable
+		// check if the evaluation has an issue
+		<?php
+			$hasEvaluationIssue = $user->checkProjectIssue(base64_decode($_GET['q']));
+			if($hasEvaluationIssue){
+				$issue = true;
+			}else{
+				$issue = "false";
+			}
 
+		?>
+		
+		
+		var issue = <?php 
+			echo $issue;
+		?>;
+	</script>
 </head>
 
 <body class="top-navigation">
@@ -51,7 +68,7 @@
                         <a aria-expanded="false" role="button" href="../technical-member"> Dashboard</a>
                     </li>
                     <li class="dropdown">
-                        <a  role="button" href="evaluation"> Evaluation</a>
+                        <a  role="button" href="./#evaluation-list"> Evaluation</a>
                     </li>
                     <li class="dropdown">
                         <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item</a>
@@ -410,10 +427,38 @@
 	
 	<script>
 $(document).ready(function(){
+
+	if(issue){
+		$('[dataFor="pre-proc-eval-issue-twg"]').html(`
+		<div class="alert alert-danger">
+			This project has a previous issue with technical member's evaluation. Choose below from the options if this issue has been resolved or not.
+		</div>								
+		<div class="radio radio-danger" style="padding-left:5px">
+			<input type="radio" name="resolution" id="radio1" value="no" required>
+			<label for="radio1" class="text-danger">
+				Check this if you consider this comment as another issue to be resolved or cleared by the enduser.
+			</label>
+		</div>
+		<div class="radio radio-info" style="padding-left:5px">
+			<input type="radio" name="resolution" id="radio2" value="yes" required >
+			<label for="radio2" class="text-success">
+				Check this if this re-evaluation is a resolution from the previous evaluation issue.
+			</label>
+		</div>`);
+	}else{
+		$('[dataFor="pre-proc-eval-issue-twg"]').html(`
+		<div class="checkbox checkbox-danger" style="padding-left:5px">
+			<input id="checkbox" type="checkbox" name="issue">
+			<label for="checkbox-issue" class="text-warning font-italic">
+				Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
+			</label>
+		</div>`);
+	}
+});
+
   $('.radial').hover (function(){
     $('.radial').toggleClass('open');
   });
-});
 
 	</script>
 

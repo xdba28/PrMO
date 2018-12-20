@@ -1,7 +1,6 @@
 <script>
 	function ModalSubmit(id, modal){
 		var DataModal = $(`#${id}`).serialize();
-		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
 			do: function(res){
 				$(`#${modal}`).modal('hide');
@@ -370,36 +369,35 @@
 				<div class="row" id="">
 					<div class="col-sm-12">
 						<div class="form-group"> 
-							<label for="projectReference" class="font-bold my-blue">Project Reference no.</label>
-							<input type="text" class="form-control" id="test11" name="projectReference" required autocomplte="off" Readonly>
-						</div>						
+							<label for="" class="font-bold my-blue">Project Reference no.</label>
+							<input type="text" class="form-control" id="test11" name="projectrefbyTwg" required autocomplte="off" Readonly>
+						</div>								
 						<div class="form-group">
-							<label for="evaluator" class="form-label">Evaluator</label>
-							<input type="text" class="form-input" id="evaluator" name="evaluator" required autocomplte="off">
-						</div>
-						<div class="form-group">
-													 
-							<div class="input-group date">
-								<span class="input-group-addon"><i class="fa fa-list"></i></span>
-								<select class="form-control m-b" name="MOP">
-									<option value="">Choose...</option>
-									<option value="Public Bidding">Public Bidding</option>
-									<option value="SVP">Small Value Procurement</option>
-									<option value="Direct Contracting">Direct Contracting</option>
-									<option value="Negociated Procurement">Negociated Procurement</option>
-									<option value="Shopping">Shopping</option>
-									<option value="Repeat Order">Repeat Order</option>
-									<option value="Limited Source Bidding">Limited Source Bidding</option>
-								</select>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="font-bold my-blue">Evaluator's Comment</label>
-							<div dataFor="pre-proc-eval-issue">
-							</div>
-								<textarea name="comment" id="comment" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
-						</div>
+							
+						   <div class="input-group date">
+							   <span class="input-group-addon"><i class="fa fa-list"></i></span>
+							   <select class="form-control m-b" name="MOPbyTwg">
+								   <option value="">Choose...</option>
+								   <option value="Public Bidding">Public Bidding</option>
+								   <option value="SVP">Small Value Procurement</option>
+								   <option value="Direct Contracting">Direct Contracting</option>
+								   <option value="Negociated Procurement">Negociated Procurement</option>
+								   <option value="Shopping">Shopping</option>
+								   <option value="Repeat Order">Repeat Order</option>
+								   <option value="Limited Source Bidding">Limited Source Bidding</option>
+							   </select>
+						   </div>
+					   </div>
+					   <br>
+					   <div id="pre-eval-formData" class="animated fadeInRight" style="display:none;">
+
+					   </div>
+					   <div class="form-group">
+						   <label class="font-bold my-blue">Evaluator's Comment</label>
+						   <div dataFor="pre-proc-eval-issue-twg">
+						   </div>
+							   <textarea name="commentbyTwg" id="comment1" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
+					   </div>
 					</div>
 				</div>
 				<input type="text" hidden value="PreprocResult" name="action">
@@ -408,7 +406,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="ModalSubmit('twgPreprocModal', 'twgEvaluation')">Submit</button>
       </div>
     </div>
   </div>
