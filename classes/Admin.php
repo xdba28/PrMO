@@ -449,12 +449,48 @@
 			return $details;
 		}
 
-		public function projectPublication($gds, $mode){
-			$this->db->query_builder("SELECT id FROM publication 
-					WHERE gds_reference = '{$gds}' AND MOP = '{$mode}'");
-			$requests = $this->db->first();
-			return $requests->id;
+		public function projectPublication($gds, $title, $cost){
+			if($this->db->query_builder("SELECT id FROM `publication`
+				WHERE gds_reference = '{$gds}' AND title = '{$title}' AND cost = '{$cost}'")){
+					return $this->db->first()->id;
+			}else{
+				return false;
+			}
 		}
+
+		public function selectCanvassForm($gds, $title, $publication_id){
+			$this->db->query_builder("SELECT publication.id as pub_id, gds_reference, title, cost, 
+				canvass_forms.id as form_id, type, per_item
+				FROM `publication`, `canvass_forms`
+				WHERE publication.id = canvass_forms.publication_reference
+				AND publication.gds_reference = '{$gds}'
+				AND title = '{$title}'
+				AND publication.id = '{$publication_id}'");
+
+			$canvassDetail = $this->db->first();
+			
+			if($canvassDetail->type === "PR"){
+				$this->db->query_builder("SELECT canvass_items_pr.id as item_id, canvass_forms_id, stock_no, unit, item_description,
+					quantity, unit_cost, total_cost, mode
+					FROM `canvass_items_pr`, `canvass_forms`
+					WHERE canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND canvass_forms_id = '{$canvassDetail->form_id}'");
+				$canvassItems = $this->db->results();
+			}elseif($canvassDetail->type === "JO"){
+				$this->db->query_builder("SELECT canvass_items_jo.id as item_id, canvass_forms_id, header, tags, mode
+					FROM `canvass_items_jo`, `canvass_forms`
+					WHERE canvass_forms.id = canvass_items_jo.canvass_forms_id
+					AND canvass_forms_id = '{$canvassDetail->form_id}'");
+				$canvassItems = $this->db->results();
+			}
+
+			$Details = [
+				'CanvassDetails' => $canvassDetail,
+				'items' => $canvassItems
+			];
+
+			return $Details;
+		} 
 
 		// modal pre procurement evaluation registration
 		public function checkProjectIssue($id){

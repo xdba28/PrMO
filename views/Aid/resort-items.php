@@ -1,8 +1,7 @@
 <?php 
 
     require_once('../../core/init.php');
-    $user = new Admin(); 
-
+    $user = new Admin();
     
     if($user->isLoggedIn()){
      //do nothing
@@ -13,22 +12,66 @@
 
 	if(!empty($_POST)){
 
-		$range = range('A', 'Z');
-		$canvassFormCount = 0;
-
 		$canvass = json_decode($_POST['canvass'], true);
 
 		$user->startTrans();
 
 		foreach($canvass['forms'] as $form){
 
-			$user->register('canvass_forms', array(
+			$count = 1;
+			$titleCount = count($form['publication']['title']);
+			$canvass_Title = '';
+
+			foreach($form['publication']['title'] as $title){
+				if($titleCount === 1){
+					$canvass_Title = $title;
+				}elseif($titleCount > 1){
+					if($count === $titleCount){
+						$canvass_Title .= 'and '.$title;
+					}else{
+						$canvass_Title .= $title.', ';
+					}
+				}
+				$count++;
+			}
+
+			$user->register('publication', array(
 				'gds_reference' => $canvass['gds'],
-				'type' => $form['type'],
-				'form_count' => $range[$canvassFormCount]
+				'title' => $canvass_Title,
+				'cost' => $form['publication']['cost']
 			));
 
-			$canvassForm = $user->get('canvass_forms', array('gds_reference', '=', $canvass['gds']));
+		}
+
+		foreach($canvass['forms'] as $form){
+
+			$count = 1;
+			$titleCount = count($form['publication']['title']);
+			$canvass_Title = '';
+
+			foreach($form['publication']['title'] as $title){
+				if($titleCount === 1){
+					$canvass_Title = $title;
+				}elseif($titleCount > 1){
+					if($count === $titleCount){
+						$canvass_Title .= 'and '.$title;
+					}else{
+						$canvass_Title .= $title.', ';
+					}
+				}
+				$count++;
+			}
+
+			$publicationForm = $user->projectPublication($canvass['gds'], $canvass_Title, $form['publication']['cost']);
+		
+			$user->register('canvass_forms', array(
+				'publication_reference' => $publicationForm,
+				'type' => $form['type'],
+				'per_item' => $form['per_item']
+			));
+
+			// $canvassForm = $user->cavassForm($publicationForm);
+			$canvassForm = $user->get('canvass_forms', array('publication_reference', '=', $publicationForm));
 
 			foreach($form['items'] as $item){
 
@@ -41,7 +84,8 @@
 						'item_description' => $item['details']['desc'],
 						'quantity' => $item['details']['qty'],
 						'unit_cost' => $item['details']['uCost'],
-						'total_cost' => $item['details']['tCost']
+						'total_cost' => $item['details']['tCost'],
+						'mode' => $item['mode']
 					));
 
 				}elseif($form['type'] === 'JO'){
@@ -49,62 +93,39 @@
 					$user->register('canvass_items_jo', array(
 						'canvass_forms_id' => $canvassForm->id,
 						'header' => $item['details']['header'],
-						'tags' => $item['details']['tags']
+						'tags' => $item['details']['tags'],
+						'mode' => $item['mode']
 					));
 
 				}
-
 			}
-
-			$canvassFormCount++;
 		}
 
-		foreach($canvass['noMop'] as $mode){
-
-			$user->register('publication', array(
-				'gds_reference' => $canvass['gds'],
-				'MOP' => $mode['mode']
-			));
-
-			$publicationID = $user->projectPublication($canvass['gds'], $mode['mode']);
-
-			foreach($mode['lot_titles'] as $prop){
-
-				$user->register('publication_lots', array(
-					'publication_id' => $publicationID,
-					'title' => $prop['title'],
-					'cost' => $prop['cost']
-				));
-
-			}
-
-		}
-
-		// update steps
+		// // update steps
 		
-		//get the json file for step details
-		$json = file_get_contents('../xhr-files/jsonsteps.json');
-		//Decode JSON
-		$stepsStructure = json_decode($json,true);
+		// //get the json file for step details
+		// $json = file_get_contents('../xhr-files/jsonsteps.json');
+		// //Decode JSON
+		// $stepsStructure = json_decode($json,true);
 
-		$updateProject = $user->get('projects', array('project_ref_no', '=', $canvass['gds']));
+		// $updateProject = $user->get('projects', array('project_ref_no', '=', $canvass['gds']));
 
-		if($updateProject->mop_peritem === NULL){
+		// if($updateProject->mop_peritem === NULL){
 
-			// get MOP and update the appropriate workflow and accomplishment
+		// 	// get MOP and update the appropriate workflow and accomplishment
 
-		}else{
+		// }else{
 	
-			$user->update('projects', 'project_ref_no', $canvass['gds'], array(
-				'accomplished' => '4',
-				'workflow' => "Canvassing"
-			));
+		// 	$user->update('projects', 'project_ref_no', $canvass['gds'], array(
+		// 		'accomplished' => '4',
+		// 		'workflow' => "Canvassing"
+		// 	));
 
-		}
+		// }
 
 		$user->endTrans();
 
-		die();
+		// redirect to project 
 
 	}
    
@@ -190,8 +211,8 @@
 							
 							if($project){
 								
-								$projectDetails = $user->projectDetails($refno);
-									
+								$projectDetails = $user->projectDetails($refno);									
+
 					?>
 					<div class="col-lg-12 animated fadeInRight">
 						<div class="ibox ">
@@ -199,7 +220,7 @@
 								<h5>Content of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
 							<div class="ibox-content">
-								<h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Items Selection</h2>
+								<h2><a style="color:#2a9c97">Step 1 of  &nbsp2</a><br>Items Selection</h2>
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="alert alert-success">
@@ -431,7 +452,7 @@
 							<div class="ibox-content">
 								<div class="row">
 									<div class="col-md-6">
-										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Items Resorting</h2>
+										<h2><a style="color:#2a9c97">Step 2 of  &nbsp2</a><br>Items Resorting</h2>
 									</div>
 									<div class="col-md-3">
 										<div class="btn-group pull-right" style="margin-right:15px">
@@ -547,7 +568,6 @@
 
 </body>
 <script>
-
 	$(function(){
 		const mop = '<?php echo $project->MOP;?>;';
 
@@ -556,21 +576,6 @@
 			forms: []
 		};
 
-		// var Canvass = {
-		// 	title: '<?php 
-			// echo $project->project_title;
-			?>',
-		// 	gds: '<?php 
-		// echo $project->project_ref_no?>',
-		// 	abc: <?php 
-		// echo $project->ABC;?>,
-		// 	requested_by: <?php 
-		// echo $project->end_user;?>,
-		// 	evaluator: '<?php
-		//  echo $project->evaluator;?>',
-		// 	forms: []
-		// };
-
 		var SelectedItems = [];
 
 		setTimeout(function(){
@@ -578,101 +583,77 @@
 		}, 1000);
 		
 		$('#bResort').on('click', function(){
+
+			SelectedItems = [];
+
 			let rItems = $('[data-cvn="step1"]:checked');
+			let count = 0, prT_header = false;
+
 			if(rItems.length !== 0){
 
-				$('[data-resort-items="files"]').html('');
-				
-				if(mop.includes(',')){
-					let moparray = [];
-					let eachMop = mop.split(',');
+				$('#pr-content').html('');
+				$('#jo-content').html('');
 
-					$('#MOPCount').html('');
+				rItems.each(function step2(i, e){
+					let rDetails = atob(e.dataset.item).split('{|}');
+					let rSpec = JSON.parse(rDetails[2]);
 
-					rItems.each(function(i, e){
-						let itemDetail = atob(e.dataset.item).split('{|}')
-						let elementMode = atob(e.dataset.mop);
+					// append selected items
+					// for checking if there are items left for selection
+					SelectedItems.push(atob(e.dataset.ref));
 
-						// find obj with an MOP of elementMode
-						let index_obj = moparray.find(function(el){
-							return el.mode === elementMode 
-						});
-
-						if(index_obj === undefined){
-
-							moparray.push({
-								mode: elementMode,
-								lot_titles: [{title: itemDetail[1], cost: itemDetail[3]}]
-							});
-
-						}else{
-
-							// NOTE add lot title total cost
-
-							// add lot title to obj with the same MOP
-							let index_array = moparray.indexOf(index_obj);
-							if(moparray[index_array].lot_titles.indexOf(itemDetail[1]) === -1){
-
-								moparray[index_array].lot_titles.push({title: itemDetail[1], cost: itemDetail[3]});
+					switch(rDetails[0]){
+						case "PR":
+							if(!prT_header){
+								$('#pr-content').html(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
+									<th>Select</th><th>MOP</th><th>Lot Origin</th><th>Stock No</th>
+									<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th>
+								</tr></thead><tbody id="pr-detail"></tbody></table></div><br>`);
+								prT_header = true;
 							}
-						}
 
-					});
-					
-					Canvass.noMop = moparray;
-					
-					moparray.forEach(function(e, i){
-						$('[data-resort-items="files"]').append(`
-							<div class="my-file-box">
-								<div class="file">
-									<a href="#">
-										<span class="corner"></span>
-										<div class="icon">
-											<i class="fas fa-file-pdf"></i>
-										</div>
-										<div class="file-name">
-											BAC Reso-Recommending & Publication ${e}.pdf
-											<div class="dropdown">
-												<a href="#" class="toggle-dropdown" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu">
-													<input type="text" class="form-control" placeholder="Classification">
-												</ul>
-											</div>												
-										</div>
-									</a>
-								</div>
-							</div>`);
-						
-						$('#MOPCount').append(`${eachMop[i]}<br>`);
-					});
-					
-					$('#MOPCountMult').text(moparray.length * 2);
-				}else{
-					$('[data-resort-items="files"]').append(`
-						<div class="my-file-box">
-							<div class="file">
-								<a href="#">
-									<div class="icon">
-										<i class="fas fa-file-pdf"></i>
-									</div>
-									<div class="file-name">
-										BAC Reso-Recommending & Publication ${mop}.pdf
-										<div class="dropdown">
-											<a href="#" class="toggle-dropdown" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu">
-												<input type="text" class="form-control" placeholder="Classification">
-											</ul>
-										</div>								
-									</div>							
-								</a>
-							</div>
-						</div>`);
-					$('#MOPCount').text(mop);
-					$('#MOPCountMult').text(2);
+							$('#pr-detail').append(`<tr>
+								<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}"  class="i-checks"></td>
+								<td>${atob(e.dataset.mop)}</td>
+								<td>${rDetails[1]}</td>
+								<td>${rSpec.stock_no}</td>
+								<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
+								<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
+									</tr>`);
+							$(`#lot-${count}`).val(rDetails[1]);
+							break;
+						case "JO":
+							$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
+								<th>Select</th><th>MOP</th><th>Lot Origin</th>
+								<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
+							</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
+							
+							$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" class="i-checks"></td>
+								<td>${atob(e.dataset.mop)}</td>
+								<td>${rDetails[1]}</td>
+								<td>${rSpec.header}</td>
+								<td>${rSpec.tags}</td>
+								<td>${rDetails[3]}</td>
+								</tr>`);
+							$(`#lot-${count}`).val(rDetails[1]);
+							break;
+						default:
+							break;
+					}
+					count++;
+				});
 
-					Canvass.noMop = mop;
-				}
-				$('#summary').modal('show');
+				
+
+				$('.i-checks').iCheck({
+					checkboxClass: 'icheckbox_square-green',
+					radioClass: 'iradio_square-green'
+				});
+
+				$('#step1').attr('style', 'display:none;');
+				$('#step2').attr('style', '');
+				$('#backbtn').attr('style', '');
+			
 			}else{
 				swal({
 					title: "Action invalid!",
@@ -685,79 +666,6 @@
 		});
 
 
-		$('#resort-savePrint').on('click', function(){
-
-			SelectedItems = [];
-
-			let rItems = $('[data-cvn="step1"]:checked');
-			let count = 0;
-			let prT_header = false;
-
-			$('#pr-content').html('');
-			$('#jo-content').html('');
-
-			rItems.each(function step2(i, e){
-				let rDetails = atob(e.dataset.item).split('{|}');
-				let rSpec = JSON.parse(rDetails[2]);
-				let cur_mop = atob(e.dataset.mop);
-
-				// append selected items
-				SelectedItems.push(atob(e.dataset.ref));
-
-				switch(rDetails[0]){
-					case "PR":
-						if(!prT_header){
-							$('#pr-content').html(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
-								<th>MOP</th><th>Select</th><th>Lot Origin</th><th>Stock No</th>
-								<th>Unit</th><th>Description</th><th>Quantity</th><th>Unit Cost</th><th>Total Cost</th>
-							</tr></thead><tbody id="pr-detail"></tbody></table></div><br>`);
-							prT_header = true;
-						}
-
-						$('#pr-detail').append(`<tr>
-							<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}"  class="i-checks"></td>
-							<td>${atob(e.dataset.mop)}</td>
-							<td>${rDetails[1]}</td>
-							<td>${rSpec.stock_no}</td>
-							<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
-							<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
-								</tr>`);
-						$(`#lot-${count}`).val(rDetails[1]);
-						break;
-					case "JO":
-						$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
-							<th>Select</th><th>MOP</th><th>Lot Origin</th>
-							<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
-						</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
-						
-						$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" class="i-checks"></td>
-							<td>${atob(e.dataset.mop)}</td>
-							<td>${rDetails[1]}</td>
-							<td>${rSpec.header}</td>
-							<td>${rSpec.tags}</td>
-							<td>${rDetails[3]}</td>
-							</tr>`);
-						$(`#lot-${count}`).val(rDetails[1]);
-						break;
-					default:
-						break;
-				}
-				count++;
-			});
-
-
-			$('.i-checks').iCheck({
-				checkboxClass: 'icheckbox_square-green',
-				radioClass: 'iradio_square-green'
-			});
-
-			$('#step1').attr('style', 'display:none;');
-			$('#step2').attr('style', '');
-			$('#backbtn').attr('style', '');
-
-		});
-
-
 		$('#backbtn').on('click', function(){
 			$('#step1').attr('style', '');
 			$('#step2').attr('style', 'display:none');
@@ -766,90 +674,135 @@
 
 
 		$('#canvassCount').on('change', function(){
-			$('#resort-savePrint').trigger('click');
-			let color = ['lazur', 'yellow', 'red'];
-			let count = 0, canvassObject = [];
+
+			Canvass.forms = [];
+
+			$('#bResort').trigger('click');
+			let canvassObject = [];
 			let elem_CanvassList = $('#CanvassList');
 			let elem_CanvassDropDown = $('#CanvassDropDown');
 
-			elem_CanvassList.attr('style', 'display:none');
-			elem_CanvassList.html('');
+			elem_CanvassList.attr('style', 'display:none').html('');
 			elem_CanvassDropDown.html('');
 
 			for(let i = 0 ; $(this).val() > i ; i++){
 				elem_CanvassList.append(`
-					<div class="widget ${color[count]}-bg text-center" data-toggle="modal" data-canv-modal="${i}" data-target="#canvasItems">
-						<h4>Canvass ${i + 1}</h4>
-						<div class="m-b-md">
-							<h1 class="m-s" data-canv-itemCount="${i}">0 item</h1>
-							<!-- <input type="text" class="form-control form-control-sm" placeholder="Lot Name"> -->
+					<div class="ibox">
+						<div class="ibox-content">
+							<h3 class="m-b-md">Canvass form ${i + 1}</h3>
+							<h4>Lot title:</h4>
+							<div data-canv-lots="${i}">
+							</div>
+							<h4 data-canv-itemCount="${i}">Items: 0</h4>
+							Canvass per item <input type="checkbox" value="true" name="perItem-${i}">
+							<br>
+							<button class="btn btn-rounded btn-sm btn-primary" data-toggle="modal" data-canv-modal="${i}" data-target="#canvasItems">Show Items</button>
 						</div>
 					</div>`);
 
-				if(count === 2){
-					count = 0;
-				}else{
-					count++;
-				}
-
 				elem_CanvassDropDown.append(`<li>
 					<a class="dropdown-item" data-canv-no="${i}">
-					<i class="fas fa-check green side"></i> Canvas ${i + 1}</a>
+					<i class="fas fa-arrow-right green side"></i> Canvas ${i + 1}</a>
 				</li>`);
 
-				// Canvass.forms.push({no: i, items: [], type: ""});
-				canvassObject.push({no: i, items: [], type: ""});
+				canvassObject.push({no: i, items: [], type: "", per_item: 0});
+				// Canvass.forms.push({no: i, items: [], type: "", perItem: 0});
 
 				$(`[data-canv-no="${i}"]`).on('click', function(){
 					let C_elem = $(this), text;
 					let cvnsItemSel = $('[data-cvn="step2"]:checked');
 					let C_elem_attr = C_elem.attr('data-canv-no');
+					let swalText = '';
+					
+					let lot = {
+						title: [],
+						cost: 0
+					};
 
 					if(cvnsItemSel.length !== 0){
 
 						cvnsItemSel.each(function(i, e){
-							let dataset_ref_decode = atob(e.dataset.ref);
 							let lot_details = atob(e.dataset.lot).split('{|}');
+							
+							// find same lot name
+							let curtitle = lot.title.find(function(el){
+								return el === lot_details[1];
+							});
 
+							let item = JSON.parse(atob(e.dataset.details));
+							if(curtitle === undefined){
+								lot.title.push(lot_details[1]);
+								lot.cost += parseFloat(item.tCost);
+							}else{
+								lot.cost += parseFloat(item.tCost);
+							}
 
+							let dataset_ref_decode = atob(e.dataset.ref);
 							// listing of items per canvass
+							canvassObject[C_elem_attr].items.push({
+								ref: dataset_ref_decode, 
+								details: item,
+								mode: atob(e.dataset.mop)
+							});
 							// Canvass.forms[C_elem_attr].items.push({
 							// 	ref: dataset_ref_decode, 
 							// 	details: JSON.parse(atob(e.dataset.details))
 							// });
+							canvassObject[C_elem_attr].type = lot_details[0];
+							// Canvass.forms[C_elem_attr].type = lot_details[0];
+						});
 
-							canvassObject[C_elem_attr].items.push({
-								ref: dataset_ref_decode, 
-								details: JSON.parse(atob(e.dataset.details))
+						if(lot.title.length > 1){
+
+							lot.title.forEach(function(e, i){
+								swalText += `${e}<br>`;
 							});
 
-
-
-							// Canvass.forms[C_elem_attr].type = lot_details[0];
-							canvassObject[C_elem_attr].type = lot_details[0];
-							
-							// remove from SelectedItems
-							SelectedItems.splice(SelectedItems.indexOf(dataset_ref_decode), 1);
-
-
-
-							e.parentNode.parentNode.parentNode.remove();
-						});
-						
-						Canvass.forms = canvassObject;
-
-						if(Canvass.forms[C_elem_attr].items.length === 1){
-							text = `${Canvass.forms[C_elem_attr].items.length} item`;
+							sweet({
+								title: "Merge the following lots?",
+								html: `
+								<div style="text-align:center;">
+									${swalText}
+								</div>`,
+								type: "info",
+								showCancelButton: true,
+								confirmButtonText: "Proceed",
+								allowOutsideClick: false
+							}, {
+								do:function(res){
+									if(res.dismiss === "cancel"){
+										swal({
+											title: "Action dismissed.",
+											text: "",
+											type: "info"
+										});
+										console.log(Canvass);
+									}else if(res.value !== "undefined"){
+										console.log(Canvass);
+										cvnsItemSel.each(function(i, e){
+											SelectedItems.splice(SelectedItems.indexOf(atob(e.dataset.ref)), 1);
+											e.parentNode.parentNode.parentNode.remove();
+										});
+										Canvass.forms = canvassObject;
+										Canvass.forms[C_elem_attr].publication = lot;
+										// canvassObject[C_elem_attr].publication = lot;
+										$(`[data-canv-lots=${i}]`).html(swalText);
+										$(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
+									}
+								}
+							});
 						}else{
-							text = `${Canvass.forms[C_elem_attr].items.length} items`;
+							console.log(Canvass);
+							cvnsItemSel.each(function(i, e){
+								SelectedItems.splice(SelectedItems.indexOf(atob(e.dataset.ref)), 1);
+								e.parentNode.parentNode.parentNode.remove();
+							});
+							Canvass.forms = canvassObject;
+							Canvass.forms[C_elem_attr].publication = lot;
+							// canvassObject[C_elem_attr].publication = lot;
+							$(`[data-canv-lots=${i}]`).html(lot.title[0]);
+							$(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
 						}
-
-						$(`[data-canv-itemCount="${i}"]`).text(text);
-						$(`[data-canv-modal="${i}"]`).addClass("shine-me");
-						setTimeout(function(){
-							$(`[data-canv-modal="${i}"]`).removeClass("shine-me");
-						}, 500);
-
 
 					}else{
 						swal({
@@ -860,11 +813,17 @@
 						});
 					}
 
-				
-					console.log(Canvass);
-
 
 					$('[name="canvass"]').val(JSON.stringify(Canvass));
+				});
+
+				$(`[name="perItem-${i}"]`).on('change', function(){
+					let C_elem_attr = $(this).attr('name').split('-')[1];
+					if(this.checked){
+						Canvass.forms[C_elem_attr].per_item = 1;
+					}else{
+						Canvass.forms[C_elem_attr].per_item = 0;
+					}
 				});
 
 				$(`[data-canv-modal="${i}"]`).on('click', function(){
@@ -882,6 +841,8 @@
 
 			}
 
+			// console.log(Canvass);
+
 			setTimeout(function(){
 				elem_CanvassList.attr('style', '');
 			}, 50);
@@ -889,7 +850,6 @@
 		});
 
 		$(document.canvass).on('submit', function(){
-			console.log(SelectedItems);
 			if(SelectedItems.length !== 0){
 				swal({
 					title: "Action invalid!",
