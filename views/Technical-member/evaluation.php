@@ -169,6 +169,14 @@
 							$project = $user->get('projects', array('project_ref_no', '=', $refno));
 							
 							if($project){
+
+								// update immidiately that this project is being evaluated and seen, "only if the accomplished is 0 or waiting for evaluation"
+								if($project->accomplished == 0){
+									$user->update('projects', 'project_ref_no', $refno, array(
+										'accomplished' => '1'
+									));
+								}
+
 								
 							
 			?>
@@ -404,7 +412,7 @@
 
 		<div class="radial">
 		  <a href="./#evaluation-list" class="fas fa-angle-double-left fa-2x" title="Back to Evaluation List" id="fa-1"></a>
-		  <button class="far fa-edit fa-2x" data-toggle="modal" data-target="#twgEvaluation" data-toevaluate="<?php echo $refno;?>" title="Register Comment and MOP" id="fa-2"></button>
+		  <button class="far fa-edit fa-2x" data-toggle="modal" data-target="#twgEvaluation" data-toevaluate="<?php echo $refno;?>" data-evaluatortwg="<?php echo $user->fullnameOf(Session::get(Config::get('session/session_name'))) ?>" title="Register Comment and MOP" id="fa-2"></button>
 		  <button class="fas fa-chevron-up static-back-to-top fa-2x" title="Back to Top" id="fa-3"></button>
 		  <button class="fab">
 			<div class="fas fa-plus fa-2x" id="plus"></div>
@@ -448,7 +456,7 @@ $(document).ready(function(){
 	}else{
 		$('[dataFor="pre-proc-eval-issue-twg"]').html(`
 		<div class="checkbox checkbox-danger" style="padding-left:5px">
-			<input id="checkbox" type="checkbox" name="issue">
+			<input id="checkbox-issue" type="checkbox" name="issue">
 			<label for="checkbox-issue" class="text-warning font-italic">
 				Check this if you consider this comment as an issue to be resolved or cleared by the enduser.
 			</label>

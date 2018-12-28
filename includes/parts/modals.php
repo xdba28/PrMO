@@ -370,10 +370,39 @@
 					<div class="col-sm-12">
 						<div class="form-group"> 
 							<label for="" class="font-bold my-blue">Project Reference no.</label>
-							<input type="text" class="form-control" id="test11" name="projectrefbyTwg" required autocomplte="off" Readonly>
+							<input type="text" class="form-control" id="test11" name="projectReference" required autocomplte="off" Readonly>
 						</div>								
-						<div class="form-group">
+						<div class="alert alert-success">
 							
+							<p>
+								<i class="fas fa-info"></i>
+								Note that you can only declare a single mode of procurement in this registration form. In cases that two or more mode of procurement is required, the responsibility of registering individual mode of procurement per item is passed to the procurement aids. If so please choose the appropriate option bellow. <i><b>"Mode of Procurement Specification"</b></i>
+							</p><br>
+							<p>
+								Also, consider that if you choose the <i><b>"Multiple MOPs"</b></i> option, all other declaration you made in this form except <i><b>"Evaluator's Comment"</b></i>  will be registered for referencing of the procurement aid in declaring individual mode of procurement for each item.
+							</p>
+
+						</div>
+						<div class="form-group">
+							<label for="" class="font-bold my-blue">Mode of Procurement Specification</label>
+							<div class="">
+								<div class="radio radio-success">
+									<input type="radio" name="mopOption" id="mopOption1" value="overall" checked>
+									<label for="mopOption1">
+										Singe MOP
+									</label>
+								</div>
+								<div class="radio radio-success">
+									<input type="radio" name="mopOption" id="mopOption2" value="muptiple">
+									<label for="mopOption2">
+										Multiple MOPs
+									</label>
+								</div>
+							</div>							
+
+						</div>
+						<div class="form-group">
+						   <label for="" class="font-bold my-blue">Specific Mode of Procurement (as a whole)</label>
 						   <div class="input-group date">
 							   <span class="input-group-addon"><i class="fa fa-list"></i></span>
 							   <select class="form-control m-b" name="MOPbyTwg">
@@ -396,11 +425,12 @@
 						   <label class="font-bold my-blue">Evaluator's Comment</label>
 						   <div dataFor="pre-proc-eval-issue-twg">
 						   </div>
-							   <textarea name="commentbyTwg" id="comment1" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>									
+							   <textarea name="commentbyTwg" id="comment1" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>
+							   <input type="text" value="hello" id="evaluatortwg" name="evaluator" hidden>							
 					   </div>
 					</div>
 				</div>
-				<input type="text" hidden value="PreprocResult" name="action">
+				<input type="text" hidden value="twgPreprocResult" name="action">
 			</form>	
 	  
       </div>

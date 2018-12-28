@@ -214,7 +214,7 @@
 								
 							</div>
 							<h2>Welcome back <?php
-								$evaluationRequests = $user->evaluation(Session::get(Config::get('session/session_name')));							
+								$evaluationRequests = $user->evaluation(Session::get(Config::get('session/session_name')));						
 								$hold = $user->fullname();
 								$currentUser = json_decode($hold,true);
 								
@@ -236,19 +236,41 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-md-6" style="border-right:solid; border-color:#f8ac59">
-										<h1 class="no-margins"><?php echo count($evaluationRequests);?></h1>
+										<h1 class="no-margins"><?php
+										
+										
+										
+										if($evaluationRequests == 0){
+											echo $evaluationRequests;
+										}else{
+											echo count($evaluationRequests);
+										}
+										
+										
+										?></h1>
 										<div class="font-bold "><i class="far fa-list-alt"></i> <small>Total Requests</small></div>
 									</div>
 									<div class="col-md-6">
 										<h1 class="no-margins"><?php 
+										
 											$criticalRequestsCount = 0;
-											foreach ($evaluationRequests as $request){
-												if($request->remaining_days <= 7){
-													$criticalRequestsCount++;
+
+											if($evaluationRequests == 0){
+												echo "0";
+											}else{
+												foreach ($evaluationRequests as $request){
+													$dateToday = date_create(date('Y-m-d H:i:s'));
+													$implementationDate = date_create($request->implementation_date);
+													$diff=date_diff($dateToday,$implementationDate);
+																										
+													if($diff->format("%a") <= 7){
+														$criticalRequestsCount++;
+													}
 												}
+												echo $criticalRequestsCount;
 											}
 
-											echo $criticalRequestsCount;
+
 										
 										?></h1>
 										<div class="font-bold text-danger"><i class="fas fa-exclamation-triangle"></i> <small>Less than a Week before Required Implementation</small></div>
@@ -432,11 +454,25 @@
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
-                                    <div class="col-sm-9 m-b-xs">
+                                    <div class="col-sm-5 m-b-xs">
                                         <div class="alert alert-success">
-											some text to display
+											<i class="fas fa-info"></i>	Listed below are evaluation requests entitled to you, please do observe the Remaining days Legend.
                                         </div>
-                                    </div>
+									</div>
+                                    <div class="col-sm-4 m-b-xs">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<i class="fas fa-info"></i> Remaining days Legend
+											</div>
+											<div class="panel-body">
+												<span class="label label-success" style="border-radius:6.25em; background-color:#02a2f8">8</span> days and up
+												<span class="label label-success" style="border-radius:6.25em; background-color:#f98111">1</span> less than a week
+												<span class="label label-success" style="border-radius:6.25em; background-color:#de1010">1</span> 1-3 days
+												<br>
+												<p>before Project's Required Implemetation date</p>
+											</div>
+										</div>
+                                    </div>									
                                     <div class="col-sm-3">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control form-control-sm" id="filter" placeholder="Search">
@@ -459,7 +495,7 @@
 												<th>ABC</th>
 												<th style="width:110px">Registration Date </th>
 												<th style="width:110px">Implementation Date </th>
-												<th style="width:110px">Days Remaing</th>
+												<th style="width:110px">Days Remaining</th>
 												<th>Actions</th>
 												
 											</tr>
@@ -468,16 +504,24 @@
                                         <tbody>
 										
 											<?php
+										if($evaluationRequests != 0){
+											
+										
+
 												foreach($evaluationRequests as $request){
+
+													$dateToday = date_create(date('Y-m-d H:i:s'));
+													$implementationDate = date_create($request->implementation_date);
+													$diff=date_diff($dateToday,$implementationDate);
 
 													$counter = (isset($counter) ? $counter++ : $counter = 1);
 
 													switch (true) {
-														case ($request->remaining_days <= 3):
+														case ($diff <= 3):
 															$class = "dangerGradient";
 															break;
 														
-														case ($request->remaining_days <= 7):
+														case ($diff <= 7):
 															$class = "warningGradient";
 															break;
 														default:
@@ -497,6 +541,10 @@
 														}
 														$displayNames =  implode(" / ", $names);
 														echo $displayNames;
+
+
+														
+
 													?>
 												</td>
 												<td style="max-width:80px"><?php echo $request->project_ref_no;?></td>
@@ -504,13 +552,18 @@
 												<td style="font-weight:bold">&#x20b1; <?php echo number_format($request->ABC, 2);?></td>
 												<td><?php echo Date::translate($request->date_registered, 1); ?></td>
 												<td><?php echo Date::translate($request->implementation_date, 2); ?></td>
-												<td class="<?php echo $class;?>" style="text-align:center"><?php echo $request->remaining_days;?> Days</td>
+												<td class="<?php echo $class;?>" style="text-align:center"><?php echo $diff->format("%R%a days");?> Days</td>
 												<td><a href="evaluation?q=<?php echo base64_encode($request->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> Evaluate </a></td>
 											</tr>
 										
 											
 											<?php
 												}
+											}else{
+												echo '<tr>
+															<td colspan="9" style="text-align:center">No data Available</td>
+												      </tr>';
+											}
 											?>
 
                                         </tbody>

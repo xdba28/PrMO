@@ -218,7 +218,8 @@
 									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
 									$addionalContent = '
 										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
-											<p style="margin-left:20px"><u><b><a href="project-details?refno='.$isProject->project_ref_no.'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
+									base64_encode
+									<p style="margin-left:20px"><u><b><a href="project-details?refno='.base64_encode($isProject->project_ref_no).'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
 										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
 											<small>'.$accomplishment.'%</small>
 											<div class="progress progress-mini">

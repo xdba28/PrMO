@@ -494,7 +494,7 @@
 				if($this->db->count()){
 					return $this->db->results();
 				}else{
-					return false;
+					return 0;
 				}
 			}
 			return false;

@@ -50,7 +50,7 @@
 					'type' => 'single',
 					'end_user' => $enduser_encoded,
 					'project_status' => 'PROCESSING',
-					'workflow'	=> 'For evaluation of technical working group',
+					'workflow'	=> 'For evaluation of technical working member',
 					'proposed_evaluator' => Input::get('proposed_evaluator'),
 					'date_registered' => Date::translate('test', 'now'),
 					'implementation_date' => $finalDate
