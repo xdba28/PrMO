@@ -77,18 +77,26 @@
 
 				$staff->register('project_logs', array(
 					'referencing_to' => $project_ref_no,
-					'remarks' => "project details of {$project_ref_no} was sent to technical member for pre-procurement evaluation.",
+					'remarks' => "Project details of {$project_ref_no} was sent to technical member for pre-procurement evaluation.",
 					'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
 					'type' =>  'OUT'
 				));
 
 				$staff->register('notifications', array(
 					'recipient' => $_POST['enduser'],
-					'message' => "Project request form {$form_ref_no} is now registered as {$project_ref_no}",
+					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				));
+
+				$staff->register('notifications', array(
+					'recipient' => Input::get('proposed_evaluator'),
+					'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
+					'datecreated' => Date::translate('test', 'now'),
+					'seen' => 0,
+					'href' => "#evaluation-list"
+				));				
 
 				$staff->endTrans(); //commit
 

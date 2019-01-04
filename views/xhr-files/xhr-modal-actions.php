@@ -18,6 +18,9 @@ else{
 
 	if(!empty($_POST))
 	{
+
+		echo "<pre>",print_r($_POST),"</pre>";
+		die();
 		try{
 			//details about the project being processed
 			$projectDetails = $user->get('projects', array('project_ref_no', '=', Input::get('projectReference')));
@@ -53,7 +56,7 @@ else{
 
 							// update the mop etc.. again
 							// register a resolution log
-							//update steps accomplished to 2
+							//update steps accomplished to 3
 
 							//update the mop and the evaluator
 							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
@@ -98,7 +101,8 @@ else{
 								'MOP' => Input::Get('MOP'),
 								'steps' => $noOfSteps,
 								'stepdetails' => $newSteps,
-								'evaluator' => Input::Get('evaluator')
+								'evaluator' => Input::Get('evaluator'),
+								'evaluators_comment' => Input::Get('comment')
 		
 							));
 							
@@ -177,7 +181,8 @@ else{
 								'steps' => $noOfSteps,
 								'stepdetails' => $newSteps,
 								'evaluator' => Input::Get('evaluator'),
-								'mop_peritem' => json_encode($mops)
+								'mop_peritem' => json_encode($mops),
+								'evaluators_comment' => Input::Get('comment')
 		
 							));
 							
@@ -248,75 +253,224 @@ else{
 					// [evaluator] => Lala Mercado Celis
 					// [action] => twgPreprocResult
 				// )
-					
-					if(Input::get('mopOption') === "overall"){
-						// register direct
-						//new steps for this project based on the new MOP
-						$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
-						//new number of steps based on the new MOP
-						$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];
 
-					$user->startTrans();
+					//new steps for this project based on the new MOP
+					$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
+					//new number of steps based on the new MOP
+					$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];		
 
-						$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
-		
-							'MOP' => Input::Get('MOPbyTwg'),
-							'steps' => $noOfSteps,
-							'stepdetails' => $newSteps,
-							'evaluator' => Input::Get('evaluator')
-	
-						));						
+					if(isset($_POST['resolution'])){
+						//this project already encountered a pre-procurement evaluation issue
+						if($_POST['resolution'] == "yes"){
+							//resolve this issue and proceed to next step
+							//check if the classification is overall mop or multiple
+							if(Input::get('mopOption') === "overall"){
 
-						if(isset($_POST['issue'])){
-								//register issue log
-								$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('commentbyTwg').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
-								$user->register('project_logs',  array(
-									'referencing_to' => $projectDetails->project_ref_no,
-									'remarks' => $logRemark,
-									'logdate' => Date::translate('now', 'now'),
-									'type' => 'IN'
-								));
-		
-								//check if the project has multiple enduser
-								if($noOfEndusers > 1){
-									$transmitting = "Endusers offices";
-									$specificOffice = "Endusers offices";
-								}else{
-									$enduserAccountDetail = $user->get('enduser', array('edr_id', '=', $enduserList[0]));
-									$officeDetails = $user->get('units', array('ID', '=', $enduserAccountDetail->edr_designated_office));
-									$transmitting = $officeDetails->office_name;
-									$specificOffice = $enduserAccountDetail->current_specific_office;
-								}
-		
-								//queue to outgoing to be returned to enduser
-								$user->register('outgoing', array(
-									'project' => $projectDetails->project_ref_no,
-									'transmitting_to' => $transmitting,
-									'specific_office' => $specificOffice,
-									'remarks' => "To be returned to enduser/s for clarification.",
-									'transactions' => "EVALUATION ISSUE",
-									'date_registered' => Date::translate('now', 'now')
-								));
-						}else{
-								#no issues and may proceed to another steps
-								//update accomplished to next step
-								$user->update('projects', 'project_ref_no', Input::Get('projectReference'), array(
+								// update the mop etc.. again
+								// register a resolution log
+								//update steps accomplished to 3
+
+							$user->startTrans();
+								//update the mop and the evaluator
+								$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
+									'MOP' => Input::Get('MOPbyTwg'),
+									'steps' => $noOfSteps,
+									'stepdetails' => $newSteps,
+									'evaluator' => Input::Get('evaluator'),
 									'accomplished' => "3",
-									'workflow' => "DBMPS Checking / Canvass"
+									'workflow' => "DBMPS Checking / Canvass",
+									'evaluators_comment' => Input::Get('commentbyTwg')
 								));
-								//register a log
+
+								//register resolution log
 								$user->register('project_logs',  array(
 									'referencing_to' => $projectDetails->project_ref_no,
-									'remarks' => "Evaluation Succesfully completed and no issues encountered.",
+									'remarks' => "SOLVE^pre-procurement evaluation^Issue regarding to pre-procurement evaluation was successfully solved. Project process continued.",
 									'logdate' => Date::translate('now', 'now'),
 									'type' => 'IN'
 								));
-						}
-					$user->endTrans();
+							$user->endTrans();
+								
+								#send sms to enduser "issue resolved and process may continue"
 
-					}else if(Input::get('mopOption') === "muptiple"){
-						// procurement aid registration
-					}	
+							}else if(Input::get('mopOption') === "muptiple"){
+								//mop classification shifted to overall(single) to multiple; conclusion:"it is shifted because in the first place if the classification is multiple already it wont we appearing here.
+								// update the project accomplishment to 2 to pass this duty to procurement aids
+								$user->update("projects", "project_ref_no", $projectDetails->project_ref_no, array(
+									'accomplished' => "2",
+									'proposed_evaluator' => "procurement aid"
+
+								));
+
+								//register resolution log
+								$user->register('project_logs',  array(
+									'referencing_to' => $projectDetails->project_ref_no,
+									'remarks' => "SOLVE^pre-procurement evaluation^Issue regarding to pre-procurement evaluation was successfully solved. Project process continued.",
+									'logdate' => Date::translate('now', 'now'),
+									'type' => 'IN'
+								));
+								// continue coding here
+							}				
+
+
+								
+
+						}else if($_POST['resolution'] == "no"){
+							//register issue log again
+							$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('comment').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
+							$user->register('project_logs',  array(
+	
+								'referencing_to' => $projectDetails->project_ref_no,
+								'remarks' => $logRemark,
+								'logdate' => Date::translate('now', 'now'),
+								'type' => 'IN'
+							));
+
+							//update comment
+							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
+								'evaluators_comment' => Input::Get('commentbyTwg')
+							));							
+
+							#send sms to enduser about this issue "issue again"
+						}
+
+					}else{
+						//this project is first time to be evaluated
+
+						if(Input::get('mopOption') === "overall"){
+							// register direct
+							//new steps for this project based on the new MOP
+							$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
+							//new number of steps based on the new MOP
+							$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];
+	
+						$user->startTrans();
+	
+							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
+			
+								'MOP' => Input::Get('MOPbyTwg'),
+								'steps' => $noOfSteps,
+								'stepdetails' => $newSteps,
+								'evaluator' => Input::Get('evaluator')
+		
+							));						
+	
+							if(isset($_POST['issue'])){
+									//register issue log
+									$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('commentbyTwg').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
+									$user->register('project_logs',  array(
+										'referencing_to' => $projectDetails->project_ref_no,
+										'remarks' => $logRemark,
+										'logdate' => Date::translate('now', 'now'),
+										'type' => 'IN'
+									));
+
+									#send sms to enduser about this issue
+			
+									//check if the project has multiple enduser
+									if($noOfEndusers > 1){
+										$transmitting = "Endusers offices";
+										$specificOffice = "Endusers offices";
+									}else{
+										$enduserAccountDetail = $user->get('enduser', array('edr_id', '=', $enduserList[0]));
+										$officeDetails = $user->get('units', array('ID', '=', $enduserAccountDetail->edr_designated_office));
+										$transmitting = $officeDetails->office_name;
+										$specificOffice = $enduserAccountDetail->current_specific_office;
+									}
+			
+									//queue to outgoing to be returned to enduser
+									$user->register('outgoing', array(
+										'project' => $projectDetails->project_ref_no,
+										'transmitting_to' => $transmitting,
+										'specific_office' => $specificOffice,
+										'remarks' => "To be returned to enduser/s for clarification.",
+										'transactions' => "EVALUATION ISSUE",
+										'date_registered' => Date::translate('now', 'now')
+									));
+	
+									
+							}else{
+									#no issues and may proceed to another steps
+									//update accomplished to next step
+									$user->update('projects', 'project_ref_no', Input::Get('projectReference'), array(
+										'accomplished' => "3",
+										'workflow' => "DBMPS Checking / Canvass"
+									));
+									//register a log
+									$user->register('project_logs',  array(
+										'referencing_to' => $projectDetails->project_ref_no,
+										'remarks' => "Evaluation Succesfully completed and no issues encountered.",
+										'logdate' => Date::translate('now', 'now'),
+										'type' => 'IN'
+									));
+	
+									//notify procurement aid that this project has been successfully evaluated
+									// *******do refer to group classification "procurement aid in sending this notif
+	
+									// $user->register('notifications', array(
+									// 	'recipient' => "admins aid",
+									// 	'message' => "Project request {$projectDetails->project_ref_no} just finished pre-procurement evaluation.",
+									// 	'datecreated' => Date::translate('test', 'now'),
+									// 	'seen' => 0,
+									// 	'href' => "Ongoing-projects"
+									// ));								
+							}
+						$user->endTrans();
+	
+						}else if(Input::get('mopOption') === "muptiple"){
+							// procurement aid registration	
+							
+						$user->startTrans();
+
+							// update the project accomplishment to 2 to pass this duty to procurement aids
+							$user->update("projects", "project_ref_no", $projectDetails->project_ref_no, array(
+								'accomplished' => "2",
+								'proposed_evaluator' => "procurement aid"
+
+							));
+
+							if(isset($_POST['issue'])){
+
+									//register issue log
+									$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('commentbyTwg').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
+									$user->register('project_logs',  array(
+										'referencing_to' => $projectDetails->project_ref_no,
+										'remarks' => $logRemark,
+										'logdate' => Date::translate('now', 'now'),
+										'type' => 'IN'
+									));
+
+									#send sms to enduser about this issue
+			
+									//check if the project has multiple enduser
+									if($noOfEndusers > 1){
+										$transmitting = "Endusers offices";
+										$specificOffice = "Endusers offices";
+									}else{
+										$enduserAccountDetail = $user->get('enduser', array('edr_id', '=', $enduserList[0]));
+										$officeDetails = $user->get('units', array('ID', '=', $enduserAccountDetail->edr_designated_office));
+										$transmitting = $officeDetails->office_name;
+										$specificOffice = $enduserAccountDetail->current_specific_office;
+									}
+			
+									//queue to outgoing to be returned to enduser
+									$user->register('outgoing', array(
+										'project' => $projectDetails->project_ref_no,
+										'transmitting_to' => $transmitting,
+										'specific_office' => $specificOffice,
+										'remarks' => "To be returned to enduser/s for clarification.",
+										'transactions' => "EVALUATION ISSUE",
+										'date_registered' => Date::translate('now', 'now')
+									));
+							}else{
+								//let the aid finish this step
+							}						
+					
+						$user->endTrans();	
+
+						}	
+
+					}					
 
 				break;
 
@@ -325,8 +479,6 @@ else{
 					break;
 				
 			}
-
-			//commit
 
 		}catch(Exception $e){
 			$e->getMessage()."A Fatal Error Occured";

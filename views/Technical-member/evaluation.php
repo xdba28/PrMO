@@ -167,14 +167,38 @@
 					if( (isset($_GET['q'])) && (!empty($_GET['q'])) ){
 							$refno = base64_decode($_GET['q']);
 							$project = $user->get('projects', array('project_ref_no', '=', $refno));
+							$endusers = json_decode($project->end_user);
 							
 							if($project){
 
 								// update immidiately that this project is being evaluated and seen, "only if the accomplished is 0 or waiting for evaluation"
 								if($project->accomplished == 0){
-									$user->update('projects', 'project_ref_no', $refno, array(
-										'accomplished' => '1'
-									));
+
+									$user->startTrans();
+
+										$user->update('projects', 'project_ref_no', $refno, array(
+											'accomplished' => '1'
+										));
+
+										foreach ($endusers as $enduser) {
+											$user->register("notifications", array(
+												'recipient' => $enduser,
+												'message' => "Project Request {$project->project_ref_no} is currently being evaluated",
+												'datecreated' => Date::translate('test', 'now'),
+												'seen' => 0,
+												'href' => ""
+		
+											));
+										}
+
+										$user->register("project_logs", array(
+											'referencing_to' => $project->project_ref_no,
+											'remarks' => "Project details of {$project->project_ref_no} is being evaluated.",
+											'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
+											'type' =>  'OUT'
+										));
+
+									$user->endTrans();
 								}
 
 								
@@ -448,7 +472,7 @@ $(document).ready(function(){
 			</label>
 		</div>
 		<div class="radio radio-info" style="padding-left:5px">
-			<input type="radio" name="resolution" id="radio2" value="yes" required >
+			<input type="radio" name="resolution" id="radio2" value="yes" required checked>
 			<label for="radio2" class="text-success">
 				Check this if this re-evaluation is a resolution from the previous evaluation issue.
 			</label>

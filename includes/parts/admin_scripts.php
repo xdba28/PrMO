@@ -619,7 +619,12 @@ require_once "../../functions/account-verifier.php";
 									classtype = "yellow-bg"
 									icon = "fas fa-check";
 									cardAction = `href="#"`;
-									break;								
+									break;
+								case "No Actions Available":
+									classtype = "yellow-bg";
+									icon = "far fa-hand-paper";
+									cardAction = ``;
+									break						
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";

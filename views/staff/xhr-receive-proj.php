@@ -27,6 +27,8 @@ try
 			'type' => "IN"
 		));
 
+		// $staff->register("notifications")
+
 		$staff->update('project_request_forms', 'form_ref_no', $Project['id'], array(
 			'status' => 'received'
 		));

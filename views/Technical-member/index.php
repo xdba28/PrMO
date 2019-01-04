@@ -517,11 +517,11 @@
 													$counter = (isset($counter) ? $counter++ : $counter = 1);
 
 													switch (true) {
-														case ($diff <= 3):
+														case ($diff->format("%a") <= 3):
 															$class = "dangerGradient";
 															break;
 														
-														case ($diff <= 7):
+														case ($diff->format("%a") <= 7):
 															$class = "warningGradient";
 															break;
 														default:
@@ -548,7 +548,7 @@
 													?>
 												</td>
 												<td style="max-width:80px"><?php echo $request->project_ref_no;?></td>
-												<td style="max-width: 300px"><?php echo $request->project_title;?> asdsdad asd asd sadas dsad a saasdasdsadasdsa d asdsadddsad   sdasdasdadasd </td>
+												<td style="max-width: 300px"><?php echo $request->project_title;?></td>
 												<td style="font-weight:bold">&#x20b1; <?php echo number_format($request->ABC, 2);?></td>
 												<td><?php echo Date::translate($request->date_registered, 1); ?></td>
 												<td><?php echo Date::translate($request->implementation_date, 2); ?></td>
