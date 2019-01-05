@@ -304,13 +304,14 @@
 							$BASE_URL = "http://query.yahooapis.com/v1/public/yql";
 							$yql_query = 'select * from weather.forecast where woeid = 2346660 ';
 							$yql_query_url = $BASE_URL . "?q=" . urlencode($yql_query) . "%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+							
 							// Make call with cURL
 							$session = curl_init($yql_query_url);
 							curl_setopt($session, CURLOPT_RETURNTRANSFER,true);
 							$json = curl_exec($session);
 							// Convert JSON to PHP object
 							 $WeatherphpObj =  json_decode($json, true);
-							// echo "<pre>", print_r($WeatherphpObj), "</pre>";
+							 //echo "<pre>", print_r($WeatherphpObj), "</pre>";
 							
 						?>
 						

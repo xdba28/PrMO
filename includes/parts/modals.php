@@ -376,12 +376,16 @@
 							
 							<p>
 								<i class="fas fa-info"></i>
-								Note that you can only declare a single mode of procurement in this registration form. In cases that two or more mode of procurement is required, the responsibility of registering individual mode of procurement per item is passed to the procurement aids. If so please choose the appropriate option bellow. <i><b>"Mode of Procurement Specification"</b></i>
+								Note that you can only declare a single mode of procurement in this registration form. In cases that two or more mode of procurement is required, or there is a need for <i><b>DBMPS Checking Result</b></i> first to finalize the individual declarations of mode of procurement.  the responsibility of registering individual mode of procurement is passed to the procurement aid. If so choose <i><b>"Multiple MOPs" </b></i> below as <b>Mode of Procurement Specification</b>.
 							</p><br>
 							<p>
 								Also, consider that if you choose the <i><b>"Multiple MOPs"</b></i> option, all other declaration you made in this form except <i><b>"Evaluator's Comment"</b></i>  will be registered for referencing of the procurement aid in declaring individual mode of procurement for each item.
-							</p>
+							</p><br>
 
+							<p>
+								<i class="fas fa-info"></i>
+								<b style="color:red">Important:</b> If you declared that this evaluation has an <i><b>"issue to be resolved or cleared by the end user"</i></b>&nbsp <b style="color:red">and</b> You chose <i><b>"Single MOP"</i></b>  as <b>Mode of Procurement Specification</b>, The responsibility of declaring if this evaluation has been resolved or not for the following reevaluation lies on this account unless you choose <i><b>"Multiple MOPs"</i></b>.
+							</p>
 						</div>
 						<div class="form-group">
 							<label for="" class="font-bold my-blue">Mode of Procurement Specification</label>
@@ -389,7 +393,7 @@
 								<div class="radio radio-success">
 									<input type="radio" name="mopOption" id="mopOption1" value="overall" checked>
 									<label for="mopOption1">
-										Singe MOP
+										Single MOP
 									</label>
 								</div>
 								<div class="radio radio-success">
@@ -402,18 +406,18 @@
 
 						</div>
 						<div class="form-group">
-						   <label for="" class="font-bold my-blue">Specific Mode of Procurement (as a whole)</label>
+						   <label for="" class="font-bold my-blue">Specific Mode of Procurement (Single MOP)</label>
 						   <div class="input-group date">
 							   <span class="input-group-addon"><i class="fa fa-list"></i></span>
 							   <select class="form-control m-b" name="MOPbyTwg">
-								   <option value="">Choose...</option>
-								   <option value="Public Bidding">Public Bidding</option>
+								   <option value="TBE">Choose...</option>
+								   <option value="PB">Public Bidding</option>
 								   <option value="SVP">Small Value Procurement</option>
-								   <option value="Direct Contracting">Direct Contracting</option>
-								   <option value="Negociated Procurement">Negociated Procurement</option>
+								   <option value="DC">Direct Contracting</option>
+								   <option value="NEGO">Negociated Procurement</option>
 								   <option value="Shopping">Shopping</option>
-								   <option value="Repeat Order">Repeat Order</option>
-								   <option value="Limited Source Bidding">Limited Source Bidding</option>
+								   <option value="RO">Repeat Order</option>
+								   <option value="LSB">Limited Source Bidding</option>
 							   </select>
 						   </div>
 					   </div>

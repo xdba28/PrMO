@@ -12,7 +12,12 @@
 	}
 
 	
-	
+	// notif(json_encode(array(
+	// 	'receiver' => "2015-15096",
+	// 	'message' => "test",
+	// 	'date' => Date::translate(Date::translate('test', 'now'), '1'),
+	// 	'href' => "test"
+	// )));
 	
 
 	
@@ -89,24 +94,38 @@
 					'seen' => 0,
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				));
+				notif(json_encode(array(
+					'receiver' => $_POST['enduser'],
+					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}1",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno=".base64_encode($project_ref_no)
+				)));				
 
+				
 				$staff->register('notifications', array(
 					'recipient' => Input::get('proposed_evaluator'),
 					'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
 					'href' => "#evaluation-list"
-				));				
+				));
+				notif(json_encode(array(
+					'receiver' => Input::get('proposed_evaluator'),
+					'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "#evaluation-list"
+				)));
+
 
 				$staff->endTrans(); //commit
 
 				Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
-				notif(json_encode(array(
-					'receiver' => $_POST['enduser'],
-					'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
-					'date' => Date::translate(Date::translate('test', 'now'), '1'),
-					'href' => "project-details?refno=".base64_encode($project_ref_no)
-				)));
+				// notif(json_encode(array(
+				// 	'receiver' => $_POST['enduser'],
+				// 	'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+				// 	'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				// 	'href' => "project-details?refno=".base64_encode($project_ref_no)
+				// )));
 
 				
 				//disable the "register" now button in the new-project page to prevent any data discrepancy

@@ -19,8 +19,8 @@ else{
 	if(!empty($_POST))
 	{
 
-		echo "<pre>",print_r($_POST),"</pre>";
-		die();
+		// echo "<pre>",print_r($_POST),"</pre>";
+		// die();
 		try{
 			//details about the project being processed
 			$projectDetails = $user->get('projects', array('project_ref_no', '=', Input::get('projectReference')));
@@ -58,6 +58,8 @@ else{
 							// register a resolution log
 							//update steps accomplished to 3
 
+						$user->startTrans();
+
 							//update the mop and the evaluator
 							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
 								'MOP' => Input::Get('MOP'),
@@ -78,7 +80,9 @@ else{
 								'remarks' => "SOLVE^pre-procurement evaluation^Issue regarding to pre-procurement evaluation was successfully solved. Project process continued.",
 								'logdate' => Date::translate('now', 'now'),
 								'type' => 'IN'
-							));						
+							));
+							
+						$user->endTrans();
 
 						}else if($_POST['resolution'] == "no"){
 								//register issue log again
@@ -108,7 +112,9 @@ else{
 							
 							//check if there is an evaluation issue
 							if(isset($_POST['issue'])){
-		
+
+							  $user->startTrans();							
+							  
 								//register issue log
 								$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('comment').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
 								$user->register('project_logs',  array(
@@ -138,9 +144,13 @@ else{
 									'transactions' => "EVALUATION ISSUE",
 									'date_registered' => Date::translate('now', 'now')
 								));
+
+							  $user->endTrans();
 		
 							}else{
 								#no issues and may proceed to another steps
+
+							  $user->startTrans();
 								//update accomplished to next step
 								$user->update('projects', 'project_ref_no', Input::Get('projectReference'), array(
 									'accomplished' => "3",
@@ -153,6 +163,7 @@ else{
 									'logdate' => Date::translate('now', 'now'),
 									'type' => 'IN'
 								));
+							  $user->endTrans();
 
 
 								
@@ -254,14 +265,18 @@ else{
 					// [action] => twgPreprocResult
 				// )
 
-					//new steps for this project based on the new MOP
-					$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
-					//new number of steps based on the new MOP
-					$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];		
+
+
 
 					if(isset($_POST['resolution'])){
 						//this project already encountered a pre-procurement evaluation issue
 						if($_POST['resolution'] == "yes"){
+
+						//new steps for this project based on the new MOP
+						$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
+						//new number of steps based on the new MOP
+						$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];	
+
 							//resolve this issue and proceed to next step
 							//check if the classification is overall mop or multiple
 							if(Input::get('mopOption') === "overall"){
@@ -289,6 +304,23 @@ else{
 									'logdate' => Date::translate('now', 'now'),
 									'type' => 'IN'
 								));
+								
+								//send dashboard notifs about resolution
+								foreach ($enduserList as $endusers){
+									$user->register('notifications', array(
+										'recipient' => $endusers,
+										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved",
+										'datecreated' => Date::translate('test', 'now'),
+										'seen' => 0,
+										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+									));
+									notif(json_encode(array(
+										'receiver' => $endusers,
+										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved",
+										'date' => Date::translate(Date::translate('test', 'now'), '1'),
+										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+									)));								
+								}
 							$user->endTrans();
 								
 								#send sms to enduser "issue resolved and process may continue"
@@ -296,6 +328,9 @@ else{
 							}else if(Input::get('mopOption') === "muptiple"){
 								//mop classification shifted to overall(single) to multiple; conclusion:"it is shifted because in the first place if the classification is multiple already it wont we appearing here.
 								// update the project accomplishment to 2 to pass this duty to procurement aids
+
+							  $user->startTrans();
+
 								$user->update("projects", "project_ref_no", $projectDetails->project_ref_no, array(
 									'accomplished' => "2",
 									'proposed_evaluator' => "procurement aid"
@@ -309,15 +344,49 @@ else{
 									'logdate' => Date::translate('now', 'now'),
 									'type' => 'IN'
 								));
-								// continue coding here
-							}				
 
+								//send dashboard notifs about resolution
+								foreach ($enduserList as $endusers){
+									$user->register('notifications', array(
+										'recipient' => $endusers,
+										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved.",
+										'datecreated' => Date::translate('test', 'now'),
+										'seen' => 0,
+										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+									));
+									notif(json_encode(array(
+										'receiver' => $endusers,
+										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved.",
+										'date' => Date::translate(Date::translate('test', 'now'), '1'),
+										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+									)));								
+								}								
+							  $user->endTrans();
+
+							}				
 
 								
 
 						}else if($_POST['resolution'] == "no"){
+
+						//new steps for this project based on the new MOP
+						$newSteps = json_encode($stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['steps'], JSON_FORCE_OBJECT);
+						//new number of steps based on the new MOP
+						$noOfSteps = $stepsStructure['modeOfProcurement'][Input::Get('MOPbyTwg')]['noofsteps'];	
+							
+							$user->startTrans();
+							
+							//register declaration again
+							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
+								'MOP' => Input::Get('MOPbyTwg'),
+								'steps' => $noOfSteps,
+								'stepdetails' => $newSteps,
+								'evaluator' => Input::Get('evaluator'),
+								'evaluators_comment' => Input::Get('commentbyTwg')
+							));								
+
 							//register issue log again
-							$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('comment').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO';
+							$logRemark = 'ISSUE^pre-procurement^Pre-procurement evaluation issue encountered, Technical member noted the request with "'.Input::Get('commentbyTwg').'", please wait for the return of your submission documents. NOTE: If the technical member comment is concerning to clarification of specifics of your item listing in your request, You can immidiately resort it by editing your request details in this <a href="my-forms">Link</a>. Then it will be approved by our procurement-aid to apply your changes after then, you can now reprint the updated PR/JO as an attachment in your original submission then return it to the PrMO.';
 							$user->register('project_logs',  array(
 	
 								'referencing_to' => $projectDetails->project_ref_no,
@@ -326,12 +395,28 @@ else{
 								'type' => 'IN'
 							));
 
-							//update comment
-							$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(
-								'evaluators_comment' => Input::Get('commentbyTwg')
-							));							
+							//send dashboard notifs about this issue again
+							foreach ($enduserList as $endusers){
+								$user->register('notifications', array(
+									'recipient' => $endusers,
+									'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+								));
+								notif(json_encode(array(
+									'receiver' => $endusers,
+									'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+								)));								
+							}							
+
 
 							#send sms to enduser about this issue "issue again"
+
+						  $user->endTrans();
+
 						}
 
 					}else{
@@ -351,7 +436,8 @@ else{
 								'MOP' => Input::Get('MOPbyTwg'),
 								'steps' => $noOfSteps,
 								'stepdetails' => $newSteps,
-								'evaluator' => Input::Get('evaluator')
+								'evaluator' => Input::Get('evaluator'),
+								'evaluators_comment' => Input::Get('commentbyTwg')
 		
 							));						
 	
@@ -364,6 +450,22 @@ else{
 										'logdate' => Date::translate('now', 'now'),
 										'type' => 'IN'
 									));
+
+									foreach ($enduserList as $endusers){
+										$user->register('notifications', array(
+											'recipient' => $endusers,
+											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+											'datecreated' => Date::translate('test', 'now'),
+											'seen' => 0,
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										));
+										notif(json_encode(array(
+											'receiver' => $endusers,
+											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+											'date' => Date::translate(Date::translate('test', 'now'), '1'),
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										)));								
+									}										
 
 									#send sms to enduser about this issue
 			
@@ -425,7 +527,8 @@ else{
 							// update the project accomplishment to 2 to pass this duty to procurement aids
 							$user->update("projects", "project_ref_no", $projectDetails->project_ref_no, array(
 								'accomplished' => "2",
-								'proposed_evaluator' => "procurement aid"
+								'proposed_evaluator' => "procurement aid",
+								'evaluators_comment' => Input::Get('commentbyTwg')
 
 							));
 
@@ -439,6 +542,22 @@ else{
 										'logdate' => Date::translate('now', 'now'),
 										'type' => 'IN'
 									));
+
+									foreach ($enduserList as $endusers){
+										$user->register('notifications', array(
+											'recipient' => $endusers,
+											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+											'datecreated' => Date::translate('test', 'now'),
+											'seen' => 0,
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										));
+										notif(json_encode(array(
+											'receiver' => $endusers,
+											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
+											'date' => Date::translate(Date::translate('test', 'now'), '1'),
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										)));								
+									}	
 
 									#send sms to enduser about this issue
 			

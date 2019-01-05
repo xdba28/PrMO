@@ -25,7 +25,7 @@
 								else echo '<span class="label label-primary" id="NotifCount">'.$notif['count']->seen.'</span>';
 							?>
 						</a>
-						<ul class="dropdown-menu dropdown-alerts" id="NotifList">
+						<ul class="dropdown-menu dropdown-alerts" id="NotifList" style="overflow: auto; height:350px">
 							<?php
 								if(!empty($notif['list'])){
 									foreach($notif['list'] as $n){

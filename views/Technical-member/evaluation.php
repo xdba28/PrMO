@@ -167,9 +167,10 @@
 					if( (isset($_GET['q'])) && (!empty($_GET['q'])) ){
 							$refno = base64_decode($_GET['q']);
 							$project = $user->get('projects', array('project_ref_no', '=', $refno));
-							$endusers = json_decode($project->end_user);
+							
 							
 							if($project){
+								$endusers = json_decode($project->end_user);
 
 								// update immidiately that this project is being evaluated and seen, "only if the accomplished is 0 or waiting for evaluation"
 								if($project->accomplished == 0){
@@ -197,6 +198,8 @@
 											'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
 											'type' =>  'OUT'
 										));
+
+										#send SMS to end user "Project Request {$project->project_ref_no} is currently being evaluated now"
 
 									$user->endTrans();
 								}
@@ -429,6 +432,7 @@
 								include('../../includes/errors/404.php');
 								echo"<br><br><br><br><br><br>";
 					}
+
 				
 			?>
         </div>
@@ -463,7 +467,7 @@ $(document).ready(function(){
 	if(issue){
 		$('[dataFor="pre-proc-eval-issue-twg"]').html(`
 		<div class="alert alert-danger">
-			This project has a previous issue with technical member's evaluation. Choose below from the options if this issue has been resolved or not.
+			<p>This project has a previous issue with technical member's evaluation.</p><br> <pre><?php echo $project->evaluators_comment;?></pre> Choose below from the options if the issue above has been resolved or not.
 		</div>								
 		<div class="radio radio-danger" style="padding-left:5px">
 			<input type="radio" name="resolution" id="radio1" value="no" required>

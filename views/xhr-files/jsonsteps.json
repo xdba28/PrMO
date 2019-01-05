@@ -37,11 +37,47 @@
 		},
 		"PB":{
 			"name":"Public Bidding",
-			"noofsteps":"x",
+			"noofsteps":"8",
 			"description":"50K above ABCs",
 			"steps":{
-				"0":"test",
-				"9":"test"
+				"0":"tes0t",
+				"1":"test1",
+				"2":"test2",
+				"3":"test3",
+				"4":"test4",
+				"5":"test5",
+				"6":"test6",
+				"7":"test7"
+			}			
+		},
+		"RO":{
+			"name":"Repeat Order",
+			"noofsteps":"8",
+			"description":"Default and unsetted",
+			"steps":{
+				"0":"tes0t",
+				"1":"test1",
+				"2":"test2",
+				"3":"test3",
+				"4":"test4",
+				"5":"test5",
+				"6":"test6",
+				"7":"test7"
+			}			
+		},
+		"LSB":{
+			"name":"Limited Source Bidding",
+			"noofsteps":"8",
+			"description":"Default and unsetted",
+			"steps":{
+				"0":"tes0t",
+				"1":"test1",
+				"2":"test2",
+				"3":"test3",
+				"4":"test4",
+				"5":"test5",
+				"6":"test6",
+				"7":"test7"
 			}			
 		},
 		"SVP":{
@@ -80,7 +116,22 @@
 			}			
 		},
 		"NEGO":{
-			
+			"name":"Negociated Procurement",
+			"noofsteps":"11",
+			"description":"Negociated Procurement",
+			"steps":{
+				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
+				"1":"Technical Member Evaluation",
+				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
+				"3":"DBMPS Checking",
+				"4":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
+				"5":"Canvassing",
+				"6":"Finalization of Abstract of Bid and BAC Resolution",
+				"7":"Routing for signatories",
+				"8":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"9":"For Conforme of Winning Bidder/s",
+				"10":"Transmittal to COA and University Supply Office for Audit"
+			}			
 		},
 		"Mixed":{
 			"name":"Mixed",

@@ -127,6 +127,7 @@
 
                                         <th>no. </th>
                                         <th>Reference </th>
+										<th>Related to </th>
                                         <th>Title </th>
 										<th class="center">Status </th>
                                         <th>Date Created</th>
@@ -136,7 +137,7 @@
                                     <tbody>
 									<?php 
 										$myRequests = $user->getAll('project_request_forms', array('requested_by', '=', Session::get(Config::get('session/session_name'))));
-										//echo "<pre>",print_r($myRequests),"</pre>";
+										// echo "<pre>",print_r($myRequests),"</pre>";
 										foreach($myRequests as $request){
 											if(isset($count)){$count++;}else{$count=1;}
 												
@@ -158,10 +159,21 @@
 												
 											}
 
+												//check if this is already a project and related to what project reference
+												$isProject = $user->isProject("projects", "request_origin", $request->form_ref_no);
+												
+												if($isProject) {
+													$relatedTo = $isProject->project_ref_no;
+												}else{
+													$relatedTo = '<a style="color:red">NA</a>';
+													
+												}											
+
 									?>
 										<tr>
 											<td><?php echo $count;?></td>
 											<td><?php echo $request->form_ref_no;?></td>
+											<td><?php echo $relatedTo;?></td>
 											<td style="max-width:300px"><?php echo $request->title;?></td>
 											<td class="status left"><?php echo $displayStatus;?></td>
 											<td><?php echo Date::translate($request->date_created, 2);?></td>
