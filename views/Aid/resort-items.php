@@ -38,29 +38,9 @@
 			$user->register('publication', array(
 				'gds_reference' => $canvass['gds'],
 				'title' => $canvass_Title,
-				'cost' => $form['publication']['cost']
+				'cost' => $form['publication']['cost'],
+				'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT)
 			));
-
-		}
-
-		foreach($canvass['forms'] as $form){
-
-			$count = 1;
-			$titleCount = count($form['publication']['title']);
-			$canvass_Title = '';
-
-			foreach($form['publication']['title'] as $title){
-				if($titleCount === 1){
-					$canvass_Title = $title;
-				}elseif($titleCount > 1){
-					if($count === $titleCount){
-						$canvass_Title .= 'and '.$title;
-					}else{
-						$canvass_Title .= $title.', ';
-					}
-				}
-				$count++;
-			}
 
 			$publicationForm = $user->projectPublication($canvass['gds'], $canvass_Title, $form['publication']['cost']);
 		
@@ -70,7 +50,6 @@
 				'per_item' => $form['per_item']
 			));
 
-			// $canvassForm = $user->cavassForm($publicationForm);
 			$canvassForm = $user->get('canvass_forms', array('publication_reference', '=', $publicationForm));
 
 			foreach($form['items'] as $item){
@@ -366,7 +345,7 @@
 													?>												
 															<tr>
 																<td style="text-align:center;">
-																	<input type="checkbox" class="i-checks" data-cvn="step1" data-ref="<?php echo base64_encode($joMOPdetail);?>" data-mop="<?php echo base64_encode($itemSpecificMode);?>" data-item='<?php echo $joitemDetails;?>'>
+																	<input type="checkbox" class="i-checks" data-cvn="step1" data-ref="<?php echo base64_encode($joMOPdetail);?>" data-mop="<?php echo base64_encode($itemSpecificMode);?>" data-item='<?php echo $joitemDetails;?>' data-notes='<?php echo base64_encode($lot['l_note']);?>'>
 																</td>
 																<th><?php echo $itemCount;?></th>
 																<th><?php echo $lotCount;?> - <?php echo $lot['l_title'];?></th>
@@ -400,7 +379,7 @@
 								</div>
 								<div class="col-lg-2">
 									<span class="pull-right">
-										<button type="button" id="bResort" class="btn btn-rounded btn-primary">Proceed <i class="ti-angle-double-right"></i></button>
+										<button type="button" id="bResort" class="btn btn-rounded btn-primary">Next <i class="ti-angle-double-right"></i></button>
 									</span>
 								</div>	
 							</div>								
@@ -452,7 +431,7 @@
 							<div class="ibox-content">
 								<div class="row">
 									<div class="col-md-6">
-										<h2><a style="color:#2a9c97">Step 2 of  &nbsp2</a><br>Items Resorting</h2>
+										<h2><a style="color:#2a9c97">Step 2 of  &nbsp3</a><br>Items Resorting</h2>
 									</div>
 									<div class="col-md-3">
 										<div class="btn-group pull-right" style="margin-right:15px">
@@ -488,8 +467,8 @@
 							</div>
 							<div class="ibox-footer col-lg-12">
 								<span class="float-right">
-									<button type="button" id="backbtn" class="btn btn-rounded btn-primary" style="display:none;"><i class="ti-angle-double-left"></i> Back</button>
-									<button type="submit" class="btn btn-rounded btn-primary">Submit and Finish <i class="ti-angle-double-right"></i></button>
+									<button type="button" id="backbtn" class="btn btn-rounded btn-primary"><i class="ti-angle-double-left"></i> Back</button>
+									<button type="button" id="publication-modal" class="btn btn-rounded btn-primary">Next <i class="ti-angle-double-right"></i></button>
 								</span>
 								<div class="col-lg-10">
 								In this part, You can now rearrange all selected items from part 1 to be canvassed. You can merge them in a single lot or rearrange it to single canvass per item.
@@ -507,30 +486,11 @@
 							</div>
 							<div id="CanvassList" class="animated fadeInUp" style="display:none">
 								
-								<!-- <div id="c1" class="widget lazur-bg text-center shine-me">
-									<h4>Canvass 1</h4>
-									<div class="m-b-md">
-										<h1 class="m-s">451226 items</h1>
-										<small>Bicol feed delights catering services</small>
-									</div>
-								</div>
-								<div class="widget yellow-bg text-center">
-									<h4>Canvass 2</h4>
-									<div class="m-b-md">
-										<h1 class="m-s">456 items</h1>
-										<small>Bicol feed delights catering services</small>
-									</div>
-								</div>	
-								<div class="widget red-bg text-center">
-									<div class="m-b-md">
-										<h1 class="m-s">456 items</h1>
-										<small>Bicol feed delights catering services</small>
-									</div>
-								</div>									 -->
 							</div>								
 						</div>
 					</div>
-				</div><br><br>
+				</div>
+					<br><br>
 			<!-- Main Content End -->
 			<button class="back-to-top" type="button"></button>
             <div class="footer">
@@ -541,22 +501,45 @@
     </div>
 
 	<div class="modal fade" id="canvasItems" tabindex="-1" role="dialog" aria-labelledby="preprocTitle" aria-hidden="true">
-		<div class="modal-dialog  modal-lg" role="document">
+		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation result Registration</h3>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				
+				<div class="modal-header">
+					<h3 class="modal-title" id="canvassHeader"></h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="table-responsive" id="modal-table">
 
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			</div>
-			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="publication" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<form action="" method="post" name="formcanvass">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Identified modes of procurement for each canvass form</h3>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="publication-content">
+						
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary" id="resort-submit">Submit</button>
+					</div>
+				</div>
+				<input type="hidden" name="canvass">
+			</form>
 		</div>
 	</div>
 
@@ -577,6 +560,7 @@
 		};
 
 		var SelectedItems = [];
+		var canvassObject = [];
 
 		setTimeout(function(){
 			$('#minimizer').trigger('click');
@@ -587,7 +571,7 @@
 			SelectedItems = [];
 
 			let rItems = $('[data-cvn="step1"]:checked');
-			let count = 0, prT_header = false;
+			let count = 0, prT_header = false, jo_header = false;
 
 			if(rItems.length !== 0){
 
@@ -595,12 +579,9 @@
 				$('#jo-content').html('');
 
 				rItems.each(function step2(i, e){
+
 					let rDetails = atob(e.dataset.item).split('{|}');
 					let rSpec = JSON.parse(rDetails[2]);
-
-					// append selected items
-					// for checking if there are items left for selection
-					SelectedItems.push(atob(e.dataset.ref));
 
 					switch(rDetails[0]){
 						case "PR":
@@ -620,31 +601,46 @@
 								<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
 								<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
 									</tr>`);
-							$(`#lot-${count}`).val(rDetails[1]);
+
+							SelectedItems.push({
+								item: atob(e.dataset.item),
+								mop: atob(e.dataset.mop),
+								ref: atob(e.dataset.ref),
+								inCanvass: false,
+							});
 							break;
 						case "JO":
-							$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
-								<th>Select</th><th>MOP</th><th>Lot Origin</th>
-								<th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
-							</tr></thead><tbody id="jo-detail-${count}"></tbody></table></div><br>`);
+							if(!jo_header){
+								$('#jo-content').append(`<div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr>
+									<th>Select</th><th>MOP</th><th>Lot Origin</th>
+									<th>List Title</th><th>Tags</th><th>Lot Estimated Cost</th><th>Notes</th>
+								</tr></thead><tbody id="jo-detail"></tbody></table></div><br>`);
+								jo_header = true;
+							}
 							
-							$(`#jo-detail-${count}`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" class="i-checks"></td>
+							$(`#jo-detail`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" data-notes="${e.dataset.notes}" data-lot-cost="${btoa(rDetails[3])}" class="i-checks"></td>
 								<td>${atob(e.dataset.mop)}</td>
 								<td>${rDetails[1]}</td>
 								<td>${rSpec.header}</td>
 								<td>${rSpec.tags}</td>
 								<td>${rDetails[3]}</td>
+								<td>${atob(e.dataset.notes)}</td>
 								</tr>`);
-							$(`#lot-${count}`).val(rDetails[1]);
+
+							SelectedItems.push({
+								item: atob(e.dataset.item),
+								mop: atob(e.dataset.mop),
+								ref: atob(e.dataset.ref),
+								notes: atob(e.dataset.notes),
+								inCanvass: false,
+							});
 							break;
 						default:
 							break;
 					}
 					count++;
 				});
-
 				
-
 				$('.i-checks').iCheck({
 					checkboxClass: 'icheckbox_square-green',
 					radioClass: 'iradio_square-green'
@@ -652,7 +648,6 @@
 
 				$('#step1').attr('style', 'display:none;');
 				$('#step2').attr('style', '');
-				$('#backbtn').attr('style', '');
 			
 			}else{
 				swal({
@@ -662,23 +657,18 @@
 					type: "error"
 				});
 			}
-
 		});
-
 
 		$('#backbtn').on('click', function(){
 			$('#step1').attr('style', '');
 			$('#step2').attr('style', 'display:none');
-			$(this).attr('style', 'display:none');
 		});
-
 
 		$('#canvassCount').on('change', function(){
 
-			Canvass.forms = [];
+			canvassObject = [];
 
 			$('#bResort').trigger('click');
-			let canvassObject = [];
 			let elem_CanvassList = $('#CanvassList');
 			let elem_CanvassDropDown = $('#CanvassDropDown');
 
@@ -709,13 +699,14 @@
 				// Canvass.forms.push({no: i, items: [], type: "", perItem: 0});
 
 				$(`[data-canv-no="${i}"]`).on('click', function(){
-					let C_elem = $(this), text;
+					let C_elem = $(this), text, currentLotPublication;
 					let cvnsItemSel = $('[data-cvn="step2"]:checked');
 					let C_elem_attr = C_elem.attr('data-canv-no');
 					let swalText = '';
 					
 					let lot = {
 						title: [],
+						mode: [],
 						cost: 0
 					};
 
@@ -723,11 +714,18 @@
 
 						cvnsItemSel.each(function(i, e){
 							let lot_details = atob(e.dataset.lot).split('{|}');
+							let mode = atob(e.dataset.mop);
 							
 							// find same lot name
 							let curtitle = lot.title.find(function(el){
 								return el === lot_details[1];
 							});
+
+							if(lot.mode.find(function(el){
+								return el.mode === mode;
+							}) === undefined){
+								lot.mode.push({mode: mode, no: ""});
+							}
 
 							let item = JSON.parse(atob(e.dataset.details));
 							if(curtitle === undefined){
@@ -737,22 +735,40 @@
 								lot.cost += parseFloat(item.tCost);
 							}
 
+							item.lot_name = lot_details[1];
+
 							let dataset_ref_decode = atob(e.dataset.ref);
 							// listing of items per canvass
-							canvassObject[C_elem_attr].items.push({
-								ref: dataset_ref_decode, 
-								details: item,
-								mode: atob(e.dataset.mop)
-							});
-							// Canvass.forms[C_elem_attr].items.push({
-							// 	ref: dataset_ref_decode, 
-							// 	details: JSON.parse(atob(e.dataset.details))
-							// });
+							if(lot_details[0] === "PR"){
+								canvassObject[C_elem_attr].items.push({
+									ref: dataset_ref_decode, 
+									details: item,
+									mode: atob(e.dataset.mop)
+								});
+							}else{
+								canvassObject[C_elem_attr].items.push({
+									ref: dataset_ref_decode, 
+									details: item,
+									mode: atob(e.dataset.mop),
+									notes: atob(e.dataset.notes),
+									lot_cost: atob(e.dataset.lotCost)
+								});
+							}
 							canvassObject[C_elem_attr].type = lot_details[0];
 							// Canvass.forms[C_elem_attr].type = lot_details[0];
 						});
 
-						if(lot.title.length > 1){
+						// chech if there is already existing lot
+
+						try {
+							if(canvassObject[C_elem_attr].publication.length > 1){
+								currentLotPublication = true;
+							}
+						} catch (error) {
+							currentLotPublication = false;
+						}
+						
+						if(lot.title.length > 1 || currentLotPublication){
 
 							lot.title.forEach(function(e, i){
 								swalText += `${e}<br>`;
@@ -776,34 +792,49 @@
 											text: "",
 											type: "info"
 										});
-										console.log(Canvass);
 									}else if(res.value !== "undefined"){
-										console.log(Canvass);
 										cvnsItemSel.each(function(i, e){
-											SelectedItems.splice(SelectedItems.indexOf(atob(e.dataset.ref)), 1);
+											let a = atob(e.dataset.ref);
+											SelectedItems[SelectedItems.indexOf(
+												SelectedItems.find(function(el){
+													return el.ref === a
+												})
+											)].inCanvass = true;
 											e.parentNode.parentNode.parentNode.remove();
 										});
-										Canvass.forms = canvassObject;
-										Canvass.forms[C_elem_attr].publication = lot;
-										// canvassObject[C_elem_attr].publication = lot;
+										// Canvass.forms = canvassObject;
+										// Canvass.forms[C_elem_attr].publication = lot;
+										canvassObject[C_elem_attr].publication = lot;
 										$(`[data-canv-lots=${i}]`).html(swalText);
-										$(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
+
+										// $(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
+										$(`[data-canv-itemCount="${i}"]`).text(`Items: ${canvassObject[C_elem_attr].items.length}`);
+
 									}
 								}
 							});
 						}else{
-							console.log(Canvass);
 							cvnsItemSel.each(function(i, e){
-								SelectedItems.splice(SelectedItems.indexOf(atob(e.dataset.ref)), 1);
+								let a = atob(e.dataset.ref);
+								SelectedItems[SelectedItems.indexOf(
+									SelectedItems.find(function(el){
+											return el.ref === a
+									})
+								)].inCanvass = true;
 								e.parentNode.parentNode.parentNode.remove();
 							});
-							Canvass.forms = canvassObject;
-							Canvass.forms[C_elem_attr].publication = lot;
-							// canvassObject[C_elem_attr].publication = lot;
-							$(`[data-canv-lots=${i}]`).html(lot.title[0]);
-							$(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
-						}
+							// Canvass.forms = canvassObject;
+							// Canvass.forms[C_elem_attr].publication = lot;
 
+							canvassObject[C_elem_attr].publication = lot;
+							$(`[data-canv-lots=${i}]`).html(lot.title[0]);
+							
+							// $(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
+							$(`[data-canv-itemCount="${i}"]`).text(`Items: ${canvassObject[C_elem_attr].items.length}`);
+							
+							// console.log({SelectedItems});
+							console.log({canvassObject});
+						}
 					}else{
 						swal({
 							title: "Action invalid!",
@@ -812,36 +843,192 @@
 							type: "error"
 						});
 					}
-
-
 					$('[name="canvass"]').val(JSON.stringify(Canvass));
 				});
 
 				$(`[name="perItem-${i}"]`).on('change', function(){
 					let C_elem_attr = $(this).attr('name').split('-')[1];
 					if(this.checked){
-						Canvass.forms[C_elem_attr].per_item = 1;
+						canvassObject[C_elem_attr].per_item = 1;
 					}else{
-						Canvass.forms[C_elem_attr].per_item = 0;
+						canvassObject[C_elem_attr].per_item = 0;
 					}
 				});
 
 				$(`[data-canv-modal="${i}"]`).on('click', function(){
-					
-					console.log(Canvass.forms[$(this).attr('data-canv-modal')].items);
-					// CanvassObject[$(this).attr('data-canv-modal')].items.forEach(function(e, i){
-					// 	console.log(JSON.parse(e.details));
+					let item_index = $(this).attr('data-canv-modal'), showItemsText = '', showItemsCount = 1;
+					$('#modal-table').html(``);
 
-					// 	// append in modal
+					if(canvassObject[item_index] !== undefined && canvassObject[item_index].items.length !== 0){
 
-					// });
+						$('#canvassHeader').html(`Canvass Form ${parseInt(item_index) + 1}`);
 
-					$('[name="canvass"]').val(JSON.stringify(Canvass));
+						canvassObject[item_index].publication.title.forEach(function(e1, i1){
+							if(canvassObject[item_index].publication.title.length === 1){
+								showItemsText = e1;
+							}else{
+								if(canvassObject[item_index].publication.title.length > showItemsCount){
+									showItemsText += `${e1}, `;
+								}else{
+									showItemsText += `and ${e1}`;
+								}
+							}
+							showItemsCount++;
+						});
+
+						if(canvassObject[item_index].type === "PR"){
+							$('#modal-table').append(`
+								<div style="font-size:20px"><b>${showItemsText}</b></div><br>
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>MOP</th>
+											<th>Stock No</th>
+											<th>Unit</th>
+											<th>Description</th>
+											<th>Quantity</th>
+											<th>Unit Cost</th>
+											<th>Total Cost</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody id="showCanvassItems">
+									</tbody>
+								</table>`);
+	
+							canvassObject[item_index].items.forEach(function(e, i){
+								let canvassModalReference = btoa(e.ref);
+								$('#showCanvassItems').append(`
+									<tr>
+										<td>${e.mode}</td>
+										<td>${e.details.stock_no}</td>
+										<td>${e.details.unit}</td>
+										<td>${e.details.desc}</td>
+										<td>${e.details.qty}</td>
+										<td>${e.details.uCost}</td>
+										<td>${e.details.tCost}</td>
+										<td style="text-align:center"><button class="btn btn-danger btn-outline btn-xs" data-canvass-modal="${canvassModalReference}"><i class="fa fa-times"></i></button></td>
+									</tr>`);
+
+								$(`[data-canvass-modal="${canvassModalReference}"]`).on('click', function(){
+									let reference = atob(this.dataset.canvassModal);
+									let deleted_item = canvassObject[item_index].items.find(function(e, i){
+											return e.ref === reference;
+									});
+
+									canvassObject[item_index].items.splice(
+										canvassObject[item_index].items.indexOf(deleted_item), 1
+									);
+
+									let item_return = SelectedItems.find(function(e){
+										return e.ref === reference
+									});
+
+									SelectedItems[SelectedItems.indexOf(item_return)].inCanvass = false;
+
+									let item_details = item_return.item.split("{|}");
+									let item_spec = JSON.parse(item_details[2]);
+
+									$('#pr-detail').append(`<tr>
+										<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${btoa(item_return.mop)}" data-ref="${btoa(item_return.ref)}" data-details="${btoa(item_details[2])}" data-lot="${btoa(item_return.item)}"  class="i-checks"></td>
+										<td>${item_return.mop}</td>
+										<td>${item_details[1]}</td>
+										<td>${item_spec.stock_no}</td>
+										<td>${item_spec.unit}</td><td>${item_spec.desc}</td><td>${item_spec.qty}</td>
+										<td>${item_spec.uCost}</td><td>${item_spec.tCost}</td>
+											</tr>`);
+										
+									$('.i-checks').iCheck({
+										checkboxClass: 'icheckbox_square-green',
+										radioClass: 'iradio_square-green'
+									});
+
+									this.parentNode.parentNode.remove();
+
+									// update displayed item count and lots
+
+								});
+			
+							});
+							
+						}else if(canvassObject[item_index].type === "JO"){
+							$('#modal-table').append(`
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>MOP</th>
+											<th>List Title</th>
+											<th>Tags</th>
+											<th>Notes</th>
+											<th>Lot Estimated Cost</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody id="showCanvassItems">
+									</tbody>
+								</table>`);
+	
+							canvassObject[item_index].items.forEach(function(e, i){
+								let canvassModalReference = btoa(e.ref);
+								$('#showCanvassItems').append(`
+									<tr>
+										<td>${e.mode}</td>
+										<td>${e.details.header}</td>
+										<td>${e.details.tags}</td>
+										<td>${e.notes}</td>
+										<td>${e.lot_cost}</td>
+										<td style="text-align:center"><button class="btn btn-danger btn-outline btn-xs" data-canvass-modal="${canvassModalReference}"><i class="fa fa-times"></i></button></td>
+									</tr>`);
+
+								$(`[data-canvass-modal="${canvassModalReference}"]`).on('click', function(){
+									let reference = atob(this.dataset.canvassModal);
+									let deleted_item = canvassObject[item_index].items.find(function(e, i){
+											return e.ref === reference;
+									});
+
+									canvassObject[item_index].items.splice(
+										canvassObject[item_index].items.indexOf(deleted_item), 1
+									);
+
+									let item_return = SelectedItems.find(function(e){
+										return e.ref === reference
+									});
+
+									SelectedItems[SelectedItems.indexOf(item_return)].inCanvass = false;
+
+									let item_details = item_return.item.split("{|}");
+									let item_spec = JSON.parse(item_details[2]);
+
+									$(`#jo-detail`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${btoa(item_return.mop)}" data-ref="${btoa(item_return.ref)}" data-details="${btoa(item_details[2])}" data-lot="${btoa(item_return.item)}" data-notes="${btoa(item_return.notes)}" data-lot-cost="${btoa(item_details[3])}" class="i-checks"></td>
+										<td>${item_return.mop}</td>
+										<td>${item_details[1]}</td>
+										<td>${item_spec.header}</td>
+										<td>${item_spec.tags}</td>
+										<td>${item_details[3]}</td>
+										<td>${item_return.lot_cost}</td>
+										</tr>`);
+
+									$('.i-checks').iCheck({
+										checkboxClass: 'icheckbox_square-green',
+										radioClass: 'iradio_square-green'
+									});
+									this.parentNode.parentNode.remove();
+
+									// update displayed item count and lots
+								});
+							});
+						}
+					}else{
+						$('#canvassHeader').html(`Canvass Form ${parseInt(item_index) + 1}`);
+						$('#modal-table').append(`
+							<div class="ibox">
+								<div class="ibox-content">
+									<h1 style="text-align:center;"><b>Canvass Form ${parseInt(item_index) + 1} has no items<b></h1>
+								</div>
+							</div>`);
+					}
 				});
-
 			}
-
-			// console.log(Canvass);
 
 			setTimeout(function(){
 				elem_CanvassList.attr('style', '');
@@ -849,15 +1036,90 @@
 
 		});
 
-		$(document.canvass).on('submit', function(){
-			if(SelectedItems.length !== 0){
+		$('#publication-modal').on('click', function(){
+			let error_check = false;
+			SelectedItems.forEach(function(e, i){
+				if(!e.inCanvass){
+					error_check = true;
+				}
+			});
+
+			if(error_check){
 				swal({
 					title: "Action invalid!",
 					text: "There are items with no assigned Canvass form.",
 					confirmButtonColor: "#DD6B55",
 					type: "error"
-				})
+				});
 				return false;
+			}
+
+			$('#publication-content').html('');
+
+			canvassObject.forEach(function(e, i){
+				let title_count = 1, text = '';
+				e.publication.title.forEach(function(e1, i1){
+					if(e.publication.title.length === 1){
+						text = e1;
+					}else{
+						if(e.publication.title.length > title_count){
+							text += `${e1}, `;
+						}else{
+							text += `and ${e1}`;
+						}
+					}
+					title_count++;
+				});
+
+				$('#publication-content').append(`
+					<div style="font-size:20px">Canvass Form ${i + 1}: <b>${text}</b></div><br>
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr><th>Mode of Procurement</th><th>Section Number</th><tr>
+							</thead>
+							<tbody data-lot="${i}"></tbody>
+						</table>
+					</div>
+				`);
+
+				e.publication.mode.forEach(function(e2, i2){
+					$(`[data-lot="${i}"]`).append(`<tr>
+						<td>${e2.mode}</td>
+						<td><input type="text" data-canvass-no="${i}"  class="form-control"></td>
+					</tr>`);
+				});
+
+			});
+
+			$('#publication').modal('show');
+
+		});
+
+		$(document.formcanvass).on('submit', function(e){
+			let input_validation = false;
+			canvassObject.forEach(function(e, i){
+				$(`[data-canvass-no="${i}"]`).each(function(i2, e2){
+					if(e2.value !== ''){
+						e.publication.mode[i2].no = escapeHtml(e2.value);
+					}else{
+						input_validation = true;
+					}
+				});
+			});
+
+			if(input_validation){
+				$('#publication').modal('hide');
+				swal({
+					title: "Action invalid!",
+					text: "There are MOP's with no section number.",
+					confirmButtonColor: "#DD6B55",
+					type: "error"
+				});
+				return false;
+			}else{
+				Canvass.forms = canvassObject;
+				$('[name="canvass"]').val(JSON.stringify(Canvass));
 			}
 		});
 

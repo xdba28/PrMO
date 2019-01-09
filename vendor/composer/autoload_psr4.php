@@ -7,11 +7,22 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
+    'Zend\\Diactoros\\' => array($vendorDir . '/zendframework/zend-diactoros/src'),
     'Pusher\\' => array($vendorDir . '/pusher/pusher-php-server/src'),
     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PhpOffice\\PhpWord\\' => array($vendorDir . '/phpoffice/phpword/src/PhpWord'),
     'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'PhpOffice\\Common\\' => array($vendorDir . '/phpoffice/common/src/Common'),
+    'Nexmo\\' => array($vendorDir . '/nexmo/client/src'),
+    'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
+    'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),
+    'Http\\Promise\\' => array($vendorDir . '/php-http/promise/src'),
+    'Http\\Client\\' => array($vendorDir . '/php-http/httplug/src'),
+    'Http\\Adapter\\Guzzle6\\' => array($vendorDir . '/php-http/guzzle6-adapter/src'),
+    'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
+    'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
+    'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
 );

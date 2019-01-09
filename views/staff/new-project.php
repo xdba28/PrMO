@@ -17,6 +17,8 @@
 	// 	'date' => 'asdasd',
 	// 	'href' => "project-details?refno=asdasd"
 	// )));
+
+	// sms();
 	
 	if(Input::exists()){
 		if(Token::check("newProject", Input::get('newProject'))){

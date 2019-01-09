@@ -27,7 +27,7 @@
 				foreach($lot['items'] as $item){
 					$user->register('canvass_returns', array(
 						'canvass_forms_id' => $canvass->id,
-						'item_id' => $item['id'],
+						'item_id' => htmlspecialchars($item['id']),
 						'supplier' => htmlspecialchars($lot['supplier']),
 						'price' => htmlspecialchars($item['price']),
 						'remarks' => htmlspecialchars($item['remarks']),
@@ -136,9 +136,9 @@
 								<h5>Lot Title: <?php echo $lot->title;?> &nbsp;&nbsp;<br>Lot Cost: <?php echo "&#8369; ".$lot->cost;?></h5>
 							</div>
 							<div class="ibox-content">
-							Supplier: <input type="text" name="lot[<?php echo $lot_count;?>][supplier]" > <br><br>
-										<input type="hidden" name="lot[<?php echo $lot_count;?>][title]" value="<?php echo $lot->title;?>">
-										<input type="hidden" name="lot[<?php echo $lot_count;?>][cost]" value="<?php echo $lot->cost;?>">
+							Supplier: <input type="text" name="lot[<?php echo $lot_count;?>][supplier]" required> <br><br>
+										<input type="hidden" name="lot[<?php echo $lot_count;?>][title]" value="<?php echo $lot->title;?>" required>
+										<input type="hidden" name="lot[<?php echo $lot_count;?>][cost]" value="<?php echo $lot->cost;?>" required>
 								<div class="table-responsive">
 					<?php
 						$canvassForms = $user->selectCanvassForm($id, $lot->title, $lot->id);
@@ -148,8 +148,8 @@
 
 						if($canvassForms['CanvassDetails']->per_item){
 							if($canvassForms['CanvassDetails']->type === "PR"){
-					?>
-								<input type="hidden" name="lot[<?php echo $lot_count;?>][per_item]" value="<?php echo $canvassForms['CanvassDetails']->per_item;?>">
+								echo '
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -164,8 +164,8 @@
 												<th>Remark</th>
 											</tr>
 										</thead>
-										<tbody>
-									<?php
+										<tbody>';
+									
 										foreach($canvassForms['items'] as $item){
 											echo '
 											<tr>
@@ -177,21 +177,21 @@
 												<td>'.$item->unit_cost.'</td>
 												<td>'.$item->total_cost.'</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'">
-													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]">
+													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
 												</td>
-												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]"></td>
+												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]" required></td>
 											</tr>
 											';
 											$item_count++;
 										}
-									?>
+									echo '
 										</tbody>
-									</table>
-						<?php
+									</table>';
+						
 							}elseif($canvassForms['CanvassDetails']->type === "JO"){
-						?>
-								<input type="text" name="lot[<?php echo $lot_count;?>][per_item]" value="<?php echo $canvassForms['CanvassDetails']->per_item;?>">
+								echo '
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -202,8 +202,8 @@
 												<th>Remark</th>
 											</tr>
 										</thead>
-										<tbody>
-									<?php
+										<tbody>';
+									
 										foreach($canvassForms['items'] as $item){
 											echo '
 											<tr>
@@ -211,24 +211,24 @@
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'">
-													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]">
+													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
 												</td>
-												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]"></td>
+												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]" required></td>
 											</tr>
 											';
 											$item_count++;
 										}
-									?>
+									echo '
 										</tbody>
-									</table>
-						<?php
+									</table>';
+						
 							}
 						}else{
 
 							if($canvassForms['CanvassDetails']->type === "PR"){
-						?>
-								<input type="text" name="lot[<?php echo $lot_count;?>][per_item]" value="<?php echo $canvassForms['CanvassDetails']->per_item;?>">
+								echo '
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -242,8 +242,8 @@
 												<th>Price Offered</th>
 											</tr>
 										</thead>
-										<tbody>
-									<?php
+										<tbody>';
+									
 										foreach($canvassForms['items'] as $item){
 											echo '
 											<tr>
@@ -255,21 +255,21 @@
 												<td>'.$item->unit_cost.'</td>
 												<td>'.$item->total_cost.'</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'">
-													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]">
+													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
 												</td>
 											</tr>
 											';
 											$item_count++;
 										}
-									?>
+									echo '
 										</tbody>
 									</table>
-								Remark: <input type="text" name="lot[<?php echo $lot_count;?>][remarks]">
-						<?php
+								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>';
+						
 							}elseif($canvassForms['CanvassDetails']->type === "JO"){
-						?>
-								<input type="text" name="lot[<?php echo $lot_count;?>][per_item]" value="<?php echo $canvassForms['CanvassDetails']->per_item;?>">
+								echo '
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'. $canvassForms['CanvassDetails']->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -279,8 +279,8 @@
 												<th>Price Offered</th>
 											</tr>
 										</thead>
-										<tbody>
-									<?php
+										<tbody>';
+									
 										foreach($canvassForms['items'] as $item){
 											echo '
 											<tr>
@@ -288,18 +288,18 @@
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'">
-													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]">
+													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
 												</td>
 											</tr>
 											';
 											$item_count++;
 										}
-									?>
+									echo '
 										</tbody>
 									</table>
-								Remark: <input type="text" name="lot[<?php echo $lot_count;?>][remarks]">
-						<?php
+								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>';
+						
 							}
 						}
 						?>

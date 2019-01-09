@@ -32,6 +32,7 @@
 
 		require_once "../../functions/sanitize.php";
 		require_once "../../functions/notif.php";
+		require_once "../../functions/sms.php";
 
 
 

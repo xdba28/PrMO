@@ -154,7 +154,6 @@
 
 						<div class="ibox-content animated fadeInDown none" id="addUnit">
 							<div class="row">
-								
 								<div class="col-sm-6">
 									<form id="profile" role="form" method="POST" enctype="multipart/form-data">
 									<div class="form-group mt-20">
