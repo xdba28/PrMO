@@ -484,7 +484,7 @@
 				$canvassItems = $this->db->results();
 			}
 
-			$Details = [
+			$Details = (object) [
 				'CanvassDetails' => $canvassDetail,
 				'items' => $canvassItems
 			];

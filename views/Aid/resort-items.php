@@ -730,9 +730,17 @@
 							let item = JSON.parse(atob(e.dataset.details));
 							if(curtitle === undefined){
 								lot.title.push(lot_details[1]);
-								lot.cost += parseFloat(item.tCost);
+								if(lot_details[0] === "PR"){
+									lot.cost += parseFloat(item.tCost);
+								}else if(lot_details[0] === "JO"){
+									lot.cost = lot_details[3]
+								}
 							}else{
-								lot.cost += parseFloat(item.tCost);
+								if(lot_details[0] === "PR"){
+									lot.cost += parseFloat(item.tCost);
+								}else if(lot_details[0] === "JO"){
+									lot.cost = lot_details[3]
+								}
 							}
 
 							item.lot_name = lot_details[1];
@@ -832,8 +840,6 @@
 							// $(`[data-canv-itemCount="${i}"]`).text(`Items: ${Canvass.forms[C_elem_attr].items.length}`);
 							$(`[data-canv-itemCount="${i}"]`).text(`Items: ${canvassObject[C_elem_attr].items.length}`);
 							
-							// console.log({SelectedItems});
-							console.log({canvassObject});
 						}
 					}else{
 						swal({

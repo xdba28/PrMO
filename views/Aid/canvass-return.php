@@ -146,10 +146,10 @@
 						// echo "<pre>".print_r($canvassForms['CanvassDetails'])."</pre>";
 						// echo "<pre>".print_r($canvassForms['items'])."</pre>";
 
-						if($canvassForms['CanvassDetails']->per_item){
-							if($canvassForms['CanvassDetails']->type === "PR"){
+						if($canvassForms->CanvassDetails->per_item){
+							if($canvassForms->CanvassDetails->type === "PR"){
 								echo '
-								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -166,7 +166,7 @@
 										</thead>
 										<tbody>';
 									
-										foreach($canvassForms['items'] as $item){
+										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
 												<td>'.$item->mode.'</td>
@@ -189,9 +189,9 @@
 										</tbody>
 									</table>';
 						
-							}elseif($canvassForms['CanvassDetails']->type === "JO"){
+							}elseif($canvassForms->CanvassDetails->type === "JO"){
 								echo '
-								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -204,7 +204,7 @@
 										</thead>
 										<tbody>';
 									
-										foreach($canvassForms['items'] as $item){
+										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
 												<td>'.$item->mode.'</td>
@@ -226,9 +226,9 @@
 							}
 						}else{
 
-							if($canvassForms['CanvassDetails']->type === "PR"){
+							if($canvassForms->CanvassDetails->type === "PR"){
 								echo '
-								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms['CanvassDetails']->per_item.'" required>
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -244,7 +244,7 @@
 										</thead>
 										<tbody>';
 									
-										foreach($canvassForms['items'] as $item){
+										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
 												<td>'.$item->mode.'</td>
@@ -265,11 +265,12 @@
 									echo '
 										</tbody>
 									</table>
-								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>';
+								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
+								Fail: <input type="checkbox" class="i-checks">';
 						
-							}elseif($canvassForms['CanvassDetails']->type === "JO"){
+							}elseif($canvassForms->CanvassDetails->type === "JO"){
 								echo '
-								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'. $canvassForms['CanvassDetails']->per_item.'" required>
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'. $canvassForms->CanvassDetails->per_item.'" required>
 									<table class="table table-bordered">
 										<thead>
 											<tr>
@@ -281,7 +282,7 @@
 										</thead>
 										<tbody>';
 									
-										foreach($canvassForms['items'] as $item){
+										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
 												<td>'.$item->mode.'</td>
@@ -289,7 +290,7 @@
 												<td>'.$item->tags.'</td>
 												<td>
 													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
-													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
+													<input class="form-control" type="number" pattern="[0-9]*" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
 												</td>
 											</tr>
 											';
@@ -298,7 +299,8 @@
 									echo '
 										</tbody>
 									</table>
-								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>';
+								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
+								Fail: <input type="checkbox" class="i-checks">';
 						
 							}
 						}
@@ -341,7 +343,10 @@
 </body>
 <script>
 	$(document).ready(function(){
-
+		$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green'
+		});
 	});
 </script>
 </html>

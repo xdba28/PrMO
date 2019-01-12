@@ -260,7 +260,7 @@ require_once "../../functions/account-verifier.php";
 						break;
 				}
 			} catch (error) {
-				console.log(error);
+				
 			}
 					
 			// modal
