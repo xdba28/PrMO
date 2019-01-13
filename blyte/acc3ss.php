@@ -43,6 +43,14 @@
 
 
 
+//    udpate password
+// $admin = new Admin();
+// $salt = Hash::salt(32);
+// $admin->update('prnl_account', 'account_id', '2011-99999', array(
+// 	'salt' => $salt,
+// 	'userpassword' => Hash::make("lalala", $salt)
+	
+// ));
 
         /* Codes on top are the actual init.php content */
 
@@ -73,6 +81,8 @@
 					}else{
 						if($user->data()->status == "DEACTIVATED"){
 							Session::flash('deactivated', 'Sorry, but your account was deactivated.');
+						}else{
+							Session::flash('incorrect', 'Incorrect Username or Password');
 						}
 					}
 					 

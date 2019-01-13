@@ -68,4 +68,4 @@
 <link href="../../assets/my_style.css" rel="stylesheet">
 
 
-<meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'))?>">
+<meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'));?>">

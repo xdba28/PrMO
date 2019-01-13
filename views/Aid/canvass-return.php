@@ -13,37 +13,80 @@
 
 	if(!empty($_POST)){
 
+		// echo "<pre>".print_r($_POST)."</pre>";
+		// die();
+
 		$user->startTrans();
 
 		$gds = htmlspecialchars($_POST['gds']);
 
 		foreach($_POST['lot'] as $lot){
 
-			$publication = $user->projectPublication($gds, htmlspecialchars($lot['title']), htmlspecialchars($lot['cost']));
-			$canvass = $user->get('canvass_forms', array('publication_reference', '=', $publication));
+			// $publication = $user->projectPublication($gds, htmlspecialchars($lot['title']), htmlspecialchars($lot['cost']));
+			// $canvass = $user->get('canvass_forms', array('publication_reference', '=', $publication));
 
 			if($lot['per_item']){
 
 				foreach($lot['items'] as $item){
+
 					$user->register('canvass_returns', array(
-						'canvass_forms_id' => $canvass->id,
-						'item_id' => htmlspecialchars($item['id']),
-						'supplier' => htmlspecialchars($lot['supplier']),
-						'price' => htmlspecialchars($item['price']),
-						'remarks' => htmlspecialchars($item['remarks']),
+						'canvass_forms_id' => $lot['lot_id'],
+						'item_id' => $item['id'],
+						'remarks' => NULL,
+						'lot_fail' => NULL
 					));
+
+					$returns_id = $user->lastId();
+					$count = 0;
+
+					foreach($item['supplier'] as $supplier){
+
+						$item_fail = (isset($item['fail'][$count])) ? true : false;
+
+						$user->register('canvass_quotation', array(
+							'returns_id' => $returns_id,
+							'supplier' => htmlspecialchars($supplier),
+							'price' => htmlspecialchars($item['price'][$count]),
+							'remark' => htmlspecialchars($item['remark'][$count]),
+							'item_fail' => $item_fail
+						));
+
+						$count++;
+					}
+
 				}
 
 			}else{
 
+				
 				foreach($lot['items'] as $item){
+
+					$lot_fail = (isset($lot['fail'])) ? true : false;
+					
 					$user->register('canvass_returns', array(
-						'canvass_forms_id' => $canvass->id,
+						'canvass_forms_id' => $lot['lot_id'],
 						'item_id' => NULL,
-						'supplier' => htmlspecialchars($lot['supplier']),
-						'price' => htmlspecialchars($item['price']),
 						'remarks' => htmlspecialchars($lot['remarks']),
+						'lot_fail' => $lot_fail
 					));
+
+					$returns_id = $user->lastId();
+					$count = 0;
+
+					foreach($item['supplier'] as $supplier){
+
+						$user->register('canvass_quotation', array(
+							'returns_id' => $returns_id,
+							'supplier' => htmlspecialchars($supplier),
+							'price' => htmlspecialchars($item['price'][$count]),
+							'remark' => NULL,
+							'item_fail' => NULL
+						));
+
+						$count++;
+					}
+
+
 				}
 
 			}
@@ -120,14 +163,15 @@
 
 			if($project){
 				
-				$lots = $user->getAll('publication', array('gds_reference', '=', $id));
+				$lots = $user->getAll('canvass_forms', array('gds_reference', '=', $id));
 				$lot_count = 0;
 				$item_count = 0;
+				$buttonCount = 0;
 
 				echo '<input type="hidden" name="gds" value="'.$id.'">';
 
 				foreach($lots as $lot){
-					// echo "<pre>".print_r($lot)."</pre>";
+					
 	?>	
 				<div class="row">
 					<div class="col-lg-12  animated fadeInRight">
@@ -136,15 +180,12 @@
 								<h5>Lot Title: <?php echo $lot->title;?> &nbsp;&nbsp;<br>Lot Cost: <?php echo "&#8369; ".$lot->cost;?></h5>
 							</div>
 							<div class="ibox-content">
-							Supplier: <input type="text" name="lot[<?php echo $lot_count;?>][supplier]" required> <br><br>
-										<input type="hidden" name="lot[<?php echo $lot_count;?>][title]" value="<?php echo $lot->title;?>" required>
-										<input type="hidden" name="lot[<?php echo $lot_count;?>][cost]" value="<?php echo $lot->cost;?>" required>
+								<input type="hidden" name="lot[<?php echo $lot_count;?>][title]" value="<?php echo $lot->title;?>" required>
+								<input type="hidden" name="lot[<?php echo $lot_count;?>][cost]" value="<?php echo $lot->cost;?>" required>
+								<input type="hidden" name="lot[<?php echo $lot_count;?>][lot_id]" value="<?php echo $lot->id?>" required>
 								<div class="table-responsive">
 					<?php
 						$canvassForms = $user->selectCanvassForm($id, $lot->title, $lot->id);
-
-						// echo "<pre>".print_r($canvassForms['CanvassDetails'])."</pre>";
-						// echo "<pre>".print_r($canvassForms['items'])."</pre>";
 
 						if($canvassForms->CanvassDetails->per_item){
 							if($canvassForms->CanvassDetails->type === "PR"){
@@ -153,15 +194,13 @@
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th>Mode of Procurement</th>
-												<th>Stock No.</th>
 												<th>Unit</th>
 												<th>Item Description</th>
 												<th>Quantity</th>
 												<th>Unit Cost</th>
 												<th>Total Cost</th>
-												<th>Price Offered</th>
-												<th>Remark</th>
+												<th>Actions</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -169,21 +208,41 @@
 										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
-												<td>'.$item->mode.'</td>
-												<td>'.$item->stock_no.'</td>
+												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
 												<td>'.$item->unit.'</td>
 												<td>'.$item->item_description.'</td>
 												<td>'.$item->quantity.'</td>
 												<td>'.$item->unit_cost.'</td>
 												<td>'.$item->total_cost.'</td>
-												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
-													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
+												<td style="text-align:center">
+													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="true" data-fcount="0" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
+														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
+													</button>
+													<br>
+													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
+														<i class="fa fa-times"></i>&nbsp;Delete Input
+													</button>										
 												</td>
-												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]" required></td>
+												<td>
+													<div class="row" id="row-'.$buttonCount.'">
+														<div class="col-lg-2">
+															<label>Supplier: </label>
+															<label>Price: </label>
+															<label>Remark: </label>
+															<label>Fail: </label>
+															<input type="checkbox" class="i-checks" name="lot['.$lot_count.'][items]['.$item_count.'][fail][0]">
+														</div>
+														<div class="col-lg-10">
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
+															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][remark][]" required>
+														</div>
+													</div>
+												</td>
 											</tr>
 											';
 											$item_count++;
+											$buttonCount++;
 										}
 									echo '
 										</tbody>
@@ -195,11 +254,10 @@
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th>Mode of Procurement</th>
 												<th>List Title</th>
 												<th>Tags</th>
-												<th>Price Offered</th>
-												<th>Remark</th>
+												<th>Actions</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -207,17 +265,38 @@
 										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
-												<td>'.$item->mode.'</td>
+												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
-												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
-													<input class="form-control" type="number" step="0.01" min="0.00" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
+												<td style="text-align:center">
+													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="true" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
+														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
+													</button>
+													<br>
+													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
+														<i class="fa fa-times"></i>&nbsp;Delete Input
+													</button>										
 												</td>
-												<td><input type="text" class="form-control" name="lot['.$lot_count.'][items]['.$item_count.'][remarks]" required></td>
+												<td>
+													<div class="row" id="row-'.$buttonCount.'">
+														<div class="col-lg-2">
+															<label>Supplier: </label>
+															<label>Price: </label>
+															<label>Remark: </label>
+															<label>Fail: </label>
+															<input type="checkbox" class="i-checks" name="lot['.$lot_count.'][items]['.$item_count.'][fail][]">
+														</div>
+														<div class="col-lg-10">
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
+															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][remark][]" required>
+														</div>
+													</div>
+												</td>
 											</tr>
 											';
 											$item_count++;
+											$buttonCount++;
 										}
 									echo '
 										</tbody>
@@ -232,14 +311,13 @@
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th>Mode of Procurement</th>
-												<th>Stock No.</th>
 												<th>Unit</th>
 												<th>Item Description</th>
 												<th>Quantity</th>
 												<th>Unit Cost</th>
 												<th>Total Cost</th>
-												<th>Price Offered</th>
+												<th>Actions</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -247,26 +325,43 @@
 										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
-												<td>'.$item->mode.'</td>
-												<td>'.$item->stock_no.'</td>
+												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
 												<td>'.$item->unit.'</td>
 												<td>'.$item->item_description.'</td>
 												<td>'.$item->quantity.'</td>
 												<td>'.$item->unit_cost.'</td>
 												<td>'.$item->total_cost.'</td>
+												<td style="text-align:center">
+													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="false" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
+														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
+													</button>
+													<br>
+													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
+														<i class="fa fa-times"></i>&nbsp;Delete Input
+													</button>										
+												</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
-													<input class="form-control" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
+													<div class="row" id="row-'.$buttonCount.'">
+														<div class="col-lg-2">
+															<label>Supplier: </label>
+															<label>Price: </label>
+														</div>
+														<div class="col-lg-10">
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
+															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
+														</div>
+													</div>
 												</td>
 											</tr>
 											';
 											$item_count++;
+											$buttonCount++;
 										}
 									echo '
 										</tbody>
 									</table>
 								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
-								Fail: <input type="checkbox" class="i-checks">';
+								Fail: <input type="checkbox" name="lot['.$lot_count.'][fail]" class="i-checks">';
 						
 							}elseif($canvassForms->CanvassDetails->type === "JO"){
 								echo '
@@ -278,6 +373,8 @@
 												<th>List Title</th>
 												<th>Tags</th>
 												<th>Price Offered</th>
+												<th>Actions</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -285,22 +382,41 @@
 										foreach($canvassForms->items as $item){
 											echo '
 											<tr>
+												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
 												<td>'.$item->mode.'</td>
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
+												<td style="text-align:center">
+													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="false" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
+														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
+													</button>
+													<br>
+													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
+														<i class="fa fa-times"></i>&nbsp;Delete Input
+													</button>										
+												</td>
 												<td>
-													<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
-													<input class="form-control" type="number" pattern="[0-9]*" name="lot['.$lot_count.'][items]['.$item_count.'][price]" required>
+													<div class="row" id="row-'.$buttonCount.'">
+														<div class="col-lg-2">
+															<label>Supplier: </label>
+															<label>Price: </label>
+														</div>
+														<div class="col-lg-10">
+															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
+															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
+														</div>
+													</div>
 												</td>
 											</tr>
 											';
 											$item_count++;
+											$buttonCount++;
 										}
 									echo '
 										</tbody>
 									</table>
 								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
-								Fail: <input type="checkbox" class="i-checks">';
+								Fail: <input type="checkbox" name="lot['.$lot_count.'][fail]" class="i-checks">';
 						
 							}
 						}
@@ -346,6 +462,63 @@
 		$('.i-checks').iCheck({
 			checkboxClass: 'icheckbox_square-green',
 			radioClass: 'iradio_square-green'
+		});
+
+		setTimeout(function(){
+			$('#minimizer').trigger('click');
+		}, 1000);
+
+		$('[data-type]').on('click', function(){
+			if(this.dataset.type === "add"){
+				if(this.dataset.peritem === "true"){
+					$(`#row-${this.dataset.btnNum}`).append(`
+						<div class="col-lg-2">
+							<label>Supplier: </label>
+							<label>Price: </label>
+							<label>Remark: </label>
+							<label>Fail: </label>
+							<input type="checkbox" class="i-checks" name="${this.dataset.name}[fail][${parseInt(this.dataset.fcount) + 1}]">
+						</div>
+						<div class="col-lg-10">
+							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[supplier][]" required>
+							<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="${this.dataset.name}[price][]" required>
+							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[remark][]" required>
+						</div>
+					`);
+					this.dataset.fcount = parseInt(this.dataset.fcount) + 1;
+					$('.i-checks').iCheck({
+						checkboxClass: 'icheckbox_square-green',
+						radioClass: 'iradio_square-green'
+					});
+				}else{
+					$(`#row-${this.dataset.btnNum}`).append(`
+						<div class="col-lg-2">
+							<label>Supplier: </label>
+							<label>Price: </label>
+						</div>
+						<div class="col-lg-10">
+							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[supplier][]" required>
+							<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="${this.dataset.name}[price][]" required>
+						</div>
+					`);
+				}
+			}else if(this.dataset.type === "del"){
+				let del_array = $(`#row-${this.dataset.btnNum} div`);
+				
+				if(this.dataset.peritem === "true"){
+					del_array[del_array.length - 1].remove();
+					del_array[del_array.length - 2].remove();
+				}else{
+					del_array[del_array.length - 1].remove();
+					del_array[del_array.length - 2].remove();
+					del_array[del_array.length - 3].remove();
+				}
+
+				let addBtn = this.parentNode.childNodes[1];
+				if(addBtn.dataset.fcount !== "-1"){
+					addBtn.dataset.fcount = parseInt(addBtn.dataset.fcount) - 1;
+				}
+			}
 		});
 	});
 </script>

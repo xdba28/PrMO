@@ -1699,7 +1699,7 @@ Licensed under the BSD-2-Clause License.
         last = next;
         idx += 1;
       }
-      this.text1 = this.drawEmptyDonutLabel(cx, cy - 10, this.options.labelColor, 15, 800);
+      this.text1 = this.drawEmptyDonutLabel(cx, cy - 10, this.options.labelColor, 12, 200);
       this.text2 = this.drawEmptyDonutLabel(cx, cy + 10, this.options.labelColor, 14);
       max_value = Math.max.apply(Math, this.values);
       idx = 0;

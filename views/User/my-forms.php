@@ -127,6 +127,7 @@
 
                                         <th>no. </th>
                                         <th>Reference </th>
+										<th>Related to </th>
                                         <th>Title </th>
 										<th class="center">Status </th>
                                         <th>Date Created</th>
@@ -136,7 +137,7 @@
                                     <tbody>
 									<?php 
 										$myRequests = $user->getAll('project_request_forms', array('requested_by', '=', Session::get(Config::get('session/session_name'))));
-										//echo "<pre>",print_r($myRequests),"</pre>";
+										// echo "<pre>",print_r($myRequests),"</pre>";
 										foreach($myRequests as $request){
 											if(isset($count)){$count++;}else{$count=1;}
 												
@@ -158,10 +159,21 @@
 												
 											}
 
+												//check if this is already a project and related to what project reference
+												$isProject = $user->isProject("projects", "request_origin", $request->form_ref_no);
+												
+												if($isProject) {
+													$relatedTo = $isProject->project_ref_no;
+												}else{
+													$relatedTo = '<a style="color:red">NA</a>';
+													
+												}											
+
 									?>
 										<tr>
 											<td><?php echo $count;?></td>
 											<td><?php echo $request->form_ref_no;?></td>
+											<td><?php echo $relatedTo;?></td>
 											<td style="max-width:300px"><?php echo $request->title;?></td>
 											<td class="status left"><?php echo $displayStatus;?></td>
 											<td><?php echo Date::translate($request->date_created, 2);?></td>
@@ -218,7 +230,8 @@
 									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
 									$addionalContent = '
 										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
-											<p style="margin-left:20px"><u><b><a href="project-details?refno='.$isProject->project_ref_no.'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
+									base64_encode
+									<p style="margin-left:20px"><u><b><a href="project-details?refno='.base64_encode($isProject->project_ref_no).'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
 										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
 											<small>'.$accomplishment.'%</small>
 											<div class="progress progress-mini">
@@ -438,7 +451,7 @@
 													</div>
 												</div>	
 												<div class="col-lg-8">
-													<h4 class="text-left" style="color: #F37123">Lot Comment</h4>
+													<h4 class="text-left" style="color: #F37123">Lot Notes</h4>
 													<div class="widget style1 yellow-bg">
 														<div class="row vertical-align">
 															<div class="col-1">												
@@ -475,7 +488,7 @@
 															];
 													?>
 														<tr>
-															<td style="text-align:center;">
+															<td style="text-align:left;">
 																<input type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
 															</td>
 															<td><?php echo $detail->header;?></td>

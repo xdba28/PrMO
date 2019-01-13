@@ -1,7 +1,6 @@
 <script>
 	function ModalSubmit(id, modal){
 		var DataModal = $(`#${id}`).serialize();
-		console.log(DataModal);
 		SendDoSomething("POST", "../xhr-files/xhr-modal-actions.php", DataModal, {
 			do: function(res){
 				$(`#${modal}`).modal('hide');
@@ -281,7 +280,7 @@
   <div class="modal-dialog  modal-expanded" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation result Registration</h3>
+        <h3 class="modal-title" id="preprocTitle">Pre-Procurement Evaluation Result Registration</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -353,6 +352,100 @@
   </div>
 </div>
 
+<!-- pre procurement evaluation registration from twg-->
+
+<div class="modal fade" id="twgEvaluation" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="evaluationTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-expanded" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="evaluationTitle">Pre-Procurement Evaluation Result Registration</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+			<form id="twgPreprocModal" method="POST" enctype="multipart/form-data" role="form">
+				<div class="row" id="">
+					<div class="col-sm-12">
+						<div class="form-group"> 
+							<label for="" class="font-bold my-blue">Project Reference no.</label>
+							<input type="text" class="form-control" id="test11" name="projectReference" required autocomplte="off" Readonly>
+						</div>								
+						<div class="alert alert-success">
+							
+							<p>
+								<i class="fas fa-info"></i>
+								Note that you can only declare a single mode of procurement in this registration form. In cases that two or more mode of procurement is required, or there is a need for <i><b>DBMPS Checking Result</b></i> first to finalize the individual declarations of mode of procurement.  the responsibility of registering individual mode of procurement is passed to the procurement aid. If so choose <i><b>"Multiple MOPs" </b></i> below as <b>Mode of Procurement Specification</b>.
+							</p><br>
+							<p>
+								Also, consider that if you choose the <i><b>"Multiple MOPs"</b></i> option, all other declaration you made in this form except <i><b>"Evaluator's Comment"</b></i>  will be registered for referencing of the procurement aid in declaring individual mode of procurement for each item.
+							</p><br>
+
+							<p>
+								<i class="fas fa-info"></i>
+								<b style="color:red">Important:</b> If you declared that this evaluation has an <i><b>"issue to be resolved or cleared by the end user"</i></b>&nbsp <b style="color:red">and</b> You chose <i><b>"Single MOP"</i></b>  as <b>Mode of Procurement Specification</b>, The responsibility of declaring if this evaluation has been resolved or not for the following reevaluation lies on this account unless you choose <i><b>"Multiple MOPs"</i></b>.
+							</p>
+						</div>
+						<div class="form-group">
+							<label for="" class="font-bold my-blue">Mode of Procurement Specification</label>
+							<div class="">
+								<div class="radio radio-success">
+									<input type="radio" name="mopOption" id="mopOption1" value="overall" checked>
+									<label for="mopOption1">
+										Single MOP
+									</label>
+								</div>
+								<div class="radio radio-success">
+									<input type="radio" name="mopOption" id="mopOption2" value="muptiple">
+									<label for="mopOption2">
+										Multiple MOPs
+									</label>
+								</div>
+							</div>							
+
+						</div>
+						<div class="form-group">
+						   <label for="" class="font-bold my-blue">Specific Mode of Procurement (Single MOP)</label>
+						   <div class="input-group date">
+							   <span class="input-group-addon"><i class="fa fa-list"></i></span>
+							   <select class="form-control m-b" name="MOPbyTwg">
+								   <option value="TBE">Choose...</option>
+								   <option value="PB">Public Bidding</option>
+								   <option value="SVP">Small Value Procurement</option>
+								   <option value="DC">Direct Contracting</option>
+								   <option value="NEGO">Negociated Procurement</option>
+								   <option value="Shopping">Shopping</option>
+								   <option value="RO">Repeat Order</option>
+								   <option value="LSB">Limited Source Bidding</option>
+							   </select>
+						   </div>
+					   </div>
+					   <br>
+					   <div id="pre-eval-formData" class="animated fadeInRight" style="display:none;">
+
+					   </div>
+					   <div class="form-group">
+						   <label class="font-bold my-blue">Evaluator's Comment</label>
+						   <div dataFor="pre-proc-eval-issue-twg">
+						   </div>
+							   <textarea name="commentbyTwg" id="comment1" placeholder="Specify technical member's comment" class="form-control" rows="7" ></textarea>
+							   <input type="text" value="hello" id="evaluatortwg" name="evaluator" hidden>							
+					   </div>
+					</div>
+				</div>
+				<input type="text" hidden value="twgPreprocResult" name="action">
+			</form>	
+	  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="ModalSubmit('twgPreprocModal', 'twgEvaluation')">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- reset password  / Super admin -->
 		<div class="modal inmodal" id="resetPassword" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">
@@ -370,12 +463,12 @@
 							New Password will be sent automatically to user's registered number. <a id="phone" class="font-bold" style="color:#438CFC; font-size:20px">default</a>
 						</div><br>
 							<div class="input-group">
-								<span class="input-group-addon"><i class="fas fa-lock"></i></span><input type="text" class="form-control" placeholder="New Password">
+								<span class="input-group-addon"><i class="fas fa-lock"></i></span><input type="text" id="s-user-Npass" class="form-control" placeholder="New Password">
 							</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary">Reset</button>
+						<button type="button" class="btn btn-primary" data-reset="user">Reset</button>
 					</div>
 				</div>
 			</div>
@@ -423,12 +516,59 @@
 					<div class="row">
 					
 						<div class="col-lg-12">
-							<div class="alert alert-success">
-								<i class="fas fa-info"></i> Click on the pdf icon to preview document.
-							</div>
-							<div data-resort-items="files">
-							
-							</div>
+							   <div class="alert alert-success">
+									<i class="fas fa-info"></i> Click on the pdf icon to preview document.
+							   </div>
+							   <div data-resort-items="files">
+								   <!-- <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_Direct Contracting.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>
+
+								   <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_SVP.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>
+
+								   <div class="my-file-box">
+									   <div class="file">
+										   <a href="#">
+											   <span class="corner"></span>
+
+											   <div class="icon">
+												   <i class="fas fa-file-pdf"></i>
+											   </div>
+											   <div class="file-name">
+												   BAC Reso-Recommending & Publication_Shopping.pdf
+											   </div>
+										   </a>
+									   </div>
+
+								   </div>							 -->
+							   </div>
+					
 						</div>
 					</div>
 			</div>

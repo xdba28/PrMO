@@ -30,7 +30,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Standard Users</title>
+    <title>INSPINIA | End Users</title>
 	<?php include "../../includes/parts/admin_styles.php";?>
 	<script>
 		var PersUpdate = '<?php 
@@ -60,18 +60,18 @@
 				</nav>
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>Standard Users Management</h2>
+                <div class="col-sm-6">
+                    <h2>End-user Accounts Management</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Users</a>
+                            <a href="#">User Accounts</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Manage Users</strong>
+                            <strong>End Users</strong>
                         </li>
                     </ol>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <div class="title-action">
                         <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
@@ -83,10 +83,10 @@
 
 			
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 animated fadeInRight">
                     <div class="ibox myShadow">
                         <div class="ibox-title">
-                            <h5>Standard Users Accounts</h5>
+                            <h5>End Users Accounts</h5>
 
                             <div class="ibox-tools">
                                 <a class="collapse-link">
@@ -122,15 +122,6 @@
                                             $fullname = $data->edr_fname." ".$data->edr_mname." ".$data->edr_lname." ".$data->edr_ext_name;
                                         }
 
-                                        // if($data->status == "ACTIVATED"){
-
-                                        //     $color = "text-navy";
-                                        //     $option = "Deactivate Account";
-
-                                        // }else{
-                                        //     $color = "text-danger";
-                                        //     $option = "Activate Account";
-                                        // }
                                        
 
                                         echo '                                        
@@ -146,7 +137,6 @@
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" data-toggle="modal" data-name="'.$fullname.'" data-phone="'.$data->phone.'" data-target="#resetPassword" data-id="'.$data->edr_id.'" data-office="'.$data->office_name.'">Reset Password</a></li>
-                                                            <li class="dropdown-divider"></li>
                                                         </ul>
                                                     </div>									
                                                 </td>
@@ -202,7 +192,47 @@
 					timer: 13000
 				});
 			}
+
+			var details = {};
+
+			$('#resetPassword').on('show.bs.modal', function(event){
+				var button = $(event.relatedTarget); // Button that triggered the modal
+				var recipient = button.data('name'); // Extract info from data-* attributes
+				var office = button.data('office');
+				var id = button.data('id');
+				var phone = button.data('phone');
+				var modal = $(this);
+
+				details.id = id;
+				details.office = office;
+				details.recipient = recipient;
+				details.phone = phone;
+				details.user = "user";
+
+				modal.find('#phone').html(phone);
+				modal.find('.modal-title').html('Reset Account Password <br> <a style="color:#06425C">' + recipient + '</a>');
+				modal.find('#office').html(office);
+			});
+
+			$('[data-reset="user"]').on('click', function(){
+				details.newPass = $('#s-user-Npass').val();
+				if(details.newPass !== ''){
+					SendDoNothing("POST", "xhr-reset.php", details, {
+						title: "Success!",
+						text: "Successfully reset user's account."
+					});
+					$('#resetPassword').modal('hide');
+				}else{
+					$('#resetPassword').modal('hide');
+					swal({
+						title: "Action invalid!",
+						text: "Enter a new password.",
+						confirmButtonColor: "#DD6B55",
+						type: "error"
+					});
+				}
+			});
+
 		});
 	</script>
-
 </html>

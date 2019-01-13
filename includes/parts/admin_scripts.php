@@ -126,7 +126,7 @@ require_once "../../functions/account-verifier.php";
 					NotifCount.innerText = (add).toFixed(0);
 				}
 				
-				if(msg.href !== undefined){
+				if(typeof msg.href !== 'undefined'){
 					$('#NotifList').prepend(`<li class="active"><a href="${msg.href}" class="dropdown-item"><div>
 					<i class="fa fa-bell fa-fw"></i> ${msg.message}</div><small>Time: ${msg.date}</small></a></li>
 					<li class="dropdown-divider"></li>`);
@@ -228,13 +228,13 @@ require_once "../../functions/account-verifier.php";
     <script>
 		// CUSTOM GLOBAL SCRIPTS
 		$(function(){
-			// side nav active
 			try {
+				// side nav active
 				var path = window.location.pathname.split("/");
 				var link = document.querySelector(`[href="${path[path.length - 1]}"]`);
-				var sLink = ['Dashboard', 'Calendar'];
+				var sLink = ['Dashboard', 'Calendar', 'Reports', 'evaluation'];
 				var higherLevelpages = [
-					{pages: ['resort-items', 'canvass-return'], link: 'Ongoing-projects'}
+					{pages: ['resort-items'], link: 'Ongoing-projects'}
 				];
 
 				var highlevelpage = higherLevelpages.find(function(e1){
@@ -243,7 +243,7 @@ require_once "../../functions/account-verifier.php";
 					});
 				});
 
-				if(highlevelpage !== undefined){
+				if(typeof highlevelpage !== "undefined"){
 					link = document.querySelector(`[href="${highlevelpage.link}"]`);
 				}
 
@@ -557,6 +557,18 @@ require_once "../../functions/account-verifier.php";
 				}
 			});
 			// modal
+			// twg evaluation result modal
+			$('#twgEvaluation').on('show.bs.modal', function (event) {
+			var button1 = $(event.relatedTarget) // Button that triggered the modal
+			var toevaluate = button1.data('toevaluate') // Extract info from data-* attributes
+			var evaluatortwg = button1.data('evaluatortwg')
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var evalmodal = $(this);
+			// evalmodal.find('#test11').val(toevaluate);
+			 document.getElementById("test11").value = toevaluate;
+			 document.getElementById("evaluatortwg").value = evaluatortwg;
+			})			
 		
 			//available actions modal
 			$('#actionsModal').on('show.bs.modal', function (event) {
@@ -607,7 +619,12 @@ require_once "../../functions/account-verifier.php";
 									classtype = "yellow-bg"
 									icon = "fas fa-check";
 									cardAction = `href="#"`;
-									break;								
+									break;
+								case "No Actions Available":
+									classtype = "yellow-bg";
+									icon = "far fa-hand-paper";
+									cardAction = ``;
+									break						
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
@@ -658,6 +675,7 @@ require_once "../../functions/account-verifier.php";
 						}
 						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
 
+						console.log(res.formData);
 						$('#pre-eval-formData').html('');
 						res.formData.forEach(function(e, i){
 							if(e.type === "PR"){
@@ -756,19 +774,7 @@ require_once "../../functions/account-verifier.php";
 
 			});
 			
-			//superadmin reset password
-			$('#resetPassword').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget) // Button that triggered the modal
-			  var recipient = button.data('name') // Extract info from data-* attributes
-			  var office = button.data('office')
-			  var id = button.data('id')
-			  var phone = button.data('phone')
-			  var modal = $(this)
 
-			  modal.find('#phone').html(phone)
-			  modal.find('.modal-title').html('Reset Account Password <br> <a style="color:#06425C">' + recipient + '</a>')
-			  modal.find('#office').html(office)
-			})
 		
 			
 			//outgoing documents table collapse all div
@@ -1028,7 +1034,7 @@ require_once "../../functions/account-verifier.php";
 			$('.footable2').footable();
 			
 			$("#typeahead").typeahead({
-				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff"]
+				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff", "Technical Member"]
 			});
 		
 
@@ -1463,6 +1469,13 @@ $(window).scroll(function() {
 });
 
 $('button.back-to-top').click(function() {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+$('button.static-back-to-top').click(function() {
   $('html, body').animate({
     scrollTop: 0
   }, 800);

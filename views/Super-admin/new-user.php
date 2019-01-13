@@ -43,13 +43,19 @@
                 $salt = Hash::salt(32);
 
                 try{
-                    
+					
+					If(Input::get('ext') == ""){
+						$extensionName = "XXXXX";
+					}else{
+						$extensionName = Input::get('ext');
+					}
+
                     $sa->register('personnel', array(
                         'prnl_id' => Input::get('ID'),
                         'prnl_fname' => Input::get('first'),
                         'prnl_mname' => Input::get('middle'),
                         'prnl_lname' => Input::get('last'),
-                        'prnl_ext_name' => 'XXXXX',
+                        'prnl_ext_name' => $extensionName,
                         'prnl_email' => Input::get('email'),
                         'phone' => Input::get('phone'),
                         'prnl_designated_office' => Input::get('office'),
@@ -68,7 +74,7 @@
                     Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
 
                 }catch(Exception $e){
-
+					/* DENVER!!!!! Display errors in toust*/
                 }
 
             }else{
@@ -76,7 +82,8 @@
                 /* DENVER!!!!! Display errors in toust*/
                 foreach($validation->errors() as $error){
                     $e .= $error;
-                }
+				}
+				echo $e;
             }
 
 
@@ -97,7 +104,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Dashboard v.3</title>
+    <title>INSPINIA | Admin Registration</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
@@ -125,29 +132,29 @@
 				</nav>
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>User Registration</h2>
+                <div class="col-sm-6">
+                    <h2>Admin Account Registration</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="#">Employees</a>
+                            <a href="#">User Accounts</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Register User</strong>
+                            <strong>Register Admin Account</strong>
                         </li>
                     </ol>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <div class="title-action">
                         <a href="Dashboard.php" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
                 </div>
             </div>
 
-            <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="wrapper wrapper-content animated fadeInUp">
 					
             <div class="row">
-                <div class="col-sm-8">
-                    <div class="ibox">
+                <div class="col-sm-8 animated fadeInLeft">
+                    <div class="ibox myShadow">
                         <div class="ibox-content">
 							<h2>User Profile</h2>
                             <p>
@@ -218,8 +225,9 @@
 												</div>												
 											</div>                                          
 											<div class="form-group">
-												<label class="col-form-label" for="date_added">Profile Photo</label>	
-												<input type="file" name="profilePhoto" class="dropify" data-allowed-file-extensions="png jpeg jpg">		
+												<label class="col-form-label" for="date_added">Profile Photo</label>
+												<div class="alert alert-success">Only JPEG file format is accepted in this form.</div>	
+												<input type="file" name="profilePhoto" class="dropify" data-allowed-file-extensions="jpeg jpg">		
 												<input type="text" name="newUserToken" hidden required value="<?php echo Token::generate("newUserToken");?>">
 											</div>										
 										</form>							
@@ -232,9 +240,9 @@
 						</div>
 					</div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="ibox">
-                        <div class="ibox-content">
+                <div class="col-sm-4 animated fadeInRight">
+                    <div class="ibox myShadow">
+                        <div class="ibox-content" style="min-height: 610px;">
 							<h2>Account information</h2>
                             <p class="alert alert-warning"><i class="ti-info-alt"></i>
                                  Some fields here are pre-defined and cannot be edited such as the default username and password.
@@ -242,8 +250,9 @@
 							<div class="row">
 								<div class="col-sm-12"> 	
 									<div class="form-group">
-										<label class="col-form-label" for="date_added">Account Type</label>												
-											<div class="i-checks"><label> <input type="radio" form="profile" checked="" value="5" name="account_type"> <i></i> Procurement Aid </label></div>
+										<label class="col-form-label" for="date_added">Account Type</label>
+											<div class="i-checks"><label> <input type="radio" form="profile" value="7" checked name="account_type"> <i></i> Technical Member </label></div>									
+											<div class="i-checks"><label> <input type="radio" form="profile" value="5" name="account_type"> <i></i> Procurement Aid </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="3" name="account_type"> <i></i> Super Admin </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="4" name="account_type"> <i></i> Director </label></div>	
 											<div class="i-checks"><label> <input type="radio" form="profile" value="6" name="account_type"> <i></i> Staff </label></div>
@@ -257,7 +266,7 @@
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Password</label>
 										<div class="input-group">
-											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="" readonly type="text" id="defaultPassword" name="defaultPassword" form="profile" class="form-control" required>
+											<span class="input-group-addon"><i class="ti-lock my-blue"></i></span><input value="<?php echo StringGen::password();?>" readonly type="text" id="defaultPassword" name="defaultPassword" form="profile" class="form-control" required>
 										</div>
 									</div>	
 
@@ -280,158 +289,7 @@
 			</div>
 
         </div>
-        <div id="right-sidebar">
-            <div class="sidebar-container">
-
-                <ul class="nav nav-tabs navs-3">
-
-                    <ul class="nav nav-tabs navs-2">
-                        <li>
-                            <a class="nav-link active" data-toggle="tab" href="#tab-3"> Settings </a>
-                        </li>					
-                        <li>
-                            <a class="nav-link" data-toggle="tab" href="#tab-2"> Projects </a>
-                        </li>
-                    </ul>
-
-                <div class="tab-content">
-
-
-                    <div id="tab-3" class="tab-pane active">
-
-                        <div class="sidebar-title">
-                            <h3><i class="fa fa-gears"></i> Settings</h3>
-                            <small><i class="fa fa-tim"></i> You have 14 projects. 10 not completed.</small>
-                        </div>
-
-                        <div class="setings-item">
-                    <span>
-                        Show notifications
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example">
-                                    <label class="onoffswitch-label" for="example">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Disable Chat
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" checked class="onoffswitch-checkbox" id="example2">
-                                    <label class="onoffswitch-label" for="example2">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Enable history
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example3">
-                                    <label class="onoffswitch-label" for="example3">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Show charts
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example4">
-                                    <label class="onoffswitch-label" for="example4">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Offline users
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example5">
-                                    <label class="onoffswitch-label" for="example5">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Global search
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" checked name="collapsemenu" class="onoffswitch-checkbox" id="example6">
-                                    <label class="onoffswitch-label" for="example6">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                    <span>
-                        Update everyday
-                    </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example7">
-                                    <label class="onoffswitch-label" for="example7">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-content">
-                            <h4>Settings</h4>
-                            <div class="small">
-                                I belive that. Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                And typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                                Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                            </div>
-                        </div>
-
-                    </div>
-                    <div id="tab-2" class="tab-pane">
-
-                        <div class="sidebar-title">
-                            <h3> <i class="fa fa-cube"></i> Latest projects</h3>
-                            <small><i class="fa fa-tim"></i> You have 14 projects. 10 not completed.</small>
-                        </div>
-
-
-
-                    </div>				
-                </div>
-
-            </div>
-
-
-
-        </div>
-    </div>
-
+ 
     <?php include_once '../../includes/parts/admin_scripts.php'; ?>
 </body>
 <script>

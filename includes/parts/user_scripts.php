@@ -195,36 +195,40 @@ require_once "../../functions/account-verifier.php";
 
 <script>
     $(document).ready(function(){
-		// side nav active		
-		var path = window.location.pathname.split("/");
-		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
-		var sLink = ['Dashboard'];
-		var higherLevelpages = [
-			{pages: ['project-details'], link: 'current-projects'}
-		];
-		toggleGreetings();
-		var highlevelpage = higherLevelpages.find(function(e1){
-			return e1.pages.find(function(e2){
-				return e2 === path[path.length - 1]
+		// side nav active	
+		try {
+			var path = window.location.pathname.split("/");
+			var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+			var sLink = ['Dashboard'];
+			var higherLevelpages = [
+				{pages: ['project-details'], link: 'current-projects'}
+			];
+			toggleGreetings();
+			var highlevelpage = higherLevelpages.find(function(e1){
+				return e1.pages.find(function(e2){
+					return e2 === path[path.length - 1]
+				});
 			});
-		});
 
-		if(highlevelpage !== undefined){
-			link = document.querySelector(`[href="${highlevelpage.link}"]`);
-		}
+			if(highlevelpage !== undefined){
+				link = document.querySelector(`[href="${highlevelpage.link}"]`);
+			}
 
-		switch (path[path.length - 1]){
-			case sLink.find(function(el){
-				return path[path.length - 1] === el
-			}):
-				link.parentNode.setAttribute("class", "active");
-				break;
-			default:
-				link.parentNode.parentNode.parentNode.setAttribute("class", "active");
-				link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
-				link.parentNode.setAttribute("class", "active");
-				break;
-		}
+			switch (path[path.length - 1]){
+				case sLink.find(function(el){
+					return path[path.length - 1] === el
+				}):
+					link.parentNode.setAttribute("class", "active");
+					break;
+				default:
+					link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+					link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+					link.parentNode.setAttribute("class", "active");
+					break;
+			}
+		} catch (error) {
+			
+		}	
 
         $("#wizard").steps();
         $("#form").steps({

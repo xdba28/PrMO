@@ -35,29 +35,30 @@
 				$count++;
 			}
 
-			$user->register('publication', array(
+			// $user->register('publication', array(
+			// 	'gds_reference' => $canvass['gds'],
+			// 	'title' => $canvass_Title,
+			// 	'cost' => $form['publication']['cost'],
+			// 	'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT)
+			// ));
+
+			$user->register('canvass_forms', array(
 				'gds_reference' => $canvass['gds'],
 				'title' => $canvass_Title,
 				'cost' => $form['publication']['cost'],
-				'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT)
-			));
-
-			$publicationForm = $user->projectPublication($canvass['gds'], $canvass_Title, $form['publication']['cost']);
-		
-			$user->register('canvass_forms', array(
-				'publication_reference' => $publicationForm,
+				'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
 				'type' => $form['type'],
 				'per_item' => $form['per_item']
 			));
 
-			$canvassForm = $user->get('canvass_forms', array('publication_reference', '=', $publicationForm));
+			$canvassId = $user->lastId();
 
 			foreach($form['items'] as $item){
 
 				if($form['type'] === 'PR'){
 
 					$user->register('canvass_items_pr', array(
-						'canvass_forms_id' => $canvassForm->id,
+						'canvass_forms_id' => $canvassId,
 						'stock_no' => $item['details']['stock_no'],
 						'unit' => $item['details']['unit'],
 						'item_description' => $item['details']['desc'],
@@ -70,7 +71,7 @@
 				}elseif($form['type'] === 'JO'){
 					
 					$user->register('canvass_items_jo', array(
-						'canvass_forms_id' => $canvassForm->id,
+						'canvass_forms_id' => $canvassId,
 						'header' => $item['details']['header'],
 						'tags' => $item['details']['tags'],
 						'mode' => $item['mode']

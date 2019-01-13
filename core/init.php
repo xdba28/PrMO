@@ -3,7 +3,7 @@
     session_start();
 
     $GLOBALS['config'] = [
-        'mysql'     =>[
+        'mysql'    =>[
             'host' => '127.0.0.1',
             'username' => 'root',
             'password' => '',
@@ -16,7 +16,11 @@
         'remember' =>[
             'cookie_name' => 'hash',
             'cookie_expiry' => 604800
-        ]
+		],
+		'links'	   =>[
+			'blyte' => '192.168.137.103/prmo/blyte/acc3ss',
+			'standarduser'	=> '192.168.137.103/prmo/'
+		]
     ]; 
     //accounttype is the identifier if the account is new or not
     //usertype determines if the account is personnel or standard user account
@@ -32,6 +36,7 @@
 
 		require_once "../../functions/sanitize.php";
 		require_once "../../functions/notif.php";
+		require_once "../../functions/loadUnits.php";
 		require_once "../../functions/sms.php";
 
 

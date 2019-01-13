@@ -449,8 +449,8 @@
 			return $details;
 		}
 
-		public function projectPublication($gds, $title, $cost){
-			if($this->db->query_builder("SELECT id FROM `publication`
+		public function findCanvass($gds, $title, $cost){
+			if($this->db->query_builder("SELECT id FROM `canvass_forms`
 				WHERE gds_reference = '{$gds}' AND title = '{$title}' AND cost = '{$cost}'")){
 					return $this->db->first()->id;
 			}else{
@@ -458,14 +458,12 @@
 			}
 		}
 
-		public function selectCanvassForm($gds, $title, $publication_id){
-			$this->db->query_builder("SELECT publication.id as pub_id, gds_reference, title, cost, 
-				canvass_forms.id as form_id, type, per_item
-				FROM `publication`, `canvass_forms`
-				WHERE publication.id = canvass_forms.publication_reference
-				AND publication.gds_reference = '{$gds}'
+		public function selectCanvassForm($gds, $title, $canvass_id){
+			$this->db->query_builder("SELECT id, gds_reference, title, cost, type, per_item
+				FROM `canvass_forms` 
+				WHERE gds_reference = '{$gds}'
 				AND title = '{$title}'
-				AND publication.id = '{$publication_id}'");
+				AND id = '{$canvass_id}'");
 
 			$canvassDetail = $this->db->first();
 			
@@ -474,13 +472,13 @@
 					quantity, unit_cost, total_cost, mode
 					FROM `canvass_items_pr`, `canvass_forms`
 					WHERE canvass_forms.id = canvass_items_pr.canvass_forms_id
-					AND canvass_forms_id = '{$canvassDetail->form_id}'");
+					AND canvass_forms_id = '{$canvassDetail->id}'");
 				$canvassItems = $this->db->results();
 			}elseif($canvassDetail->type === "JO"){
 				$this->db->query_builder("SELECT canvass_items_jo.id as item_id, canvass_forms_id, header, tags, mode
 					FROM `canvass_items_jo`, `canvass_forms`
 					WHERE canvass_forms.id = canvass_items_jo.canvass_forms_id
-					AND canvass_forms_id = '{$canvassDetail->form_id}'");
+					AND canvass_forms_id = '{$canvassDetail->id}'");
 				$canvassItems = $this->db->results();
 			}
 
@@ -495,8 +493,12 @@
 		// modal pre procurement evaluation registration
 		public function checkProjectIssue($id){
 			if($this->db->query_builder("SELECT remarks FROM `project_logs`
-			WHERE remarks LIKE '%ISSUE%' AND referencing_to = '{$id}'")){
-				return $this->db->results();
+			WHERE remarks LIKE '%ISSUE^pre-procurement%' AND referencing_to = '{$id}'")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
 			}else{
 				return false;
 			}
@@ -527,6 +529,17 @@
 				}
 			}
 		}//for fetching lot content
+
+		public function evaluation($ID){
+			if($this->db->query_builder("SELECT *, DATEDIFF(implementation_date, date_registered) as 'remaining_days' FROM `projects` WHERE proposed_evaluator = '{$ID}' AND accomplished < 3")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return 0;
+				}
+			}
+			return false;
+		}
 
 		public function count($table, $where){
 			if($this->db->basic_count($table, $where)){
@@ -594,7 +607,11 @@
 
 		public function endTrans(){
 			$this->db->endTrans();
-		}		
+		}
+
+		public function lastId(){
+			return $this->db->lastId();
+		}
 
         public function data(){
             return $this->data;
