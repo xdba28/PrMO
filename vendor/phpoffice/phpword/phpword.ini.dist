@@ -5,8 +5,8 @@
 
 compatibility         = true
 zipClass              = ZipArchive
-pdfRendererName       = DomPDF
-pdfRendererPath       =
+pdfRendererName       = TCPDF
+pdfRendererPath       = "..\..\vendor\tecnickcom\tcpdf"
 ; tempDir               = "C:\PhpWordTemp"
 outputEscapingEnabled = false
 

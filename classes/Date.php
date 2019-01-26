@@ -25,7 +25,13 @@
 					break;
 				case 'today':
 					$translated_date = date('F j, Y');
-					break;				
+					break;
+				case 'php':
+
+					$temp = number_format($string,2);
+					$translated_date = "&#x20b1; ".$temp;
+				
+					break;
 				default:
 					# code...
 					break;

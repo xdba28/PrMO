@@ -14,6 +14,9 @@
 
 		$canvass = json_decode($_POST['canvass'], true);
 
+		// echo "<pre>".print_r($canvass)."</pre>";
+		// die();
+
 		$user->startTrans();
 
 		foreach($canvass['forms'] as $form){
@@ -35,21 +38,25 @@
 				$count++;
 			}
 
-			// $user->register('publication', array(
-			// 	'gds_reference' => $canvass['gds'],
-			// 	'title' => $canvass_Title,
-			// 	'cost' => $form['publication']['cost'],
-			// 	'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT)
-			// ));
+				$user->register('canvass_forms', array(
+					'gds_reference' => $canvass['gds'],
+					'title' => $canvass_Title,
+					'cost' => $form['publication']['cost'],
+					'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
+					'type' => $form['type'],
+					'per_item' => $form['per_item'],
+					'lot_fail_option' => NULL
+				));
+				// $user->register('canvass_forms', array(
+				// 	'gds_reference' => $canvass['gds'],
+				// 	'title' => $canvass_Title,
+				// 	'cost' => $form['publication']['cost'],
+				// 	'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
+				// 	'type' => $form['type'],
+				// 	'per_item' => $form['per_item'],
+				// 	'lot_fail_option' => NULL
+				// ));
 
-			$user->register('canvass_forms', array(
-				'gds_reference' => $canvass['gds'],
-				'title' => $canvass_Title,
-				'cost' => $form['publication']['cost'],
-				'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
-				'type' => $form['type'],
-				'per_item' => $form['per_item']
-			));
 
 			$canvassId = $user->lastId();
 
@@ -74,6 +81,7 @@
 						'canvass_forms_id' => $canvassId,
 						'header' => $item['details']['header'],
 						'tags' => $item['details']['tags'],
+						'notes' => $item['notes'],
 						'mode' => $item['mode']
 					));
 
@@ -81,29 +89,27 @@
 			}
 		}
 
-		// // update steps
+
+		$user->update('projects', 'project_ref_no', $canvass['gds'], array(
+			'accomplished' => '4',
+			'workflow' => 'Canvassing'
+		));
+
+		$user->register('project_logs',  array(
+			'referencing_to' => $canvass['gds'],
+			'remarks' => "Canvass forms finalized.",
+			'logdate' => Date::translate('now', 'now'),
+			'type' => 'IN'
+		));
+
+		// que out canvass form
+
 		
-		// //get the json file for step details
-		// $json = file_get_contents('../xhr-files/jsonsteps.json');
-		// //Decode JSON
-		// $stepsStructure = json_decode($json,true);
-
-		// $updateProject = $user->get('projects', array('project_ref_no', '=', $canvass['gds']));
-
-		// if($updateProject->mop_peritem === NULL){
-
-		// 	// get MOP and update the appropriate workflow and accomplishment
-
-		// }else{
-	
-		// 	$user->update('projects', 'project_ref_no', $canvass['gds'], array(
-		// 		'accomplished' => '4',
-		// 		'workflow' => "Canvassing"
-		// 	));
-
-		// }
-
 		$user->endTrans();
+
+		Redirect::To('project-details?refno='.base64_encode($canvass['gds']));
+		die();
+
 
 		// redirect to project 
 
@@ -150,7 +156,7 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-6">
-                    <h2>Procurement Aid Dashboard</h2>
+                    <h2>Procurement Aide Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">Projects</a>
@@ -200,7 +206,7 @@
 								<h5>Content of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
 							<div class="ibox-content">
-								<h2><a style="color:#2a9c97">Step 1 of  &nbsp2</a><br>Items Selection</h2>
+								<h2><a style="color:#2a9c97">Step 1 of  &nbsp3</a><br>Items Selection</h2>
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="alert alert-success">
@@ -282,8 +288,8 @@
 													<td><?php echo $lotContent['unit'];?></td>
 													<td class="tddescription"><?php echo $lotContent['desc'];?></td>
 													<td><?php echo $lotContent['qty'];?></td>
-													<td><?php echo $lotContent['uCost'];?></td>
-													<td><?php echo $lotContent['tCost'];?></td>
+													<td><?php echo Date::translate($lotContent['uCost']);?></td>
+													<td><?php echo Date::translate($lotContent['tCost']);?></td>
 												</tr>
 												
 											<?php
@@ -353,7 +359,7 @@
 																<td><?php echo $itemSpecificMode ?></td>
 																<td><?php echo $lotContent['header'];?></td>
 																<td><?php echo $lotContent['tags'];?></td>
-																<td><?php echo $lot['l_cost'];?></td>
+																<td><?php echo Date::translate($lot['l_cost'], 'php');?></td>
 																<td class="tddescription"><?php echo $lot['l_note'];?></td>
 															</tr>
 														
@@ -407,20 +413,6 @@
 		
 				
 				</div>
-				
-				<!-- denver! after this comment will be the second content or the step 2 after selecting the items to be resorted. also if the project has a pr and jo make them appear in 2 table. 1 table for all items in pr(sama sama na whether its from pr1 and pm2)
-					but in the case of jo make every single jo to be separated from other jo.
-					
-					EG. project something has 2pr and 2 jo
-					
-						1. all selected items from pr 1 and 2 should appear in 1 table, just put some delimiter like the header "item" and "from lot" from the table above to avoid confusion.
-						2. since we have 2 jo, make them in a separeted table. we cant combine them for it will massively confuse the aid. it is not as easy as the pr because it is just items unlike
-						   here it is services, and we dont want to mess up here.
-						3. in the end we will come up having 3 tables. 1 merged table for pr and 2 separate table for each JO.
-						4. then proceed to your sorting magic. create canvass, like what we're doing in creation of jo we create lots but in this case it is canvass form we are creating.
-						   then we can select items then put it to the created canvass.
-						
-				-->
 				
 				<div id="step2" class="row animated fadeInUp" style="display:none">
 					<div class="col-lg-10">
@@ -600,7 +592,7 @@
 								<td>${rDetails[1]}</td>
 								<td>${rSpec.stock_no}</td>
 								<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
-								<td>${rSpec.uCost}</td><td>${rSpec.tCost}</td>
+								<td>&#x20b1; ${formatMoney(rSpec.uCost)}</td><td>&#x20b1; ${formatMoney(rSpec.tCost)}</td>
 									</tr>`);
 
 							SelectedItems.push({
@@ -621,10 +613,10 @@
 							
 							$(`#jo-detail`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" data-notes="${e.dataset.notes}" data-lot-cost="${btoa(rDetails[3])}" class="i-checks"></td>
 								<td>${atob(e.dataset.mop)}</td>
-								<td>${rDetails[1]}</td>
+								<th>${rDetails[1]}</th>
 								<td>${rSpec.header}</td>
 								<td>${rSpec.tags}</td>
-								<td>${rDetails[3]}</td>
+								<td>&#x20b1; ${formatMoney(rDetails[3])}</td>
 								<td>${atob(e.dataset.notes)}</td>
 								</tr>`);
 
@@ -734,13 +726,13 @@
 								if(lot_details[0] === "PR"){
 									lot.cost += parseFloat(item.tCost);
 								}else if(lot_details[0] === "JO"){
-									lot.cost = lot_details[3]
+									lot.cost += parseFloat(lot_details[3]);
 								}
 							}else{
 								if(lot_details[0] === "PR"){
 									lot.cost += parseFloat(item.tCost);
 								}else if(lot_details[0] === "JO"){
-									lot.cost = lot_details[3]
+									// lot.cost += parseFloat(lot_details[3]);
 								}
 							}
 
@@ -942,7 +934,7 @@
 										<td>${item_details[1]}</td>
 										<td>${item_spec.stock_no}</td>
 										<td>${item_spec.unit}</td><td>${item_spec.desc}</td><td>${item_spec.qty}</td>
-										<td>${item_spec.uCost}</td><td>${item_spec.tCost}</td>
+										<td>&#x20b1; ${formatMoney(item_spec.uCost)}</td><td>&#x20b1; ${formatMoney(item_spec.tCost)}</td>
 											</tr>`);
 										
 									$('.i-checks').iCheck({
@@ -983,7 +975,7 @@
 										<td>${e.details.header}</td>
 										<td>${e.details.tags}</td>
 										<td>${e.notes}</td>
-										<td>${e.lot_cost}</td>
+										<td>&#x20b1; ${formatMoney(e.lot_cost)}</td>
 										<td style="text-align:center"><button class="btn btn-danger btn-outline btn-xs" data-canvass-modal="${canvassModalReference}"><i class="fa fa-times"></i></button></td>
 									</tr>`);
 

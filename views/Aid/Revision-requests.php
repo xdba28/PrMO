@@ -82,7 +82,7 @@
 				?>
 				<div class="row">
 					<div class="col-lg-12 animated fadeInRight">
-						<div class="ibox ">
+						<div class="ibox myShadow">
 							<div class="ibox-title">
 								<h5>Received Purchase requests and Job Order forms</h5>
 								<div class="ibox-tools">

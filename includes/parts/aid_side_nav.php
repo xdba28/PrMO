@@ -15,8 +15,18 @@
     <a href="#"><img src="../../assets/pics/flaticons/internet-security/030-file-1.png" alt="" height="22" width="22"> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level collapse">
         <li><a href="Ongoing-projects">Ongoing Projects</a></li>
-        <li><a href="Paused-projects">Paused Projects</a></li>
-		<li><a href="Revision-requests">Revision Requests <span class="label label-info float-right" style="color:black; font-weight:200px">62</span></a></li>
+        <li><a href="Finished">Finished / Failed Projects</a></li>
+		<li>
+			<a href="Revision-requests">Revision Requests 
+				<span class="label label-info float-right" style="color:black; font-weight:200px">
+				<?php
+					$REVISION_OBJ = new Admin();
+					$REVISION_COUNT = $REVISION_OBJ->selectAll('form_update_requests');
+					echo count($REVISION_COUNT);
+				?>
+				</span>
+			</a>
+		</li>
     </ul>
 </li>
 

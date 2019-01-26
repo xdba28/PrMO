@@ -2,21 +2,27 @@
 require_once "../../core/init.php";
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
+\PhpOffice\PhpWord\Settings::loadConfig();
+
 $user = new User();
 
-// if($user->isLoggedIn());
-// else{
-// 	Redirect::To('../../index');
-// 	die();
-// }
+if($user->isLoggedIn());
+else{
+	$user = new Admin();
+	// Redirect::To('../../index');
+	// die();
+}
 
-// if(Session::exists("Request")){
-// 	$REQ = Session::flash('Request');
-// }else{
-// 	Redirect::To('../../index');
-// 	exit();
-// }
-$REQ = "JO2018-C6D3DH:JO";
+if(Session::exists("Request")){
+	$REQ = Session::flash('Request');
+}else if(!empty($_GET)){
+	$REQ = $_GET['id'].":".$_GET['type'];
+}else{
+	Redirect::To('../../index');
+	exit();
+}
+
+// $REQ = "JO2018-C6D3DH:JO";
 $REQUEST = explode(":", $REQ);
 $ProjectData = $user->Doc_projData($REQ);
 $UserData = $user->user_data($ProjectData->requested_by);

@@ -3,33 +3,16 @@ require_once "../../core/init.php";
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 \PhpOffice\PhpWord\Settings::loadConfig();
+
 $user = new User();
 
-if($user->isLoggedIn());
-else{
-	Redirect::To('../../index');
-	die();
-}
-
-if(Session::exists("Request")){
-	$request = Session::flash('Request');
-}else{
-	Redirect::To('../../index');
-	exit();
-}
-
-// $request = "JO2018-C2E628:JO";
-// $request = "PR2018-FE1C7I:PR";
-$id = explode(":", $request);
-
-// Global Settings
-$file = $id[0].".docx";
+$file = "Project request form - ".$_GET['id'].".docx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 header('Content-Disposition: attachment; filename="'.$file.'"');
+
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 72, 'after' => 72]]);
 $phpWord->setDefaultFontName('Arial');
 $phpWord->setDefaultFontSize(10);
-
 
 $section = $phpWord->addSection([
 	'marginTop' => 720,
@@ -48,7 +31,17 @@ $tsAlignCenter = ['valign' => 'center'];
 $cStyle = ['indentation' => ['left' => 200, 'right' => 300]];
 
 
-$project = $user->requestDetails($id[0]);
+if(Session::exists("Request")){
+	$project_ex = explode(":", Session::flash('Request'));
+	$project = $user->requestDetails($project_ex[0]);
+}else if(!empty($_GET)){
+	$project = $user->requestDetails($_GET['id']);
+}else{
+	Redirect::To('../../index');
+	exit("Exit");
+}
+
+
 
 if($project['end_user']['edr_ext_name'] !== "XXXXX"){
 	$userFullName = $project['end_user']['edr_fname']." ".$project['end_user']['edr_mname']." ".$project['end_user']['edr_lname']." ".$project['end_user']['edr_ext_name'];
@@ -56,13 +49,10 @@ if($project['end_user']['edr_ext_name'] !== "XXXXX"){
 	$userFullName = $project['end_user']['edr_fname']." ".$project['end_user']['edr_mname']." ".$project['end_user']['edr_lname'];
 }
 
-// echo "<pre>".print_r($project)."</pre>";
-// die();
-// Jocelyn E. Serrano
 
-if($id[1] === "PR"){
+if($project['type'] === "PR"){
 
-	// Header
+
 	$header = $section->addHeader();
 	$header->firstPage();
 	$header->addText("PURCHASE REQUEST", ['bold' => true, 'size' => 12], $cPragr);
@@ -86,7 +76,7 @@ if($id[1] === "PR"){
 	
 	$table->addRow(43.2)
 		->addCell(7000, ['gridSpan' => 3])->addText("Department: ", $bText);
-	$table->addCell(2304, ['gridSpan' => 2])->addText("PR.No. ".$id[0], $bText);
+	$table->addCell(2304, ['gridSpan' => 2])->addText("PR.No. ".$project['refno'], $bText);
 	$table->addCell(2304)->addText("Date: ".date('F j, o', strtotime($project['date'])), $bText);
 
 	$table->addRow(43.2)
@@ -112,6 +102,8 @@ if($id[1] === "PR"){
 	$table->addCell(1353.6, $tsAlignCenter)->addText("Estimate Unit Cost", $bText, $cPragr);
 	$table->addCell(1612.8, $tsAlignCenter)->addText("Estimate Cost", $bText, $cPragr);
 
+	$total = 0;
+
 	foreach($project['lots'] as $lot){
 
 		$table->addRow(43.2)
@@ -124,9 +116,9 @@ if($id[1] === "PR"){
 			$table->addCell()->addText($item['unit'], null, $cPragr);
 			$table->addCell()->addText($item['desc'], null, $cPragr);
 			$table->addCell()->addText($item['stock_no'], null, $cPragr);
-			$table->addCell()->addText("&#8369; ".$item['uCost'], null, $cPragr);
-			$table->addCell()->addText("&#8369; ".$item['tCost'], null, $cPragr);
-
+			$table->addCell()->addText(Date::translate($item['uCost'], 'php'), null, $cPragr);
+			$table->addCell()->addText(Date::translate($item['tCost'], 'php'), null, $cPragr);
+			$total += $item['tCost'];
 		}
 		
 	}
@@ -136,7 +128,7 @@ if($id[1] === "PR"){
 		->addCell()->addText("Purpose: ");
 	$table->addCell(null, ['gridSpan' => 3])->addText($project['purpose']);
 	$table->addCell()->addText("Total", ['bold' => true], $cPragr);
-	$table->addCell()->addText("&#8369; ", ['bold' => true], ['alignment' => 'right']);
+	$table->addCell()->addText(Date::translate($total, 'php'), ['bold' => true], ['alignment' => 'center']);
 
 	$table->addRow(500)
 		->addCell(null, ['gridSpan' => 3, 'valign' => 'bottom'])
@@ -198,7 +190,8 @@ if($id[1] === "PR"){
 		->addText("Effective: January 3, 2011", ['size' => 8], $cPragr);
 
 
-}elseif($id[1] === "JO"){
+
+}else{
 
 	$header = $section->addHeader();
 	$header->firstPage();
@@ -207,8 +200,8 @@ if($id[1] === "PR"){
 	$header->addText("Legazpi City", ['size' => 12], $cPragr);
 
 	$textrun = $section->addTextRun(['alignment' => 'right']);
-	$textrun->addText("No.     ");
-	$textrun->addText($id[0], ['underline' => 'single']);
+	$textrun->addText("No.    ");
+	$textrun->addText($project['refno'], ['underline' => 'single']);
 	$section->addText("Date. ".date('F j, o', strtotime($project['date'])), null, ['alignment' => 'right']);
 
 	$section->addTextBreak(1);
@@ -344,11 +337,12 @@ if($id[1] === "PR"){
 		->addText($project['end_user']['signatories']['approving_position']);
 
 
+
 }
 
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
-$objWriter->save('C:/xampp/htdocs/PrMO/bac/pdf/'.$id[0].'.pdf');
+$objWriter->save('../pdf/'.$project['refno'].'.pdf');
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 // $objWriter->save('C:/Users/Denver/Desktop/Project Request.docx');

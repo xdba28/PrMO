@@ -101,7 +101,7 @@
 				));
 				notif(json_encode(array(
 					'receiver' => $_POST['enduser'],
-					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}1",
+					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				)));				

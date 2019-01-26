@@ -98,15 +98,15 @@
 							<table id="DataTables_overallLogs" class="table table-striped table-bordered table-hover dataTables-example" >
 							<h4>Showing logs from most recent to oldest.</h4>
 							<thead>
-							<tr>
-								<th>#</th>
-								<th>Log ID</th>
-								<th>Refering to</th>
-								<th>Log Remark</th>
-								<th>Type</th>
-								<th>Log Date</th>
-								
-							</tr>
+								<tr>
+									<th>#</th>
+									<th>Log ID</th>
+									<th>Refering to</th>
+									<th>Log Remark</th>
+									<th>Type</th>
+									<th>Log Date</th>
+									
+								</tr>
 							</thead>
 							<tbody>
 							

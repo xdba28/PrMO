@@ -39,7 +39,8 @@ try
 		'edr_designated_office' => $office->ID,
 		'current_specific_office' => $r->specific_office,
 		'edr_job_title' => $r->jobtitle,
-		'edr_profile_photo' => NULL
+		'edr_profile_photo' => NULL,
+		'date_joined' => Date::translate('now', 'now')
 	));
 
 	$sa->register('edr_account', array(
@@ -54,8 +55,10 @@ try
 	
 	$sa->endTrans();
 
+
 	//send sms to enduser that his/her account is already created with the One-time password
-	$customMessage = 'Hello '.$r->fname.'! Welcome to PrMO OPPTS. Your account request has been successfully verified, you may now login to '.Config::get('links/standarduser').' with your one-time password "'.$OTP.'".';
+	// $customMessage = 'Hello '.$r->fname.'! Welcome to PrMO OPPTS. Your account request has been successfully verified, you may now login to '.Config::get('links/standarduser').' with your one-time password "'.$OTP.'".';
+	$customMessage = 'Welcome to PrMO OPPTS! You may now login with your one-time password: "'.$OTP.'".';
 	sms($r->contact, "System", $customMessage);
 }
 catch(Exception $e)

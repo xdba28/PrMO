@@ -7,8 +7,8 @@
     if($user->isLoggedIn()){
      //do nothing
     }else{
-       Redirect::To('../../blyte/acc3ss');
-        die();
+    	Redirect::To('../../blyte/acc3ss');
+    	die();
 	}
 
 	if(!empty($_POST)){
@@ -22,81 +22,132 @@
 
 		foreach($_POST['lot'] as $lot){
 
-			// $publication = $user->projectPublication($gds, htmlspecialchars($lot['title']), htmlspecialchars($lot['cost']));
-			// $canvass = $user->get('canvass_forms', array('publication_reference', '=', $publication));
-
 			if($lot['per_item']){
 
-				foreach($lot['items'] as $item){
+				// lot details
+				$user->update('canvass_forms', 'id', $lot['lot_id'], array(
+					'lot_fail_option' => 'By Item',
+				));
 
-					$user->register('canvass_returns', array(
-						'canvass_forms_id' => $lot['lot_id'],
-						'item_id' => $item['id'],
-						'remarks' => NULL,
-						'lot_fail' => NULL
+				$supp_count = 0;
+				foreach($lot['supplier'] as $supplier){
+					
+					// supplier details
+					$user->register('canvass_supplier', array(
+						'form_id' => $lot['lot_id'],
+						'supplier' => htmlspecialchars($supplier),
+						'remark' => NULL,
+						'award' => 0
 					));
 
-					$returns_id = $user->lastId();
-					$count = 0;
+					$supplier_id = $user->lastId();
 
-					foreach($item['supplier'] as $supplier){
+					// item details
+					for($i = 0; $i < $lot['item_count']; $i++){
 
-						$item_fail = (isset($item['fail'][$count])) ? true : false;
+						$item_fail = (isset($lot['fail'][$i])) ? true : false;
+
+						if($lot['type'] === "PR"){
+							// update canvass_items_pr
+							$user->update('canvass_items_pr', 'id', $lot['items'][$i]['id'], array(
+								'item_fail' => $item_fail
+							));
+						}elseif($lot['type'] === "JO"){
+							// update canvass_items_jo
+							$user->update('canvass_items_jo', 'id', $lot['items'][$i]['id'], array(
+								'item_fail' => $item_fail
+							));
+						}
 
 						$user->register('canvass_quotation', array(
-							'returns_id' => $returns_id,
-							'supplier' => htmlspecialchars($supplier),
-							'price' => htmlspecialchars($item['price'][$count]),
-							'remark' => htmlspecialchars($item['remark'][$count]),
-							'item_fail' => $item_fail
+							'supplier_id' => $supplier_id,
+							'item_id' => $lot['items'][$i]['id'],
+							'offered' => htmlspecialchars($lot['offer'][$i][$supp_count]),
+							'price' => htmlspecialchars($lot['items'][$i][$supp_count]),
+							'remark' => htmlspecialchars($lot['remark'][$i][$supp_count]),
+							'award_selected' => NULL
 						));
-
-						$count++;
 					}
-
+					$supp_count++;
 				}
 
 			}else{
 
-				
-				foreach($lot['items'] as $item){
+				$lot_fail = (isset($lot['fail'])) ? "1" : "0";
 
-					$lot_fail = (isset($lot['fail'])) ? true : false;
-					
-					$user->register('canvass_returns', array(
-						'canvass_forms_id' => $lot['lot_id'],
-						'item_id' => NULL,
-						'remarks' => htmlspecialchars($lot['remarks']),
-						'lot_fail' => $lot_fail
+				// lot details
+				$user->update('canvass_forms', 'id', $lot['lot_id'], array(
+					'lot_fail_option' => $lot_fail,
+				));
+
+				$supp_count = 0;
+				foreach($lot['supplier'] as $supplier){
+
+					// supplier details
+					$user->register('canvass_supplier', array(
+						'form_id' => $lot['lot_id'],
+						'supplier' => htmlspecialchars($supplier),
+						'remark' => htmlspecialchars($lot['remark'][$supp_count]),
+						'award' => 0
 					));
 
-					$returns_id = $user->lastId();
-					$count = 0;
+					$supplier_id = $user->lastId();
 
-					foreach($item['supplier'] as $supplier){
+					// item details
+					for($i = 0; $i < $lot['item_count']; $i++){
 
 						$user->register('canvass_quotation', array(
-							'returns_id' => $returns_id,
-							'supplier' => htmlspecialchars($supplier),
-							'price' => htmlspecialchars($item['price'][$count]),
+							'supplier_id' => $supplier_id,
+							'item_id' => $lot['items'][$i]['id'],
+							'offered' => htmlspecialchars($lot['offer'][$i][$supp_count]),
+							'price' => htmlspecialchars($lot['items'][$i][$supp_count]),
 							'remark' => NULL,
-							'item_fail' => NULL
+							'award_selected' => NULL
 						));
 
-						$count++;
 					}
-
-
+					$supp_count++;
 				}
-
 			}
-
 		}
 
+		$user->update('projects', 'project_ref_no', $gds, array(
+			'accomplished' => '5',
+			'workflow' => 'Release of Abstract of Bid and BAC Resolution'
+		));
+		
+		// important update abstract & reso created
+		$user->register('project_logs',  array(
+			'referencing_to' => $gds,
+			'remarks' => "AWARD^Abstract^Abstract of Bids available",
+			'logdate' => Date::translate('now', 'now'),
+			'type' => 'IN'
+		));
 
-		// redirect to print abstract
+		$end_users = $user->get('projects', array('project_ref_no', '=', $gds));
+		foreach(json_decode($end_users, true) as $end_user){
+			$user->register('notifications', array(
+				'recipient' => $end_user,
+				'message' => "Abstract of Bids of project ".$gds." is now available",
+				'datecreated' => Date::translate('test', 'now'),
+				'seen' => 0,
+				'href' => "project-details?refno=".base64_encode($project_ref_no)
+			));
+			notif(json_encode(array(
+				'receiver' => $end_user,
+				'message' => "Abstract of Bids of project ".$gds." is now available",
+				'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				'href' => "project-details?refno=".base64_encode($project_ref_no)
+			)));
+		}
+
+		// NOTIFICATION OF AWARD TO END USER
+
 
 		$user->endTrans();
+
+		Redirect::To('project-details?refno='.base64_encode($gds));
+		die();
 
 	}
 
@@ -109,7 +160,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Overview</title>
+    <title>PrMO OPPTS | Canvass Result</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 </head>
@@ -166,41 +217,102 @@
 				$lots = $user->getAll('canvass_forms', array('gds_reference', '=', $id));
 				$lot_count = 0;
 				$item_count = 0;
-				$buttonCount = 0;
 
 				echo '<input type="hidden" name="gds" value="'.$id.'">';
 
+				$option_1 = '';
+				$option_2 = '';
+				foreach($user->selectAll('supplier') as $supplier){
+					if($supplier->type === "Services"){
+						$option_1 .= '<option value="'.$supplier->s_id.'">'.$supplier->name.'</option>';
+					}else{
+						$option_2 .= '<option value="'.$supplier->s_id.'">'.$supplier->name.'</option>';						
+					}
+				}
+
 				foreach($lots as $lot){
+
+
+					$canvassForms = $user->selectCanvassForm($id, $lot->title, $lot->id);
+					// echo "<pre>".print_r($canvassForms)."</pre>";
+					// die();
 					
+					// if($canvassForms->CanvassDetails->type === "PR"){
+					// 	$option = $option_2;
+					// }else{
+					// 	$option = $option_1;
+					// }
+					$option = '
+						<option>Select Supplier</option>
+						<optgroup label="-- Supplies --">
+							'.$option_2.'
+						</optgroup>
+						<optgroup label="-- Services ---">
+							'.$option_1.'
+						</optgroup>
+					';
+
+					$btn_identify = ($lot->per_item) ? "true" : "false" ;
+
 	?>	
 				<div class="row">
 					<div class="col-lg-12  animated fadeInRight">
 						<div class="ibox myShadow">
 							<div class="ibox-title">
-								<h5>Lot Title: <?php echo $lot->title;?> &nbsp;&nbsp;<br>Lot Cost: <?php echo "&#8369; ".$lot->cost;?></h5>
+								<div class="row">
+									<div class="col-lg-6">
+									<?php
+										if($canvassForms->CanvassDetails->per_item){
+											echo '<h5>Lot Title: '.$lot->title.' --- '.Date::translate($lot->cost, 'php').'<br></h5>';
+										}else{
+											echo '
+											<h5>
+												Lot Title: '.$lot->title.' --- '.Date::translate($lot->cost, 'php').'<br>
+												Declare Bid Failure:&nbsp;&nbsp;<input type="checkbox" name="lot['.$lot_count.'][fail]">
+											</h5>
+											';
+										}
+									?>
+									</div>
+									<div class="col-lg-6" style="text-align: right;">
+										<button type="button" data-type="add" data-fcount="0" data-table="<?php echo 'table-lot-'.$lot_count;?>" data-idty="<?php echo $btn_identify;?>" data-itmcnt="<?php echo count($canvassForms->items);?>" data-name="<?php echo 'lot['.$lot_count.']';?>" data-prjtype="<?php echo $canvassForms->CanvassDetails->type?>" class="btn btn-primary btn-outline">
+											<i class="fa fa-plus"></i>&nbsp;Add Supplier
+										</button>
+										<button type="button" data-type="del" data-table="<?php echo 'table-lot-'.$lot_count;?>" data-idty="<?php echo $btn_identify;?>" data-itmcnt="<?php echo count($canvassForms->items);?>" class="btn btn-danger btn-outline">
+											<i class="fa fa-times"></i>&nbsp;Delete Supplier
+										</button>	
+									</div>
+								</div>
 							</div>
 							<div class="ibox-content">
 								<input type="hidden" name="lot[<?php echo $lot_count;?>][title]" value="<?php echo $lot->title;?>" required>
 								<input type="hidden" name="lot[<?php echo $lot_count;?>][cost]" value="<?php echo $lot->cost;?>" required>
 								<input type="hidden" name="lot[<?php echo $lot_count;?>][lot_id]" value="<?php echo $lot->id?>" required>
+								<input type="hidden" name="lot[<?php echo $lot_count;?>][item_count]" value="<?php echo count($canvassForms->items)?>">
+								<input type="hidden" name="lot[<?php echo $lot_count;?>][type]" value="<?php echo $canvassForms->CanvassDetails->type?>">
+								
+								
 								<div class="table-responsive">
 					<?php
-						$canvassForms = $user->selectCanvassForm($id, $lot->title, $lot->id);
 
 						if($canvassForms->CanvassDetails->per_item){
 							if($canvassForms->CanvassDetails->type === "PR"){
 								echo '
 								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
-									<table class="table table-bordered">
-										<thead>
+									<table class="table table-bordered" id="table-lot-'.$lot_count.'">
+										<thead id="">
 											<tr>
+												<th>Declare Item Bid Failure</th>
 												<th>Unit</th>
 												<th>Item Description</th>
 												<th>Quantity</th>
 												<th>Unit Cost</th>
 												<th>Total Cost</th>
-												<th>Actions</th>
-												<th></th>
+												<th>	
+													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
+														'.$option.'
+													</select>
+												</th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -209,40 +321,20 @@
 											echo '
 											<tr>
 												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+												<td><input name="lot['.$lot_count.'][fail]['.$item_count.']" type="checkbox"></td>
 												<td>'.$item->unit.'</td>
 												<td>'.$item->item_description.'</td>
 												<td>'.$item->quantity.'</td>
-												<td>'.$item->unit_cost.'</td>
-												<td>'.$item->total_cost.'</td>
-												<td style="text-align:center">
-													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="true" data-fcount="0" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
-														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
-													</button>
-													<br>
-													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
-														<i class="fa fa-times"></i>&nbsp;Delete Input
-													</button>										
-												</td>
+												<td>'.Date::translate($item->unit_cost, 'php').'</td>
+												<td>'.Date::translate($item->total_cost, 'php').'</td>
 												<td>
-													<div class="row" id="row-'.$buttonCount.'">
-														<div class="col-lg-2">
-															<label>Supplier: </label>
-															<label>Price: </label>
-															<label>Remark: </label>
-															<label>Fail: </label>
-															<input type="checkbox" class="i-checks" name="lot['.$lot_count.'][items]['.$item_count.'][fail][0]">
-														</div>
-														<div class="col-lg-10">
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
-															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][remark][]" required>
-														</div>
-													</div>
+													<textarea name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
+													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
 												</td>
 											</tr>
 											';
 											$item_count++;
-											$buttonCount++;
 										}
 									echo '
 										</tbody>
@@ -251,13 +343,17 @@
 							}elseif($canvassForms->CanvassDetails->type === "JO"){
 								echo '
 								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
-									<table class="table table-bordered">
+									<table class="table table-bordered" id="table-lot-'.$lot_count.'">
 										<thead>
 											<tr>
+												<th>Item Bid Fail</th>
 												<th>List Title</th>
 												<th>Tags</th>
-												<th>Actions</th>
-												<th></th>
+												<th>
+													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
+														'.$option.'
+													</select>
+												</th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -266,37 +362,17 @@
 											echo '
 											<tr>
 												<input type="hidden" name="lot['.$lot_count.'][items]['.$item_count.'][id]" value="'.$item->item_id.'" required>
+												<td><input name="lot['.$lot_count.'][fail]['.$item_count.']" type="checkbox"></td>
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
-												<td style="text-align:center">
-													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="true" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
-														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
-													</button>
-													<br>
-													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
-														<i class="fa fa-times"></i>&nbsp;Delete Input
-													</button>										
-												</td>
 												<td>
-													<div class="row" id="row-'.$buttonCount.'">
-														<div class="col-lg-2">
-															<label>Supplier: </label>
-															<label>Price: </label>
-															<label>Remark: </label>
-															<label>Fail: </label>
-															<input type="checkbox" class="i-checks" name="lot['.$lot_count.'][items]['.$item_count.'][fail][]">
-														</div>
-														<div class="col-lg-10">
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
-															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][remark][]" required>
-														</div>
-													</div>
+													<textarea hidden name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Price">
+													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
 												</td>
 											</tr>
 											';
 											$item_count++;
-											$buttonCount++;
 										}
 									echo '
 										</tbody>
@@ -308,7 +384,7 @@
 							if($canvassForms->CanvassDetails->type === "PR"){
 								echo '
 								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
-									<table class="table table-bordered">
+									<table class="table table-bordered" id="table-lot-'.$lot_count.'">
 										<thead>
 											<tr>
 												<th>Unit</th>
@@ -316,8 +392,12 @@
 												<th>Quantity</th>
 												<th>Unit Cost</th>
 												<th>Total Cost</th>
-												<th>Actions</th>
-												<th></th>
+												<th>
+													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
+														'.$option.'
+													</select>
+													<input name="lot['.$lot_count.'][remark][0]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+												</th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -329,52 +409,35 @@
 												<td>'.$item->unit.'</td>
 												<td>'.$item->item_description.'</td>
 												<td>'.$item->quantity.'</td>
-												<td>'.$item->unit_cost.'</td>
-												<td>'.$item->total_cost.'</td>
-												<td style="text-align:center">
-													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="false" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
-														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
-													</button>
-													<br>
-													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
-														<i class="fa fa-times"></i>&nbsp;Delete Input
-													</button>										
-												</td>
+												<td>'.Date::translate($item->unit_cost, 'php').'</td>
+												<td>'.Date::translate($item->total_cost, 'php').'</td>
 												<td>
-													<div class="row" id="row-'.$buttonCount.'">
-														<div class="col-lg-2">
-															<label>Supplier: </label>
-															<label>Price: </label>
-														</div>
-														<div class="col-lg-10">
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
-															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
-														</div>
-													</div>
+													<textarea name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
 												</td>
 											</tr>
 											';
 											$item_count++;
-											$buttonCount++;
 										}
 									echo '
 										</tbody>
-									</table>
-								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
-								Fail: <input type="checkbox" name="lot['.$lot_count.'][fail]" class="i-checks">';
+									</table>';
 						
 							}elseif($canvassForms->CanvassDetails->type === "JO"){
 								echo '
-								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'. $canvassForms->CanvassDetails->per_item.'" required>
-									<table class="table table-bordered">
+								<input type="hidden" name="lot['.$lot_count.'][per_item]" value="'.$canvassForms->CanvassDetails->per_item.'" required>
+									<table class="table table-bordered" id="table-lot-'.$lot_count.'">
 										<thead>
 											<tr>
 												<th>Mode of Procurement</th>
 												<th>List Title</th>
 												<th>Tags</th>
-												<th>Price Offered</th>
-												<th>Actions</th>
-												<th></th>
+												<th>
+													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
+														'.$option.'
+													</select>
+													<input name="lot['.$lot_count.'][remark][0]" type="text" class="form-control form-control-sm" placeholder="Remark" required>
+												</th>
 											</tr>
 										</thead>
 										<tbody>';
@@ -386,37 +449,17 @@
 												<td>'.$item->mode.'</td>
 												<td>'.$item->header.'</td>
 												<td>'.$item->tags.'</td>
-												<td style="text-align:center">
-													<button type="button" data-type="add" data-btn-num="'.$buttonCount.'" data-name="lot['.$lot_count.'][items]['.$item_count.']" data-peritem="false" class="btn btn-primary btn-outline btn-xs" style="margin-bottom:5px;">
-														<i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Input
-													</button>
-													<br>
-													<button type="button" data-type="del" data-btn-num="'.$buttonCount.'" class="btn btn-danger btn-outline btn-xs">
-														<i class="fa fa-times"></i>&nbsp;Delete Input
-													</button>										
-												</td>
 												<td>
-													<div class="row" id="row-'.$buttonCount.'">
-														<div class="col-lg-2">
-															<label>Supplier: </label>
-															<label>Price: </label>
-														</div>
-														<div class="col-lg-10">
-															<input class="form-control form-control-sm" type="text" name="lot['.$lot_count.'][items]['.$item_count.'][supplier][]" required>
-															<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="lot['.$lot_count.'][items]['.$item_count.'][price][]" required>
-														</div>
-													</div>
+													<textarea hidden name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="1" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Price">
 												</td>
 											</tr>
 											';
 											$item_count++;
-											$buttonCount++;
 										}
 									echo '
 										</tbody>
-									</table>
-								Remark: <input type="text" name="lot['.$lot_count.'][remarks]" required>
-								Fail: <input type="checkbox" name="lot['.$lot_count.'][fail]" class="i-checks">';
+									</table>';
 						
 							}
 						}
@@ -443,8 +486,9 @@
 			echo"<br><br><br><br><br><br>";
 		}	
 	?>
-					
-			<button class="btn btn-rounded btn-success">Submit</button>
+			<div style="text-align:right; margin-right: 25px;">
+				<button class="btn btn-rounded btn-primary">Submit</button>
+			</div>
 			</form>
 			</div>
 			<button class="back-to-top" type="button"></button>
@@ -459,10 +503,6 @@
 </body>
 <script>
 	$(document).ready(function(){
-		$('.i-checks').iCheck({
-			checkboxClass: 'icheckbox_square-green',
-			radioClass: 'iradio_square-green'
-		});
 
 		setTimeout(function(){
 			$('#minimizer').trigger('click');
@@ -470,53 +510,99 @@
 
 		$('[data-type]').on('click', function(){
 			if(this.dataset.type === "add"){
-				if(this.dataset.peritem === "true"){
-					$(`#row-${this.dataset.btnNum}`).append(`
-						<div class="col-lg-2">
-							<label>Supplier: </label>
-							<label>Price: </label>
-							<label>Remark: </label>
-							<label>Fail: </label>
-							<input type="checkbox" class="i-checks" name="${this.dataset.name}[fail][${parseInt(this.dataset.fcount) + 1}]">
-						</div>
-						<div class="col-lg-10">
-							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[supplier][]" required>
-							<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="${this.dataset.name}[price][]" required>
-							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[remark][]" required>
-						</div>
-					`);
+				let el = document.querySelector(`#${this.dataset.table}`).childNodes;
+				let name = this.dataset.name
+
+				if(this.dataset.idty === "true"){
 					this.dataset.fcount = parseInt(this.dataset.fcount) + 1;
-					$('.i-checks').iCheck({
-						checkboxClass: 'icheckbox_square-green',
-						radioClass: 'iradio_square-green'
+					let fcount = this.dataset.fcount;
+
+					el[1].childNodes[1].innerHTML += `
+						<th>
+							<select name="${name}[supplier][${fcount}]" type="text" class="form-control form-control-sm" required>
+								<?php echo $option;?>
+							</select>
+						</th>
+					`;
+
+					let tempcount = 0;
+					el[3].childNodes.forEach(function(e ,i){
+						if((i % 2) !== 0){
+							e.innerHTML += `
+								<td>
+									<textarea name="${name}[offer][${tempcount}][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+									<input name="${name}[items][${tempcount}][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
+									<input name="${name}[remark][${tempcount}][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
+								</td>
+							`;
+							tempcount++;
+						}
 					});
 				}else{
-					$(`#row-${this.dataset.btnNum}`).append(`
-						<div class="col-lg-2">
-							<label>Supplier: </label>
-							<label>Price: </label>
-						</div>
-						<div class="col-lg-10">
-							<input class="form-control form-control-sm" type="text" name="${this.dataset.name}[supplier][]" required>
-							<input class="form-control form-control-sm" step="0.01" min="0.00" type="number" name="${this.dataset.name}[price][]" required>
-						</div>
-					`);
+					this.dataset.fcount = parseInt(this.dataset.fcount) + 1;
+					
+					if(this.dataset.prjtype === "PR"){
+
+						el[1].childNodes[1].innerHTML += `
+							<th>
+								<select name="${name}[supplier][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required>
+									<?php echo $option;?>
+								</select>
+								<input name="${name}[remark][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+							</th>
+						`;
+
+						let tempcount = 0;
+						el[3].childNodes.forEach(function(e ,i){
+							if((i % 2) !== 0){
+								e.innerHTML += `
+									<td>
+										<textarea name="${name}[offer][${tempcount}][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+										<input name="${name}[items][${tempcount}][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
+									</td>
+								`;
+								tempcount++;
+							}
+						});
+
+					}else{
+
+						el[1].childNodes[1].innerHTML += `
+							<th>
+								<select name="${name}[supplier][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required>
+									<?php echo $option;?>
+								</select>
+								<input name="${name}[remark][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+							</th>
+						`;
+
+						let tempcount = 0;
+						el[3].childNodes.forEach(function(e ,i){
+							if((i % 2) !== 0){
+								e.innerHTML += `
+									<td>
+										<textarea hidden name="${name}[offer][${tempcount}][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
+										<input name="${name}[items][${tempcount}][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Price">
+									</td>
+								`;
+								tempcount++;
+							}
+						});
+
+					}
+
 				}
 			}else if(this.dataset.type === "del"){
-				let del_array = $(`#row-${this.dataset.btnNum} div`);
-				
-				if(this.dataset.peritem === "true"){
-					del_array[del_array.length - 1].remove();
-					del_array[del_array.length - 2].remove();
-				}else{
-					del_array[del_array.length - 1].remove();
-					del_array[del_array.length - 2].remove();
-					del_array[del_array.length - 3].remove();
-				}
-
-				let addBtn = this.parentNode.childNodes[1];
-				if(addBtn.dataset.fcount !== "-1"){
-					addBtn.dataset.fcount = parseInt(addBtn.dataset.fcount) - 1;
+				let addbtn = this.previousSibling.previousSibling;
+				let el = document.querySelector(`#${this.dataset.table}`).childNodes;
+				if(addbtn.dataset.fcount !== "0"){
+					addbtn.dataset.fcount = parseInt(addbtn.dataset.fcount) - 1;
+					el[1].childNodes[1].lastElementChild.remove();
+					el[3].childNodes.forEach(function(e, i){
+						if((i % 2) !== 0){
+							e.lastElementChild.remove();
+						}
+					});
 				}
 			}
 		});

@@ -24,7 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Procurement Aid</title>
+    <title>PrMO OPPTS | </title>
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>

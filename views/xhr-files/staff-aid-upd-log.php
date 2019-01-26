@@ -199,11 +199,11 @@ else{
 
 					case "SIGNATURES":
 						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+						// $unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						$signiture[] = [
 							'project' => $document->project,
 							'title' => $project->project_title,
-							'transmitting_to' => $unit->office_name,
+							'transmitting_to' => $document->transmitting_to,
 							'specific_office' => $document->specific_office,
 							'date_registered' => Date::translate($document->date_registered, 1)
 						];

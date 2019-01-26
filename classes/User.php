@@ -224,6 +224,26 @@
 			return $notif;
 		}
 
+		public function activity_frequency($ID){
+			$days[] = date('Y-m-d',strtotime('monday this week'));
+			$days[] = date('Y-m-d',strtotime('tuesday this week'));
+			$days[] = date('Y-m-d',strtotime('wednesday this week'));
+			$days[] = date('Y-m-d',strtotime('thursday this week'));
+			$days[] = date('Y-m-d',strtotime('friday this week'));
+			$days[] = date('Y-m-d',strtotime('saturday this week'));
+			$days[] = date('Y-m-d',strtotime('sunday this week'));
+
+			foreach ($days as $day){
+				if($this->db->query_builder("SELECT COUNT(*) as 'activities' FROM `activity_log` WHERE date_log LIKE '{$day}%' AND made_by = '{$ID}'")){
+						if($this->db->count()){
+							$activities[] = $this->db->first()->activities;
+						}
+				}
+			}
+
+			return $activities;
+		}
+
 
         public function userData($ID){
             if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, concat(edr_fname,edr_lname), concat(edr_fname,' ' ,edr_lname), edr_ext_name, edr_email, phone, office_name, edr_job_title, username, group_id, name as 'group_name', permission
@@ -403,7 +423,7 @@
 
 		//project details important updates
 		public function importantUpdates($ID){ 
-			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%' OR remarks LIKE 'DECLARATION%') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
 				if($this->db->count()){
 					return $this->db->results();
 				}else{
@@ -413,6 +433,18 @@
 			}
 			
 		}
+
+		public function importantUpdates2($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%' OR remarks LIKE 'DECLARATION%' OR remarks LIKE '%is being evaluated.') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}		
 
 		//used to validated if the requests form(PR / JO still has any items on it or any items from each lot.)
 		public function checkItems($refno, $lot, $type){
@@ -434,6 +466,55 @@
 					}
 				}
 			return false;
+
+		}
+
+		public function dashboardReports($ID){
+
+			$SummaryReports = [];
+
+			if($this->db->query_builder("SELECT TOTAL_PROJECTS, ONGOING, FINISHED, FAILED
+				FROM(
+				SELECT COUNT(*) as 'ONGOING' FROM `projects` WHERE end_user LIKE '%{$ID}%' AND project_status = 'PROCESSING'
+				) as a,
+				(
+				SELECT COUNT(*) as 'FINISHED' FROM `projects` WHERE end_user LIKE '%{$ID}%' AND project_status = 'FINISHED'
+				) as b,
+				(
+				SELECT COUNT(*) as 'FAILED' FROM `projects` WHERE end_user LIKE '%{$ID}%' AND project_status = 'FAILED'
+				) as c,
+				(
+				SELECT COUNT(*) as 'TOTAL_PROJECTS' FROM `projects` WHERE end_user LIKE '%{$ID}%'
+				) as d")){
+					if($this->db->count()){
+						$SummaryReports["projectStatusCount"] =  $this->db->first();
+					}
+			}
+
+			if($this->db->query_builder("SELECT REQUEST_FORMS, UNRECEIVED, REVISION_REQUEST
+			FROM(
+				SELECT COUNT(*) as 'REQUEST_FORMS' FROM `project_request_forms` WHERE requested_by = '{$ID}'
+			) as a,
+			(
+				SELECT COUNT(*) as 'UNRECEIVED' FROM `project_request_forms` WHERE requested_by = '{$ID}' AND status = 'unreceived'
+			) as b,
+			(
+				SELECT COUNT(*) as 'REVISION_REQUEST' FROM `form_update_requests` WHERE requested_by = '{$ID}'
+			) as c")){
+					if($this->db->count()){
+						$SummaryReports["request_forms_related"] =  $this->db->first();
+					}
+			}
+
+			//Add another report query here if any then push it to the summary report array.
+
+
+			if(!empty($SummaryReports)){
+				return (object)$SummaryReports;
+			}
+
+			return false;
+
 
 		}
 

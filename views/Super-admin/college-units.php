@@ -11,6 +11,21 @@
         die();
 	}
 
+	if(!empty($_POST)){
+		$user->startTrans();
+
+		$user->register('units', array(
+			'office_name' => Input::get('unit_name'),
+			'acronym' => Input::get('acr'),
+			'campus' => Input::get('camp')
+		));
+
+		$user->endTrans();
+
+		$responce = "Succesfully added college/unit.";
+		unset($_POST);
+	}
+
 
 ?>
 <!DOCTYPE html>
@@ -21,11 +36,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Colleges and Units</title>
+    <title>PrMO OPPTS | Overview</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
-
+		var responce = '<?php 
+			if(isset($responce)){
+				echo $responce;
+			}else{
+				echo "";
+			}
+		?>';
 		const SampleData = [
 			
 			<?php
@@ -49,7 +70,11 @@
 		?>
 		];
 	</script>
-
+	<style>
+		.none {
+			display: none;
+		}
+	</style>
 </head>
 
 <body class="fixed-navigation">
@@ -106,25 +131,63 @@
 							<div class="alert alert-info">
                                Here you can edit the default data per College / Office Unit like the personnel incharge of noting, verifying, and approving the Purchase Requests or Job Orders. Click on the underlined field to edit. After finalizing all your changes click the "Save Changes" button at the bottom-right of this page.
                             </div>
-                            <table class="table table-bordered">
+							<div class="row">
+								<div class="col-sm-9 m-b-xs">
+								</div>
+								<div class="col-sm-3">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control form-control-sm" placeholder="Search" id="filter">
+									</div>
+								</div>
+							</div>
+							<table class="footable table table-striped toggle-arrow-tiny" data-filter="#filter">
                                 <thead>
-                                <tr>
-									<th>Accronym</th>
-                                    <th>College / Unit</th>
-                                    <th>Noted By</th>
-                                    <th>Noted By Job title</th>
-                                    <th>Verifier</th>
-									<th>Verifier Job title</th>
-                                    <th>Approving</th>
-									<th>Approving Job title</th>
-                                </tr>
+									<tr>
+										<th>Acronym</th>
+										<th>College / Unit</th>
+										<th>Noted By</th>
+										<th>Noted By Job title</th>
+										<th>Verifier</th>
+										<th>Verifier Job title</th>
+										<th>Approving</th>
+										<th>Approving Job title</th>
+									</tr>
                                 </thead>
                                 <tbody id="t-data">
 
                                 </tbody>
                             </table>
-						<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
+							<button class="btn btn-outline btn-success btn-rounded" id="btnAdd">Add College / Office</button>
+							<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
                         </div>
+
+						<div class="ibox-content animated fadeInDown none" id="addUnit">
+							<div class="row">
+								
+								<div class="col-sm-6">
+									<form id="profile" role="form" method="POST" enctype="multipart/form-data">
+									<div class="form-group mt-20">
+										<label class="form-label" for="unit_name">College / Unit Name</label>
+										<input id="unit_name" name="unit_name" class="form-input" type="text" required>
+									</div>			
+									<div class="form-group mt-20">
+										<label class="form-label" for="camp">Campus</label>
+										<input id="camp" name="camp" class="form-input" type="text" required>
+									</div>															
+								</div>
+								<div class="col-sm-6"> 												
+									<div class="form-group mt-20">
+										<label class="form-label" for="acr">Acronym</label>
+										<input id="acr" name="acr" class="form-input" type="text" required>
+									</div>	
+									</form>							
+								</div>
+								<div class="col-lg-12">
+									<button class="btn btn-primary btn-rounded pull-right" type="submit" form="profile">Submit</button>
+								</div>									
+							</div>
+						</div>
+
                     </div>
                 
 					
@@ -151,6 +214,14 @@
 </body>
 <script>
 $(document).ready(function () {
+
+	if(responce !== ''){
+		swal({
+			title: "Success!",
+			text: responce,
+			type: "success"
+		});
+	}
 
 	var Edit = [];
 
@@ -219,6 +290,10 @@ $(document).ready(function () {
 			title: 'Success!',
 			text: 'Successfully updated signatories.'
 		});
+	});
+
+	$('#btnAdd').on('click', function(){
+		$('#addUnit').toggleClass('none');
 	});
 });
 </script>

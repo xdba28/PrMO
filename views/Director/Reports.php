@@ -71,6 +71,8 @@
 			
 			<!-- Main Content -->
         <div class="wrapper wrapper-content animated fadeInRight" >
+
+			<?php  $reports=$user->dashboardReports(); ?>
 			<div class="p-w-md m-t-sm">
 				<div class="row">
 
@@ -82,7 +84,7 @@
 					<div class="col-lg-8">
 						<div class="ibox ">
 							<div class="ibox-title">
-								<h5>Bar Chart Example</h5>
+								<h5>Projects Success Ratio</h5>
 							</div>
 							<div class="ibox-content">
 								<div>
@@ -93,6 +95,88 @@
 					</div>
 					
 				</div>
+
+		
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>All Ongoing Projects</h5>
+							</div>
+							<div class="ibox-content">
+
+								<div class="table-responsive">
+									<table id="ongoing_report" class="table table-striped table-bordered table-hover dataTables-example" >
+									
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Reference</th>
+											<th>Title</th>
+											<th>MOP</th>
+											<th>ABC</th>
+											<th>Date Registered</th>
+											<th>Implementation</th>
+											<th>Workflow</th>
+											<th>Accomplishment</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+
+										<?php
+
+											$counter = 0;
+											foreach ($reports["current_projects"] as $project){
+												$counter++;
+
+												$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1); //computation on progress report
+												
+											
+										?>
+										<tr class="gradeX">
+											<td><?php echo $counter;?></td>
+											<td>
+												<?php echo $project->project_ref_no;?>
+											</td>
+											<td><?php echo $project->project_title;?></td>
+											<td class="center"><?php echo $project->MOP;?></td>
+											<td class="center"><?php echo Date::translate($project->ABC, "php");?></td>
+											<td class="center"><?php echo Date::translate($project->date_registered, "2");?></td>
+											<td class="center"><?php echo Date::translate($project->implementation_date, "2");?></td>
+											<td class="center"><?php echo $project->workflow;?></td>
+											<td class="center"><?php echo $accomplishment;?>%</td>										
+										</tr>
+
+
+										<?php
+											}
+										?>
+									</tbody>
+									
+									<tfoot>
+										<tr>
+											<th>#</th>
+											<th>Reference</th>
+											<th>Title</th>
+											<th>MOP</th>
+											<th>ABC</th>
+											<th>Date Registered</th>
+											<th>Implementation</th>
+											<th>Workflow</th>
+											<th>Accomplishment</th>
+										</tr>
+									</tfoot>
+									</table>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+					
 			</div>
 
 
@@ -184,7 +268,13 @@
 
 		});	
 	</script>
-
+<script>
+	$(function(){
+		setTimeout(function(){
+			$('#minimizer').trigger('click');
+		}, 1000);
+	});
+</script>
 
 </body>
 

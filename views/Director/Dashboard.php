@@ -61,15 +61,47 @@
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
-                    die($e->getMessage());
+					// die($e->getMessage());
+					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
             }
-        }
+        }else if(Token::check("directors-action", Input::get('directors-action'))){
+			try{
+				$user->startTrans();
+					$user->update("projects", "project_ref_no", Input::get('to-prioritize'), array(
+						'priority_level' => 'HIGH'
+					));
+
+					$user->register("project_logs", array(
+						'referencing_to' => Input::get('to-prioritize'),
+						'remarks' => "project ".Input::get('to-prioritize')." was set to high-priority project by the director.",
+						'logdate' => Date::translate('now', 'now'),
+						'type' =>  'IN'						
+					));
+				$user->endTrans();
+
+				
+				$success_notifs[] = "Actions taken, ".Input::get('to-prioritize')." was listed on the high priority projects.";
+				# send notif to aids
+				$user->register('notifications', array(
+					'recipient' => "group5",
+					'message' => "project ".Input::get('to-prioritize')." was set to high-priority project by the director.",
+					'datecreated' => Date::translate('test', 'now'),
+					'seen' => 0,
+					'href' => "Ongoing-projects"
+				));
+				notif(json_encode(array(
+					'receiver' => "group5",
+					'message' => "project ".Input::get('to-prioritize')." was set to high-priority project by the director.",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "Ongoing-projects"
+				)), true);				
+			}catch(Exception $e){
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
+			}
+
+		}
     }
 
    
@@ -88,6 +120,29 @@
     <title>PrMO OPPTS | Director</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
+	
+	
+		
+	<style>
+		.ibox-title1 {
+			-moz-border-bottom-colors: none;
+			-moz-border-left-colors: none;
+			-moz-border-right-colors: none;	
+			-moz-border-top-colors: none;
+			background-color: #ffffff;
+			border-color: #e7eaec;
+			border-image: none;
+			/* border-style: solid solid none; */
+			border-width: 2px 0 0;
+			color: inherit;
+			margin-bottom: 0;
+			padding: 15px 90px 8px 15px;
+			min-height: 48px;
+			position: relative;
+			clear: both;
+		}	
+	
+	</style>
 
 </head>
 
@@ -105,7 +160,7 @@
 			</div>
 		</nav>
 
-        <div id="page-wrapper" class="gray-bg" style="background-color:#e7e7ec">
+        <div id="page-wrapper" class="gray-bg">
 			<div class="row border-bottom">
 				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/admin_header.php'; ?>
@@ -128,7 +183,7 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content"><h1>Procurement Entries</h1>
+            <div class="wrapper wrapper-content">
 
 				<?php
 										
@@ -139,11 +194,11 @@
 					
 
 				?>
-
-				<div class="row col-lg-12 ">
+				<h1>Procurement Entries</h1>
+				<div class="row">
 						<div class="col-lg-3 animated fadeInUp">
-							<div class="ibox widget">
-								<div class="ibox-title">
+							<div class="ibox minimal-shadow">
+								<div class="ibox-title" style="border-style:none">
 									<span class="label label-warning float-right pull-right">2018</span>
 									<h5>Yearly Entries</h5>
 								</div>
@@ -182,8 +237,8 @@
 							</div>
 						</div>
 						<div class="col-lg-3 animated fadeInDown">
-							<div class="ibox">
-								<div class="ibox-title">
+							<div class="ibox minimal-shadow">
+								<div class="ibox-title" style="border-style:none">
 									<span class="label label-warning float-right pull-right"><?php echo Date::translate('test','month');?></span>
 									<h5>Monthly</h5>
 								</div>
@@ -221,8 +276,8 @@
 							</div>
 						</div>
 						<div class="col-lg-3 animated fadeInUp">
-							<div class="ibox ">
-								<div class="ibox-title">
+							<div class="ibox minimal-shadow">
+								<div class="ibox-title" style="border-style:none">
 									<span class="label label-warning float-right pull-right"><?php echo Date::translate('test','weekno');?> <i class="fas fa-info"></i></span>
 									<h5>Weekly</h5>
 								</div>
@@ -259,8 +314,8 @@
 							</div>
 						</div>
 						<div class="col-lg-3 animated fadeInDown">
-							<div class="ibox ">
-								<div class="ibox-title">
+							<div class="ibox minimal-shadow">
+								<div class="ibox-title" style="border-style:none">
 									<span class="label label-warning float-right pull-right"><?php echo Date::translate('test','today');?></span>
 									<h5>Today's Entries</h5>
 								</div>
@@ -298,75 +353,107 @@
 							</div>
 						</div>
 				</div>
-				<div class="row col-lg-12">
-					<div class="col-lg-7 animated fadeInUp">
-						<?php
-							$BASE_URL = "http://query.yahooapis.com/v1/public/yql";
-							$yql_query = 'select * from weather.forecast where woeid = 2346660 ';
-							$yql_query_url = $BASE_URL . "?q=" . urlencode($yql_query) . "%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
-							
-							// Make call with cURL
-							$session = curl_init($yql_query_url);
-							curl_setopt($session, CURLOPT_RETURNTRANSFER,true);
-							$json = curl_exec($session);
-							// Convert JSON to PHP object
-							 $WeatherphpObj =  json_decode($json, true);
-							 //echo "<pre>", print_r($WeatherphpObj), "</pre>";
-							
-						?>
+				
+				<h1>Current Projects Nearing Implemenation Date</h1>
+				<div class="row">
+
+					<?php
+						$reports = $user->dashboardReports();
+						foreach ($reports["current_projects"] as $project) {
+
+							if($project->priority_level !== "HIGH"){
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								if($diff->format("%a") <= 10){
+									$urgentPriority[] = $project;
+								}else if($diff->format("%a") <= 29){
+									$highPriority[] = $project;
+								}else if(($diff->format("%a") >= 30) AND ($diff->format("%a") <= 200)){
+									$lowPriority[] = $project;
+								}
+							}
+						}
 						
-						<div class="ibox ">
-							<div class="ibox-title">
-								<h5>Todays Weather Status</h5>
-								<div class="ibox-tools">
-									<a class="collapse-link">
-										<i class="fa fa-chevron-up"></i>
-									</a>
-								</div>
-							</div>
-							<div class="ibox-content">
-										<div id="top">
-										  <div class="location"><?php echo $WeatherphpObj['query']['results']['channel']['location']['city'],", ",$WeatherphpObj['query']['results']['channel']['location']['country'];?></div>
-										  <div class="time"><?php echo $WeatherphpObj['query']['results']['channel']['lastBuildDate'];?></div>
-										  <div class="status"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['text'];?></div>
-										</div>
-
-										<div id="left-information">
-										  <img src="../../assets/weather/png/<?php echo weatherConditionIcon($WeatherphpObj['query']['results']['channel']['item']['condition']['code']); ?>.png" alt="status" class="thumbnail" />
-										  <div class="temperature"><?php echo $WeatherphpObj['query']['results']['channel']['item']['condition']['temp'];?></div>
-										  <div class="unit">°C</div>
-										</div>
-
-										<div id="right-information">
-										  <span>Humidity: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['humidity'];?>%</span><br/>
-										  <span>Pressure: <?php echo $WeatherphpObj['query']['results']['channel']['atmosphere']['pressure'], " ",$WeatherphpObj['query']['results']['channel']['units']['pressure'];?></span><br/>
-										  <span>Wind speed: <?php echo $WeatherphpObj['query']['results']['channel']['wind']['speed'], " ",$WeatherphpObj['query']['results']['channel']['units']['speed'];?></span>
-										</div>
-
-										<div id="forecast">
-											  <ul>
-													<?php
-														for($x = 0; $x<7; $x++){
-															$conditionCode = $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['code'];
-
-															$displayIcon = weatherConditionIcon($conditionCode);
-													?>
-													<li>
-													<div><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['day'];?></div>
-													<img src="../../assets/weather/png/<?php echo $displayIcon; ?>.png" alt="icon" height="32" width="32"/>
-													<b><?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['high'];?>°</b> <?php echo $WeatherphpObj['query']['results']['channel']['item']['forecast'][$x]['low'];?>°
-													</li>
-													<?php
-														}
-													?>
-											  </ul>
-										</div>
-							</div>
-						</div>						
 						
-					</div>
-					
-				</div>
+					?>
+
+
+					<?php
+
+						if(!empty($urgentPriority)){
+							foreach ($urgentPriority as $project) {
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								echo'
+									<div class="col-lg-3 animated fadeInRight">
+										<a data-toggle="modal" data-target="#nearing-projects" data-priority="urgent" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
+										<div class="widget style1 bg-danger">
+											<div class="row">
+												<div class="col-4">
+													<i class="ti-alarm-clock fa-4x"></i>
+												</div>
+												<div class="col-8 text-right" style="height:90px">
+													<span>'.$project->project_title.'</span>
+												</div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' day/s</h2></div>
+											</div>
+										</div>
+										</a>
+									</div>
+								';								
+							}
+
+						}
+
+						if(!empty($highPriority)){
+							foreach ($highPriority as $project) {
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								echo'
+									<div class="col-lg-3 animated fadeInRight">
+										<a data-toggle="modal" data-target="#nearing-projects" data-priority="high" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
+										<div class="widget style1 yellow-bg">
+											<div class="row">
+												<div class="col-4">
+													<i class="ti-alert fa-4x"></i>
+												</div>
+												<div class="col-8 text-right" style="height:90px">
+													<span>'.$project->project_title.'</span>
+												</div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' days</h2></div>
+											</div>
+										</div>
+										</a>
+									</div>								
+								';
+							}
+
+						}
+
+						if(!empty($lowPriority)){
+							foreach ($lowPriority as $project) {
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								echo'
+									<div class="col-lg-3 animated fadeInRight">
+									<a data-toggle="modal" data-target="#nearing-projects" data-priority="low" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
+										<div class="widget style1 lazur-bg">
+											<div class="row">
+												<div class="col-4">
+													<i class="ti-calendar fa-4x"></i>
+												</div>
+												<div class="col-8 text-right" style="height:90px">
+													<span>'.$project->project_title.'</span>
+												</div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' day/s</h2></div>
+											</div>
+										</div>
+										</a>
+									</div>								
+								';
+							}
+						}
+					?>	
+
+
+				
+				</div>			
 
 
 						
@@ -385,6 +472,18 @@
 	<!-- Password meter -->
 <script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
 <script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	
+	$('.custom-file-input').on('change', function() {
+	   let fileName = $(this).val().split('\\').pop();
+	   $(this).next('.custom-file-label').addClass("selected").html(fileName);
+	}); 
+
+});
+</script>
 	<script>	
 		$(document).ready(function(){
            // Example 4 password meter
@@ -430,135 +529,90 @@
 	
 	</script>
 
-	<?php
-	function weatherConditionIcon($conditionCode) {
-		switch($conditionCode){
-			case '0':
-				# tornado...
-				$icon = 'tornado';
-				break;	
-			case '1':
-				# tropical storm...
-				$icon = 'tropical-storm';
-				break;
-			case '2':
-				# hurricane...
-				$icon = 'hurricane';
-				break;
-			case '3':
-				# severe thunderstorms...
-				$icon = 'tropical-storm';
-				break;	
-			case '4':
-				# thunderstorms...
-				$icon = 'thunderstorm';
-				break;
-			case '8':
-				# drizzle...
-				$icon = 'drizzle';
-				break;
-			case '9':
-				# drizzle...
-				$icon = 'drizzle';
-				break;	
-			case '10':
-				# freezing rain...
-				$icon = 'rain';
-				break;
-			case '11':
-				# shower...
-				$icon = 'drizzle';
-				break;
-			case '12':
-				# shower...
-				$icon = 'drizzle';
-				break;	
-			case '20':
-				# foggy...
-				$icon = 'foggy';
-				break;
-			case '24':
-				# windy...
-				$icon = 'windy';
-				break;	
-			case '25':
-				# cold...
-				$icon = 'cold';
-				break;
-			case '26':
-				# cloudy...
-				$icon = 'cloudy';
-				break;
-			case '27':
-				# mostly cloudy (night)...
-				$icon = 'cloudynight';
-				break;	
-			case '28':
-				# mostly cloudy (day)...
-				$icon = 'cloudyday';
-				break;
-			case '29':
-				# partly cloudy (night)...
-				$icon = 'cloudynight';
-				break;
-			case '30':
-				# partly cloudy (day)...
-				$icon = 'cloudyday';
-				break;	
-			case '31':
-				# clear (night)...
-				$icon = 'clearnight';
-				break;
-			case '32':
-				# sunny...
-				$icon = 'sunny';
-				break;
-			case '33':
-				# fair (night)...
-				$icon = 'cloudynight';
-				break;	
-			case '34':
-				# fair (day)...
-				$icon = 'cloudyday';
-				break;
+	<script>
+	$(function(){
+		$('#nearing-projects').on('show.bs.modal', function (event){
 
-			case '36':
-				# hot...
-				$icon = 'hot';
-				break;	
-			case '37':
-				# isolated thunderstorm...
-				$icon = 'thunderstorm';
-				break;
-			case '38':
-				# scattered thunder storm...
-				$icon = 'thunderstorm';
-				break;
-			case '39':
-				# scattered thunder storm...
-				$icon = 'thunderstorm';
-				break;	
-			case '44':
-				# cloudy...
-				$icon = 'cloudy';
-				break;
-			case '45':
-				# thundershower...
-				$icon = 'thunderstorm';
-				break;	
-			case '47':
-				# isolated thunder shower...
-				$icon = 'thunderstorm';
-				break;
-			default:
-			$icon = 'cloudyday';
-			break;			
-		}		
+			var editButton = $(event.relatedTarget) // Button that triggered the modal
+			var currentProject = editButton.data('project')
+			var title = editButton.data('title')
+			var priority = editButton.data('priority')
+			var modal = $(this);
 
-		return $icon;
-	}
+			SendDoSomething("GET", "xhr-project-details.php", {
+				id: currentProject
+			}, {
+				do: function(result){
+					var projectDetails = result.project_details;
+
+					var imp_date_split = projectDetails.implementation_date.split('-');
+					var months = [
+						"January", "February", "March",
+						"April", "May", "June", "July",
+						"August", "September", "October",
+						"November", "December"
+					];
+					
+					var display_date = `${months[parseInt(imp_date_split[1]) - 1]} ${imp_date_split[2]}, ${imp_date_split[0]}`;
+					var accomplishment = ((projectDetails.accomplished / projectDetails.steps) * 100).toFixed(1);
+					var currentdate = new Date();
+					var diff = new Date(projectDetails.implementation_date) - currentdate;
+					var days = diff / 1000 / 60 / 60 / 24					
+					
+
+					switch (priority) {
+						case "urgent":
+							modal.find('#modal-icon-nearing').removeClass().addClass('ti-alarm-clock text-danger modal-icon');
+							// modal.find('.modal-title').text(currentProject);
+							// modal.find('#modal-description-nearing').text(title);
+							modal.find('#days').removeClass().addClass('text-danger');
+							// modal.find('#days').text(Math.floor(days));
+							modal.find('#implementation-date').removeClass().addClass('text-danger');
+							// modal.find('#implementation-date').text(display_date);
+							// modal.find('#accomplishment').text(accomplishment);
+							// modal.find('#workflow').text(projectDetails.workflow);
+							// var finallink = "project-details?refno="+projectDetails.project_ref_no;
+							// document.getElementById("link").href=finallink;
+							// document.getElementById("to-prioritize").value=projectDetails.project_ref_no;
+
+				
+							;
+							
+							break;
+						case "high":
+							modal.find('#modal-icon-nearing').removeClass().addClass('ti-alert text-warning modal-icon');
+							modal.find('#days').removeClass().addClass('text-warning');
+							modal.find('#implementation-date').removeClass().addClass('text-warning');												
+							break;
+						case "low":
+							modal.find('#modal-icon-nearing').removeClass().addClass('ti-calendar text-info modal-icon');
+							modal.find('#days').removeClass().addClass('text-info');
+							modal.find('#implementation-date').removeClass().addClass('text-info');							
+							break;
+					}
+
+
+							modal.find('.modal-title').text(currentProject);
+							modal.find('#modal-description-nearing').text(title);						
+							modal.find('#days').text(Math.floor(days));
+							modal.find('#implementation-date').text(display_date);
+							modal.find('#accomplishment').text(accomplishment);
+							modal.find('#workflow').text(projectDetails.workflow);
+							var finallink = "project-details?refno="+projectDetails.project_ref_no;
+							document.getElementById("link").href=finallink;
+							document.getElementById("to-prioritize").value=projectDetails.project_ref_no;					
+
+				}
+			});
+
+		});
+
+
+	});
 	
-	?>
+	</script>
+
+
 
 
 

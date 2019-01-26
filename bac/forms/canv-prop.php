@@ -4,14 +4,13 @@ require_once "../../core/init.php";
 $admin = new Admin();
 
 // $gds = base64_decode('R0RTMjAxOC05');
-$gds = base64_decode('R0RTMjAxOC0z');
+$gds = base64_decode($_GET['rq']);
+$title = base64_decode($_GET['t']);
+$id = $_GET['i'];
 
 // $canvassForm = $admin->selectCanvassForm($gds, 'Common Office Supplies, and ICT Supplies', 1);
 // $canvassForm = $admin->selectCanvassForm($gds, 'ICT Supplies', 2);
-$canvassForm = $admin->selectCanvassForm($gds, 'August 14 &amp; 16, 2018 |50 Pax @ BUCS Bldg.', 3);
-
-// echo "<pre>".print_r($canvassForm)."</pre>";
-// die();
+$canvassForm = $admin->selectCanvassForm($gds, $title, $id);
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
@@ -19,9 +18,9 @@ $phpWord = new \PhpOffice\PhpWord\PhpWord();
 // $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
 // $documentProtection->setPassword('PrMO');
 
-// $file = "Canvass.docx";
-// header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-// header('Content-Disposition: attachment; filename="'.$file.'"');
+$file = $gds.' - Canvass Form - '.$title.".docx";
+header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+header('Content-Disposition: attachment; filename="'.$file.'"');
 
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 0, 'after' => 0]]);
 $phpWord->setDefaultFontName('Times New Roman');
@@ -225,6 +224,69 @@ if($canvassForm->CanvassDetails->type === "PR"){
 
 	if($canvassForm->CanvassDetails->per_item){
 		
+		$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2, 'cellMarginRight' => 115.2]);
+		$table->addRow(662.4);
+		$textrun = $table->addCell(1900, ['vMerge' => 'restart', 'valign' => 'center'])->addTextRun(['alignment' => 'center']);
+		$textrun->addText("Ref/ ABC/ Item");
+		$textrun->addTextBreak(1);
+		$textrun->addText($gds, ['bold' => true]);
+		$textrun->addTextBreak(1);
+		$textrun->addText("Php {$canvassForm->CanvassDetails->cost}", ['bold' => true]);
+
+		$table->addCell(518.4, $sC)->addText("Unit", null, $c);
+		// $table->addCell(720, $sC)->addText("Qty", null, $c);
+		$table->addCell(3672, $sC)->addText("Description", null, $c);
+		$table->addCell(1238.4, $sC)->addText("Unit Price", null, $c);
+		$table->addCell(1800, $sC)->addText("Compliance to Technical Specifications", null, $c);
+		$table->addCell(1296, $sC)->addText("Offer", null, $c);
+	
+		$table->addRow(350);
+		$table->addCell(null, ['vMerge' => 'continue']);	
+		$table->addCell(null, ['gridSpan' => 6, 'valign' => 'center'])
+			->addText(
+				"Provision of {$canvassForm->CanvassDetails->title}",
+				['bold' => true]
+			);
+			
+		foreach($canvassForm->items as $key => $item){
+			$table->addRow(450);
+	
+			$table->addCell(475, $sC)
+				->addText($key + 1, null, $c);
+
+			$table->addCell(null, $sC)
+				->addText("lot", null, $c);
+			// $table->addCell(null, $sC)
+			// 	->addText("1", null, $c);
+			$table->addCell(null, $sC)
+				->addText($item->tags, null);
+			$table->addCell();
+			$table->addCell();
+			$table->addCell();
+
+		}
+
+		$table->addRow(790);
+		$textrun = $table->addCell(null, ['gridSpan' => 7])->addTextRun();
+		$textrun->addText("Service Delivery Conditions", ['size' => 9]);
+		$textrun->addTextBreak(1);
+		$textrun->addText("    ");
+		$textrun->addCheckBox("del1", "  Delivery of item is required:", ['size' => 9]);
+		$textrun->addTextBreak(1);
+		$textrun->addText("    ");
+		$textrun->addCheckBox("del2", "  Details related to implementation shall be communicated with ", ['size' => 9]);
+		$textrun->addText("Ms. Charina J. Cipcon;", ['size' => 9, 'bold' => true]);
+		$textrun->addText(" End-User", ['size' => 9, 'bold' => true]);
+
+		$table->addRow(43.2);
+		$table->addCell(null, ['valign' => 'center'])->addText("Price Validity", ['size' => 9]);
+		$table->addCell(null, ['gridSpan' => 3]);
+		$table->addCell()->addText("Payment Term:", ['size' => 9]);
+		$table->addCell(null, ['gridSpan' => 2]);
+
+
+
+
 	}else{
 		
 		$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2, 'cellMarginRight' => 115.2]);
@@ -237,7 +299,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addText("Php {$canvassForm->CanvassDetails->cost}", ['bold' => true]);
 
 		$table->addCell(518.4, $sC)->addText("Unit", null, $c);
-		$table->addCell(720, $sC)->addText("Qty", null, $c);
+		// $table->addCell(720, $sC)->addText("Qty", null, $c);
 		$table->addCell(3672, $sC)->addText("Description", null, $c);
 		$table->addCell(1238.4, $sC)->addText("Unit Price", null, $c);
 		$table->addCell(1800, $sC)->addText("Compliance to Technical Specifications", null, $c);
@@ -259,8 +321,8 @@ if($canvassForm->CanvassDetails->type === "PR"){
 
 			$table->addCell(null, $sC)
 				->addText("lot", null, $c);
-			$table->addCell(null, $sC)
-				->addText("1", null, $c);
+			// $table->addCell(null, $sC)
+			// 	->addText("1", null, $c);
 			$table->addCell(null, $sC)
 				->addText($item->tags, null);
 			$table->addCell();
@@ -312,6 +374,6 @@ $section->addTextBreak(5);
 $section->addText("Served by/Date: ______________________");
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$objWriter->save('C:/Users/Denver/Desktop/Canvas.docx');
-// $objWriter->save("php://output");
+// $objWriter->save('C:/Users/Denver/Desktop/Canvas.docx');
+$objWriter->save("php://output");
 ?>

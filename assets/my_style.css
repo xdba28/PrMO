@@ -1,5 +1,7 @@
 .wizard-big.wizard > .content {
-    min-height: 520px;
+	min-height: 520px;
+	overflow: auto;
+    height: 350px;	
 }
 
 .side {
@@ -220,7 +222,7 @@ button.back-to-top.show:active {
     min-width:200px;
 }
 .td-project-title{
-    width:40%;
+    width:25%;
     min-width:200px;
 }
 
@@ -690,12 +692,37 @@ li {
 	border-color: #DA932C;
   }
   #myTable .status-text.status-red:before {
-	border-color: #D65B4A;
+	border-color: rgb(214, 93, 76);
   }
 
   .myShadow{
 	background: rgb(76, 76, 76);
 	box-shadow: 0 0 20px 0px rgb(47, 47, 47), 0 0 20px 0px rgba(107, 104, 104, 0);
+  }
+
+  .warningShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px #DA932C, 0 0 20px 0px #DA932C;
+  }
+
+  .dangerShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px #ed5565, 0 0 20px 0px #ed5565;
+  }
+
+  .primaryShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px #ed5565, 0 0 20px 0px #ed5565;
+  }
+
+  .successShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px #1c84c6, 0 0 20px 0px #1c84c6;
+  }
+
+  .infoShadow{
+	background: rgb(76, 76, 76);
+	box-shadow: 0 0 20px 0px #23c6c8, 0 0 20px 0px #23c6c8;
   }
 
   .ibox-tools a {
@@ -711,6 +738,14 @@ li {
 
   /* #F37123 -> BUorange */
   /* #009bdf -> BUblue */
+
+  .buBlue{
+	  color:#009bdf;
+  }
+
+  .buOrange{
+	color:#F37123;
+}  
 
 
 
@@ -1723,3 +1758,56 @@ button:focus {
 	  opacity: 1;
 	}
   }
+
+
+/* terms and condtion styling */
+
+  ul#mylist > li{
+	  list-style-type: circle;
+  }
+
+  .wizard-big.wizard > .content#termAndconditiion {
+    min-height: 920px;
+}
+
+
+/* custom scrollbar terms and condition*/
+
+#terms::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#terms::-webkit-scrollbar
+{
+	width: 8px;
+	background-color: #F5F5F5;
+}
+
+#terms::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #ffad33;
+}
+
+
+
+/* minimal box shadow */
+
+.minimal-shadow{
+	box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.7);
+}
+
+
+.hprow{
+	border-left: 3px solid #eb7655;
+}
+
+.hprow1{
+	border-left: 3px solid #52d29a;
+}
+
+

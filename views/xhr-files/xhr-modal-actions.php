@@ -293,6 +293,7 @@ else{
 									'stepdetails' => $newSteps,
 									'evaluator' => Input::Get('evaluator'),
 									'accomplished' => "3",
+									'project_status' => "PROCESSING",
 									'workflow' => "DBMPS Checking / Canvass",
 									'evaluators_comment' => Input::Get('commentbyTwg')
 								));
@@ -333,7 +334,8 @@ else{
 
 								$user->update("projects", "project_ref_no", $projectDetails->project_ref_no, array(
 									'accomplished' => "2",
-									'proposed_evaluator' => "procurement aid"
+									'proposed_evaluator' => "procurement aid",
+									'project_status' => "PROCESSING"
 
 								));
 
@@ -382,7 +384,8 @@ else{
 								'steps' => $noOfSteps,
 								'stepdetails' => $newSteps,
 								'evaluator' => Input::Get('evaluator'),
-								'evaluators_comment' => Input::Get('commentbyTwg')
+								'evaluators_comment' => Input::Get('commentbyTwg'),
+								'project_status' => "PAUSED"
 							));								
 
 							//register issue log again
@@ -450,6 +453,11 @@ else{
 										'logdate' => Date::translate('now', 'now'),
 										'type' => 'IN'
 									));
+
+									//set status to paused
+									$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(			
+										'project_status' => "PAUSED"
+									));	
 
 									foreach ($enduserList as $endusers){
 										$user->register('notifications', array(
@@ -544,6 +552,10 @@ else{
 										'type' => 'IN'
 									));
 
+									//set status to paused
+									$user->update('projects', 'project_ref_no', $projectDetails->project_ref_no, array(			
+										'project_status' => "PAUSED"
+									));
 
 									foreach ($enduserList as $endusers){
 										$user->register('notifications', array(
@@ -587,7 +599,7 @@ else{
 								//let the aid finish this step
 							}						
 					
-						$user->endTrans();	
+						$user->endTrans();
 
 						}	
 
@@ -610,7 +622,7 @@ else{
 		}
 		
 
-		$data = ['success' => true];
+		$data = ['success' => true, 'projectreference' => $_POST['projectReference']];
 		echo json_encode($data);
 	}
 	else

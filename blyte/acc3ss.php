@@ -91,13 +91,7 @@
 					 
                  }
 
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
             }
-
-
 
         }
 
@@ -112,7 +106,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO | Admin Login</title>
+    <title>PrMO OPPTS | Admin Login</title>
 
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -126,7 +120,7 @@
 
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
-            <div>
+            <div class="animated pulse">
 
                 <h1 class="logo-name" style="margin-left: -70px">PrMO</h1>
 

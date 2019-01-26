@@ -69,7 +69,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Dashboard v.3</title>
+    <title>PrMO OPPTS | Account Requests</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>

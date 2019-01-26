@@ -45,8 +45,8 @@
 <!-- Ladda style -->
 <link href="../../assets/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
 <!--Dropzone-->
-<link href="../../assets/css/plugins/dropzone/basic.css" rel="stylesheet">
-<link href="../../assets/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+<!-- <link href="../../assets/css/plugins/dropzone/basic.css" rel="stylesheet"> -->
+<!-- <link href="../../assets/css/plugins/dropzone/dropzone.css" rel="stylesheet"> -->
 <!--jasny-->
 <link href="../../assets/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
 <!--CodeMirror-->
@@ -67,5 +67,10 @@
 <!--Custom CSS-->
 <link href="../../assets/my_style.css" rel="stylesheet">
 
+<?php
+$GROUP = new Admin();
+$group_id = $GROUP->get('prnl_account', array('account_id', '=', Session::get(Config::get('session/session_name'))));
+?>
 
 <meta name="auth" content="<?php echo Session::get(Config::get('session/session_name'));?>">
+<meta name="group" content="<?php echo "group".$group_id->group_?>">

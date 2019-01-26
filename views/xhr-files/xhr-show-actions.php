@@ -42,7 +42,12 @@ else{
 
 		$formData = $user->projectDetails($refno);
 
-		$data = ['success' => true, 'fetchedResult' => $availableActions, 'issue' => $PreEvalIssue, 'formData' => $formData];
+		$data = ['success' => true, 
+			'fetchedResult' => $availableActions, 
+			'issue' => $PreEvalIssue, 
+			'formData' => $formData,
+			'standing' => $standing
+		];
 		header("Content-type:application/json");
 		echo json_encode($data);
 	}
