@@ -24,16 +24,19 @@
             $validation =  $validate->check($_POST, array(
                 'ID' => [
                     'required' => true,
-                    'unique_prnl_id'   => 'personnel'
+                    'unique_prnl_id'   => 'personnel',
+					'unique_edr_id'	=> 'enduser'
                 ],
                 
                 'email' => [
                     'required' => true,
-                    'unique_prnl_email'   => 'personnel'
+                    'unique_prnl_email'   => 'personnel',
+					'unique_edr_id' => 'enduser'
                 ],
                 'username' => [
                     'required' => true,
-                    'unique' => 'prnl_account'
+                    'unique' => 'edr_account',
+					'unique_prnl_username' => 'prnl_account'
                 ]
             ));
 
@@ -43,6 +46,55 @@
                 $salt = Hash::salt(32);
 
                 try{
+
+
+					// *************************
+
+
+					$finalPhoto = null;
+
+					if($_FILES["profilePhoto"]["name"]){
+
+						$new_filename = rand(1000,100000)."-".Input::get('ID').".".pathinfo($_FILES["profilePhoto"]["name"], PATHINFO_EXTENSION);
+
+						// die($new_filename);
+						$target_dir = "../../data/profile_images/";
+						$target_file = $target_dir . basename($new_filename);
+						$uploadOk = 1;
+						$imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+						
+						// Check if image file is a actual image or fake image
+						
+							if ($target_file == "../data/profile_images/") {
+								$msg = "cannot be empty";
+								$uploadOk = 0;
+							} // Check if file already exists
+							else if (file_exists($target_file)) {
+								$msg = "Sorry, file already exists.";
+								$uploadOk = 0;
+							} // Check file size
+							else if ($_FILES["profilePhoto"]["size"] > 5000000) {
+								$msg = "Sorry, your file is too large.";
+								$uploadOk = 0;
+							} // Check if $uploadOk is set to 0 by an error
+							else if ($uploadOk == 0) {
+								$msg = "Sorry, your file was not uploaded.";
+						
+								// if everything is ok, try to upload file
+							} else {
+								if (move_uploaded_file($_FILES["profilePhoto"]["tmp_name"], $target_file)) {
+									$msg = "The file " . basename($_FILES["profilePhoto"]["name"]) . " has been uploaded.";
+									$finalPhoto = $new_filename;
+								}
+							}
+					}
+
+					
+					
+					// *************************
+
+
+
 					
 					If(Input::get('ext') == ""){
 						$extensionName = "XXXXX";
@@ -57,10 +109,11 @@
                         'prnl_lname' => Input::get('last'),
                         'prnl_ext_name' => $extensionName,
                         'prnl_email' => Input::get('email'),
-                        'phone' => Input::get('phone'),
+                        'phone' => "+63".Input::get('phone'),
                         'prnl_designated_office' => Input::get('office'),
-                        'prnl_job_title' => Input::get('jobtitle'),
-                    )); //No profile photo yet
+						'prnl_job_title' => Input::get('jobtitle'),
+						'prnl_profile_photo' => $finalPhoto
+                    )); 
 
                     $sa->register('prnl_account', array(
                         'account_id' => Input::get('ID'),
@@ -71,19 +124,15 @@
                         'userpassword' => Hash::make(Input::get('defaultPassword'), $salt)
                     ));
 
-                    Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
+					// Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
+					$success_notifs[] = "User successfully registered in the system";
 
-                }catch(Exception $e){
-					/* DENVER!!!!! Display errors in toust*/
+                }catch(Exception $e){					
+					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
 
             }else{
 
-                /* DENVER!!!!! Display errors in toust*/
-                foreach($validation->errors() as $error){
-                    $e .= $error;
-				}
-				echo $e;
             }
 
 
@@ -104,7 +153,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Admin Registration</title>
+    <title>PrMO OPPTS | Admin Registration</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
@@ -164,7 +213,7 @@
 							<div class="row">
 								
 									<div class="col-sm-6 b-r"> 
-										<form id="profile" role="form" method="POST" enctype= multipart/form-data>
+										<form id="profile" action="" method="post" enctype="multipart/form-data">
 									
 											<div class="form-group">	
 												<label class="col-form-label" for="ID">Employee ID</label>
@@ -197,7 +246,7 @@
 											<div class="form-group">
 												<label class="col-form-label" for="phone">Phone No.</label>
 												<div class="input-group">
-													<span class="input-group-addon"><i class="fa fa-phone my-blue"></i></span><input id="phone" name="phone" data-mask="9999 999 9999" type="text" class="form-control" required>
+													<span class="input-group-addon"><i class="fa fa-phone my-blue">+63</i></span><input id="phone" name="phone" data-mask="9999999999" type="text" class="form-control" required>
 												</div>
 											</div>											
 									</div>
@@ -227,13 +276,21 @@
 											<div class="form-group">
 												<label class="col-form-label" for="date_added">Profile Photo</label>
 												<div class="alert alert-success">Only JPEG file format is accepted in this form.</div>	
-												<input type="file" name="profilePhoto" class="dropify" data-allowed-file-extensions="jpeg jpg">		
+												<!-- <input type="file" name="profilePhoto" id="profilePhoto" class="dropify" data-allowed-file-extensions="jpeg jpg">		 -->
+												<div class="input-group">
+												  <div class="custom-file">
+													<input type="file" class="custom-file-input"name="profilePhoto" id="inputGroupFile01" aria-describedby="" accept="image/*">
+													<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+												  </div>
+												</div>	
 												<input type="text" name="newUserToken" hidden required value="<?php echo Token::generate("newUserToken");?>">
-											</div>										
+											</div>	
+										
+											
 										</form>							
 									</div>
 									<div class="col-lg-12">
-												<button class="btn btn-primary btn-rounded pull-right" type="submit" form="profile">Submit</button>
+												<button class="btn btn-primary btn-rounded pull-right" name="submit" value="submit" type="submit" form="profile">Submit</button>
 												<a href="#" class="btn btn-danger btn-rounded pull-right" style="margin-right:5px">Cancel</a>	
 									</div>									
 							</div>
@@ -252,7 +309,7 @@
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Account Type</label>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="7" checked name="account_type"> <i></i> Technical Member </label></div>									
-											<div class="i-checks"><label> <input type="radio" form="profile" value="5" name="account_type"> <i></i> Procurement Aid </label></div>
+											<div class="i-checks"><label> <input type="radio" form="profile" value="5" name="account_type"> <i></i> Procurement Aide </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="3" name="account_type"> <i></i> Super Admin </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="4" name="account_type"> <i></i> Director </label></div>	
 											<div class="i-checks"><label> <input type="radio" form="profile" value="6" name="account_type"> <i></i> Staff </label></div>
@@ -281,7 +338,7 @@
 
 
                 </div>
-            </div>
+            </div>		
 
             </div>
 			<div class="footer">
@@ -329,4 +386,20 @@
 
 
 </script>
+
+	<script>
+
+        $(document).ready(function() {
+
+			$('.custom-file-input').on('change', function() {
+			   let fileName = $(this).val().split('\\').pop();
+			   $(this).next('.custom-file-label').addClass("selected").html(fileName);
+			}); 
+
+
+			
+		});
+			
+	</script>
+			
 </html>

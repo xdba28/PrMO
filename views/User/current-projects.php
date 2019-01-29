@@ -22,9 +22,11 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 
-    <title>PrMO OPPTS | Projects</title>
+    <title>PrMO OPPTS | Current Projects</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 
@@ -77,7 +79,7 @@
 
 						<div class="ibox myShadow">
 							<div class="ibox-title">
-								<h5>All projects entitled to this account</h5>
+								<h5>All Ongoing projects entitled to this account</h5>
 							</div>
 							<div class="ibox-content">
 								<div class="row m-b-sm m-t-sm">
@@ -93,13 +95,28 @@
 								<div class="project-list">
 
 									<table class="table footable table-hover" data-filter=#filter>
+
 										<tbody>
 										<?php
 											$user = new User();
 											$current_user = Session::get(Config::get('session/session_name'));
-											$myRequests = $user->like('projects', 'end_user', "%{$current_user}%");
+											$myRequests = $user->like('projects', 'end_user', "%{$current_user}%");											
+											
+											if($myRequests){
+												
+											
 
 											foreach($myRequests as $request){
+
+												if(($request->project_status != "FINISHED") AND ($request->project_status != "FAILED")){
+
+													if($request->project_status == "PAUSED"){
+														$bg = "label-warning";
+														$progress = "yellow-bg";
+													}else{
+														$bg = "label-info";
+														$progress = "lazur-bg";
+													}
 
 												$accomplishment = number_format(($request->accomplished / $request->steps) * 100, 1);
 
@@ -114,15 +131,15 @@
 											<td style="max-width: 220px"><?php echo $request->project_title;?></td>
 
 											<td class="project-status">
-												<span class="label label-primary"><?php echo $request->project_status;?></span>
+												<span class="label <?php echo $bg;?>"><?php echo $request->project_status;?></span>
 												<br/>
 												<small><?php echo $request->type;?> project</small>
 											</td>
 
 											<td class="project-completion">
 												<small>Completion with: <?php echo $accomplishment;?>%</small>
-												<div class="progress progress-mini">
-													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar"></div>
+												<div class="progress progress-mini" style="background-color:#b7bfc7">
+													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar <?php echo $progress;?>"></div>
 												</div>
 											</td>
 
@@ -132,6 +149,17 @@
 										</tr>
 
 										<?php
+											}
+										}
+											}else{
+												
+												echo '
+													<tr>
+														<td colspan="5" style="text-align:center">No Data Available</td>
+													</tr>
+												
+												';
+												
 											}
 										?>
 										</tbody>

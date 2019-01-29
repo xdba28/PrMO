@@ -1,11 +1,27 @@
 <?php
 require_once "../../core/init.php";
-
+$admin = new Admin();
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+// GDS2018-1
+$id = base64_decode($_GET['rq']);
+// canvass_forms id
+$form_id = $_GET['f'];
+// mop_index
+$mop_index = $_GET['m'];
+
+$prop = $admin->getPublication($id, $form_id);
+
+$pub_quo = ($prop->type === "PR") ? "Quotation" : "Proposal";
+
+$file = $id." - Request for ".$pub_quo.".docx";
+header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+header('Content-Disposition: attachment; filename="'.$file.'"');
 
 // $documentProtection = $phpWord->getSettings()->getDocumentProtection();
 // $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
 // $documentProtection->setPassword('PrMO');
+
 
 $phpWord->setDefaultParagraphStyle(['lineHeight' => 1, 'space' => ['before' => 0, 'after' => 0]]);
 $phpWord->setDefaultFontName('Arial');
@@ -44,18 +60,18 @@ $table->addCell(null, ['vMerge' => 'continue']);
 $section->addTextBreak(1);
 
 
-$Project = "Provide Catering Services, Printing Services of Streamers and Printing Service of Polo Shirts to be used during the College Foundation Day Celebration 2018 of BUCN";
+// $Project = "Provide Catering Services, Printing Services of Streamers and Printing Service of Polo Shirts to be used during the College Foundation Day Celebration 2018 of BUCN";
 
 $section->addText("REQUEST FOR PROPOSAL", ['bold' => true], ['alignment' => 'center', 'lineHeight' => 1, 'space' => ['before' => 0, 'after' => 72]]);
-$section->addText(htmlspecialchars($Project, ENT_QUOTES), ['bold' => true], ['alignment' => 'center']);
+$section->addText($prop->project_title, ['bold' => true], ['alignment' => 'center']);
 $section->addTextBreak(1);
 
-$ABC = 57440.00;
+$ABC = $prop->ABC;
 $ex = explode('.', $ABC);
 $countABC = count($ex);
 if($countABC === 1)
 {
-	$ABC = sprintf("%s0", $ABC);
+	// $ABC = sprintf("%s0", $ABC);
 	$whole = $ex[0];
 }
 elseif($countABC === 2)
@@ -64,7 +80,7 @@ elseif($countABC === 2)
 	if($decimal <= 10)
 	{
 		$decimal = sprintf("%d0", $decimal);
-		$ABC = sprintf("%s0", $ABC);
+		// $ABC = sprintf("%s0", $ABC);
 	}
 }
 
@@ -74,11 +90,11 @@ $whole = htmlspecialchars($format->format($whole));
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("The Bicol University, through the Corporate Budget for the contract approved by the Board of Regents intends to apply the sum of ");
 
-if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".$ABC.")", ['bold' => true, 'italic' => true]);
-elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".$ABC.")", ['bold' => true, 'italic' => true]);
+if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
+elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
 
 $textrun->addText(" being the Approved Budget for the Contract to payment for the contract: ");
-$textrun->addText($Project, ['bold' => true, 'italic' => true]);
+$textrun->addText($prop->project_title, ['bold' => true, 'italic' => true]);
 
 $section->addTextBreak(1);
 
@@ -86,39 +102,27 @@ $c = ['alignment' => 'center'];
 $tbStyle = ['italic' => true, 'bold' => true, 'size' => 10];
 $tbc = ['valign' => 'center'];
 
-$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 144]);
-$table->addRow(43.2);
-$table->addCell(921.6, $tbc)->addText("Item", $tbStyle, $c);
-$table->addCell(4320, $tbc)->addText("Title", $tbStyle, $c);
-$table->addCell(2160, $tbc)->addText("ABC", $tbStyle, $c);
-
-$table->addRow(43.2);
-$table->addCell(null, $tbc)->addText("A", $tbStyle, $c);
-$table->addCell(null, $tbc)->addText("Catering Service", $tbStyle);
-$table->addCell(null, $tbc)->addText("Php 39,000.00", $tbStyle);
-
-$table->addRow(43.2);
-$table->addCell(null, $tbc)->addText("B", $tbStyle, $c);
-$table->addCell(null, $tbc)->addText("Printing Services of Streamers", $tbStyle);
-$table->addCell(null, $tbc)->addText("Php 5,000.00", $tbStyle);
-
-$table->addRow(43.2);
-$table->addCell(null, $tbc)->addText("C", $tbStyle, $c);
-$table->addCell(null, $tbc)->addText("Printing Services of Polo Shirt", $tbStyle);
-$table->addCell(null, $tbc)->addText("Php 13,440.00", $tbStyle);
-
-$section->addTextBreak(1);
 
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("The Bicol University now requests proposals from bonafide suppliers to submit proposals for the ");
-$textrun->addText(htmlspecialchars($Project, ENT_QUOTES), ['italics' => true]);
+$textrun->addText($prop->project_title, ['italics' => true]);
 
 $section->addTextBreak(1);
+
+$mop = json_decode($prop->mop, true);
+
+switch($mop[$mop_index]['mode']){
+	case "SVP":
+		$mop_name = "Small Value Procurement";
+		break;
+	default:
+		$mop_name = $mop[$mop_index]['mode'];
+}
 
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("Procurement will be conducted through ");
 $textrun->addText("Negotiated Procurement", ['italic' => true]);
-$textrun->addText(" - an alternative method of procurement specified and prescribed under rule XVI - Alternative Modes of Procurement, Section 53.9 - Negotiated Procurement (Small Value Procurement), of the Implementing Rules and Regulations Part-A (IRR-A) of Republic Act No. 9184, otherwise known as Government Procurement Reform Act.");
+$textrun->addText(" - an alternative method of procurement specified and prescribed under rule XVI - Alternative Modes of Procurement, Section ".$mop[$mop_index]['no']." - Negotiated Procurement (".$mop_name."), of the Implementing Rules and Regulations Part-A (IRR-A) of Republic Act No. 9184, otherwise known as Government Procurement Reform Act.");
 
 $section->addTextBreak(1);
 
@@ -148,8 +152,10 @@ $section->addText("Approved:");
 
 $section->addTextBreak(2);
 
-$section->addText("Prof. JERRY S. BIGORNIA", ['bold' => true, ['size' => 11]]);
-$section->addText("BAC Chairperson");
+$chair = $admin->get('commitee', array('position', '=', 'BAC Chairperson'));
+
+$section->addText($chair->name, ['bold' => true, ['size' => 11]]);
+$section->addText($chair->position);
 
 
 $section->addTextBreak(10);
@@ -159,7 +165,7 @@ $section->addText("\t\t\t\t\t\t\t\tTransaction Reference No. _______________", [
 
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-$objWriter->save('C:/Users/Denver/Desktop/PROP.docx');
-// $objWriter->save("php://output");
+// $objWriter->save('C:/Users/Denver/Desktop/PROP.docx');
+$objWriter->save("php://output");
 
 ?>

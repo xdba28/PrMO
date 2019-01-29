@@ -9,16 +9,17 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/jquery-3.1.1.min.js"></script>
 <script src="../../assets/js/popper.min.js"></script>
 <script src="../../assets/js/bootstrap.js"></script>
+<script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <!-- Custom and plugin javascript -->
 <script src="../../assets/js/inspinia.js"></script>
 <script src="../../assets/js/plugins/pace/pace.min.js"></script>
-<script src="../../assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
 
 
 <!-- ***********************************FROM FORM ADVANCE RESOURCES*************************************** --> 
 
-<!-- Menu -->
-<script src="../../assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
 <!-- Chosen -->
 <script src="../../assets/js/plugins/chosen/chosen.jquery.js"></script>
 <!-- Input Mask-->
@@ -32,6 +33,14 @@ require_once "../../functions/account-verifier.php";
 <script src="../../assets/js/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../../assets/js/plugins/cropper/cropper.min.js"></script>
 <script src="../../assets/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+
+
+<!-- DROPZONE -->
+<!-- <script src="../../assets/js/plugins/dropzone/dropzone.js"></script> -->
+<!-- CodeMirror -->
+<!-- <script src="../../assets/js/plugins/codemirror/codemirror.js"></script> -->
+<!-- <script src="../../assets/js/plugins/codemirror/mode/xml/xml.js"></script> -->
+
 
 <!-- Dual Listbox -->
 <script src="../../assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
@@ -93,7 +102,7 @@ require_once "../../functions/account-verifier.php";
 
 
 <!-- **********************************EXTERNAL**********************************-->
-<script src="../../assets/dropify/js/dropify.min.js"></script>
+<!-- <script src="../../assets/dropify/js/dropify.min.js"></script> -->
 
 
 <!-- Always Set Last --> 
@@ -115,7 +124,7 @@ require_once "../../functions/account-verifier.php";
 		var Notif_channel = Notif.subscribe('notif');
 		Notif_channel.bind('admin', function(data){
 			let msg = JSON.parse(data);
-			if(msg.receiver === $('meta[name="auth"]').attr('content')){
+			if(msg.receiver === $('meta[name="auth"]').attr('content') || msg.receiver === $('meta[name="group"]').attr('content')){
 				$('#message').remove();
 				$('#NotifCount').show();
 				let NotifCount = document.getElementById('NotifCount');
@@ -222,6 +231,17 @@ require_once "../../functions/account-verifier.php";
 			}
 		}]
 	});
+	
+	const ongoing_report = $('#ongoing_report').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+		buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+				customize: function (win){
+					$(win.document.body).addClass('white-bg');
+					$(win.document.body).css('font-size', '10px');
+					$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+				}
+			}]
+	});	
 </script>
 
 
@@ -234,7 +254,7 @@ require_once "../../functions/account-verifier.php";
 				var link = document.querySelector(`[href="${path[path.length - 1]}"]`);
 				var sLink = ['Dashboard', 'Calendar', 'Reports', 'evaluation'];
 				var higherLevelpages = [
-					{pages: ['resort-items'], link: 'Ongoing-projects'}
+					{pages: ['resort-items', 'canvass-return', 'project-details', 'award'], link: 'Ongoing-projects'}
 				];
 
 				var highlevelpage = higherLevelpages.find(function(e1){
@@ -260,7 +280,7 @@ require_once "../../functions/account-verifier.php";
 						break;
 				}
 			} catch (error) {
-				console.log(error);
+				
 			}
 					
 			// modal
@@ -556,14 +576,17 @@ require_once "../../functions/account-verifier.php";
 					});
 				}
 			});
-			// modal
+
+			/**** Varying modal content ****/
+
+	
+
 			// twg evaluation result modal
 			$('#twgEvaluation').on('show.bs.modal', function (event) {
 			var button1 = $(event.relatedTarget) // Button that triggered the modal
 			var toevaluate = button1.data('toevaluate') // Extract info from data-* attributes
 			var evaluatortwg = button1.data('evaluatortwg')
-			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			
 			var evalmodal = $(this);
 			// evalmodal.find('#test11').val(toevaluate);
 			 document.getElementById("test11").value = toevaluate;
@@ -599,7 +622,6 @@ require_once "../../functions/account-verifier.php";
 									icon = "fas fa-exclamation-triangle";
 									//cardAction = `data-toggle="modal" data-target="#pre-proc-evaluation"`;
 									break;
-
 								case "Register Pre-procurement Evaluation result":
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
@@ -624,7 +646,52 @@ require_once "../../functions/account-verifier.php";
 									classtype = "yellow-bg";
 									icon = "far fa-hand-paper";
 									cardAction = ``;
-									break						
+									break;
+								case "Register Canvass returns":
+									classtype = "lazur-bg";
+									icon = "fas fa-file-import ";
+									cardAction = `href="canvass-return?q=${btoa(reference)}"`;
+									break;
+								case "Proceed to NOA, PO/LO Creation":
+									classtype = "lazur-bg";
+									icon = "fas fa-chess-pawn";
+									cardAction = `href="award?q=${btoa(reference)}"`;
+									break;
+								case "Queue documents to outgoing for signatories":
+									classtype = "lazur-bg";
+									icon = "fas fa-book";
+									cardAction = `data-standing="${res.standing}"`;
+									break;
+								case "Print Publication and Canvass form":
+									classtype = "lazur-bg";
+									icon = "far fa-file-alt";
+									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
+									break;
+								case "Print Abstract of Bid":
+									classtype = "lazur-bg";
+									icon = "far fa-file-alt";
+									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
+									break;
+								case "Print BAC Resolution":
+									classtype = "lazur-bg";
+									icon = "far fa-file-alt";
+									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
+									break;
+								case "Print NOA, PO/LO":
+									classtype = "lazur-bg";
+									icon = "far fa-file-alt";
+									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
+									break;
+								case "Queue Document to outgoing documents for Conforme":
+									classtype = "lazur-bg";
+									icon = "fas fa-book";
+									cardAction = `data-standing="${res.standing}"`;
+									break;
+								case "Finish project":
+									classtype = "lazur-bg";
+									icon = "fas fa-book";
+									cardAction = `data-standing="${res.standing}"`;
+									break;
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
@@ -645,6 +712,124 @@ require_once "../../functions/account-verifier.php";
 									</div>
 								</div>
 							</a>`;
+
+							$('[data-standing="5"]').on('click', function(){
+								// update workflow to 6
+								// register workflow to outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										swal({
+											title: "Success!",
+											text: "Successfully queued project for outgoing.",
+											type: "success",
+										});
+									}
+								});
+							});
+
+
+							$('[data-standing="6"]').on('click', function(){
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										if(res.remark === ""){
+											swal({
+												title: "Success!",
+												text: "Successfully queued project for outgoing.",
+												type: "success",
+											});
+										}else{
+											swal({
+												title: "Notice!",
+												text: res.remark,
+												type: "info",
+											});
+										}
+									}
+								});
+							});
+
+							$('[data-standing="7"]').on('click', function(){
+								// update to 8
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										if(res.remark === ""){
+											swal({
+												title: "Success!",
+												text: "Successfully queued project for outgoing.",
+												type: "success",
+											});
+										}else{
+											swal({
+												title: "Notice!",
+												text: res.remark,
+												type: "info",
+											});
+										}
+									}
+								});
+							});
+
+							$('[data-standing="8"]').on('click', function(){
+								// update to 8
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										if(res.remark === ""){
+											swal({
+												title: "Success!",
+												text: "Successfully queued project for outgoing.",
+												type: "success",
+											});
+										}else{
+											swal({
+												title: "Notice!",
+												text: res.remark,
+												type: "info",
+											});
+										}
+									}
+								});
+							});
+
+							$('[data-standing="9"]').on('click', function(){
+								// finish project
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										swal({
+											title: "Success!",
+											text: "Project successfully finished.",
+											type: "success",
+										});
+									}
+								});
+							});
 
 							if(res.issue){
 								$('[dataFor="pre-proc-eval-issue"]').html(`
@@ -675,7 +860,6 @@ require_once "../../functions/account-verifier.php";
 						}
 						$('[dataFor="OutGoingProjectModal"]').toggleClass('sk-loading');
 
-						console.log(res.formData);
 						$('#pre-eval-formData').html('');
 						res.formData.forEach(function(e, i){
 							if(e.type === "PR"){
@@ -774,19 +958,7 @@ require_once "../../functions/account-verifier.php";
 
 			});
 			
-			//superadmin reset password
-			$('#resetPassword').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget) // Button that triggered the modal
-			  var recipient = button.data('name') // Extract info from data-* attributes
-			  var office = button.data('office')
-			  var id = button.data('id')
-			  var phone = button.data('phone')
-			  var modal = $(this)
 
-			  modal.find('#phone').html(phone)
-			  modal.find('.modal-title').html('Reset Account Password <br> <a style="color:#06425C">' + recipient + '</a>')
-			  modal.find('#office').html(office)
-			})
 		
 			
 			//outgoing documents table collapse all div
@@ -858,7 +1030,7 @@ require_once "../../functions/account-verifier.php";
 		</script>
 
 
-		<script>
+		<!-- <script>
         $(document).ready(function(){
 
 			Dropzone.options.dropzoneForm = {
@@ -893,7 +1065,7 @@ require_once "../../functions/account-verifier.php";
             });
 
        });
-    </script>
+    </script> -->
 
     <script> //wizard
         $(document).ready(function(){
@@ -976,7 +1148,7 @@ require_once "../../functions/account-verifier.php";
        });
     </script>
 	
-	<script> //dropify
+	<!-- <script> //dropify
 	$(function() {
 		$('.dropify').dropify();
 
@@ -998,7 +1170,7 @@ require_once "../../functions/account-verifier.php";
 			}
 		});
 	});
-	</script>
+	</script> -->
 	
 	<script> //search modal animation timer
 		function refreshPage(){
@@ -1046,7 +1218,7 @@ require_once "../../functions/account-verifier.php";
 			$('.footable2').footable();
 			
 			$("#typeahead").typeahead({
-				source: ["Job Order","Procurement Aid","Head Secretariat", "Director", "Staff", "Technical Member"]
+				source: ["Job Order","Procurement Aide","Head Secretariat", "Director", "Staff", "Technical Member"]
 			});
 		
 
@@ -1074,7 +1246,97 @@ require_once "../../functions/account-verifier.php";
 			  }
 			});
 
+			<?php
+			
+				// FATAL ERROR NOTIFICATIONS
+				if(Session::exists("FATAL_ERROR")){
+					
+					echo '
+						audio.play();
+						toastr.options = {
+						"closeButton": true,
+						"debug": true,
+						"progressBar": false,
+						"preventDuplicates": false,
+						"positionClass": "toast-top-full-width",
+						"onclick": null,
+						"showDuration": "400",
+						"hideDuration": "1000",
+						"timeOut": "60000",
+						"extendedTimeOut": "60000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut"
+						}
+						toastr.error("'.Session::flash("FATAL_ERROR").'", "Fatal Error");
+					
+					';				
+					
+				}
+				// VALIDATION ERRORS
 
+				if(isset($validation)){
+					if($validation->errors()){
+						$default_time_out = 20000;
+						foreach ($validation->errors() as $error_type => $error_message) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+									"closeButton": true,
+									"debug": true,
+									"progressBar": true,
+									"preventDuplicates": false,
+									"positionClass": "toast-top-full-width",
+									"onclick": null,
+									"showDuration": "400",
+									"hideDuration": "1000",
+									"timeOut": "'.$default_time_out.'",
+									"extendedTimeOut": "10000",
+									"showEasing": "swing",
+									"hideEasing": "linear",
+									"showMethod": "fadeIn",
+									"hideMethod": "fadeOut"
+									}
+									toastr.warning("'.$error_message.'", "'.$error_type.'");
+								
+								';
+								$default_time_out += 5000;			
+						}
+					}
+
+				}
+
+				
+				// SUCCESS NOTIFICATIONS
+
+				if(isset($success_notifs)){
+						
+						foreach ($success_notifs as $notif) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+										"progressBar": true,
+										"preventDuplicates": false,
+										"showDuration": "400",
+										"hideDuration": "1000",
+										"timeOut": "6000",
+										"extendedTimeOut": "1000",
+										"showEasing": "swing",
+										"hideEasing": "linear",
+										"showMethod": "fadeIn",
+										"hideMethod": "fadeOut"
+									}
+									toastr.info("'.$notif.'", "Success");
+								
+								';
+						}			
+
+				}			
+			
+			?>
 
 		});
 

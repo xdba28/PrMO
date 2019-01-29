@@ -6,7 +6,7 @@
 compatibility         = true
 zipClass              = ZipArchive
 pdfRendererName       = TCPDF
-pdfRendererPath       = "C:\xampp\htdocs\PrMO\vendor\tecnickcom\tcpdf"
+pdfRendererPath       = "C:\xampp\htdocs\PrMO\vendor\tecnickcom\tcpdf\"
 ; tempDir               = "C:\PhpWordTemp"
 outputEscapingEnabled = false
 

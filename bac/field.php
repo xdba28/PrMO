@@ -15,16 +15,37 @@
 	<div>
 		<input type="text" name="a">
 		<button id="btn">Send</button>
-		<?php
-			echo Date::translate("test", "now");
-		?>
 	</div>
 </body>
 <script>
-	document.querySelector('#btn').addEventListener('click', function(){
-		var a = document.querySelector('[name="a"]').value;
-		alert(a);
+
+	document.addEventListener("DOMContentLoaded", function() {
+		const vara = 'sync';
+
+		swal({
+			title: "Confirm?",
+			text: "",
+			type: "question",
+			showCancelButton: true,
+			confirmButtonText: "Proceed",
+			allowOutsideClick: false,
+			preConfirm: function(res){
+				return res;
+			}
+		}, function(res){
+			alert('confirm')
+			console.log(res);
+		});
+
+
+		alert(vara);
 	});
+
+
+	// document.querySelector('#btn').addEventListener('click', function(){
+	// 	var a = document.querySelector('[name="a"]').value;
+	// 	alert(a);
+	// });
 
 // (async function getFormValues () {
 // const {value: formValues} = await swal({

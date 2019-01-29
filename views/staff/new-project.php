@@ -11,19 +11,11 @@
         die();
 	}
 
-	
-	// notif(json_encode(array(
-	// 	'receiver' => "2015-15096",
-	// 	'message' => "test",
-	// 	'date' => Date::translate(Date::translate('test', 'now'), '1'),
-	// 	'href' => "test"
-	// )));
-	
 
-	
-	
-	
-	
+				
+
+
+
 	if(Input::exists()){
 
 		if(Token::check("newProject", Input::get('newProject'))){
@@ -36,6 +28,17 @@
 			$enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
 			$form = ["0" => $form_ref_no];
 			$requestOrigin_encoded = json_encode($form, JSON_FORCE_OBJECT);
+
+			//get the json file for step details
+			$json = file_get_contents('../xhr-files/jsonsteps.json');
+			//Decode JSON
+			$stepsStructure = json_decode($json,true);
+
+			//default steps
+			$newSteps = json_encode($stepsStructure['modeOfProcurement']['TBE']['steps'], JSON_FORCE_OBJECT);
+			//default no. of steps
+			$noOfSteps = $stepsStructure['modeOfProcurement']['TBE']['noofsteps'];
+
 
 
 			try{
@@ -52,10 +55,12 @@
 					'project_title' => Input::get('title'),
 					'ABC' => Input::get('ABC'),
 					'MOP' => 'TBE',
+					'stepdetails' => $newSteps,
+					'steps' => $noOfSteps,
 					'type' => 'single',
 					'end_user' => $enduser_encoded,
 					'project_status' => 'PROCESSING',
-					'workflow'	=> 'For evaluation of technical working member',
+					'workflow'	=> 'For evaluation of technical member',
 					'proposed_evaluator' => Input::get('proposed_evaluator'),
 					'date_registered' => Date::translate('test', 'now'),
 					'implementation_date' => $finalDate
@@ -96,7 +101,7 @@
 				));
 				notif(json_encode(array(
 					'receiver' => $_POST['enduser'],
-					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}1",
+					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				)));				
@@ -440,7 +445,7 @@
 												<h2> </h2>
 											</p>
 											
-											<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver0" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
+											<button type="button" class="btn btn-warning btn-sm btn-block" id="popOver" data-trigger="hover" title="Instructions" data-placement="left" data-content="Click on this to download a soft copy of the original PR / JO created in the system to compare it to the actual submission of the Enduser."><i class="ti-split-h"></i> Compare to Original</button>
 											<!-- <a href="" class="btn btn-primary btn-sm btn-block" id="registerNow"><i class="fa fa-download"></i> Register Now</a> -->
 											<a id="btnlink" ><button class="btn btn-primary btn-sm btn-block mt-10" id="registerNow"><i class="fa fa-download"></i> Register Now</button></a>
 							
@@ -498,9 +503,8 @@
 			});
 		}
 
-		$('#popOver0').on('click', function(){
-			// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
-			window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
+		$('#popOver').on('click', function(){
+			window.open(`../../bac/forms/project-request?id=${$(this).attr("proj-comp")}`);
 		});
 
 
@@ -535,7 +539,7 @@
 				if(typeof PROJ !== "undefined"){
 					$('[data="side-panel"]').attr("id", PROJ.id);
 					$('[data="side-panel"] h2').html(PROJ.title);
-					$('#popOver0').attr("proj-comp", PROJ.id);
+					$('#popOver').attr("proj-comp", PROJ.id);
 					$('#btnlink').attr("href", `?q=${PROJ.id}`)
 
 					if(PROJ.log_exist){

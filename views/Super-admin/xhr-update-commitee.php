@@ -18,8 +18,8 @@ if(!empty($_POST))
 
 		foreach ($_POST['col'] as $v){
 
-			$name = ($v['name'] !== "") ? htmlspecialchars($v['name']) : 'unset';
-			$position = ($v['position'] !== "") ? htmlspecialchars($v['position']) : 'unset';
+			$name = ($v['name'] !== "") ? $v['name'] : 'unset';
+			$position = ($v['position'] !== "") ? $v['position'] : 'unset';
 
 			$office_id = $admin->get('units', array('ID', '=', $v['unit_office']));
 

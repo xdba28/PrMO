@@ -61,6 +61,13 @@
     <link href="assets/css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="assets/css/animate.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+	
+	<link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+	<link href="assets/fontawesome-free-5.5.0/css/fontawesome.css" rel="stylesheet">
+	<link href="assets/font-awesome/themify-icons/themify-icons.css" rel="stylesheet">
+	<link href="assets/fontawesome-free-5.5.0/css/solid.css" rel="stylesheet">
+	<link href="assets/fontawesome-free-5.5.0/css/regular.css" rel="stylesheet">
+	<link href="assets/fontawesome-free-5.5.0/css/brands.css" rel="stylesheet">		
 
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
 
@@ -74,22 +81,27 @@
             <div class="col-md-6">
                 <h2 class="font-bold">Welcome to PrMO Online Procurement Project Tracking System</h2>
 
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
+                 <p>
+                    The PrMO Online Procurement Project Tracking and Monitoring System is a system platform that track your procurement project anytime and anywhere.  
                 </p>
 
-                <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-					
-                </p>
 
-                <p>
-                    When an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                </p>
+				
+				<div class="row">
+					<div class="col-lg-4 text-center animated fadeInDown">
+						<i class="fas fa-tachometer-alt fa-3x animated flip" style="color:#8CC63E"></i>
+						<p>Track your procurement project with ease in realtime</p>
+					</div>
+					<div class="col-lg-4 text-center animated fadeInUp">
+						<i class="fas fa-file-invoice fa-5x animated bounceIn" style="color:#ea3c14"></i>
+						<p>Create your request forms directly into the system</p>
+					</div>
+					<div class="col-lg-4 text-center animated fadeInDown">
+						<i class="far fa-bell fa-3x animated swing" style="color:#F99324"></i>					
+						<p>Don't miss any important updates from your project's progress</p>
+					</div>															
+				</div>
 
-                <p>
-                    <small>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</small>
-                </p>
 
             </div>
             <div class="col-md-6">

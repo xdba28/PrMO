@@ -192,7 +192,47 @@
 					timer: 13000
 				});
 			}
+
+			var details = {};
+
+			$('#resetPassword').on('show.bs.modal', function(event){
+				var button = $(event.relatedTarget); // Button that triggered the modal
+				var recipient = button.data('name'); // Extract info from data-* attributes
+				var office = button.data('office');
+				var id = button.data('id');
+				var phone = button.data('phone');
+				var modal = $(this);
+
+				details.id = id;
+				details.office = office;
+				details.recipient = recipient;
+				details.phone = phone;
+				details.user = "user";
+
+				modal.find('#phone').html(phone);
+				modal.find('.modal-title').html('Reset Account Password <br> <a style="color:#06425C">' + recipient + '</a>');
+				modal.find('#office').html(office);
+			});
+
+			$('[data-reset="user"]').on('click', function(){
+				details.newPass = $('#s-user-Npass').val();
+				if(details.newPass !== ''){
+					SendDoNothing("POST", "xhr-reset.php", details, {
+						title: "Success!",
+						text: "Successfully reset user's account."
+					});
+					$('#resetPassword').modal('hide');
+				}else{
+					$('#resetPassword').modal('hide');
+					swal({
+						title: "Action invalid!",
+						text: "Enter a new password.",
+						confirmButtonColor: "#DD6B55",
+						type: "error"
+					});
+				}
+			});
+
 		});
 	</script>
-
 </html>

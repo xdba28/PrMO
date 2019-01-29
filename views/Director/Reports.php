@@ -71,6 +71,8 @@
 			
 			<!-- Main Content -->
         <div class="wrapper wrapper-content animated fadeInRight" >
+
+			<?php  $reports=$user->dashboardReports(); ?>
 			<div class="p-w-md m-t-sm">
 				<div class="row">
 
@@ -82,7 +84,7 @@
 					<div class="col-lg-8">
 						<div class="ibox ">
 							<div class="ibox-title">
-								<h5>Bar Chart Example</h5>
+								<h5>Projects Success Ratio</h5>
 							</div>
 							<div class="ibox-content">
 								<div>
@@ -93,6 +95,90 @@
 					</div>
 					
 				</div>
+
+		
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox ">
+							<div class="ibox-title">
+								<h5>All Ongoing Projects</h5>
+							</div>
+							<div class="ibox-content">
+
+								<div class="table-responsive">
+									<table id="ongoing_report" class="table table-striped table-bordered table-hover dataTables-example" >
+									
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Reference</th>
+											<th>Title</th>
+											<th>MOP</th>
+											<th>ABC</th>
+											<th>Date Registered</th>
+											<th>Implementation</th>
+											<th>Workflow</th>
+											<th>Accomplishment</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+
+										<?php
+
+											$counter = 0;
+											if($reports["current_projects"]){
+											foreach ($reports["current_projects"] as $project){
+												$counter++;
+
+												$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1); //computation on progress report
+												
+											
+										?>
+										<tr class="gradeX">
+											<td><?php echo $counter;?></td>
+											<td>
+												<?php echo $project->project_ref_no;?>
+											</td>
+											<td><?php echo $project->project_title;?></td>
+											<td class="center"><?php echo $project->MOP;?></td>
+											<td class="center"><?php echo Date::translate($project->ABC, "php");?></td>
+											<td class="center"><?php echo Date::translate($project->date_registered, "2");?></td>
+											<td class="center"><?php echo Date::translate($project->implementation_date, "2");?></td>
+											<td class="center"><?php echo $project->workflow;?></td>
+											<td class="center"><?php echo $accomplishment;?>%</td>										
+										</tr>
+
+
+										<?php
+											}
+										}
+										?>
+									</tbody>
+									
+									<tfoot>
+										<tr>
+											<th>#</th>
+											<th>Reference</th>
+											<th>Title</th>
+											<th>MOP</th>
+											<th>ABC</th>
+											<th>Date Registered</th>
+											<th>Implementation</th>
+											<th>Workflow</th>
+											<th>Accomplishment</th>
+										</tr>
+									</tfoot>
+									</table>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+					
 			</div>
 
 
@@ -122,13 +208,69 @@
 	<!-- Data for pie -->
     <script>
 		$(function() {
+
+			<?php
+			
+				if($projects = $user->selectAll("projects")){
+					foreach($projects as $project){
+						$origin = json_decode($project->request_origin, true);
+
+						$prCounter = 0;
+						$joCounter = 0;
+
+						foreach($origin as $list){
+							$identifier = substr($list, 0, 2);
+
+							switch ($identifier) {
+								case "PR":
+									$prCounter++;
+									break;
+							
+								case "JO":
+									$joCounter++;
+									break;
+							}
+
+						}
+
+						if(($prCounter > 0) AND ($joCounter == 0)){
+							#pure pr
+							$prArray[] = $project;
+						}else if(($joCounter > 0) AND ($prCounter == 0)){
+							#pure jo
+							$joArray[] = $project;
+						}
+					}
+
+				}
+
+			?>
 			
 			Morris.Donut({
 				element: 'morris-donut-chart',
 				data: [
-					{ label: "Purchase Request", value: 12 },
-					{ label: "Job Orders", value: 30 },
-					{ label: "Mixed", value: 20 } 
+					{ label: "Purchase Request", value: <?php 
+						if(isset($prArray)){
+							echo count($prArray);
+						}else{
+							echo "0";
+						}
+					?> },
+					{ label: "Job Orders", value: <?php
+						if(isset($joArray)){
+							echo count($joArray);
+						}else{
+							echo "0";
+						}
+					?> },
+					{ label: "Mixed", value: <?php 
+							$mixed = $user->getAll("projects", array("type", "=", "consolidated"));
+							if($mixed){
+								echo count($mixed);
+							}else{
+								echo "0";
+							}
+					?> } 
 					],
 				resize: true,
 				colors: ['#f8ac59', '#23c6c8','#b6325e'],
@@ -184,7 +326,13 @@
 
 		});	
 	</script>
-
+<script>
+	$(function(){
+		setTimeout(function(){
+			$('#minimizer').trigger('click');
+		}, 1000);
+	});
+</script>
 
 </body>
 

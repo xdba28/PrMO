@@ -28,6 +28,8 @@
 
 		require_once "functions/sanitize.php";
 		require_once "functions/notif.php";
+		require_once "functions/sms.php";
+		
 
         if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))){
             //echo 'User asked to be Remembered<br>';

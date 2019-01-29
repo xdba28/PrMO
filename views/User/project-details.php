@@ -75,9 +75,6 @@
 			
 			<!-- Main Content -->
         <div class="row">
-            <div class="col-lg-9">
-                <div class="wrapper wrapper-content animated fadeInUp">
-				
 				<?php
 					if(isset($_GET['refno'])){
 						$refno = base64_decode($_GET['refno']);
@@ -105,10 +102,14 @@
 						$projectOrigins = json_decode($project->request_origin, true);
 
 
-				?>				
+				?>			
+            <div id="details-div" class="col-lg-9">
+                <div class="wrapper wrapper-content animated fadeInUp">
 				
-                    <div class="ibox">
-                        <div class="ibox-content">
+			
+				
+                    <div id="status-div" class="ibox myShadow">
+                        <div class="ibox-content" style="min-height:800px">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
@@ -125,7 +126,7 @@
                                     </dl>								
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Status:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"><dd class="mb-1"><span class="label label-primary"><?php echo $project->project_status;?></span></dd></div>
+                                        <div class="col-sm-8 text-sm-left"><dd class="mb-1"><span id="status-span" class="label label-primary"><?php echo $project->project_status;?></span></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
@@ -221,6 +222,7 @@
                                             </dd>
                                         </div>
                                     </dl>
+									
                                 </div>
                             </div>
                             <div class="row">
@@ -258,10 +260,14 @@
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="tab-1">
                                     <div class="feed-activity-list">
+									
+
 										
 										<?php
+										
 											$updates = $user->importantUpdates($refno);
 											
+										
 											if($updates){
 												
 												foreach($updates as $update){
@@ -277,9 +283,19 @@
 															$message ='<strong>Cheer Up! </strong> Issues realated to '.$remarksParts[1].' was successfuly solved.';
 															break;
 														case "ISSUE":
-															$icon = 'ti-flag-alt text-danger';
+															$icon = 'ti-flag-alt text-warning';
 															$message ="<strong>Uh.. Oh, </strong> Your project encountered an issue related to ". $remarksParts[1] .". Check the details in your project's detailed history tab.";
-															break;											
+															break;
+														case "DECLA":													
+															if($remarksParts[1] == "FAILURE"){
+																$icon = 'fas fa-exclamation-triangle text-danger';
+																$message ="<strong>We're sorry, but </strong> Your project was declared as failed project. Check the details in your project's detailed history tab.  ";
+															}else if($remarksParts[1] == "FINISH"){
+																$icon = 'ti-check-box text-info';
+																$message ="<strong>You're good to go!!</strong> for this project has finished its required transactions in the system.";
+															}															
+															
+															break;																								
 													}
 													
 													echo '
@@ -354,7 +370,20 @@
 														$remarksParts =  explode('^', $detail->remarks);
 														$announcementClass = 'far fa-thumbs-up text-success';
 														$newRemarks = $remarksParts[2];
-														break;													
+														break;
+													case 'DECLA':
+														$remarksParts =  explode('^', $detail->remarks);
+															if($remarksParts[1] == "FAILURE"){
+																
+																$announcementClass = 'ti-alert text-danger';
+																$newRemarks = $remarksParts[2];
+															}else if($remarksParts[1] == "FINISH"){
+																
+																$announcementClass = 'far fa-flag text-info';
+																$newRemarks = $remarksParts[2];
+															}
+														
+														break;
 													default:
 														$announcementClass = "ti-announcement  text-warning";
 														$newRemarks=$detail->remarks;
@@ -396,40 +425,164 @@
                             </div>
                         </div>
                     </div>
-					<?php
-						}
-					?>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="wrapper wrapper-content project-manager">
-                    <h4>Project Documents</h4>
-                    <!-- <img src="img/zender_logo.png" class="img-fluid"> -->
-                    <p class="small">
-                        Project documents that are viewable and downloadable here are for viewing purposes only, also not all procurement documents that are related to this project are shown for it is exclusively viewable only for the PrMO personnels.
-                    </p>
-                    <!-- <p class="small font-bold">
-                        <span><i class="fa fa-circle text-warning"></i> High priority</span>
-                    </p> -->
-                    <!-- <h5>Project tag</h5>
-                    <ul class="tag-list" style="padding: 0">
-                        <li><a href=""><i class="fa fa-tag"></i> Zender</a></li>
-                        <li><a href=""><i class="fa fa-tag"></i> Lorem ipsum</a></li>
-                        <li><a href=""><i class="fa fa-tag"></i> Passages</a></li>
-                        <li><a href=""><i class="fa fa-tag"></i> Variations</a></li>
-                    </ul> -->
-                    <h5>Project files (Enduser Copy)</h5>
-                    <ul class="list-unstyled project-files">
-                        <li><a href=""><i class="far fa-file-word" style="font-size:16px; color:#2a5696"></i> sample_document.docx</a></li>
-                        <li><a href=""><i class="far fa-file-pdf" style="font-size:16px; color:#d3241b"></i> sample_document.pdf</a></li>
-                    </ul>
-                    <!-- <div class="text-center m-t-md">
-                        <a href="#" class="btn btn-xs btn-primary">Add files</a>
-                        <a href="#" class="btn btn-xs btn-primary">Report contact</a>
 
-                    </div> -->
                 </div>
             </div>
+            <div id="timeline-div" class="col-lg-3" style="padding-left:0px">
+                    <div id="vertical-timeline" class="vertical-container light-timeline no-margins" style="width:100%; padding-top:17px">
+											
+					
+							<?php
+							
+
+								if($Updates = $user->importantUpdates2($refno)){
+
+									
+									if(($upd_count = count($Updates)) > 5){
+
+										for($x = 1; $x<6; $x++){
+
+							?>
+							
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon <?php echo $bg;?>">
+                                <i class="<?php echo $timelineIcon;?>"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content" style="margin-left:45px">
+                                <h2><?php echo strtoupper($activityLogs[$activity_count-$x]->type);?></h2>
+                                <p>	
+
+									<?php 
+									echo $activityLogs[$activity_count-$x]->activity;
+									
+									?>
+                                </p>
+                                
+                                    <span class="vertical-date">										
+										<?php echo Date::translate($activityLogs[$activity_count-$x]->date_log, 1);?>
+										<br>
+                                        <small>
+                                        <?php
+											$datetime_today = Date::translate('now', 'now');
+											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->date_log));
+											echo $interval->format("%a days %h hours ago");										
+										?>										
+										</small>
+                                    </span>
+                            </div>
+                        </div>							
+											
+							<?php
+										}
+
+									}else{
+										// echo "<pre>",print_r($Updates),"</pre>";
+										foreach ($Updates as $update) {
+
+											$identifier = explode("^", $update->remarks);
+											switch ($identifier[0]) {
+												case "AWARD":
+													$timelineIcon = "fas fa-award";
+													$bg = "lazur-bg";
+													$displayMessage = $identifier[2];
+													break;
+												case "SOLVE":
+													$timelineIcon = "fas fa-thumbs-up";
+													$bg = "bg-success";
+													$displayMessage = "Pre-procurement evaluation issue resolved";
+
+													break;
+												case "ISSUE":
+													$timelineIcon = "fas fa-exclamation-triangle";
+													$bg = "yellow-bg";
+													switch ($identifier[1]) {
+														case 'pre-procurement':
+															$displayMessage = "Pre-procurement evaluation issue encountered";
+															break;
+														
+														default:
+															# code...
+															break;
+													}
+													break;
+												case "DECLARATION":
+													if($identifier[1]=="FINISH"){
+														$timelineIcon = "far fa-flag";
+														$bg = "bg-info";
+														$displayMessage = "This project has completed all required processes and transactions in the system";
+
+													}elseif($identifier[1] == "FAILURE"){
+														$timelineIcon = "ti-face-sad";
+														$bg = "bg-danger";
+														$displayMessage = "Project was declared as a failed project";
+
+													}
+													
+													break;
+												default:
+
+													$identifier[1] = "TECHNICAL MEMBER EVALUATION";
+													$timelineIcon = "fas fa-users";
+													$bg = "bg-primary";
+													$displayMessage = "Project documents are being evaluated by respective Technical member.";
+													break;
+											}
+										
+							?>
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon <?php echo $bg;?>">
+                                <i class="<?php echo $timelineIcon;?>"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content" style="margin-left:45px">
+                                <h2><?php echo strtoupper($identifier[1]);?></h2>
+                                <p>	
+									
+									<?php 
+									 echo $displayMessage;
+									?>
+                                </p>
+                                
+                                    <span class="vertical-date">										
+										<?php echo Date::translate($update->logdate, 1);?>
+										<br>
+                                        <small>
+                                        <?php
+											$interval = date_diff(date_create(Date::translate('now', 'now')), date_create($update->logdate));
+											echo $interval->format("%a days ago");										
+										?>										
+										</small>
+                                    </span>
+                            </div>
+                        </div>									
+
+							<?php
+										}
+									}
+									
+									$noUpdates = false;
+								}else{
+									
+									$noUpdates = true;
+									
+							?>
+							
+									<h1>no updates</h1>
+							
+							<?php
+								}
+							?>						
+
+
+                    </div>
+            </div>			
+			
+			<?php
+				}
+			?>			
+
         </div>
 			<!-- Main Content End -->
 			
@@ -441,7 +594,195 @@
         </div>
     </div>
 
+	<div class="modal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			
+				<div class="modal-header">
+					<h3 class="modal-title">Available Documents</h3>		
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<?php
+							$admin = new Admin();
+							$documents = $admin->checkDocuments($refno);
+	
+							foreach($documents['request'] as $request){
+								echo '									
+								<div class="my-file-box">
+									<div class="file">
+										<a href="#" onclick="window.open(\'../../bac/forms/pr-jo-doc?id='.$request['ref_no'].'&type='.$request['type'].'\');">
+											<span class="corner"></span>
+											<div class="icon">
+												<i class="fas fa-file-word"></i>
+											</div>
+											<div class="file-name">
+												'.$request['title'].'.docx
+											</div>
+										</a>
+									</div>
+								</div>
+								';
+							}
+	
+							if($documents['technical']){
+								echo '									
+								<div class="my-file-box">
+									<div class="file">
+										<a href="#" onclick="window.open(\'../../bac/forms/pre-eval-form?g='.$refno.'\');">
+											<span class="corner"></span>
+											<div class="icon">
+												<i class="fas fa-file-word"></i>
+											</div>
+											<div class="file-name">
+												Technical Working Group Pre-evaluation.docx
+											</div>
+										</a>
+									</div>
+								</div>
+								';
+
+								if(isset($documents['canvass_forms'])){
+									foreach($documents['canvass_forms'] as $lot){
+										echo '									
+										<div class="my-file-box">
+											<div class="file">
+												<a href="#" onclick="window.open(\'../../bac/forms/canv-prop?rq='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&i='.$lot['canvass_id'].'\');">
+													<span class="corner"></span>
+													<div class="icon">
+														<i class="fas fa-file-word"></i>
+													</div>
+													<div class="file-name">
+														'.$lot['title'].'.docx
+													</div>
+												</a>
+											</div>
+										</div>
+										';
+
+										foreach($lot['publication'] as $key => $pub){
+											$pub_quo = ($project->type === "PR") ? "Quotation" : "Proposal";
+											echo '
+											<div class="my-file-box">
+												<div class="file">
+													<a href="#" onclick="window.open(\'../../bac/forms/reso-prop?rq='.base64_encode($refno).'&f='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
+														<span class="corner"></span>
+														<div class="icon">
+															<i class="fas fa-file-word"></i>
+														</div>
+														<div class="file-name">
+															Request for '.$pub_quo.' - '.$pub['mode'].'.docx
+														</div>
+													</a>
+												</div>
+											</div>
+											';
+										}
+									}
+								}
+							}
+							// echo "<pre>".print_r($documents)."</pre>";
+						?>
+	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<?php include_once'../../includes/parts/user_scripts.php'; ?>
+	
+	<script>
+
+		
+		 $(document).ready(function(){
+			<?php
+				if($updates = $user->importantUpdates($refno)){
+					$identifier = explode("^", $updates[0]->remarks);
+						switch($identifier[0]){
+							case "AWARD":
+								echo "$('#status-div').removeClass().addClass('ibox myShadow');";
+								break;
+							case "SOLVE":
+								// echo "$('#status-div').removeClass().addClass('ibox myShadow');";
+								echo "
+								$('#status-div').removeClass().addClass('ibox myShadow').delay(2000).queue(function( next ){
+
+									$(this).addClass('ibox successShadow').delay(5000).queue(function( next ){
+										$(this).removeClass().addClass('ibox myShadow'); 
+										next();
+									});
+								
+									next();
+								});
+								";					
+								break;
+							case "ISSUE":
+								echo "$('#status-div').removeClass().addClass('ibox warningShadow');";
+								echo "$('#status-span').removeClass().addClass('label label-warning');";
+								echo "$('.progress-bar').addClass('yellow-bg');";
+								break;
+							case "FAIL":							
+								echo "$('#status-div').removeClass().addClass('ibox dangerShadow');";
+								echo "$('.progress-bar').addClass('bg-danger');";
+								break;						
+						}
+				}else{
+					echo "$('#status-div').removeClass().addClass('ibox myShadow');";
+				}
+
+
+				// check the status of the project failed or finished
+				if($thisProject = $user->get("projects", array("project_ref_no", "=", $refno))){
+
+					if($thisProject->project_status == "FINISHED"){
+
+						echo "$('#status-div').removeClass().addClass('ibox infoShadow');";
+						echo "$('.progress-bar').removeClass().addClass('progress-bar progress-bar-striped progress-bar-animated lazur-bg');";
+						echo "$('#status-span').removeClass().addClass('label label-info');";
+
+					}else if($thisProject->project_status == "FAILED"){
+
+						echo "$('#status-div').removeClass().addClass('ibox dangerShadow');";
+						echo "$('.progress-bar').removeClass().addClass('progress-bar progress-bar-striped progress-bar-animated bg-danger');";
+						echo "$('#status-span').removeClass().addClass('label label-danger');";
+
+					}else if($thisProject->project_status == "PAUSED"){
+
+						echo "$('#status-div').removeClass().addClass('ibox warningShadow');";
+						echo "$('.progress-bar').removeClass().addClass('progress-bar progress-bar-striped progress-bar-animated yellow-bg');";
+						echo "$('#status-span').removeClass().addClass('label label-warning');";
+
+					}else{
+
+						echo "$('#status-div').removeClass().addClass('ibox myShadow');";
+						echo "$('.progress-bar').removeClass().addClass('progress-bar progress-bar-striped progress-bar-animated primary-bg');";
+						echo "$('#status-span').removeClass().addClass('label label-primary');";
+
+					}
+
+
+
+					
+					// echo "<pre>",print_r($status),"</pre>";
+
+				}
+			
+			?>
+			
+			var noUpdates = <?php echo $noUpdates;?>;
+			
+			if(noUpdates == true){
+				$('#timeline-div').remove();
+				$('#details-div').removeClass('col-lg-9').addClass('col-lg-12');
+			}
+			 
+		 });
+		
+	</script>
 
 </body>
 

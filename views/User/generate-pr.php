@@ -1,5 +1,7 @@
 <?php 
-    require_once('../../core/init.php');
+	require_once '../../core/init.php';
+	require_once '../../functions/loadUnits.php';
+
     $user = new User(); 
     if($user->isLoggedIn()){
      //do nothing
@@ -177,9 +179,11 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Purchase Request</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 
@@ -344,7 +348,30 @@
 																	<tbody id="pr-tbl-static">
 																		<tr id="pr-0-r-0">
 																			<td><input type="text" name="L0-stk-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
-																			<td class="center"><input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+																			<td class="center">
+																				<!-- <input type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required> -->
+																				<select type="text" name="L0-unit-0" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required>
+																					<option></option>
+																					<?php
+																						$separator = false;
+																						$option_1 = '';
+																						$option_2 = '';
+																						foreach($availableUnits as $key => $unit){
+																							if($key === 14){
+																								$separator = true;
+																							}else{
+																								if(!$separator){
+																									$option_1 .= '<option value="'.$unit.'">'.$unit.'</option>';
+																								}else{
+																									$option_2 .= '<option value="'.$unit.'">'.$unit.'</option>';
+																								}
+																							}
+																						}
+																						echo '<optgroup>'.$option_1.'</optgroup>
+																							<optgroup label="________">'.$option_2.'</optgroup>';
+																					?>
+																				</select>
+																			</td>
 																			<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 																			<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-0" name="L0-qty-0" class="form-control" min="1" form="pr_form" required></td>
 																			<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-0" name="L0-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
@@ -482,7 +509,15 @@
 			var tmp_static = `
 			<tr id="pr-0-r-${objStat.lst}">
 				<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
-				<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+				<td class="center">
+					<select name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required>
+						<option></option>
+						<?php
+							echo '<optgroup>'.$option_1.'</optgroup>
+								<optgroup label="________">'.$option_2.'</optgroup>';
+						?>
+					</select>
+				</td>
 				<td><textarea rows="1" cols="30" name="L0-desc-${objStat.lst}" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 				<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
 				<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
@@ -525,7 +560,15 @@
 				var tmp_static = `
 				<tr id="pr-0-r-${objStat.lst}">
 					<td><input type="text" name="L0-stk-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form"></td>
-					<td class="center"><input type="text" name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required></td>
+					<td class="center">
+						<select name="L0-unit-${objStat.lst}" data-cnt="pr-0-lst-0" class="form-control" form="pr_form" required>
+							<option></option>
+							<?php
+								echo '<optgroup>'.$option_1.'</optgroup>
+									<optgroup label="________">'.$option_2.'</optgroup>';
+							?>
+						</select>
+					</td>
 					<td><textarea rows="1" cols="30" name="L0-desc-0" data-cnt="pr-0-lst-${objStat.lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 					<td class="center"><input type="number" data="qty" data-cnt="pr-0-qty-lst-${objStat.lst}" name="L0-qty-${objStat.lst}" class="form-control" min="1" form="pr_form" required></td>
 					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-0-Ucst-lst-${objStat.lst}" name="L0-Ucst-${objStat.lst}" class="form-control" min="0.01" form="pr_form" required></td>
@@ -623,7 +666,15 @@
 							<tbody id="pr-tbl-${index}">
 								<tr id="pr-${index}-r-0">
 									<td><input type="text" name="L${index}-stk-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form"></td>
-									<td class="center"><input type="text" name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required></td>
+									<td class="center">
+										<select name="L${index}-unit-0" data-cnt="pr-${index}-lst-0" class="form-control" form="pr_form" required>
+											<option></option>
+											<?php
+												echo '<optgroup>'.$option_1.'</optgroup>
+													<optgroup label="________">'.$option_2.'</optgroup>';
+											?>
+										</select>
+									</td>
 									<td><textarea rows="1" cols="30" name="L${index}-desc-0" data-cnt="pr-${index}-lst-0" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 									<td class="center"><input type="number" data="qty" data-cnt="pr-${index}-qty-lst-0" name="L${index}-qty-0" class="form-control" min="1" form="pr_form" required></td>
 									<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${index}-Ucst-lst-0" name="L${index}-Ucst-0" class="form-control" min="0.01" form="pr_form" required></td>
@@ -683,7 +734,15 @@
 				var tr_tmp = `
 				<tr id="pr-${pr_num[1]}-r-${obj[pr_num[1]].lst}">
 					<td><input type="text" name="L${pr_num[1]}-stk-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form"></td>
-					<td class="center"><input type="text" name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required></td>
+					<td class="center">
+						<select name="L${pr_num[1]}-unit-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" form="pr_form" required>
+						<option></option>
+						<?php
+							echo '<optgroup>'.$option_1.'</optgroup>
+								<optgroup label="________">'.$option_2.'</optgroup>';
+						?>
+						</select>
+					</td>
 					<td><textarea rows="1" cols="30" name="L${pr_num[1]}-desc-${obj[pr_num[1]].lst}" data-cnt="pr-${pr_num[1]}-lst-${obj[pr_num[1]].lst}" class="form-control" maxlength="1000" form="pr_form" required></textarea></td>
 					<td class="center"><input type="number" data="qty" data-cnt="pr-${pr_num[1]}-qty-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-qty-${obj[pr_num[1]].lst}" class="form-control" min="1" form="pr_form" required></td>
 					<td class="right"><input type="number" step=".01" data="Ucst" data-cnt="pr-${pr_num[1]}-Ucst-lst-${obj[pr_num[1]].lst}" name="L${pr_num[1]}-Ucst-${obj[pr_num[1]].lst}" class="form-control" min="0.01" form="pr_form" required></td>

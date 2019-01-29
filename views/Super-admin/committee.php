@@ -11,6 +11,22 @@
         die();
 	}
 
+	if(!empty($_POST)){
+		$user->startTrans();
+
+		$user->register('commitee', array(
+			'name' => Input::get('full'),
+			'position' => Input::get('position'),
+			'type' => Input::get('type'),
+			'unit_office' => Input::get('office')
+		));
+
+		$user->endTrans();
+
+		$responce = "Succesfully added commitee member.";
+		unset($_POST);
+	}
+
 
 ?>
 <!DOCTYPE html>
@@ -21,9 +37,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Committee</title>
+    <title>PrMO OPPTS | Overview</title>
 	<?php include "../../includes/parts/admin_styles.php"?>
 	<script>
+		var responce = '<?php 
+			if(isset($responce)){
+				echo $responce;
+			}else{
+				echo "";
+			}
+		?>';
 		const SampleData = [<?php
 			$units = $user->selectAll('commitee');
 			foreach ($units as $unit) {
@@ -64,7 +87,11 @@
 		}
 	?>];
 	</script>
-
+	<style>
+		.none{
+			display: none;
+		}
+	</style>
 </head>
 <body class="fixed-navigation">
     <div id="wrapper">
@@ -86,13 +113,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>Committee Settings</h2>
+                    <h2>Commitee Settings</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">System Settings</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Committee</strong>
+                            <strong>Commitee</strong>
                         </li>
                     </ol>
                 </div>
@@ -113,19 +140,28 @@
                     
 					<div class="ibox myShadow">
                         <div class="ibox-title">
-                            <h5>Bicol Univerity Bids and Awards Committee</h5>
+                            <h5>College and Office Unit Settings </h5>
 
                         </div>
                         <div class="ibox-content">
-							<div class="alert alert-success">
-                               Here you can edit / update data of each member of the Bids and Awards Committee.
-                            </div>
-                            <table class="table table-bordered">
+							<div class="alert alert-info">
+                               Here you can edit the default data per College / Office Unit like the personnel incharge of noting, verifying, and approving the Purchase Requests or Job Orders. Click on the underlined field to edit. After finalizing all your changes click the "Save Changes" button at the bottom-right of this page.
+							</div>
+							<div class="row">
+								<div class="col-sm-9 m-b-xs">
+								</div>
+								<div class="col-sm-3">
+									<div class="input-group mb-3">
+										<input type="text" class="form-control form-control-sm" placeholder="Search" id="filter">
+									</div>
+								</div>
+							</div>
+							<table class="footable table table-striped toggle-arrow-tiny" data-filter="#filter">
                                 <thead>
                                 <tr>
                                     <th>Position</th>
-									<th>Full Name</th>
-                                    <th>Specification</th>
+									<th>Name</th>
+                                    <th>type</th>
                                     <th>Unit / Office</th>
                                 </tr>
                                 </thead>
@@ -133,8 +169,63 @@
 
                                 </tbody>
                             </table>
+						<button class="btn btn-outline btn-success btn-rounded" id="btnAdd">Add Commitee</button>
 						<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>
                         </div>
+
+						<div class="ibox-content animated fadeInDown none" id="addCommitee">
+							
+							<div class="row">
+									
+								<div class="col-sm-6 b-r">
+									<form id="profile" role="form" method="POST" enctype="multipart/form-data">
+									<div class="form-group mt-20">
+										<label class="form-label" for="full">Full Name</label>
+										<input id="full" name="full" class="form-input" type="text" required>
+									</div>										
+									<div class="form-group mt-20">
+										<label>Type</label>
+										<select class="form-control m-b" name="type" required>
+											<option value=""></option>
+											<option value="GEN">General</option>
+											<option value="GDS">Goods and Services</option>
+											<option value="INF">Infrastructure</option>
+										</select>
+									</div>										
+								</div>
+								<div class="col-sm-6"> 												
+									<div class="form-group">
+										<label>Office / Unit</label>
+										<select class="form-control m-b required chosen-select" name="office" required>
+											<option>Select... </option>
+											<?php
+												foreach($offices as $off){
+													echo '<option value="'.$off->ID.'">'.$off->office_name.'</option>';
+												}
+											?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Position</label>		
+										<select name="position" class="form-control m-b" required>
+											<option></option>
+											<option value="BAC Secretariat">BAC Secretariat</option>
+											<option value="BAC Chairperson">BAC Chairperson</option>
+											<option value="Vice Chairman">Vice Chairman</option>
+											<option value="BAC Member">BAC Member</option>
+											<option value="Technical Working Group">Technical Working Group</option>
+										</select>										
+									</div>           									
+									</form>							
+								</div>
+								<div class="col-lg-12">
+									<button class="btn btn-primary btn-rounded pull-right" type="submit" form="profile">Submit</button>
+								</div>									
+							</div>
+
+						</div>
+						
+						
                     </div>
                 
 					
@@ -161,6 +252,14 @@
 </body>
 <script>
 $(document).ready(function(){
+
+	if(responce !== ''){
+		swal({
+			title: "Success!",
+			text: responce,
+			type: "success"
+		});
+	}
 
 	var Edit = [];
 
@@ -292,12 +391,26 @@ $(document).ready(function(){
 	});
 
 	$('#save').on('click', function(){
-		SendDoNothing("POST", 'xhr-update-commitee.php', {
-			col: Edit
-		}, {
-			title: 'Success!',
-			text: 'Successfully updated commitee.'
-		});
+		if(Edit.length !== 0){
+			SendDoNothing("POST", 'xhr-update-commitee.php', {
+				col: Edit
+			}, {
+				title: 'Success!',
+				text: 'Successfully updated commitee.'
+			});
+		}else{
+			swal({
+				title: "Invalid action!",
+				text: "No data edited.",
+				confirmButtonColor: "#DD6B55",
+				type: "error"
+
+			});
+		}
+	});
+
+	$('#btnAdd').on('click', function(){
+		$('#addCommitee').toggleClass('none');
 	});
 
 });

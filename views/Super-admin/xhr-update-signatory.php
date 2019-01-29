@@ -19,17 +19,17 @@ if($admin->isLoggedIn()){
 
 			foreach ($_POST['col'] as $v) {
 
-				$note = ($v['note'] !== "") ? htmlspecialchars($v['note']) : 'unset';
+				$note = ($v['note'] !== "") ? $v['note'] : 'unset';
 
-				$note_pos = ($v['n_pos'] !== "") ? htmlspecialchars($v['n_pos']) : 'unset';
+				$note_pos = ($v['n_pos'] !== "") ? $v['n_pos'] : 'unset';
 
-				$verify = ($v['verify'] !== "") ? htmlspecialchars($v['verify']) : 'unset';
+				$verify = ($v['verify'] !== "") ? $v['verify'] : 'unset';
 
-				$verify_pos = ($v['v_pos'] !== "") ? htmlspecialchars($v['v_pos']) : 'unset';
+				$verify_pos = ($v['v_pos'] !== "") ? $v['v_pos'] : 'unset';
 
-				$approve = ($v['approve'] !== "") ? htmlspecialchars($v['approve']) : 'unset';
+				$approve = ($v['approve'] !== "") ? $v['approve'] : 'unset';
 
-				$approve_pos = ($v['a_pos'] !== "") ? htmlspecialchars($v['a_pos']) : 'unset';
+				$approve_pos = ($v['a_pos'] !== "") ? $v['a_pos'] : 'unset';
 
 
 				$admin->update('units', 'acronym', $v['acronym'], array(

@@ -119,6 +119,7 @@
 											$user = new Admin();
 											
 											$projects = $user->getAll('projects', array('project_status', '=', 'processing'));
+											if($projects){
 											foreach($projects as $project){
 												
 												$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1);
@@ -153,16 +154,19 @@
 													
 												</td>
 												<td><?php echo $currentWork;?></td>
-											<td><?php echo $project->ABC;?></td>
+											<td><?php echo Date::translate($project->ABC, 'php');?></td>
 											<td class="project-completion">
 												<small>Completion with: <?php echo $accomplishment;?>%</small>
 												<div class="progress progress-mini">
 													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar"></div>
 												</div>
 											</td>
-											<td><a href="project-details?refno=<?php echo $project->project_ref_no;?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a></td>
+											<td><a href="project-details?refno=<?php echo base64_encode($project->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a></td>
 										</tr>
 										<?php
+											}
+											}else{
+												echo '<td colspan="8" style="text-align:center">No Data Available</td>';
 											}
 										?>
 										</tbody>

@@ -1,5 +1,7 @@
 <?php
+
 require_once "../../core/init.php";
+// require the library
 
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
@@ -7,7 +9,7 @@ $phpWord = new \PhpOffice\PhpWord\PhpWord();
 // $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
 // $documentProtection->setPassword('PrMO');
 
-// $file = $REQUEST[0].".docx";
+// $file = "Canvass.docx";
 // header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 // header('Content-Disposition: attachment; filename="'.$file.'"');
 
@@ -80,7 +82,7 @@ $sC = ['valign' => 'center'];
 
 $table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2]);
 $table->addRow(662.4);
-$table->addCell(1900, ['vMerge' => 'restart', 'valign' => 'center'])->addText("Ref/ ABC/ Item GDS-2018-645(C) Php 95,351");
+$table->addCell(1900, ['vMerge' => 'restart', 'valign' => 'center'])->addText(htmlspecialchars("Ref/ ABC/ Item GDS-2018-645(C) Php 95,351"));
 $table->addCell(518.4, $sC)->addText("Unit", null, $c);
 $table->addCell(720, $sC)->addText("Qty", null, $c);
 $table->addCell(3672, $sC)->addText("Description", null, $c);

@@ -164,6 +164,10 @@
 			return $this->pdo->commit();
 		}
 
+		public function lastId(){
+			return $this->pdo->lastInsertId();
+		}
+
         public function results(){
             return $this->results;
         }

@@ -194,37 +194,337 @@ require_once "../../functions/account-verifier.php";
 </script>
 
 <script>
+	$(function(){
+
+
+			/**** DATA TABLES ****/
+
+			// var DataTables_finishedprojects = $('#DataTables_finishedprojects').DataTable({pageLength: 25,responsive: true,dom: '<"html5buttons"B>lTfgitp',
+			// buttons: [{extend: 'copy'},{extend: 'csv'},{extend: 'excel', title: 'ExampleFile'},
+			// 	{extend: 'pdf', title: 'ExampleFile'},{extend: 'print',
+			// 		customize: function (win){
+			// 			$(win.document.body).addClass('white-bg');
+			// 			$(win.document.body).css('font-size', '10px');
+			// 			$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+			// 		}
+			// 	}]
+			// });			
+			
+			/**** Varying modal content ****/
+
+			// PROFILE SETTING
+			$('#profile-setting').on('show.bs.modal', function (event) {
+			var editButton = $(event.relatedTarget) // Button that triggered the modal
+			var request_content = editButton.data('rcontent') // Extract info from data-* attributes
+			var currentUser = editButton.data('user')
+
+
+			
+			 var profilemodal = $(this);
+				switch (request_content){
+					case "name":
+
+
+						profilemodal.find('.modal-title').text('Personal Information Setting: Fullname')
+						var fname =  editButton.data('fname')
+						var mname =  editButton.data('mname')
+						var lname =  editButton.data('lname')
+						var extname =  editButton.data('extname')
+						var token = "<?php echo Token::generate('nametoken');?>"
+
+							if(extname === "XXXXX"){
+								extname = "";
+							}
+						
+						$('#rcontent-container').html(`
+
+							<form id="singleForm" method="POST" enctype="multipart/form-data">
+								<div class="form-group">
+									<label>First name</label>
+									<input id="fname" name="fname" type="text" value="${fname}" class="form-control" required>
+								</div>
+								<div class="form-group">
+									<label>Middle name</label>
+									<input id="mname" name="mname" type="text" value="${mname}" class="form-control" required>
+								</div>											
+								<div class="form-group">
+									<label>Last name</label>
+									<input id="lname" name="lname" type="text" value="${lname}" class="form-control" required>
+								</div>
+								<div class="form-group">
+									<label>Extension name</label>
+									<input id="extname" name="extname" type="text" value="${extname}" class="form-control">
+								</div>
+								<input name="nametoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							
+							</form>
+						
+						
+						`);
+						break;
+				
+					default:
+						break;
+				}
+
+						
+			});	
+			
+			// PROFILE SETTING SMALL
+			$('#profile-setting-small').on('show.bs.modal', function (event) {
+			var editButton = $(event.relatedTarget) // Button that triggered the modal
+			var request_content = editButton.data('rcontent') // Extract info from data-* attributes
+			var currentUser = editButton.data('user')
+
+
+			
+			 var profilemodal = $(this);
+				switch (request_content){
+					case "email":
+
+
+						profilemodal.find('.modal-title').text('Email Address Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('far fa-envelope modal-icon');
+						profilemodal.find('#modal-description-small').text('Make sure your email address is always updated for future announcements')
+						var toupdate =  editButton.data('toupdate')
+						var token = "<?php echo Token::generate('emailtoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>Email Address</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon">@</span>
+												</div>
+												<input type="email" name="newemail" value="${toupdate}" placeholder="Enter your new email" class="form-control" required>
+										</div>
+								</div>
+								<input name="emailtoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;
+						
+					case "phone":
+
+
+						profilemodal.find('.modal-title').text('Phone Number Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('fas fa-phone modal-icon');
+						profilemodal.find('#modal-description-small').text('Make sure your phone number is always updated to receive all important updates')
+						var toupdate =  editButton.data('toupdate')
+						
+
+						
+						var token = "<?php echo Token::generate('phonetoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>Phone Number</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon">+63</span>
+												</div>
+												<input type="text" min="10" max="10" name="newphone" value="${toupdate}" data-mask="9999999999" placeholder="Enter your new phone number" class="form-control" required>
+												
+										</div>
+								</div>
+								<input name="phonetoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;
+					case "designation":
+
+
+						profilemodal.find('.modal-title').text('Designation / College Unit Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('fas fa-institution modal-icon');
+						profilemodal.find('#modal-description-small').text('Office or College Unit you are under')
+						var toupdate =  editButton.data('toupdate')
+						var collegelist = `
+							
+							<?php
+								
+								if($units = $user->selectAll("units")){
+									foreach($units as $unit){
+										echo '
+												<option value="'.$unit->ID.'">'.$unit->office_name.'</option>
+											
+										';
+									}
+								}
+							
+							?>
+						
+						`
+						
+						
+						var token = "<?php echo Token::generate('designationtoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>Designation</label>
+									
+												<select class="form-control m-b required" name="newunit" required="" >
+														<option value="${toupdate}"> Select... </option>
+														${collegelist}
+												</select>
+								</div>
+								<input name="designationtoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;
+					case "office":
+
+
+						profilemodal.find('.modal-title').text('Specific Office Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('fas fa-briefcase modal-icon');
+						profilemodal.find('#modal-description-small').text('Specific office under your designation or college unit')
+						var toupdate =  editButton.data('toupdate')
+						var token = "<?php echo Token::generate('specificofficetoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>Specific Office</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon"><i class="fas fa-briefcase"></i></span>
+												</div>
+												<input type="text" name="newspecificoffice" value="${toupdate}" placeholder="Specific Office" class="form-control" required>
+										</div>
+								</div>
+								<input name="specificofficetoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;
+					case "username":
+
+
+						profilemodal.find('.modal-title').text('Username Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('fas fa-user modal-icon');
+						profilemodal.find('#modal-description-small').text('')
+						var toupdate =  editButton.data('toupdate')
+						var token = "<?php echo Token::generate('usernametoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>New Username</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon"><i class="fas fa-user-shield"></i></span>
+												</div>
+												<input type="text" name="newusername" value="${toupdate}" placeholder="Enter your new username" class="form-control" required>
+										</div>
+								</div>
+								<input name="usernametoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;
+					case "password":
+
+
+						profilemodal.find('.modal-title').text('Password Update')
+						profilemodal.find('#modal-icon-small').removeClass().addClass('fas fa-lock modal-icon');
+						profilemodal.find('#modal-description-small').text('It is adviced to regularly update your password')
+						var toupdate =  editButton.data('toupdate')
+						var token = "<?php echo Token::generate('newpasstoken');?>"
+
+						
+						$('#rcontent-container-small').html(`
+							<form id="singleForm1" method="POST" enctype="multipart/form-data">
+								<div class="form-group"><label>Current Password</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon"><i class="fas fa-unlock"></i></span>
+												</div>
+												<input type="password" id="currentpassword" name="currentpassword" value="" placeholder="Current password" class="form-control" required>
+										</div>
+								</div>
+								<div class="form-group"><label>New Password</label>
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon"><i class="fas fa-key"></i></span>
+												</div>
+												<input type="password" id="newpassword" name="newpassword" value="" placeholder="New password" class="form-control" required>
+										</div>
+								</div>
+								<div class="form-group">
+									
+										<div class="input-group m-b">
+												<div class="input-group-prepend">
+													<span class="input-group-addon"><i class="fas fa-key"></i></span>
+												</div>
+												<input type="password" id="" name="passwordagain" value="" placeholder="Re-type new password" class="form-control" required>
+										</div>
+								</div>														
+								<input name="newpasstoken" type="text" value="${token}" hidden>
+								<input name="user" type="text" value="${currentUser}" hidden>
+							</form>
+						`);
+						break;						
+				
+					default:
+						break;
+				}
+
+						
+			});				
+
+
+	});
+
+</script>
+
+<script>
     $(document).ready(function(){
-		// side nav active		
-		var path = window.location.pathname.split("/");
-		var link = document.querySelector(`[href='${path[path.length - 1]}']`);
-		var sLink = ['Dashboard'];
-		var higherLevelpages = [
-			{pages: ['project-details'], link: 'current-projects'}
-		];
-		toggleGreetings();
-		var highlevelpage = higherLevelpages.find(function(e1){
-			return e1.pages.find(function(e2){
-				return e2 === path[path.length - 1]
+		// side nav active	
+		try {
+			var path = window.location.pathname.split("/");
+			var link = document.querySelector(`[href='${path[path.length - 1]}']`);
+			var sLink = ['Dashboard'];
+			var higherLevelpages = [
+				{pages: ['project-details'], link: 'current-projects'}
+			];
+			// toggleGreetings();
+			var highlevelpage = higherLevelpages.find(function(e1){
+				return e1.pages.find(function(e2){
+					return e2 === path[path.length - 1]
+				});
 			});
-		});
 
-		if(highlevelpage !== undefined){
-			link = document.querySelector(`[href="${highlevelpage.link}"]`);
-		}
+			if(highlevelpage !== undefined){
+				link = document.querySelector(`[href="${highlevelpage.link}"]`);
+			}
 
-		switch (path[path.length - 1]){
-			case sLink.find(function(el){
-				return path[path.length - 1] === el
-			}):
-				link.parentNode.setAttribute("class", "active");
-				break;
-			default:
-				link.parentNode.parentNode.parentNode.setAttribute("class", "active");
-				link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
-				link.parentNode.setAttribute("class", "active");
-				break;
-		}
+			switch (path[path.length - 1]){
+				case sLink.find(function(el){
+					return path[path.length - 1] === el
+				}):
+					link.parentNode.setAttribute("class", "active");
+					break;
+				default:
+					link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+					link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+					link.parentNode.setAttribute("class", "active");
+					break;
+			}
+		} catch (error) {
+			
+		}	
 
         $("#wizard").steps();
         $("#form").steps({
@@ -302,6 +602,7 @@ require_once "../../functions/account-verifier.php";
                         }
                     }
                 });
+
 				
 		
     });
@@ -748,6 +1049,101 @@ require_once "../../functions/account-verifier.php";
 
 			password.onchange = validatePassword;
 			confirm_password.onkeyup = validatePassword;			
+
+
+			// toust toggle
+
+			<?php
+			
+				// FATAL ERROR NOTIFICATIONS
+				if(Session::exists("FATAL_ERROR")){
+					
+					echo '
+						audio.play();
+						toastr.options = {
+						"closeButton": true,
+						"debug": true,
+						"progressBar": false,
+						"preventDuplicates": false,
+						"positionClass": "toast-top-full-width",
+						"onclick": null,
+						"showDuration": "400",
+						"hideDuration": "1000",
+						"timeOut": "60000",
+						"extendedTimeOut": "60000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut"
+						}
+						toastr.error("'.Session::flash("FATAL_ERROR").'", "Fatal Error");
+					
+					';				
+					
+				}
+				// VALIDATION ERRORS
+
+				if(isset($validation)){
+					if($validation->errors()){
+						$default_time_out = 20000;
+						foreach ($validation->errors() as $error_type => $error_message) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+									"closeButton": true,
+									"debug": true,
+									"progressBar": true,
+									"preventDuplicates": false,
+									"positionClass": "toast-top-full-width",
+									"onclick": null,
+									"showDuration": "400",
+									"hideDuration": "1000",
+									"timeOut": "'.$default_time_out.'",
+									"extendedTimeOut": "10000",
+									"showEasing": "swing",
+									"hideEasing": "linear",
+									"showMethod": "fadeIn",
+									"hideMethod": "fadeOut"
+									}
+									toastr.warning("'.$error_message.'", "'.$error_type.'");
+								
+								';
+								$default_time_out += 5000;			
+						}
+					}
+
+				}
+
+				
+				// SUCCESS NOTIFICATIONS
+
+				if(isset($success_notifs)){
+						
+						foreach ($success_notifs as $notif) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+										"progressBar": true,
+										"preventDuplicates": false,
+										"showDuration": "400",
+										"hideDuration": "1000",
+										"timeOut": "6000",
+										"extendedTimeOut": "1000",
+										"showEasing": "swing",
+										"hideEasing": "linear",
+										"showMethod": "fadeIn",
+										"hideMethod": "fadeOut"
+									}
+									toastr.info("'.$notif.'", "Success");
+								
+								';
+						}			
+
+				}			
+			
+			?>
 	
 
 			

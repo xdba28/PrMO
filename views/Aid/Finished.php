@@ -24,7 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Procurement Aid</title>
+    <title>PrMO OPPTS | Finished Projects</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -53,13 +53,13 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
-                    <h2>Paused Projects</h2>
+                    <h2>Finished Projects</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">Projects</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Paused Projects</strong>
+                            <strong>Finished / Failed Projects</strong>
                         </li>
                     </ol>
                 </div>

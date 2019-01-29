@@ -63,10 +63,6 @@
                     die($e->getMessage());
                 }
                 
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
             }
         }
     }
@@ -84,7 +80,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
+    <title>PrMO OPPTS | Staff</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -113,30 +109,192 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-12">
-                    <h2>Staff</h2>
+                    <h2>Staff Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
                         </li>
                         <li class="breadcrumb-item active">
-                            <strong>Breadcrumb</strong>
+                            <strong>Dashboard</strong>
                         </li>
                     </ol>
                 </div>
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content">
-				<div class="middle-box text-center animated fadeInRightBig">
-
-						<h3 class="font-bold">Staff</h3>
-						<div class="error-desc">
-							You can create here any grid layout you want. And any variation layout you imagine:) Check out
-							main dashboard and other site. It use many different layout.
-							<br/><a href="Dashboard" class="btn btn-primary m-t">Dashboard</a>
+            <div class="wrapper wrapper-content animated fadeInUp">
+			
+			<div class="row">
+                <div class="col-lg-12">
+					<div class="ibox-content m-b-sm border-bottom">
+						<div class="p-xs">
+							<div class="float-left m-r-md">
+								<i class="fas fa-book-reader text-navy mid-icon"></i>
+								
+							</div>
+							<h2>Welcome back <?php											
+								$hold = $user->fullname();
+								$currentUser = json_decode($hold,true);	
+								
+								
+								echo $currentUser[0];				
+							
+							?>!</h2>
+							<span>Staff</span>
 						</div>
-
+					</div>
 				</div>
+				
+			<?php
+				$reports = $user->dashboardReports();
+
+				
+
+				// echo "<pre>",print_r($reports["current_projects"]),"</pre>";
+			?>
+
+				<div class="col-lg-6">
+					<div class="widget style1 yellow-bg">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php
+
+
+									if(isset($reports["request_forms"])){
+
+
+										
+										$requestCounter = 0;
+										foreach ($reports["request_forms"] as $request){
+											if($user->like("projects", "request_origin", $request->form_ref_no)){
+												// already a project
+											}else{
+												$requestCounter++;
+											}
+										}
+
+										echo $requestCounter;
+
+									}else{
+										echo "0";
+									}	
+									
+									
+									
+									
+									?></h1>
+
+									<h3 class="font-bold no-margins">
+										Available Request Forms
+									</h3>
+									<small>Purchase Requests and Job Orders to be received</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="new-project" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-6">
+					<div class="widget style1 lazur-bg">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php
+									
+									
+									if(isset($reports["logs_today"])){
+										$logs_today = $reports["logs_today"];
+										echo count($logs_today);
+									}else{
+										echo "0";
+									}									
+									 //echo "<pre>",print_r($reports),"</pre>";
+									?></h1>
+
+									<h3 class="font-bold no-margins">
+										Overall Logs made today
+									</h3>
+									<small><?php echo Date::translate('now',2); ?></small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="Overall-logs" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="widget style1" style="background-color:#8CC63E; color:white">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php 
+									
+
+									
+									if(isset($reports["outgoing"])){
+										$outgoing = $reports["outgoing"];
+										echo count($outgoing);
+									}else{
+										echo "0";
+									}									
+									
+									
+									?></h1>
+
+									<h3 class="font-bold no-margins">
+										Project Documents in the Outgoing Queue
+									</h3>
+									<small>For Signatures and General Documents</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="outgoing" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="widget style1" style="background-color:#EF5720; color:white">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php 
+									
+																		
+									if(isset($reports["released"])){
+										$released = $reports["released"];
+										echo count($released);
+									}else{
+										echo "0";
+									}
+									
+									
+									
+									?></h1>
+
+									<h3 class="font-bold no-margins">
+										Project Documents in the Released Documents Queue
+									</h3>
+									<small>Update these documents to finish log</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a data-toggle="modal" data-target="#returning" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>				
+            </div>			
+	
             </div>
 			<!-- Main Content End -->
 			

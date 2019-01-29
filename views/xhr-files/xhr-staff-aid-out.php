@@ -44,8 +44,12 @@ else{
 
 						break;
 					case 'SIGNATURES':
+						$remarks = "Project released for routing";
 						# code...
 						break;
+					case 'EVALUATION ISSUE':
+						$remarks = "Documents released to be returned to end user(s)";
+						break;						
 					default:
 						# code...
 						break;
@@ -95,11 +99,11 @@ else{
 
 					case "SIGNATURES":
 						$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-						$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+						// $unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						$signiture[] = [
 							'project' => $document->project,
 							'title' => $project->project_title,
-							'transmitting_to' => $unit->office_name,
+							'transmitting_to' => $document->transmitting_to,
 							'specific_office' => $document->specific_office,
 							'date_registered' => Date::translate($document->date_registered, 1)
 						];
@@ -131,6 +135,8 @@ else{
 				$updateDoc[] = [
 					'project' => $a->project,
 					'title' => $project->project_title,
+					'transmit' => $a->transmitting_to,
+					'specific' => $a->specific_office,
 					'date_registered' => Date::translate($a->date_registered, 1)
 				];
 			}

@@ -61,13 +61,9 @@
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
-                    die($e->getMessage());
+                    Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
             }
         }
     }
@@ -105,7 +101,7 @@
 			</div>
 		</nav>
 
-        <div id="page-wrapper" class="gray-bg" style="background-color:#c2c2ca">
+        <div id="page-wrapper" class="gray-bg">
 			<div class="row border-bottom">
 				<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
 					<?php include '../../includes/parts/admin_header.php'; ?>
@@ -113,7 +109,7 @@
 			
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <h2>Procurement Aid Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
@@ -124,114 +120,144 @@
                         </li>
                     </ol>
                 </div>
-                <div class="col-sm-8">
-                    <div class="title-action">
-                    <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
-                    </div>
-                </div>
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content animated fadeInUpBig">
+            <div class="wrapper wrapper-content animated fadeInUp">
+			
+			<div class="row">
+                <div class="col-lg-12">
+					<div class="ibox-content m-b-sm border-bottom">
+						<div class="p-xs">
+							<div class="float-left m-r-md">
+								<i class="fas fa-users-cog text-navy mid-icon"></i>
+							</div>
+							<h2>Welcome back <?php											
+								$hold = $user->fullname();
+								$currentUser = json_decode($hold,true);	
+								
+								
+								echo $currentUser[0];				
+							
+							?>!</h2>
+							<span>Procurement Aid</span>
+						</div>
+					</div>
+				</div>
+				
+			<?php
+				$reports = $user->dashboardReports();
 
-					<div class="container card-list">
-					  <div class="card blue" style="margin-right:10px">
-						<div style="min-height:90px">
-							<div class="">All Projects</div><span class="glyphicon glyphicon-upload"></span>
-							<div class="value">00</div>
-						</div>
-							<div class="stat"><b>13</b>% increase</div>
-					  </div>
-					  <div class="card green" style="margin-right:10px">
-					  	<div style="min-height:90px">
-							<div class="">Projects with 75% and up <br>accomplishment</div><span class="glyphicon glyphicon-upload"></span>
-							<div class="value">00</div>
-						</div>
-							<div class="stat"><b>4</b>% increase</div>
-					  </div>
-					  <div class="card orange" style="margin-right:10px">
-					  	<div style="min-height:90px">
-							<div class="">Something</div><span class="glyphicon glyphicon-download"></span>
-							<div class="value">00</div>
-						</div>
-							<div class="stat"><b>13</b>% decrease</div>
-					  </div>
-					  <div class="card red">
-						<div style="min-height:90px">
-							<div class="">Projects less than a Week before <br>Deadline</div><span class="glyphicon glyphicon-download"></span>
-							<div class="value">00</div>
-						</div>
-							<div class="stat"><b>13</b>% decrease</div>
-					  </div>
-					</div><br>
-					
-					<div class="container projects">
-					  <div class="projects-inner">
-						<header class="projects-header">
-						  <div class="title">Ongoing Projects</div>
-						  <div class="count">| 00 Projects</div><span class="glyphicon glyphicon-download-alt"></span>
-						</header>
-						<table class="projects-table">
-							 <thead>
-								<tr>
-									<th>Project</th>
-									<th>Deadline</th>
-									<th>Budget</th>
-									<th>Status</th>
-								</tr>
-							 </thead>
-						  <tr>
-							<td>
-							  <p>New Dashboard</p>
-							  <p>Google</p>
-							</td>
-							<td>
-							  <p>17th Oct, 15</p>
-							  <p class="danger-text">Overdue</p>
-							</td>
-							<td>
-							  <p>$4,670</p>
-							  <p>Paid</p>
-							</td>
-							<td class="status"><span class="status-text status-orange">In progress</span>
-							  <form class="form" action="#" method="POST">
-								<select class="action-box">
-								  <option>Actions</option>
-								  <option>Start project</option>
-								  <option>Send for QA</option>
-								  <option>Send invoice</option>
-								</select>
-							  </form>
-							</td>
-						  </tr>
-						  <tr class="danger-item">
-							<td>
-							  <p>New Dashboard</p>
-							  <p>Google</p>
-							</td>
-							<td>
-							  <p>17th Oct, 15</p>
-							  <p class="danger-text">Overdue</p>
-							</td>
-							<td>
-							  <p>$4,670</p>
-							  <p>Paid</p>
-							</td>
-							<td class="status"><span class="status-text status-red">Blocked</span>
-							  <form class="form" action="#" method="POST">
-								<select class="action-box">
-								  <option>Actions</option>
-								  <option>Start project</option>
-								  <option>Send for QA</option>
-								  <option>Send invoice</option>
-								</select>
-							  </form>
-							</td>
-						  </tr>
+				$hpCounter = 0;
+				$allproCounter = 0;
+				if($reports["current_projects"]){
+					foreach ($reports["current_projects"] as $project) {
+						if($project->priority_level === "HIGH"){
+							$hpCounter++;
+						}
+						$allproCounter++;
+					}
+				}
 
-						</table>
-					  </div>
-					</div><br><br>			
+				// echo "<pre>",print_r($reports["current_projects"]),"</pre>";
+			?>
+
+				<div class="col-lg-6">
+					<div class="widget style1 yellow-bg">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php echo $hpCounter;?></h1>
+
+									<h3 class="font-bold no-margins">
+										High Priority Projects
+									</h3>
+									<small>Listed by the director</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="Ongoing-projects" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-6">
+					<div class="widget style1 lazur-bg">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php echo $allproCounter;?></h1>
+
+									<h3 class="font-bold no-margins">
+										Overall Ongoing Projects
+									</h3>
+									<small>Ongoing and Paused</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="Ongoing-projects" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="widget style1" style="background-color:#8CC63E; color:white">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php 
+									
+									$canvassReturns = $user->getAll("projects", array("accomplished", "=", 4));
+									echo count($canvassReturns);
+									
+									
+									?></h1>
+
+									<h3 class="font-bold no-margins">
+										Projects Waiting for Canvass Returns
+									</h3>
+									<small>Purchase Requests and Job Orders</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="Ongoing-projects" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="widget style1" style="background-color:#EF5720; color:white">
+						<div class="row">
+							<div class="col-8">
+								<div class="">
+									<h1 class="m-xs"><?php 
+									if($reports["revision_requests"]){
+										echo count($reports["revision_requests"]);
+									}else{
+										echo "0";
+									}
+									
+									;?></h1>
+
+									<h3 class="font-bold no-margins">
+										Form Revisions to Review
+									</h3>
+									<small>Purchase Requests and Job Orders</small>
+								</div>
+							</div>
+							<div class="col-4 text-right text-center">
+								<!-- <span> New albums </span> -->
+								<a href="Revision-requests" class="btn btn-default btn-outline">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>				
+            </div>			
+	
             </div>
 			<!-- Main Content End -->
 			
@@ -244,8 +270,14 @@
 
     <?php include '../../includes/parts/admin_scripts.php'; ?>
 	<!-- Password meter -->
-<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	<script src="../../assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+	<script src="../../assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	
+
+
+	
+	
+	
 	<script>	
 		$(document).ready(function(){
            // Example 4 password meter

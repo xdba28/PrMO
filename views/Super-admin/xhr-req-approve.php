@@ -18,12 +18,14 @@ $r = $sa->get("account_requests", array("ID", "=", $_POST['id']));
 if($r->ext_name == "none") $extention = "XXXXX";
 else $extention = $r->ext_name;
 
-$salt = Hash::salt(32);
+
 
 $office = $sa->get("units", array("ID", "=", $r->designation));
 
 try
 {
+	$salt = Hash::salt(32);
+	$OTP = strtoupper(StringGen::password());
 	$sa->startTrans();
 
 	$sa->register("enduser", array(
@@ -37,23 +39,27 @@ try
 		'edr_designated_office' => $office->ID,
 		'current_specific_office' => $r->specific_office,
 		'edr_job_title' => $r->jobtitle,
-		'edr_profile_photo' => NULL
+		'edr_profile_photo' => NULL,
+		'date_joined' => Date::translate('now', 'now')
 	));
-
-	$temporaryPassword = StringGen::password();
 
 	$sa->register('edr_account', array(
 		'account_id' => $r->employee_id,
 		'username' => $r->username,
 		'salt' => $salt,
-		'userpassword' => Hash::make($temporaryPassword, $salt),
+		'userpassword' => Hash::make($OTP, $salt),
 		'group_' => 1
 	));
-
-	//send sms to enduser that his/her account is already created with the One-time password
+	
 	$sa->delPersn("account_requests", array("employee_id", "=", $r->employee_id));
 	
 	$sa->endTrans();
+
+
+	//send sms to enduser that his/her account is already created with the One-time password
+	// $customMessage = 'Hello '.$r->fname.'! Welcome to PrMO OPPTS. Your account request has been successfully verified, you may now login to '.Config::get('links/standarduser').' with your one-time password "'.$OTP.'".';
+	$customMessage = 'Welcome to PrMO OPPTS! You may now login with your one-time password: "'.$OTP.'".';
+	sms($r->contact, "System", $customMessage);
 }
 catch(Exception $e)
 {

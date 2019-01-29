@@ -10,15 +10,11 @@ if($user->isLoggedIn()){
 	die();
 }
 
-	echo "<pre>",print_r($_POST),"</pre>";
-	die();
+	// echo "<pre>",print_r($_POST),"</pre>";
+	// die();
 
-	foreach ($_POST['del']['lotref'] as $ref) {
-		$test = explode('blyt322', $ref);
-		echo "<pre>",print_r($test),"</pre>";
-	}
-	
-	die();
+
+	// die();
 
 	if(!empty($_POST)){
 		
@@ -134,10 +130,26 @@ if($user->isLoggedIn()){
 		
 								));
 
+							$user->endTrans();	
+
 								# send notif to aids
+								$user->register('notifications', array(
+									'recipient' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "revision-requests"
+								));
+								notif(json_encode(array(
+									'receiver' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "revision-requests"
+								)), true);
+			
+
 								$notif = true;
 				
-							$user->endTrans();	
 
 						}else if($_POST['orig']['type'] == "JO"){
 							#register request
@@ -158,10 +170,32 @@ if($user->isLoggedIn()){
 
 							$user->endTrans();
 
+								# send notif to aids
+								$user->register('notifications', array(
+									'recipient' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "revision-requests"
+								));
+								notif(json_encode(array(
+									'receiver' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "revision-requests"
+								)), true);
+			
+
+								$notif = true;							
 						}
 
 			}
 		}else if($_POST['action'] === 'delete'){
+
+			foreach($_POST['del']['lotref'] as $ref) {
+				$test = explode('blyt322', $ref);
+			}
+			
 				//Delete Action
 
 				#!!NOTE check the form if we still have any items left in lot or the form. else delete lot or form
@@ -275,7 +309,26 @@ if($user->isLoggedIn()){
 
 							));
 
-						}					
+						}
+						
+						
+								# send notif to aids
+								$user->register('notifications', array(
+									'recipient' => "group5",
+									'message' => "A new revision request has been sent",
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "revision-requests"
+								));
+								notif(json_encode(array(
+									'receiver' => "group5",
+									'message' => "A revision request has been sent",
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "revision-requests"
+								)), true);
+			
+
+								$notif = true;
 					
 					}				
 			}

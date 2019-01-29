@@ -89,7 +89,7 @@
 			?>
 		
             <div class="row">
-                <div class="col-lg-12 animated fadeInRight">
+                <!-- <div class="col-lg-12 animated fadeInRight">
 					<div class="ibox">
 						<div class="ibox-title">
 							<h2>For Technical Member Evaluation <span class="label label-warning" style="font-size:24px"><?php echo $evalCount;?> </span></h2>
@@ -149,7 +149,7 @@
 
 						</div>
 					</div>
-				</div>
+				</div> -->
                 <div class="col-lg-12 animated fadeInLeft">
 					<div class="ibox ">
 						<div class="ibox-title">
@@ -185,7 +185,7 @@
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="sign[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 							<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
-							<td class="center"><?php echo $unit->office_name;?></td>
+							<td class="center"><?php echo $document->transmitting_to;?></td>
 							<td class="center"><?php echo $document->specific_office;?></td>
 							<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 						</tr>
@@ -315,8 +315,8 @@
 							DataTable_Twg.row.add([
 								`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
-								'TWG',
-								'TWG',
+								'Technical Working Group',
+								'Technical Working Group',
 								e.date_registered
 							]);
 						});
@@ -362,11 +362,12 @@
 					if(res.updateDoc !== null){
 						DataTables_DocUpdate.clear().draw();
 						res.updateDoc.forEach(function(e, i){
+							console.log(e);
 							DataTables_DocUpdate.row.add([
 								`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
-								'TWG',
-								'TWG',
+								e.transmit,
+								e.specific,
 								e.date_registered
 							]);
 						});

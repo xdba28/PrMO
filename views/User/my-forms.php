@@ -7,6 +7,7 @@
        Redirect::To('../../index');
         die();
 	}
+	// echo "<pre>".print_r($_SESSION)."</pre>";
 	    
 ?>
 
@@ -17,7 +18,9 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 
     <title>PrMO OPPTS | My Forms</title>
 
@@ -138,6 +141,7 @@
 									<?php 
 										$myRequests = $user->getAll('project_request_forms', array('requested_by', '=', Session::get(Config::get('session/session_name'))));
 										// echo "<pre>",print_r($myRequests),"</pre>";
+										if($myRequests){
 										foreach($myRequests as $request){
 											if(isset($count)){$count++;}else{$count=1;}
 												
@@ -182,6 +186,9 @@
 
 									<?php 
 										}
+									}else{
+										echo '<td colspan="7" style="text-align:center">No Data Available</td>';
+									}
 									?>
                 
                                     </tbody>
@@ -230,7 +237,7 @@
 									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
 									$addionalContent = '
 										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
-									base64_encode
+									
 									<p style="margin-left:20px"><u><b><a href="project-details?refno='.base64_encode($isProject->project_ref_no).'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
 										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
 											<small>'.$accomplishment.'%</small>
@@ -331,7 +338,7 @@
 											?>
 											<tr>
 												<td style="text-align:center;">
-													<input type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
+													<input type="checkbox" class="i-checks" details='<?php echo base64_encode(json_encode($item_details));?>'>
 												</td>
 												<td><?php echo $line;?></td>
 												<td><?php echo $detail->stock_no; ?></td>
@@ -488,8 +495,8 @@
 															];
 													?>
 														<tr>
-															<td style="text-align:center;">
-																<input type="checkbox" class="i-checks" details='<?php echo json_encode($item_details);?>'>
+															<td style="text-align:left;">
+																<input type="checkbox" class="i-checks" details='<?php echo base64_encode(json_encode($item_details));?>'>
 															</td>
 															<td><?php echo $detail->header;?></td>
 															<td><?php echo str_replace(",", ", ", $detail->tags);?></td>
@@ -557,7 +564,8 @@
 			// echo "window.open('../../bac/forms/pr-jo-doc');";
 			// }
 			if(Session::exists("Request")){
-			echo "window.open('../../bac/forms/request-gen');";
+			$request = explode(":", Session::flash('Request')); 
+			echo "window.open('../../bac/forms/project-request?id=".$request[0]."&type=".$request[1]."');";
 			}
 		?>
 		var ProjType = '<?php 
@@ -592,7 +600,7 @@
 					let lot_counter = [];
 
 					$('.i-checks:checked').each(function(i){
-						obj = JSON.parse($(this).attr('details'));
+						obj = JSON.parse(atob($(this).attr('details')));
 						array.push(obj);
 
 						if(typeof lot_counter.find(function(el){
@@ -669,7 +677,7 @@
 
 					$('#userEditTable').html('');
 					$('.i-checks:checked').each(function(i){
-						obj = JSON.parse($(this).attr('details'));
+						obj = JSON.parse(atob($(this).attr('details')));
 						array.push(obj);
 						
 						if(typeof lot_counter.find(function(el){
@@ -759,7 +767,7 @@
 					let lot = [];
 					let sweetHtml = '';
 					$('.i-checks:checked').each(function(i){
-						obj = JSON.parse($(this).attr('details'));
+						obj = JSON.parse(atob($(this).attr('details')));
 						array.push(obj);
 
 						if(typeof lot.find(function(el){
@@ -856,7 +864,7 @@
 											}else{
 												swal({
 													title: "Success!",
-													text: "Successfully deleted.",
+													text: "Your Requests has been successfully submited we'll notify you if your request has been approved.",
 													type: "success"
 												});
 											}

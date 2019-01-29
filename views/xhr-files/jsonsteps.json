@@ -8,31 +8,31 @@
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
 				"4":"Canvassing",
-				"5":"Finalization of Abstract of Bid and BAC Resolution",
+				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}
 		},
 		"Shopping":{
 			"name":"Shopping",
-			"noofsteps":"11",
+			"noofsteps":"10",
 			"description":"For supplies",
 			"steps":{
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"DBMPS Checking",
-				"4":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
-				"5":"Canvassing",
-				"6":"Finalization of Abstract of Bid and BAC Resolution",
-				"7":"Routing for signatories",
-				"8":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
-				"9":"For Conforme of Winning Bidder/s",
-				"10":"Transmittal to COA and University Supply Office for Audit"
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
+				"4":"Canvassing",
+				"5":"Release of Abstract of Bid and BAC Resolution",
+				"6":"Routing for signatories",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
+				"8":"For Conforme of Winning Bidder/s",
+				"9":"Transmittal to COA and University Supply Office for Audit"
 			}
 		},
 		"PB":{
@@ -88,14 +88,14 @@
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"DBMPS Checking",
-				"4":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
-				"5":"Canvassing",
-				"6":"Finalization of Abstract of Bid and BAC Resolution",
-				"7":"Routing for signatories",
-				"8":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
-				"9":"For Conforme of Winning Bidder/s",
-				"10":"Transmittal to COA and University Supply Office for Audit"
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
+				"4":"Canvassing",
+				"5":"Release of Abstract of Bid and BAC Resolution",
+				"6":"Routing for signatories",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
+				"8":"For Conforme of Winning Bidder/s",
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}
 		},
 		"DC":{
@@ -106,49 +106,50 @@
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
 				"4":"Canvassing",
-				"5":"Finalization of Abstract of Bid and BAC Resolution",
+				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}			
 		},
 		"NEGO":{
 			"name":"Negociated Procurement",
-			"noofsteps":"11",
+			"noofsteps":"10",
 			"description":"Negociated Procurement",
 			"steps":{
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"DBMPS Checking",
-				"4":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
-				"5":"Canvassing",
-				"6":"Finalization of Abstract of Bid and BAC Resolution",
-				"7":"Routing for signatories",
-				"8":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
-				"9":"For Conforme of Winning Bidder/s",
-				"10":"Transmittal to COA and University Supply Office for Audit"
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
+				"4":"Canvassing",
+				"5":"Release of Abstract of Bid and BAC Resolution",
+				"6":"Routing for signatories",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
+				"8":"For Conforme of Winning Bidder/s",
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}			
 		},
 		"Mixed":{
 			"name":"Mixed",
-			"noofsteps":"11",
+			"noofsteps":"10",
 			"description":"For projects that requesst are only supplier or service provider can provide/deliver within the area",
 			"steps":{
 				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
 				"1":"Technical Member Evaluation",
 				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
-				"3":"DBMPS Checking",
-				"4":"Finalization of BAC Resolution Recomending mode of Procurement, Publication, and canvass/RFQ form",
-				"5":"Canvassing",
-				"6":"Finalization of Abstract of Bid and BAC Resolution",
-				"7":"Routing for signatories",
-				"8":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
-				"9":"For Conforme of Winning Bidder/s",
-				"10":"Transmittal to COA and University Supply Office for Audit"
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
+				"4":"Canvassing",
+				"5":"Release of Abstract of Bid and BAC Resolution",
+				"6":"Routing for signatories",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
+				"8":"For Conforme of Winning Bidder/s",
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}	
 		}
 
@@ -158,44 +159,7 @@
 
 		"TBE":{
 			"0":{
-				"0":"Que Document to outgoing documents for Pre-procurement evaluation",
-				"1":"Return to Enduser due to incompliance"
-			},
-			"1":{
-				"0":"No Actions Available"
-			},
-			"2":{
-				"0":"Register Pre-procurement Evaluation result"
-			},
-			"3":{
-				"0":"Create BAC Resolution Recomending Mode of Procurement",
-				"1":"Create Publication",
-				"2":"Resort Items to be canvassed"
-			},
-			"4":{
-				"0":"Register Canvass returns"
-			},
-			"5":{
-				"0":"Manage Abstract of Bid",
-				"1":"Manage BAC Resolution"
-			},
-			"6":{
-				"0":"Proceed to NOA, PO/LO Creation"
-			},
-			"7":{
-				"0":"Create NOA, PO/LO"
-			},
-			"8":{
-				"0":"Que Document to outgoing documents for Conforme"
-			},
-			"9":{
-				"0":"No Actions Available"
-			}
-		},
-
-		"SVP":{
-			"0":{
-				"0":"Que Document to outgoing documents for Pre-procurement evaluation",
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
 				"1":"Return to Enduser due to incompliance"
 			},
 			"1":{
@@ -209,25 +173,72 @@
 				"1":"Dismiss Project for all items are available in DBM"
 			},
 			"4":{
-				"0":"Create BAC Resolution Recomending Mode of Procurement",
-				"1":"Create Publication",
-				"2":"Print Canvass"
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
 			},
 			"5":{
-				"0":"Register Canvass returns"
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
 			},
 			"6":{
-				"0":"Manage Abstract of Bid",
-				"1":"Manage BAC Resolution"
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
 			},
 			"7":{
-				"0":"Proceed to NOA, PO/LO Creation"
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
 			},
 			"8":{
-				"0":"Create NOA, PO/LO"
+				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
-				"0":"Que Document to outgoing documents for Conforme"
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
+				"0":"No Actions Available"
+			}
+		},
+
+		"SVP":{
+			"0":{
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
+				"1":"Return to Enduser due to incompliance"
+			},
+			"1":{
+				"0":"No Actions Available"
+			},
+			"2":{
+				"0":"Register Pre-procurement Evaluation result"
+			},
+			"3":{
+				"0":"Proceed to resorting unavailable items from DBMPS for canvass",
+				"1":"Dismiss Project for all items are available in DBM"
+			},
+			"4":{
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
+			},
+			"5":{
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
+			},
+			"6":{
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
+			},
+			"7":{
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
+			},
+			"8":{
+				"0":"Queue Document to outgoing documents for Conforme"
+			},
+			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
 			},
 			"10":{
 				"0":"No Actions Available"
@@ -236,7 +247,7 @@
 
 		"Shopping":{
 			"0":{
-				"0":"Que Document to outgoing documents for Pre-procurement evaluation",
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
 				"1":"Return to Enduser due to incompliance"
 			},
 			"1":{
@@ -250,25 +261,28 @@
 				"1":"Dismiss Project for all items are available in DBM"
 			},
 			"4":{
-				"0":"Create BAC Resolution Recomending Mode of Procurement",
-				"1":"Create Publication",
-				"2":"Print Canvass"
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
 			},
 			"5":{
-				"0":"Register Canvass returns"
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
 			},
 			"6":{
-				"0":"Manage Abstract of Bid",
-				"1":"Manage BAC Resolution"
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
 			},
 			"7":{
-				"0":"Proceed to NOA, PO/LO Creation"
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
 			},
 			"8":{
-				"0":"Create NOA, PO/LO"
+				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
-				"0":"Que Document to outgoing documents for Conforme"
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
 			},
 			"10":{
 				"0":"No Actions Available"
@@ -277,43 +291,7 @@
 
 		"DC":{
 			"0":{
-				"0":"Que Document to outgoing documents for Pre-procurement evaluation",
-				"1":"Return to Enduser due to incompliance"
-			},
-			"1":{
-				"0":"No Actions Available"
-			},
-			"2":{
-				"0":"Register Pre-procurement Evaluation result"
-			},
-			"3":{
-				"0":"Create BAC Resolution Recomending Mode of Procurement",
-				"1":"Create Publication",
-				"2":"Resort Items to be canvassed"
-			},
-			"4":{
-				"0":"Register Canvass returns"
-			},
-			"5":{
-				"0":"Manage Abstract of Bid",
-				"1":"Manage BAC Resolution"
-			},
-			"6":{
-				"0":"Proceed to NOA, PO/LO Creation"
-			},
-			"7":{
-				"0":"Create NOA, PO/LO"
-			},
-			"8":{
-				"0":"Que Document to outgoing documents for Conforme"
-			},
-			"9":{
-				"0":"No Actions Available"
-			}
-		},
-		"Mixed":{
-			"0":{
-				"0":"Que Document to outgoing documents for Pre-procurement evaluation",
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
 				"1":"Return to Enduser due to incompliance"
 			},
 			"1":{
@@ -327,23 +305,114 @@
 				"1":"Dismiss Project for all items are available in DBM"
 			},
 			"4":{
-				"0":"View Sorting Summary"
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
 			},
 			"5":{
-				"0":"Register Canvass returns"
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
 			},
 			"6":{
-				"0":"Manage Abstract of Bid",
-				"1":"Manage BAC Resolution"
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
 			},
 			"7":{
-				"0":"Proceed to NOA, PO/LO Creation"
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
 			},
 			"8":{
-				"0":"Create NOA, PO/LO"
+				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
-				"0":"Que Document to outgoing documents for Conforme"
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
+				"0":"No Actions Available"
+			}
+		},
+		"Mixed":{
+			"0":{
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
+				"1":"Return to Enduser due to incompliance"
+			},
+			"1":{
+				"0":"No Actions Available"
+			},
+			"2":{
+				"0":"Register Pre-procurement Evaluation result"
+			},
+			"3":{
+				"0":"Proceed to resorting unavailable items from DBMPS for canvass",
+				"1":"Dismiss Project for all items are available in DBM"
+			},
+			"4":{
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
+			},
+			"5":{
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
+			},
+			"6":{
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
+			},
+			"7":{
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
+			},
+			"8":{
+				"0":"Queue Document to outgoing documents for Conforme"
+			},
+			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
+				"0":"No Actions Available"
+			}
+		},
+		"NEGO":{
+			"0":{
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
+				"1":"Return to Enduser due to incompliance"
+			},
+			"1":{
+				"0":"No Actions Available"
+			},
+			"2":{
+				"0":"Register Pre-procurement Evaluation result"
+			},
+			"3":{
+				"0":"Proceed to resorting unavailable items from DBMPS for canvass",
+				"1":"Dismiss Project for all items are available in DBM"
+			},
+			"4":{
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
+			},
+			"5":{
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
+			},
+			"6":{
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
+			},
+			"7":{
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
+			},
+			"8":{
+				"0":"Queue Document to outgoing documents for Conforme"
+			},
+			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
 			},
 			"10":{
 				"0":"No Actions Available"

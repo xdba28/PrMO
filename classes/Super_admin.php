@@ -249,8 +249,10 @@
         
         public function update($table, $particular, $identifier, $fields){
             if(!$this->db->update($table, $particular, $identifier, $fields)){
-                throw new Exception("Error Updating Request", 1);
-            }
+				throw new Exception("Error Updating Request", 1);
+				return false;
+			}
+			return true;
         }
 
 		public function startTrans(){
@@ -260,6 +262,10 @@
 		public function endTrans(){
 			$this->db->endTrans();
 		}
+
+        public function isLoggedIn(){
+            return $this->isLoggedIn;
+        }		
 
         public function data(){
             return $this->data;

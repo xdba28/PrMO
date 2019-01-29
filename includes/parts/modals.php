@@ -9,6 +9,9 @@
 					text: "Project Updated.",
 					type: "success"
 				});
+				setTimeout(function(){
+					window.open(`../../bac/forms/pre-eval-form?g=${res.projectreference}`);
+				}, 2000);
 			}
 		});
 	}
@@ -56,7 +59,7 @@
                 <div class="row">
                     <div class="col-sm-12"><h3 class="m-t-none m-b">Finish your account setup by changing your username and password</h3>
 
-                            <form id="newAccount" action="Dashboard" method="POST" role="form">
+                            <form id="newAccount" action="" method="POST" role="form">
                                 <div class="row" id="pwd-container">
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -463,16 +466,99 @@
 							New Password will be sent automatically to user's registered number. <a id="phone" class="font-bold" style="color:#438CFC; font-size:20px">default</a>
 						</div><br>
 							<div class="input-group">
-								<span class="input-group-addon"><i class="fas fa-lock"></i></span><input type="text" class="form-control" placeholder="New Password">
+								<span class="input-group-addon"><i class="fas fa-lock"></i></span><input type="text" id="s-user-Npass" class="form-control" placeholder="New Password">
 							</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary">Reset</button>
+						<button type="button" class="btn btn-primary" data-reset="user">Reset</button>
 					</div>
 				</div>
 			</div>
 		</div>
+
+
+<div id="profile-setting" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<h3 class="modal-title">Test Modal</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>			
+			</div>
+			<div class="modal-body" id="rcontent-container">
+			
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary" form="singleForm" id="profile-submit">
+					<i class="fas fa-user-check"></i>
+					<span>Update</span>&nbsp;
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal inmodal" id="profile-setting-small" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated fadeInUp">
+			<div class="modal-header">
+				
+				<i class="default" id="modal-icon-small"></i>
+				<h4 class="modal-title">Modal title</h4>
+				<small class="font-bold" id="modal-description-small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
+			</div>
+			<div class="modal-body" id="rcontent-container-small">
+
+						
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary" form="singleForm1" id="profile-submit">
+					<i class="fas fa-user-check"></i>
+					<span>Update</span>&nbsp;
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="profile-photo-modal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-12"><h3 class="m-t-none m-b">Update Profile Photo</h3>
+
+						<p>Update your profile photo by browsing your files.</p>
+
+						<form role="form" method="POST" enctype="multipart/form-data">
+							<div class="form-group">
+								<div class="input-group" style="margin-top:5px">
+								  <div class="custom-file">
+									<input type="file" class="custom-file-input" name="profilePhoto" id="profile-photo-in" aria-describedby="" accept="image/*" required>
+									<label class="custom-file-label" for="profile-photo-in">Choose file</label>
+								  </div>
+								</div>
+								<input type="text" name="profile-photo-token" value="<?php echo Token::generate('profile-photo-token');?>" hidden>
+							</div>							
+							<div>
+								<button class="btn btn-sm btn-info btn-outline float-right m-t-n-xs" type="submit" style="margin-left:5px"><strong>Update</strong></button>
+								<button class="btn btn-sm btn-danger btn-outline float-right m-t-n-xs" type="button" data-dismiss="modal"><strong>Cancel</strong></button>
+								
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <!-- publication summary -->
 <div id="summary" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -519,8 +605,8 @@
 							   <div class="alert alert-success">
 									<i class="fas fa-info"></i> Click on the pdf icon to preview document.
 							   </div>
-							   <div data-resort-items="files">
-								   <!-- <div class="my-file-box">
+							   <div >
+								    <div class="my-file-box">
 									   <div class="file">
 										   <a href="#">
 											   <span class="corner"></span>
@@ -566,7 +652,7 @@
 										   </a>
 									   </div>
 
-								   </div>							 -->
+								   </div>							
 							   </div>
 					
 						</div>
@@ -582,6 +668,76 @@
 					<span>Save and print Later</span>&nbsp;
 				</button>
 				<button type="button" class="btn btn-danger btn-rounded btn-outline" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- director's action to nearing projects -->
+<div class="modal inmodal" id="nearing-projects" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content animated fadeInUp">
+			<div class="modal-header">
+				
+				<i class="fas fa-users modal-icon" id="modal-icon-nearing"></i>
+				<h4 class="modal-title">Modal title</h4>
+				<small class="font-bold" id="modal-description-nearing">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
+			</div>
+			<div class="modal-body" id="nearing-projects-detail">
+
+
+                        <div class="">
+
+                            <div class="forum-title">
+                                <h3>Project Summary</h3>
+                            </div>
+
+                            <div class="forum-item active">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="forum-icon">
+                                            <i class="fas fa-business-time"></i>
+                                        </div>
+                                        <a class="forum-item-title">Available Time</a>
+                                        <div class="forum-sub-title">Starting from this day, we still have <b><a id="days" class=""></a></b> more days to work on this project. Required implementation date is on <b><a id="implementation-date" class=""></a></b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="forum-item active">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="forum-icon">
+                                            <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                        <a class="forum-item-title">Current Status</a>
+                                        <div class="forum-sub-title">This project is currently in <b><a id="accomplishment"></a></b>% accomplishment and is currently <b><a id="workflow"></a></b>. Click this <a id="link" href="" style="color:#009bdf">Link</a> for more info.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="forum-item active">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="forum-icon">
+                                            <i class="fas fa-chess-pawn"></i>
+                                        </div>
+                                        <a class="forum-item-title">What can we do?</a>
+                                        <div id="" class="forum-sub-title">
+											<form id="project-options" method="POST" enctype="multipart/form-data">
+												<button type="submit" name="to-prioritize" id="to-prioritize" class="btn btn-danger btn-outline btn-block">Prioritize this project</button>
+											</form>
+											<input type="text" form="project-options" name="directors-action" hidden value="<?php echo Token::generate('directors-action');?>">
+											
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>			
+			
+						
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
