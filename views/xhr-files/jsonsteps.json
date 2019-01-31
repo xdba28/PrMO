@@ -12,9 +12,10 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}
 		},
 		"Shopping":{
@@ -29,7 +30,7 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
 				"9":"Transmittal to COA and University Supply Office for Audit"
 			}
@@ -91,9 +92,10 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}
 		},
 		"DC":{
@@ -108,9 +110,10 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}			
 		},
 		"NEGO":{
@@ -125,9 +128,10 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}			
 		},
 		"Mixed":{
@@ -142,9 +146,10 @@
 				"4":"Canvassing",
 				"5":"Release of Abstract of Bid and BAC Resolution",
 				"6":"Routing for signatories",
-				"7":"Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}	
 		}
 
@@ -181,12 +186,17 @@
 				"1":"Proceed to NOA, PO/LO Creation"
 			},
 			"7":{
-				"0":"Print NOA, PO/LO"
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
 			},
 			"8":{
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		},
@@ -227,6 +237,10 @@
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		},
@@ -267,6 +281,10 @@
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		},
@@ -307,6 +325,10 @@
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		},
@@ -346,6 +368,10 @@
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		},
@@ -385,6 +411,10 @@
 				"0":"Queue Document to outgoing documents for Conforme"
 			},
 			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
 				"0":"No Actions Available"
 			}
 		}

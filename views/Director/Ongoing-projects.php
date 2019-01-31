@@ -119,6 +119,7 @@
 											$user = new Admin();
 											
 											$projects = $user->getAll('projects', array('project_status', '=', 'processing'));
+											if($projects){
 											foreach($projects as $project){
 												
 												$accomplishment = number_format(($project->accomplished / $project->steps) * 100, 1);
@@ -163,6 +164,9 @@
 											<td><a href="project-details?refno=<?php echo base64_encode($project->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a></td>
 										</tr>
 										<?php
+											}
+											}else{
+												echo '<td colspan="8" style="text-align:center">No Data Available</td>';
 											}
 										?>
 										</tbody>

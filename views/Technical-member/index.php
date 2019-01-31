@@ -315,16 +315,16 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <small class="stats-label">Passed</small>
-                                        <h4>4</h4>
+                                        <h4>0</h4>
                                     </div>
 
                                     <div class="col-4">
                                         <small class="stats-label">Evaluation with Issue</small>
-                                        <h4>3</h4>
+                                        <h4>0</h4>
                                     </div>
                                     <div class="col-4">
                                         <small class="stats-label">Projects for Evaluation</small>
-                                        <h4>10</h4>
+                                        <h4>0</h4>
                                     </div>
                                 </div>
                             </div>

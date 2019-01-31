@@ -12,6 +12,18 @@ $id = $_GET['i'];
 // $canvassForm = $admin->selectCanvassForm($gds, 'ICT Supplies', 2);
 $canvassForm = $admin->selectCanvassForm($gds, $title, $id);
 
+
+$gds_details = $admin->get('projects', array('project_ref_no', '=', $gds));
+foreach(json_decode($gds_details->end_user, true) as $end_user){
+	$end_users[] = $admin->get('enduser', array('edr_id', '=', $end_user)); 
+}
+
+if($end_users[0]->edr_ext_name !== "XXXXX"){
+	$userFullName = $end_users[0]->edr_fname." ".$end_users[0]->edr_mname." ".$end_users[0]->edr_lname." ".$end_users[0]->edr_ext_name;
+}else{
+	$userFullName = $end_users[0]->edr_fname." ".$end_users[0]->edr_mname." ".$end_users[0]->edr_lname;
+}
+
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
 // $documentProtection = $phpWord->getSettings()->getDocumentProtection();
@@ -148,7 +160,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText("    ");
 		$textrun->addCheckBox("del2", "  Details related to implementation shall be communicated with ", ['size' => 9]);
-		$textrun->addText("Ms. Charina J. Cipcon;", ['size' => 9, 'bold' => true]);
+		$textrun->addText($userFullName.";", ['size' => 9, 'bold' => true]);
 		$textrun->addText(" End-User", ['size' => 9, 'bold' => true]);
 
 		$table->addRow(43.2);
@@ -209,7 +221,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText("    ");
 		$textrun->addCheckBox("del2", "  Details related to implementation shall be communicated with ", ['size' => 9]);
-		$textrun->addText("Ms. Charina J. Cipcon;", ['size' => 9, 'bold' => true]);
+		$textrun->addText($userFullName.";", ['size' => 9, 'bold' => true]);
 		$textrun->addText(" End-User", ['size' => 9, 'bold' => true]);
 
 		$table->addRow(43.2);
@@ -275,7 +287,11 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText("    ");
 		$textrun->addCheckBox("del2", "  Details related to implementation shall be communicated with ", ['size' => 9]);
-		$textrun->addText("Ms. Charina J. Cipcon;", ['size' => 9, 'bold' => true]);
+
+
+
+		// replace with project enduser
+		$textrun->addText($userFullName.";", ['size' => 9, 'bold' => true]);
 		$textrun->addText(" End-User", ['size' => 9, 'bold' => true]);
 
 		$table->addRow(43.2);
@@ -340,7 +356,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText("    ");
 		$textrun->addCheckBox("del2", "  Details related to implementation shall be communicated with ", ['size' => 9]);
-		$textrun->addText("Ms. Charina J. Cipcon;", ['size' => 9, 'bold' => true]);
+		$textrun->addText($userFullName.";", ['size' => 9, 'bold' => true]);
 		$textrun->addText(" End-User", ['size' => 9, 'bold' => true]);
 
 		$table->addRow(43.2);

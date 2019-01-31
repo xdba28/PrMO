@@ -309,7 +309,7 @@
 									<div class="form-group">
 										<label class="col-form-label" for="date_added">Account Type</label>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="7" checked name="account_type"> <i></i> Technical Member </label></div>									
-											<div class="i-checks"><label> <input type="radio" form="profile" value="5" name="account_type"> <i></i>  </label></div>
+											<div class="i-checks"><label> <input type="radio" form="profile" value="5" name="account_type"> <i></i> Procurement Aide </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="3" name="account_type"> <i></i> Super Admin </label></div>
 											<div class="i-checks"><label> <input type="radio" form="profile" value="4" name="account_type"> <i></i> Director </label></div>	
 											<div class="i-checks"><label> <input type="radio" form="profile" value="6" name="account_type"> <i></i> Staff </label></div>

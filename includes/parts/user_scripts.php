@@ -510,17 +510,19 @@ require_once "../../functions/account-verifier.php";
 				link = document.querySelector(`[href="${highlevelpage.link}"]`);
 			}
 
-			switch (path[path.length - 1]){
-				case sLink.find(function(el){
-					return path[path.length - 1] === el
-				}):
-					link.parentNode.setAttribute("class", "active");
-					break;
-				default:
-					link.parentNode.parentNode.parentNode.setAttribute("class", "active");
-					link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
-					link.parentNode.setAttribute("class", "active");
-					break;
+			if(path[path.length - 1] !== "profile"){
+				switch (path[path.length - 1]){
+					case sLink.find(function(el){
+						return path[path.length - 1] === el
+					}):
+						link.parentNode.setAttribute("class", "active");
+						break;
+					default:
+						link.parentNode.parentNode.parentNode.setAttribute("class", "active");
+						link.parentNode.parentNode.setAttribute("class", "nav nav-second-level collapse in")
+						link.parentNode.setAttribute("class", "active");
+						break;
+				}
 			}
 		} catch (error) {
 			

@@ -75,12 +75,12 @@ if($project['type'] === "PR"){
 	]);
 	
 	$table->addRow(43.2)
-		->addCell(7000, ['gridSpan' => 3])->addText("Department: ", $bText);
+		->addCell(7000, ['gridSpan' => 3])->addText("College/Unit: ".$project['end_user']['office_name'], $bText);
 	$table->addCell(2304, ['gridSpan' => 2])->addText("PR.No. ".$project['refno'], $bText);
 	$table->addCell(2304)->addText("Date: ".date('F j, o', strtotime($project['date'])), $bText);
 
 	$table->addRow(43.2)
-		->addCell(7000, ['gridSpan' => 3])->addText("Section: ", $bText);
+		->addCell(7000, ['gridSpan' => 3])->addText("Office: ".$project['end_user']['current_specific_office'], $bText);
 	$table->addCell(2304, ['gridSpan' => 2])->addText("SAI.No.", $bText);
 	$table->addCell(2304)->addText("Date:", $bText);
 
@@ -227,8 +227,8 @@ if($project['type'] === "PR"){
 	$table->addCell(1800)
 		->addText("COST", $bText, $cPragr);
 
+	$lot_count = 1;
 	foreach($project['lots'] as $lot){
-		$lot_count = 1;
 
 		$table->addRow(43.2)
 			->addCell(null, $tsAlignCenter)

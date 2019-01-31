@@ -135,6 +135,8 @@ else{
 				$updateDoc[] = [
 					'project' => $a->project,
 					'title' => $project->project_title,
+					'transmit' => $a->transmitting_to,
+					'specific' => $a->specific_office,
 					'date_registered' => Date::translate($a->date_registered, 1)
 				];
 			}

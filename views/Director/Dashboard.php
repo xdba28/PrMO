@@ -359,6 +359,7 @@
 
 					<?php
 						$reports = $user->dashboardReports();
+						if($reports["current_projects"]){
 						foreach ($reports["current_projects"] as $project) {
 
 							if($project->priority_level !== "HIGH"){
@@ -372,6 +373,22 @@
 								}
 							}
 						}
+					}else{
+						echo '
+						<div class="col-lg-12 animated fadeInRight">
+							<div class="ibox-content m-b-sm border-bottom">
+								<div class="p-xs">
+									<div class="float-left m-r-md">
+										<i class="fa fa-quote-left text-navy mid-icon"></i>
+									</div>
+									<h2>Sorry, but we do not have any data right now.</h2>
+									
+								</div>
+							</div>
+						</div>
+						
+						';
+					}	
 						
 						
 					?>

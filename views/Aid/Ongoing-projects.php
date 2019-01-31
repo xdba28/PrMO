@@ -24,7 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Procurement Aide</title>
+    <title>PrMO OPPTS | Procurement Aid</title>
 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
@@ -116,6 +116,8 @@
 											$projects = $user->ongoing_projects();
 											$leftBorder = "hprow1";
 											$hpCount = false;
+
+											if($projects){
 											foreach($projects as $project){
 												
 												if($project->priority_level === "HIGH"){
@@ -180,6 +182,7 @@
 										<?php
 												}
 											}
+										}
 											
 											if(!$hpCount){
 												echo '<tr>
@@ -244,6 +247,7 @@
 											$user = new Admin();
 											
 											$projects = $user->ongoing_projects();
+											if($projects){
 											foreach($projects as $project){
 												
 												if($project->priority_level !== "HIGH"){
@@ -305,6 +309,9 @@
 										<?php
 												}
 											}
+										}else{
+											echo '<td colspan="8" style="text-align:center">No Data Available</td>';
+										}
 										?>
 										</tbody>
 										<tfoot>

@@ -56,7 +56,7 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-6">
-                    <h2>Procurement Aide Dashboard</h2>
+                    <h2>Procurement Aid Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">Projects</a>

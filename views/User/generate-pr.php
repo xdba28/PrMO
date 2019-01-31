@@ -284,7 +284,7 @@
 															<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="right" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
 																<label class="font-normal">Category(-ies)</label>
 																<div>
-																	<select data-placeholder="Choose Category or Lots needed" class="chosen-select" multiple style="width:350px;" tabindex="4" name="category" form="pr_form">															
+																	<select data-placeholder="Choose Category or Lots needed" class="select2_demo_1" multiple style="width:350px;overflow: scroll" tabindex="4" name="category" form="pr_form">															
 																		<option value="Common Office Supplies">Common Office Supplies</option>
 																		<option value="Paper Materials & Products">Paper Materials & Products</option>          
 																		<option value="Hardware Supplies">Hardware Supplies</option>
@@ -490,6 +490,7 @@
 <script>
 	$(function()
 	{
+		$(".select2_demo_1").select2();
 
 		$('[data="tab"]').on('click', function(){
 			var tab = $(this).attr("id").split("-");
@@ -632,7 +633,8 @@
 		});
 
 		var arry = [];
-		$('.chosen-select').chosen({width: "100%"}).on('change', function()
+		// $('.chosen-select').chosen({width: "100%"}).on('change', function()
+		$(".select2_demo_1").select2().on('change', function()
 		{
 			var TC = 0;
 			var obj = [];

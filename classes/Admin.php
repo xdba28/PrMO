@@ -603,18 +603,6 @@
 								}
 							}
 						}
-						// $this->db->query_builder("SELECT * FROM `canvass_supplier`, `canvass_quotation`
-						// 	WHERE canvass_supplier.cvsp_id = canvass_quotation.supplier_id
-						// 	AND form_id = '{$supplier->form_id}'
-						// 	AND supplier_id = '{$supplier->cvsp_id}'");
-						// $items = $this->db->results();
-						// foreach($items as $item){
-						// 	echo "<---------------- Item ------------------>";
-						// 	echo "<pre>".print_r($item)."</pre>";
-						// 	if($item->award_selected == NULL || $item->award_selected == "0"){
-						// 		$award = false;
-						// 	}
-						// }
 					}
 				}
 			}
@@ -697,6 +685,70 @@
 			// return $canvass;
 		}
 
+		public function awardSupplier($cvsp_id){
+			$this->db->query_builder("SELECT * FROM `canvass_supplier`, `supplier`
+				WHERE canvass_supplier.supplier = supplier.s_id
+				AND cvsp_id = '{$cvsp_id}'");
+			return $this->db->first();
+		}
+
+		public function getallawardedItems($gds, $supplier_id, $perItem){
+			if($perItem){
+				// per item
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_pr`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND awarded = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}else{
+				// per lot
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_pr`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND award = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}
+		}
+
+		public function getawardedJO($gds, $supplier_id, $perItem){
+			if($perItem){
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_jo`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_jo.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND awarded = '1'
+					GROUP BY canvass_items_jo.id");
+				return $this->db-results();
+			}else{
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_jo`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_jo.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND award = '1'
+					GROUP BY canvass_items_jo.id");
+				return $this->db->results();
+			}
+		}
+
+		public function getSupplierTotal($gds, $lot){
+			$this->db->query_builder("SELECT SUM(price) as total, name, canvass_supplier.remark as remark FROM `canvass_forms`, `canvass_supplier`, `canvass_quotation`, `supplier`
+				WHERE canvass_forms.id = canvass_supplier.form_id
+				AND canvass_supplier.cvsp_id = canvass_quotation.supplier_id
+				AND canvass_supplier.supplier = supplier.s_id
+				AND gds_reference = '{$gds}'
+				AND canvass_forms.id = '{$lot}'
+				GROUP BY canvass_supplier.supplier");
+			return $this->db->results();
+		}
+
 		public function getPublication($gds, $form_id){
 			$this->db->query_builder("SELECT * FROM `canvass_forms`, `projects`
 				WHERE canvass_forms.gds_reference = projects.project_ref_no
@@ -735,6 +787,7 @@
 						array_push($documents['canvass_forms'], [
 							'canvass_id' => $canvass->id,
 							'title' => $canvass->title,
+							'type' => $canvass->type,
 							'publication' => []
 						]);
 
@@ -746,15 +799,30 @@
 							]);
 						}
 
+
 						// check if abstract available
 							// print Abstract
 						if($request->accomplished >= 5){
 							$documents['canvass_forms'][$key]['abstract'] = true;
 
 							// bac reso on award and failure
+							// check if all items fail or lot fail
 							if($canvass->lot_fail_option === "1"){
 								$documents['canvass_forms'][$key]['fail'] = true;
 							}
+
+							// find an awarded supplier
+							$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`
+								WHERE canvass_forms.id = canvass_supplier.form_id
+								AND canvass_supplier.supplier = supplier.s_id
+								AND gds_reference = '{$gds}'
+								AND canvass_forms.id = '{$canvass->id}'
+								AND award = '1'");
+							$documents['canvass_forms'][$key]['noa'] = $this->db->results();
+							
+							
+
+							
 
 							// check if NOA available
 								// print NOA
@@ -768,6 +836,43 @@
 			return $documents;
 		}
 
+		public function docOrderItems($gds, $supplier_id, $per_item){
+			if($per_item){
+				// per item
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`, `canvass_items_pr`, `canvass_quotation`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_supplier.supplier = supplier.s_id
+					AND canvass_quotation.supplier_id = canvass_supplier.cvsp_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$gds}'
+					AND awarded = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}else{
+				// lot
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`, `canvass_items_pr`, `canvass_quotation`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_supplier.supplier = supplier.s_id
+					AND canvass_quotation.supplier_id = canvass_supplier.cvsp_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND award = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}
+		}
+
+		public function getDeliveryDetails($gds, $supplier_id){
+			$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `award`
+				WHERE canvass_forms.id = canvass_supplier.form_id
+				AND canvass_forms.id = award.canvass_form_id
+				AND gds_reference = '{$gds}'
+				AND cvsp_id = '{$supplier_id}'");
+			return $this->db->first();
+		}
+		
 		// request-gen.php PRINTING OF REQUEST FORM
 		public function requestDetails($id){
 			$this->db->query_builder("SELECT form_ref_no, title, purpose, requested_by, date_created FROM `project_request_forms` WHERE form_ref_no = '{$id}'");
@@ -863,6 +968,20 @@
 			}
 			return false;
 		}
+
+		// used for recomputing PR lots costs
+		public function recompute($origin, $lot){
+			if($this->db->query_builder("SELECT 
+			SUM(total_cost) as 'recomputed_total'
+			
+			FROM 
+			`lots`, `lot_content_for_pr`
+			WHERE lot_content_for_pr.lot_id_origin = lots.lot_id AND
+			lot_no = '{$lot}' AND request_origin = '{$origin}'")){
+				return $this->db->first()->recomputed_total;
+			}
+			return false;
+		}		
 
 		public function dashboardReports($ID = null){
 			$reports = [];

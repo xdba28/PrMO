@@ -40,22 +40,54 @@
                     'prnl_lname' => Input::get('lastName'),
                     'prnl_ext_name' => Input::get('extName'),
                     'prnl_job_title' => Input::get('jobTitle'),
-                    'prnl_assigned_phase' => Input::get('phase'),
                     'prnl_id' => Input::get('employeeId')
 
                 ));
 
 
-				Session::flash("PersUpdate", "Successfully updated personnel information");
-                //create flash "Personnel Info Successfuly Updated"
-                //assign this flash to toust
+				$special_notifs[] = "User information successfully updated.";
 				
 				
 			}catch(Exception $e){
-				die($e->getMessage());
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");				
 			}
 			
 		}
+	}
+
+	if(Input::exists('GET')){
+
+		$requested_action = base64_decode(Input::get('action'));
+		$action_receiver = base64_decode(Input::get('receiver'));
+
+		try{
+
+			if($requested_action === "activate"){
+				$user->startTrans();
+					$user->update("prnl_account", "account_id", $action_receiver, array(
+						'status' => 'ACTIVATED'
+					));
+				$user->endTrans();
+
+				$messageFiller = "activated";
+			}else if($requested_action === "deactivate"){
+				$user->startTrans();
+					$user->update("prnl_account", "account_id", $action_receiver, array(
+						'status' => 'DEACTIVATED'
+					));
+				$user->endTrans();
+
+				$messageFiller = "deactivated";
+			}
+
+
+
+			$special_notifs[] = "Account successfully {$messageFiller}.";
+
+		}catch(Exception $e){
+			Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");				
+		}
+
 	}
 
 
@@ -177,8 +209,7 @@
 											<div class="form-group"><label>Middle name</label> <input type="text" value="<?php echo $data->prnl_mname;?>" name="middleName" class="form-control"></div>
 											<div class="form-group"><label>Last name</label> <input type="text" value="<?php echo $data->prnl_lname;?>" name="lastName" class="form-control"></div>
 											<div class="form-group"><label>Extension name</label> <input type="text" value="<?php echo $data->prnl_ext_name;?>" name="extName" class="form-control"></div>
-											<div class="form-group"><label>Job Title</label> <input type="text" value="<?php echo $data->prnl_job_title;?>" name="jobTitle" class="form-control"></div>
-											<div class="form-group"><label>Phase Assigned</label> <input type="text" value="<?php echo $data->prnl_assigned_phase;?>"name="phase" class="form-control"></div>
+											<div class="form-group"><label>Job Title</label> <input type="text" value="<?php echo $data->prnl_job_title;?>" name="jobTitle" class="form-control"></div>											
 									</div>
 									<div class="col-sm-6">
 											<div class="form-group"><label>Employee ID</label> <input type="text" value="<?php echo $data->prnl_id;?>" name="employeeId" class="form-control"></div>
@@ -242,6 +273,7 @@
 										<th data-hide="all">Phone</th>
 										
 										<th data-hide="all">Account Status</th>
+										<th>Account Type</th>
 										<th>Action</th>
 									</tr>
                                 </thead>
@@ -249,6 +281,8 @@
                                 <tbody>
                                 <?php
 
+									// echo "<pre>",print_r($PersonnelInfo),"</pre>";
+									
                                     foreach($PersonnelInfo as $data){
                                         if($data->prnl_ext_name == 'XXXXX'){
                                             $fullname = $data->prnl_fname." ".$data->prnl_mname." ".$data->prnl_lname;
@@ -260,10 +294,12 @@
 
                                             $color = "text-navy";
                                             $option = "Deactivate Account";
+											$action = "deactivate";
 
                                         }else{
                                             $color = "text-danger";
                                             $option = "Activate Account";
+											$action = "activate";
                                         }
                                        
 
@@ -277,6 +313,7 @@
                                                 <td>'.$data->phone.'</td>
                                                 
                                                 <td><b><a  class="'.$color.'">'.$data->status.'</a></b></td>
+												<td>'.$data->name.'</td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
@@ -284,7 +321,7 @@
                                                             <li><a class="dropdown-item" href="?q='.$data->prnl_id.'">Update Info</a></li>
                                                             <li><a class="dropdown-item" data-toggle="modal" data-name="'.$fullname.'" data-phone="'.$data->phone.'" data-target="#resetPassword" data-id="'.$data->prnl_id.'" data-office="'.$data->office_name.'">Reset Password</a></li>
                                                             <li class="dropdown-divider"></li>
-                                                            <li><a class="dropdown-item nicecolor" href="#">'.$option.'</a></li>
+                                                            <li><a class="dropdown-item nicecolor" href="?action='.base64_encode($action).'&&receiver='.base64_encode($data->prnl_id).'">'.$option.'</a></li>
                                                         </ul>
                                                     </div>									
                                                 </td>

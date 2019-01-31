@@ -11,29 +11,50 @@ else{
 
 $staff = new Staff();
 
-	//Denver, after creating a log here update form's status unreceived to received.
+// echo "<pre>",print_r(json_decode($_POST['obj'], true)),"</pre>";
+// die();
 
 try
 {
 	if(!empty($_POST))
 	{
-		$staff->startTrans();
 		$Project = json_decode($_POST['obj'], true);
 
-		$staff->register("project_logs", array(
-			'referencing_to' => $Project['id'],
-			'remarks' => "START_PROJECT",
-			'logdate' => date('Y-m-d H:i:s'),
-			'type' => "IN"
-		));
+		$staff->startTrans();
 
-		// $staff->register("notifications")
+			$staff->register("project_logs", array(
+				'referencing_to' => $Project['id'],
+				'remarks' => "START_PROJECT",
+				'logdate' => date('Y-m-d H:i:s'),
+				'type' => "IN"
+			));
 
-		$staff->update('project_request_forms', 'form_ref_no', $Project['id'], array(
-			'status' => 'received'
-		));
-		
+			$staff->update('project_request_forms', 'form_ref_no', $Project['id'], array(
+				'status' => 'received'
+			));
+
 		$staff->endTrans();
+
+		$request_info = $staff->get("project_request_forms", array("form_ref_no", "=", $Project['id']));
+
+		#send Dashboard notif
+		$staff->register('notifications', array(
+			'recipient' => $request_info->requested_by,
+			'message' => "Your project request form {$Project['id']} was received in the PrMO.",
+			'datecreated' => Date::translate('test', 'now'),
+			'seen' => 0,
+			'href' => "my-forms"
+		));
+		notif(json_encode(array(
+			'receiver' => $request_info->requested_by,
+			'message' => "Your project request form {$Project['id']} was received in the PrMO.",
+			'date' => Date::translate(Date::translate('test', 'now'), '1'),
+			'href' => "my-forms"
+		)));
+
+
+		
+
 		header("Content-type:application/json");
 		echo json_encode($staff->allPRJO_req_detail());
 		

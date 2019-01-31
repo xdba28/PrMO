@@ -640,7 +640,7 @@ require_once "../../functions/account-verifier.php";
 								case "Dismiss Project for all items are available in DBM":
 									classtype = "yellow-bg"
 									icon = "fas fa-check";
-									cardAction = `href="#"`;
+									cardAction = `data-dismiss="${res.standing}"`;
 									break;
 								case "No Actions Available":
 									classtype = "yellow-bg";
@@ -677,6 +677,21 @@ require_once "../../functions/account-verifier.php";
 									icon = "far fa-file-alt";
 									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
 									break;
+								case "Print NOA, PO/LO":
+									classtype = "lazur-bg";
+									icon = "far fa-file-alt";
+									cardAction = `href="project-details?refno=${btoa(reference)}&m=1"`;
+									break;
+								case "Queue Document to outgoing documents for Conforme":
+									classtype = "lazur-bg";
+									icon = "fas fa-book";
+									cardAction = `data-standing="${res.standing}"`;
+									break;
+								case "Finish project":
+									classtype = "lazur-bg";
+									icon = "fas fa-book";
+									cardAction = `data-standing="${res.standing}"`;
+									break;
 								default:
 									classtype = "lazur-bg";
 									icon = "fas fa-chess-pawn";
@@ -698,6 +713,25 @@ require_once "../../functions/account-verifier.php";
 								</div>
 							</a>`;
 
+							$('[data-dismiss="3"]').on('click', function(){
+								// update project to finished
+								// notify end user that all items are in DBMPS
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference,
+									dismiss: true
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										swal({
+											title: "Success!",
+											text: "Successfully dismissed project.",
+											type: "success",
+										});
+									}
+								});
+							});
+
 							$('[data-standing="5"]').on('click', function(){
 								// update workflow to 6
 								// register workflow to outgoing
@@ -709,7 +743,7 @@ require_once "../../functions/account-verifier.php";
 										$('#actionsModal').modal('hide');
 										swal({
 											title: "Success!",
-											text: "Successfully queued project for outgoing",
+											text: "Successfully queued project for outgoing.",
 											type: "success",
 										});
 									}
@@ -729,7 +763,7 @@ require_once "../../functions/account-verifier.php";
 										if(res.remark === ""){
 											swal({
 												title: "Success!",
-												text: "Successfully queued project for outgoing",
+												text: "Successfully queued project for outgoing.",
 												type: "success",
 											});
 										}else{
@@ -739,6 +773,79 @@ require_once "../../functions/account-verifier.php";
 												type: "info",
 											});
 										}
+									}
+								});
+							});
+
+							$('[data-standing="7"]').on('click', function(){
+								// update to 8
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										if(res.remark === ""){
+											swal({
+												title: "Success!",
+												text: "Successfully queued project for outgoing.",
+												type: "success",
+											});
+										}else{
+											swal({
+												title: "Notice!",
+												text: res.remark,
+												type: "info",
+											});
+										}
+									}
+								});
+							});
+
+							$('[data-standing="8"]').on('click', function(){
+								// update to 8
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										if(res.remark === ""){
+											swal({
+												title: "Success!",
+												text: "Successfully queued project for outgoing.",
+												type: "success",
+											});
+										}else{
+											swal({
+												title: "Notice!",
+												text: res.remark,
+												type: "info",
+											});
+										}
+									}
+								});
+							});
+
+							$('[data-standing="9"]').on('click', function(){
+								// finish project
+								// register project in outgoing
+								// check if project is in outgoing
+								SendDoSomething("POST", 'xhr-update-workflow.php', {
+									workflow: res.standing,
+									gds: reference
+								}, {
+									do: function(res){
+										$('#actionsModal').modal('hide');
+										swal({
+											title: "Success!",
+											text: "Project successfully finished.",
+											type: "success",
+										});
 									}
 								});
 							});
@@ -1246,7 +1353,38 @@ require_once "../../functions/account-verifier.php";
 								';
 						}			
 
-				}			
+				}
+
+				// SPECIAL ACTIONS NOTIFICATIONS
+
+				if(isset($special_notifs)){
+						
+						foreach ($special_notifs as $Snotif) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+										"closeButton": true,
+										"debug": false,
+										"progressBar": true,
+										"preventDuplicates": false,
+										"positionClass": "toast-top-full-width",
+										"onclick": null,
+										"showDuration": "400",
+										"hideDuration": "1000",
+										"timeOut": "7000",
+										"extendedTimeOut": "1000",
+										"showEasing": "swing",
+										"hideEasing": "linear",
+										"showMethod": "fadeIn",
+										"hideMethod": "fadeOut"
+									}
+									toastr.success("'.$Snotif.'", "Success");
+								
+								';
+						}			
+
+				}				
 			
 			?>
 

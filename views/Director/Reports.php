@@ -127,6 +127,7 @@
 										<?php
 
 											$counter = 0;
+											if($reports["current_projects"]){
 											foreach ($reports["current_projects"] as $project){
 												$counter++;
 
@@ -151,6 +152,7 @@
 
 										<?php
 											}
+										}
 										?>
 									</tbody>
 									
@@ -206,13 +208,69 @@
 	<!-- Data for pie -->
     <script>
 		$(function() {
+
+			<?php
+			
+				if($projects = $user->selectAll("projects")){
+					foreach($projects as $project){
+						$origin = json_decode($project->request_origin, true);
+
+						$prCounter = 0;
+						$joCounter = 0;
+
+						foreach($origin as $list){
+							$identifier = substr($list, 0, 2);
+
+							switch ($identifier) {
+								case "PR":
+									$prCounter++;
+									break;
+							
+								case "JO":
+									$joCounter++;
+									break;
+							}
+
+						}
+
+						if(($prCounter > 0) AND ($joCounter == 0)){
+							#pure pr
+							$prArray[] = $project;
+						}else if(($joCounter > 0) AND ($prCounter == 0)){
+							#pure jo
+							$joArray[] = $project;
+						}
+					}
+
+				}
+
+			?>
 			
 			Morris.Donut({
 				element: 'morris-donut-chart',
 				data: [
-					{ label: "Purchase Request", value: 12 },
-					{ label: "Job Orders", value: 30 },
-					{ label: "Mixed", value: 20 } 
+					{ label: "Purchase Request", value: <?php 
+						if(isset($prArray)){
+							echo count($prArray);
+						}else{
+							echo "0";
+						}
+					?> },
+					{ label: "Job Orders", value: <?php
+						if(isset($joArray)){
+							echo count($joArray);
+						}else{
+							echo "0";
+						}
+					?> },
+					{ label: "Mixed", value: <?php 
+							$mixed = $user->getAll("projects", array("type", "=", "consolidated"));
+							if($mixed){
+								echo count($mixed);
+							}else{
+								echo "0";
+							}
+					?> } 
 					],
 				resize: true,
 				colors: ['#f8ac59', '#23c6c8','#b6325e'],

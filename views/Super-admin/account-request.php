@@ -214,7 +214,7 @@
                                 <tbody>
                                 
                                 <?php														
-                                    
+                                    if($requests){
                                     foreach($requests as $request){
                                         if($request->ext_name == "none"){
                                             $fullname = $request->fname." ".$request->last_name;
@@ -249,7 +249,10 @@
                                                 </td>
                                             </tr>																				
                                         ';
-                                    }
+									}
+								}else{
+									echo '<td colspan="9" style="text-align:center">No Data Available</td>';
+								}
                                 ?>
                                 
 

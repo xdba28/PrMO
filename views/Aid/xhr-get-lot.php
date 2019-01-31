@@ -13,8 +13,11 @@ else{
 try
 {
 	if(!empty($_GET['id'])){
+
 		$get_lot = explode("-", $_GET['lot']);
-		$lot_details = $user->selectCanvassForm($_GET['id'], $get_lot[1], $get_lot[0]);
+
+		$lot_details = $user->selectCanvassForm($_GET['id'], htmlspecialchars($get_lot[1]), $get_lot[0]);
+				
 		$lot_details->CanvassDetails->cost = Date::translate($lot_details->CanvassDetails->cost, 'php');
 
 		$suppliers = $user->getSuppliers($_GET['id'], $lot_details->CanvassDetails->id);

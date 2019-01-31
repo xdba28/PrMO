@@ -356,8 +356,6 @@ if($canvass->CanvassDetails->type === "PR"){
 				if($offer->price === "0.00"){
 					$table->addCell(null, $cc)
 						->addText("N/A", null, $r);
-					$table->addCell(null, $cc)
-						->addText("N/A", null, $r);
 				}else{
 					$table->addCell(null, $cc)
 						->addText(Date::translate($offer->price, 'php'), null, $c);
@@ -438,13 +436,13 @@ if($canvass->CanvassDetails->type === "PR"){
 				->addText("lot", null, $c);
 			$textrun = $table->addCell()->addTextRun($cStyle);
 			$textrun->addText($item->header, ['bold' => true], $c);
+
+			// add tags and note
 	
 			foreach($admin->getOffered($gds, $lot, $item->item_id) as $key => $offer){
 				if($offer->price === "0.00"){
 					$table->addCell(null, $cc)
-						->addText("N/A", null, $r);
-					$table->addCell(null, $cc)
-						->addText("N/A", null, $r);
+						->addText("N/A", null, $c);
 				}else{
 					$table->addCell(null, $cc)
 						->addText(Date::translate($offer->price, 'php'), null, $c);
@@ -468,7 +466,7 @@ if($canvass->CanvassDetails->type === "PR"){
 			->addText("Grand Total:", $fb, $r);
 		foreach($supplier_total as $total){
 			$table->addCell()
-				->addText(Date::translate($total, 'php'), $fb, $r);
+				->addText(Date::translate($total, 'php'), $fb, $c);
 		}
 
 
@@ -531,8 +529,7 @@ $textrun->addText(strtoupper($technical), $fb);
 $textrun->addTextBreak(1);
 $textrun->addText("Technical Member", ['size' => 9]);
 
-$gds_details = $admin->get('projects', array('project_ref_no', '=', $gds));
-foreach(json_decode($gds_details->end_user, true) as $end_user){
+foreach(json_decode($project->end_user, true) as $end_user){
 	$end_users[] = $admin->get('enduser', array('edr_id', '=', $end_user)); 
 }
 

@@ -142,6 +142,7 @@
 		}
 
 		// NOTIFICATION OF AWARD TO END USER
+		// notif if bidding failed or bidding succeeded
 
 
 		$user->endTrans();
@@ -330,7 +331,7 @@
 												<td>
 													<textarea name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
 													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
-													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
+													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" list="list-remark" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
 												</td>
 											</tr>
 											';
@@ -368,7 +369,7 @@
 												<td>
 													<textarea hidden name="lot['.$lot_count.'][offer]['.$item_count.'][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
 													<input name="lot['.$lot_count.'][items]['.$item_count.'][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Price">
-													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
+													<input name="lot['.$lot_count.'][remark]['.$item_count.'][]" list="list-remark" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
 												</td>
 											</tr>
 											';
@@ -396,7 +397,7 @@
 													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
 														'.$option.'
 													</select>
-													<input name="lot['.$lot_count.'][remark][0]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+													<input name="lot['.$lot_count.'][remark][0]" list="list-remark" type="text" class="form-control form-control-sm" required placeholder="Remark">
 												</th>
 											</tr>
 										</thead>
@@ -436,7 +437,7 @@
 													<select name="lot['.$lot_count.'][supplier][0]" type="text" class="form-control form-control-sm" required>
 														'.$option.'
 													</select>
-													<input name="lot['.$lot_count.'][remark][0]" type="text" class="form-control form-control-sm" placeholder="Remark" required>
+													<input name="lot['.$lot_count.'][remark][0]" list="list-remark" type="text" class="form-control form-control-sm" placeholder="Remark" required>
 												</th>
 											</tr>
 										</thead>
@@ -490,6 +491,14 @@
 				<button class="btn btn-rounded btn-primary">Submit</button>
 			</div>
 			</form>
+			<!-- <datalist id="list-remark">
+				<option value="Rank 1">Rank 1</option>
+				<option value="Rank 2">Rank 2</option>
+				<option value="Rank 3">Rank 3</option>
+				<option value="DQ: Exceeded ABC">DQ: Exceeded ABC</option>
+				<option value="DQ: Incomplete Bid">DQ: Incomplete Bid</option>
+				<option value="DQ: No Bid"></option>
+			</datalist> -->
 			</div>
 			<button class="back-to-top" type="button"></button>
 			<div class="footer">
@@ -507,6 +516,10 @@
 		setTimeout(function(){
 			$('#minimizer').trigger('click');
 		}, 1000);
+
+		$('[list="list-remark"]').typeahead({
+			source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+		});
 
 		$('[data-type]').on('click', function(){
 			if(this.dataset.type === "add"){
@@ -532,11 +545,14 @@
 								<td>
 									<textarea name="${name}[offer][${tempcount}][]" rows="2" cols="30" class="form-control form-control-sm" type="text" placeholder="Offer"></textarea>
 									<input name="${name}[items][${tempcount}][]" type="number" step="0.01" min="0.00" class="form-control form-control-sm" placeholder="Unit Price">
-									<input name="${name}[remark][${tempcount}][]" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
+									<input name="${name}[remark][${tempcount}][]" list="list-remark" type="text" class="form-control form-control-sm" placeholder="Remark" style="margin-bottom: 10px">
 								</td>
 							`;
 							tempcount++;
 						}
+					});
+					$('[list="list-remark"]').typeahead({
+						source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
 					});
 				}else{
 					this.dataset.fcount = parseInt(this.dataset.fcount) + 1;
@@ -548,7 +564,7 @@
 								<select name="${name}[supplier][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required>
 									<?php echo $option;?>
 								</select>
-								<input name="${name}[remark][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+								<input name="${name}[remark][${this.dataset.fcount}]" list="list-remark" type="text" class="form-control form-control-sm" required placeholder="Remark">
 							</th>
 						`;
 
@@ -565,6 +581,10 @@
 							}
 						});
 
+						$('[list="list-remark"]').typeahead({
+							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+						});
+
 					}else{
 
 						el[1].childNodes[1].innerHTML += `
@@ -572,7 +592,7 @@
 								<select name="${name}[supplier][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required>
 									<?php echo $option;?>
 								</select>
-								<input name="${name}[remark][${this.dataset.fcount}]" type="text" class="form-control form-control-sm" required placeholder="Remark">
+								<input name="${name}[remark][${this.dataset.fcount}]" list="list-remark" type="text" class="form-control form-control-sm" required placeholder="Remark">
 							</th>
 						`;
 
@@ -588,6 +608,11 @@
 								tempcount++;
 							}
 						});
+
+						$('[list="list-remark"]').typeahead({
+							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+						});
+
 
 					}
 

@@ -60,8 +60,6 @@ $table->addCell(null, ['vMerge' => 'continue']);
 $section->addTextBreak(1);
 
 
-// $Project = "Provide Catering Services, Printing Services of Streamers and Printing Service of Polo Shirts to be used during the College Foundation Day Celebration 2018 of BUCN";
-
 $section->addText("REQUEST FOR PROPOSAL", ['bold' => true], ['alignment' => 'center', 'lineHeight' => 1, 'space' => ['before' => 0, 'after' => 72]]);
 $section->addText($prop->project_title, ['bold' => true], ['alignment' => 'center']);
 $section->addTextBreak(1);
@@ -71,7 +69,7 @@ $ex = explode('.', $ABC);
 $countABC = count($ex);
 if($countABC === 1)
 {
-	$ABC = sprintf("%s0", $ABC);
+	// $ABC = sprintf("%s0", $ABC);
 	$whole = $ex[0];
 }
 elseif($countABC === 2)
@@ -80,7 +78,7 @@ elseif($countABC === 2)
 	if($decimal <= 10)
 	{
 		$decimal = sprintf("%d0", $decimal);
-		$ABC = sprintf("%s0", $ABC);
+		// $ABC = sprintf("%s0", $ABC);
 	}
 }
 
@@ -90,8 +88,8 @@ $whole = htmlspecialchars($format->format($whole));
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("The Bicol University, through the Corporate Budget for the contract approved by the Board of Regents intends to apply the sum of ");
 
-if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".$ABC.")", ['bold' => true, 'italic' => true]);
-elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".$ABC.")", ['bold' => true, 'italic' => true]);
+if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
+elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
 
 $textrun->addText(" being the Approved Budget for the Contract to payment for the contract: ");
 $textrun->addText($prop->project_title, ['bold' => true, 'italic' => true]);
@@ -102,28 +100,6 @@ $c = ['alignment' => 'center'];
 $tbStyle = ['italic' => true, 'bold' => true, 'size' => 10];
 $tbc = ['valign' => 'center'];
 
-// $table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 144]);
-// $table->addRow(43.2);
-// $table->addCell(921.6, $tbc)->addText("Item", $tbStyle, $c);
-// $table->addCell(4320, $tbc)->addText("Title", $tbStyle, $c);
-// $table->addCell(2160, $tbc)->addText("ABC", $tbStyle, $c);
-
-// $table->addRow(43.2);
-// $table->addCell(null, $tbc)->addText("A", $tbStyle, $c);
-// $table->addCell(null, $tbc)->addText("Catering Service", $tbStyle);
-// $table->addCell(null, $tbc)->addText("Php 39,000.00", $tbStyle);
-
-// $table->addRow(43.2);
-// $table->addCell(null, $tbc)->addText("B", $tbStyle, $c);
-// $table->addCell(null, $tbc)->addText("Printing Services of Streamers", $tbStyle);
-// $table->addCell(null, $tbc)->addText("Php 5,000.00", $tbStyle);
-
-// $table->addRow(43.2);
-// $table->addCell(null, $tbc)->addText("C", $tbStyle, $c);
-// $table->addCell(null, $tbc)->addText("Printing Services of Polo Shirt", $tbStyle);
-// $table->addCell(null, $tbc)->addText("Php 13,440.00", $tbStyle);
-
-// $section->addTextBreak(1);
 
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("The Bicol University now requests proposals from bonafide suppliers to submit proposals for the ");
@@ -174,8 +150,10 @@ $section->addText("Approved:");
 
 $section->addTextBreak(2);
 
-$section->addText("Prof. JERRY S. BIGORNIA", ['bold' => true, ['size' => 11]]);
-$section->addText("BAC Chairperson");
+$chair = $admin->get('commitee', array('position', '=', 'BAC Chairperson'));
+
+$section->addText($chair->name, ['bold' => true, ['size' => 11]]);
+$section->addText($chair->position);
 
 
 $section->addTextBreak(10);

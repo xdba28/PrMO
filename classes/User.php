@@ -131,7 +131,7 @@
 			$project = $this->db->first();
 
 			$this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, 
-				edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone
+				edr_ext_name, acronym, office_name, edr_job_title, edr_email, phone, current_specific_office
 				FROM `enduser`, `units`
 				WHERE enduser.edr_designated_office = units.ID AND edr_id = '{$project->requested_by}'");
 			$enduserDetails = (array) $this->db->first();

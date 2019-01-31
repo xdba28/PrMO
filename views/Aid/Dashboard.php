@@ -110,7 +110,7 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-6">
-                    <h2> Dashboard</h2>
+                    <h2>Procurement Aid Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
@@ -140,23 +140,23 @@
 								echo $currentUser[0];				
 							
 							?>!</h2>
-							<span>Procurement Aide</span>
+							<span>Procurement Aid</span>
 						</div>
 					</div>
 				</div>
 				
 			<?php
 				$reports = $user->dashboardReports();
-				// echo "<pre>".print_r($reports)."</pre>";
-				// die();
 
 				$hpCounter = 0;
 				$allproCounter = 0;
-				foreach ($reports["current_projects"] as $project) {
-					if($project->priority_level === "HIGH"){
-						$hpCounter++;
+				if($reports["current_projects"]){
+					foreach ($reports["current_projects"] as $project) {
+						if($project->priority_level === "HIGH"){
+							$hpCounter++;
+						}
+						$allproCounter++;
 					}
-					$allproCounter++;
 				}
 
 				// echo "<pre>",print_r($reports["current_projects"]),"</pre>";
@@ -234,8 +234,14 @@
 						<div class="row">
 							<div class="col-8">
 								<div class="">
-									<h1 class="m-xs">3<?php 
-										// echo count($reports["revision_requests"]);?></h1>
+									<h1 class="m-xs"><?php 
+									if($reports["revision_requests"]){
+										echo count($reports["revision_requests"]);
+									}else{
+										echo "0";
+									}
+									
+									;?></h1>
 
 									<h3 class="font-bold no-margins">
 										Form Revisions to Review

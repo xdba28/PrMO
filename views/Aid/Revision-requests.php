@@ -12,6 +12,25 @@
         die();
 	}
 
+	if(isset($_GET["delete"])){
+		$reference = base64_decode(Input::get('delete'));
+
+		try{
+
+			$user->startTrans();
+
+				$user->delete("form_update_requests", array("ID", "=", $reference));
+
+			$user->endTrans();
+
+			$success_notifs[] = "Revision request deleted.";
+
+		}catch(Exception $e){
+			Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
+		}
+		
+	}
+
 
 
 ?>
@@ -106,11 +125,11 @@
 												<th>Reference No.</th>
 												<th>Date Requested</th>
 												<th>Requested Action</th>
+												<th>Responce</th>
 													<th data-hide="all">Current Workflow</th>
 													<th data-hide="all">Completion</th>
 													<th data-hide="all">Purpose</th>
-													<th data-hide="all">Project Origin</th>
-													<th data-hide="all"><i>My Response</i></th>
+													<th data-hide="all">Project Origin</th>													
 												<th style="text-align:center">Action</th>
 											</tr>
 										</thead>
@@ -139,6 +158,13 @@
 													}
 													
 													if($request->action == "delete"){$color="red";}else{$color="green";}
+													if($request->response == "declined"){
+														$label="label-danger";
+													}else if($request->response == "none"){
+														$label = "";
+													}else if($request->response == "granted"){
+														$label = "primary";
+													}
 													
 													
 											?>
@@ -149,13 +175,15 @@
 														<td style="color:#009bdf"><?php echo $request->form_origin;?></td>
 														<td><?php echo Date::translate($request->date_registered, 1);?></td>
 														<td style="color:<?php echo $color;?>"><?php echo strtoupper($request->action);?></td>
-															<td><?php echo $workflow;?></td>
-															<td><?php echo $completion;?></td>											
+														<td><span class="label <?php echo $label;?>"><?php echo strtoupper($request->response);?></span></td>
+															<td><?php echo $workflow;?></td>															
+															<td><?php echo $completion;?></td>				
 															<td><?php echo $request->purpose;?></td>
-															<td><b><?php echo $displayProject;?></b></td>
-															<td><?php echo $request->response;?></td>
+															<td><b><?php echo $displayProject;?></b></td>	
+
 														<td style="text-align:center">
-															<a href="?q=<?php echo $request->ID;?>" class="btn btn-info btn-outline btn-sm" style="color:black"><i class="ti-layers-alt"></i> view changes </a>								
+															<a href="?q=<?php echo base64_encode($request->ID);?>" class="btn btn-info btn-outline btn-sm" style="color:black"><i class="ti-layers-alt"></i> View Changes </a>
+															<a href="?delete=<?php echo base64_encode($request->ID);?>" class="btn btn-danger btn-outline btn-sm" style="color:black"><i class="far fa-times-circle"></i> Delete</a>
 														</td>
 													</tr>
 											<?php
@@ -168,7 +196,7 @@
 										
 										<tfoot>
 											<tr>
-												<td colspan="6">
+												<td colspan="7">
 													<ul class="pagination float-right"></ul>
 												</td>
 											</tr>
@@ -185,6 +213,15 @@
 					$reference =  base64_decode($_GET['q']);
 
 					$request = $user->get('form_update_requests', array('ID', '=', $reference));
+					//check if this is a project already
+					$project = $user->like("projects", "request_origin", $request->form_origin);
+					if($project){
+						if(empty($project->evaluators_comment)){
+							$ec = "N/A";
+						}else{
+							$ec = $project->evaluators_comment;
+						}
+					}
 
 					if($request){
 						//echo "<pre>",print_r($request),"</pre>";
@@ -238,7 +275,21 @@
 							</div>
 							<div class="ibox-content">
 								<h2><?php echo $heading;?></h2>
+								<h4 style="color: #F37123">Purpose of this request</h4>
 								<input type="text" disabled="" placeholder="<?php echo $request->purpose;?>" class="form-control"><br>
+								<h4 style="color: #F37123">Evaluator's Comment</h4>
+								<input type="text" disabled="" placeholder="<?php echo $ec?>" class="form-control"><br>
+								<?php
+									if(!($request->response_date == "0000-00-00 00:00:00") AND ($request->response == "declined")){
+										echo '
+											<h4 style="color: #c21749">Reason for declination</h4>
+											<div class="has-error">
+												<input type="text" readonly placeholder="'.$request->response_message.'" class="form-control"><br>
+											</div>
+										';
+									}
+								
+								?>
 								
 								<?php
 									$type = substr($request->form_origin, 0,2);
@@ -411,7 +462,7 @@
 										</tbody>
 									</table><br>
 									
-									<h4 style="color: #F37123">Update Data foreach affected lot/s</h4>
+									<h4 style="color: #F37123">Update Data for each affected lot/s</h4>
 									<div id="updateCards" class="row">
 										<?php
 											$affectedLots = $updateData->affectedLots;
@@ -469,8 +520,21 @@
 							</div>
 							<div class="ibox-content">
 								<h2><?php echo $heading;?></h2>
+								<h4 style="color: #F37123">Purpose of this request</h4>
 								<input type="text" disabled="" placeholder="<?php echo $request->purpose;?>" class="form-control"><br>
+								<h4 style="color: #F37123">Evaluator's Comment</h4>
+								<input type="text" disabled="" placeholder="<?php echo $ec;?>" class="form-control"><br><br>
+								<?php
+									if(!($request->response_date == "0000-00-00 00:00:00") AND ($request->response == "declined")){
+										echo '
+											<h4 style="color: #c21749">Reason for declination</h4>
+											<div class="has-error">
+												<input type="text" readonly placeholder="'.$request->response_message.'" class="form-control"><br>
+											</div>
+										';
+									}
 								
+								?>								
 								<?php
 									if($updateData->type === "PR"){
 									
@@ -622,7 +686,7 @@
 				}, {
 					do: function(res){
 						swal({
-							title: `Successfully ${innertext}`,
+							title: `Successfully ${innertext}ed`,
 							text: "",
 							type: "success"
 						});
@@ -630,7 +694,7 @@
 				});
 			}else{
 				sweet({
-					title: 'Reason for edit decline',
+					title: 'Reason for declining this request',
 					type: "info",
 					showCancelButton: true,
 					confirmButtonText: "Submit",
@@ -656,7 +720,7 @@
 							}, {
 								do: function(d){
 									swal({
-										title: `Successfully ${innertext}`,
+										title: `Successfully ${innertext}d`,
 										text: "",
 										type: "success"
 									});

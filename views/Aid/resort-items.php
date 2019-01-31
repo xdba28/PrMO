@@ -38,6 +38,7 @@
 				$count++;
 			}
 
+			if($form['type'] === 'PR'){
 				$user->register('canvass_forms', array(
 					'gds_reference' => $canvass['gds'],
 					'title' => $canvass_Title,
@@ -47,15 +48,17 @@
 					'per_item' => $form['per_item'],
 					'lot_fail_option' => NULL
 				));
-				// $user->register('canvass_forms', array(
-				// 	'gds_reference' => $canvass['gds'],
-				// 	'title' => $canvass_Title,
-				// 	'cost' => $form['publication']['cost'],
-				// 	'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
-				// 	'type' => $form['type'],
-				// 	'per_item' => $form['per_item'],
-				// 	'lot_fail_option' => NULL
-				// ));
+			}else{
+				$user->register('canvass_forms', array(
+					'gds_reference' => $canvass['gds'],
+					'title' => $canvass_Title,
+					'cost' => $form['publication']['cost'],
+					'mop' => json_encode($form['publication']['mode'], JSON_FORCE_OBJECT),
+					'type' => $form['type'],
+					'per_item' => "0",
+					'lot_fail_option' => NULL
+				));
+			}
 
 
 			$canvassId = $user->lastId();
@@ -288,8 +291,8 @@
 													<td><?php echo $lotContent['unit'];?></td>
 													<td class="tddescription"><?php echo $lotContent['desc'];?></td>
 													<td><?php echo $lotContent['qty'];?></td>
-													<td><?php echo Date::translate($lotContent['uCost']);?></td>
-													<td><?php echo Date::translate($lotContent['tCost']);?></td>
+													<td><?php echo Date::translate($lotContent['uCost'], 'php');?></td>
+													<td><?php echo Date::translate($lotContent['tCost'], 'php');?></td>
 												</tr>
 												
 											<?php
@@ -420,7 +423,6 @@
 							<div class="ibox-title">
 								<h5>Items rearrangement for canvass of project <a style="color:#009bdf"><?php echo $refno;?></a> "<a style="color:#F37123"><?php echo $project->project_title;?></a>".</h5>
 							</div>
-							<form method="POST" action="" name="canvass">
 							<div class="ibox-content">
 								<div class="row">
 									<div class="col-md-6">
@@ -467,7 +469,6 @@
 								In this part, You can now rearrange all selected items from part 1 to be canvassed. You can merge them in a single lot or rearrange it to single canvass per item.
 								</div>
 							</div>
-							</form>
 						</div>
 					</div>
 					<div class="col-lg-2" style="margin-top:-25px">
@@ -659,6 +660,12 @@
 
 		$('#canvassCount').on('change', function(){
 
+			if(SelectedItems.find(function(el){
+				return el.item.split('{|}')[0] === "JO";
+			}) !== undefined){
+				var jo_inItems = true;
+			}
+
 			canvassObject = [];
 
 			$('#bResort').trigger('click');
@@ -669,19 +676,34 @@
 			elem_CanvassDropDown.html('');
 
 			for(let i = 0 ; $(this).val() > i ; i++){
-				elem_CanvassList.append(`
-					<div class="ibox">
-						<div class="ibox-content">
-							<h3 class="m-b-md">Canvass form ${i + 1}</h3>
-							<h4>Lot title:</h4>
-							<div data-canv-lots="${i}">
+				if(jo_inItems){
+					elem_CanvassList.append(`
+						<div class="ibox">
+							<div class="ibox-content">
+								<h3 class="m-b-md">Canvass form ${i + 1}</h3>
+								<h4>Lot title:</h4>
+								<div data-canv-lots="${i}">
+								</div>
+								<h4 data-canv-itemCount="${i}">Items: 0</h4>
+								<br>
+								<button class="btn btn-rounded btn-sm btn-primary" data-toggle="modal" data-canv-modal="${i}" data-target="#canvasItems">Show Items</button>
 							</div>
-							<h4 data-canv-itemCount="${i}">Items: 0</h4>
-							Canvass per item <input type="checkbox" value="true" name="perItem-${i}">
-							<br>
-							<button class="btn btn-rounded btn-sm btn-primary" data-toggle="modal" data-canv-modal="${i}" data-target="#canvasItems">Show Items</button>
-						</div>
-					</div>`);
+						</div>`);
+				}else{
+					elem_CanvassList.append(`
+						<div class="ibox">
+							<div class="ibox-content">
+								<h3 class="m-b-md">Canvass form ${i + 1}</h3>
+								<h4>Lot title:</h4>
+								<div data-canv-lots="${i}">
+								</div>
+								<h4 data-canv-itemCount="${i}">Items: 0</h4>
+								Canvass per item <input type="checkbox" value="true" name="perItem-${i}">
+								<br>
+								<button class="btn btn-rounded btn-sm btn-primary" data-toggle="modal" data-canv-modal="${i}" data-target="#canvasItems">Show Items</button>
+							</div>
+						</div>`);
+				}
 
 				elem_CanvassDropDown.append(`<li>
 					<a class="dropdown-item" data-canv-no="${i}">
@@ -904,8 +926,8 @@
 										<td>${e.details.unit}</td>
 										<td>${e.details.desc}</td>
 										<td>${e.details.qty}</td>
-										<td>${e.details.uCost}</td>
-										<td>${e.details.tCost}</td>
+										<td>&#x20b1; ${formatMoney(e.details.uCost)}</td>
+										<td>&#x20b1; ${formatMoney(e.details.tCost)}</td>
 										<td style="text-align:center"><button class="btn btn-danger btn-outline btn-xs" data-canvass-modal="${canvassModalReference}"><i class="fa fa-times"></i></button></td>
 									</tr>`);
 
@@ -1003,8 +1025,8 @@
 										<td>${item_details[1]}</td>
 										<td>${item_spec.header}</td>
 										<td>${item_spec.tags}</td>
-										<td>${item_details[3]}</td>
-										<td>${item_return.lot_cost}</td>
+										<td>&#x20b1; ${formatMoney(item_details[3])}</td>
+										<td>${item_return.notes}</td>
 										</tr>`);
 
 									$('.i-checks').iCheck({

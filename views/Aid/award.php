@@ -76,7 +76,7 @@
 					<div class="col-lg-12">
 						<div class="ibox">
 							<div class="ibox-title">
-								<?php echo '<h5>Select Lot from '.$id.'</h5>';?>
+								<?php echo '<h5>Select Lot from '.$id.' --- '.$project->project_title.'</h5>';?>
 							</div>
 							<div class="ibox-content">
 								<div class="row">
@@ -102,22 +102,24 @@
 													<input type="text" id="place" name="place" class="form-input" required>
 												</div>
 												<div class="form-group">
-													<div class="input-group date">
+													<label class="form-label" for="pay">Mode of payment</label>
+													<input type="text" id="pay" name="pay" class="form-input" list="payment" required>
+													<!-- <div class="input-group date">
 														<span class="input-group-addon">
 															<i class="fa fa-calendar"></i>
 														</span>
 														<input type="text" id="date" name="date" class="form-control" placeholder="Date of delivery">
-													</div>
+													</div> -->
 												</div>
 											</div>
 											<div class="col-lg-6">
 												<div class="form-group">
 													<label class="form-label" for="term">Delivery term</label>
-													<input type="text" id="term" name="term" class="form-input" required>
+													<input type="text" id="term" name="term" class="form-input" list="delivery" required>
 												</div>
 												<div class="form-group">
-													<label class="form-label" for="pay">Mode of payment</label>
-													<input type="text" id="pay" name="pay" class="form-input" required>
+													<!-- <label class="form-label" for="pay">Mode of payment</label>
+													<input type="text" id="pay" name="pay" class="form-input" required> -->
 												</div>
 											</div>
 										</div>
@@ -156,13 +158,22 @@
 </body>
 <script>
 	$(document).ready(function(){
-		$('.input-group.date').datepicker({
-			todayBtn: "linked",
-			keyboardNavigation: false,
-			forceParse: false,
-			calendarWeeks: true,
-			autoclose: true
+
+		$('[list="delivery"]').typeahead({
+			source: ["7 calendar days after receipt of Purchase Order", "7 calendar days after receipt of Letter Order", "15 calendar days after receipt of Purchase Order", "15 calendar days after receipt of Letter Order"]
 		});
+
+		$('[list="payment"]').typeahead({
+			source: ["As billed", "Check"]
+		});
+
+		// $('.input-group.date').datepicker({
+		// 	todayBtn: "linked",
+		// 	keyboardNavigation: false,
+		// 	forceParse: false,
+		// 	calendarWeeks: true,
+		// 	autoclose: true
+		// });
 
 		// setTimeout(function(){
 		// 	$('#minimizer').trigger('click');
@@ -176,7 +187,6 @@
 					lot: this.value
 				}, {
 					do: function(d){
-						console.log(d);
 	
 						let supplier = '';
 						d.suppliers.forEach(function(e, i){
@@ -386,6 +396,11 @@
 												date.val('');
 												term.val('');
 												pay.val('');
+												if(result.finish){
+													setTimeout(function(){
+														window.location = 'project-details?refno=<?php echo $_GET['q']?>';
+													}, 2000);
+												}
 											}
 										}
 									});
@@ -427,6 +442,11 @@
 												date.val('');
 												term.val('');
 												pay.val('');
+												if(result.finish){
+													setTimeout(function(){
+														window.location = 'project-details?refno=<?php echo $_GET['q']?>';
+													}, 2000);
+												}
 											}
 										}
 									});

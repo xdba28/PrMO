@@ -43,14 +43,6 @@
 					'unique'   => 'prnl_account',
                     'required' => true
                 ],
-                'password' => [
-                    'min' => '2',
-                    'required' => true
-                ],
-                'confirm' => [
-                    'required' => true,
-                    'matches' => 'password'
-                ], 
                 'acceptTerms' => [                    
                     'required' => true
                 ],        
@@ -76,7 +68,6 @@
                         'email' => Input::get('email'),
                         'designation' => Input::get('unit'),
                         'username' => Input::get('userName'),
-                        'userpassword' => Input::get('password'),
 						'submitted' => date('Y-m-d H:i:s'),
 						'specific_office' => Input::get('specific_office'),
 						'jobtitle' => Input::get('jobtitle')
@@ -111,12 +102,13 @@
                     die($e->getMessage());
                 }
 
-            }else{        
-              foreach($validation->errors() as $error){
-                  echo $error,'<br>';
-              }
+            }else{
+            //   foreach($validation->errors() as $error){
+            //       echo $error,'<br>';
+            //   }
 			  
-			  die("error");        
+			//   die("error");    
+			echo "<pre>",print_r($validation->errors()),"</pre>";    
             }               
         }
             
@@ -274,21 +266,21 @@
                                 <fieldset>
                                     <h2>Account Information</h2>
                                     <div class="row">
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Username *</label>
                                                 <input id="userName" name="userName" type="text" class="form-control required">
                                             </div>
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label>Password *</label>
                                                 <input id="password" name="password" type="password" class="form-control required">
                                             </div>
                                             <div class="form-group">
                                                 <label>Confirm Password *</label>
                                                 <input id="confirm" name="confirm" type="password" class="form-control required">
-                                            </div>
+                                            </div> -->
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-6">
                                             <div class="text-center">
                                                 <div style="margin-top: 20px">
                                                     <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
@@ -449,6 +441,9 @@
             $('.example4').pwstrength(options4);
 
 
+		
+
+
         })
 
     </script>
@@ -538,19 +533,103 @@
     <script>
 		$(document).ready(function () {
 			$('#popOver').popover();
-		});
-
-		$(document).ready(function () {
 			$('#popOver1').popover();
-		});
-
-		$(document).ready(function () {
 			$('#popOver2').popover();
+			$('#popOver3').popover();
+
+			<?php
+			
+				// FATAL ERROR NOTIFICATIONS
+				if(Session::exists("FATAL_ERROR")){
+					
+					echo '
+						audio.play();
+						toastr.options = {
+						"closeButton": true,
+						"debug": true,
+						"progressBar": false,
+						"preventDuplicates": false,
+						"positionClass": "toast-top-full-width",
+						"onclick": null,
+						"showDuration": "400",
+						"hideDuration": "1000",
+						"timeOut": "60000",
+						"extendedTimeOut": "60000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut"
+						}
+						toastr.error("'.Session::flash("FATAL_ERROR").'", "Fatal Error");
+					
+					';				
+					
+				}
+				// VALIDATION ERRORS
+
+				if(isset($validation)){
+					if($validation->errors()){
+						$default_time_out = 20000;
+						foreach ($validation->errors() as $error_type => $error_message) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+									"closeButton": true,
+									"debug": true,
+									"progressBar": true,
+									"preventDuplicates": false,
+									"positionClass": "toast-top-full-width",
+									"onclick": null,
+									"showDuration": "400",
+									"hideDuration": "1000",
+									"timeOut": "'.$default_time_out.'",
+									"extendedTimeOut": "10000",
+									"showEasing": "swing",
+									"hideEasing": "linear",
+									"showMethod": "fadeIn",
+									"hideMethod": "fadeOut"
+									}
+									toastr.warning("'.$error_message.'", "'.$error_type.'");
+								
+								';
+								$default_time_out += 5000;			
+						}
+					}
+
+				}
+
+				
+				// SUCCESS NOTIFICATIONS
+
+				if(isset($success_notifs)){
+						
+						foreach ($success_notifs as $notif) {
+								
+								echo '
+									audio.play();
+									toastr.options = {
+										"progressBar": true,
+										"preventDuplicates": false,
+										"showDuration": "400",
+										"hideDuration": "1000",
+										"timeOut": "6000",
+										"extendedTimeOut": "1000",
+										"showEasing": "swing",
+										"hideEasing": "linear",
+										"showMethod": "fadeIn",
+										"hideMethod": "fadeOut"
+									}
+									toastr.info("'.$notif.'", "Success");
+								
+								';
+						}			
+
+				}			
+			
+			?>				
 		});
 
-		$(document).ready(function () {
-			$('#popOver3').popover();
-		});		
 	</script>
 
 

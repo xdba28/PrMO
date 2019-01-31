@@ -130,25 +130,26 @@ if($user->isLoggedIn()){
 		
 								));
 
+							$user->endTrans();	
+
 								# send notif to aids
 								$user->register('notifications', array(
 									'recipient' => "group5",
-									'message' => "A revision request has been send for project request form ".$originalData['origin_form'],
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
 									'datecreated' => Date::translate('test', 'now'),
 									'seen' => 0,
-									'href' => "my-forms?q=".base64_encode($originalData['origin_form'])
+									'href' => "revision-requests"
 								));
 								notif(json_encode(array(
 									'receiver' => "group5",
-									'message' => "A revision request has been send for project request form ".$originalData['origin_form'],
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
 									'date' => Date::translate(Date::translate('test', 'now'), '1'),
-									'href' => "my-forms?q=".base64_encode($originalData['origin_form'])
+									'href' => "revision-requests"
 								)), true);
 			
 
 								$notif = true;
 				
-							$user->endTrans();	
 
 						}else if($_POST['orig']['type'] == "JO"){
 							#register request
@@ -169,6 +170,23 @@ if($user->isLoggedIn()){
 
 							$user->endTrans();
 
+								# send notif to aids
+								$user->register('notifications', array(
+									'recipient' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "revision-requests"
+								));
+								notif(json_encode(array(
+									'receiver' => "group5",
+									'message' => "A revision request has been sent for project request form ".$originalData['origin_form'],
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "revision-requests"
+								)), true);
+			
+
+								$notif = true;							
 						}
 
 			}
@@ -291,7 +309,26 @@ if($user->isLoggedIn()){
 
 							));
 
-						}					
+						}
+						
+						
+								# send notif to aids
+								$user->register('notifications', array(
+									'recipient' => "group5",
+									'message' => "A new revision request has been sent",
+									'datecreated' => Date::translate('test', 'now'),
+									'seen' => 0,
+									'href' => "revision-requests"
+								));
+								notif(json_encode(array(
+									'receiver' => "group5",
+									'message' => "A revision request has been sent",
+									'date' => Date::translate(Date::translate('test', 'now'), '1'),
+									'href' => "revision-requests"
+								)), true);
+			
+
+								$notif = true;
 					
 					}				
 			}

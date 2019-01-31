@@ -615,7 +615,7 @@
 								echo '									
 								<div class="my-file-box">
 									<div class="file">
-										<a href="#" onclick="window.open(\'../../bac/forms/project-request?id='.$request['ref_no'].'&type='.$request['type'].'\');">
+										<a href="#" onclick="window.open(\'../../bac/forms/project-request?id='.$request['ref_no'].'\');">
 											<span class="corner"></span>
 											<div class="icon">
 												<i class="fas fa-file-word"></i>
@@ -679,46 +679,100 @@
 													</a>
 												</div>
 											</div>';
-										}
 
-										// check abstract of bid
-										if(isset($lot['abstract'])){
-											echo '
-											<div class="my-file-box">
-												<div class="file">
-													<a href="#" onclick="window.open(\'../../bac/forms/abstract?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'\');">
-														<span class="corner"></span>
-														<div class="icon">
-															<i class="fas fa-file-word"></i>
-														</div>
-														<div class="file-name" style="height: 150px;">
-															<h4>Abstract of Bids</h4>Lot '.$count.' - '.$lot['title'].'.docx
-														</div>
-													</a>
-												</div>
-											</div>';
-
-											// check if lot fail
-											if(isset($lot['fail'])){
+											// check abstract of bid
+											if(isset($lot['abstract'])){
 												echo '
 												<div class="my-file-box">
 													<div class="file">
-														<a href="#" onclick="window.open(\'../../bac/forms/resolution?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'\');">
+														<a href="#" onclick="window.open(\'../../bac/forms/abstract?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'\');">
 															<span class="corner"></span>
 															<div class="icon">
 																<i class="fas fa-file-word"></i>
 															</div>
 															<div class="file-name" style="height: 150px;">
-																<h4>BAC Resolution Failure of Bidding</h4>Lot '.$count.' - '.$lot['title'].'.docx
+																<h4>Abstract of Bids</h4>Lot '.$count.' - '.$lot['title'].'.docx
 															</div>
 														</a>
 													</div>
 												</div>';
+	
+												// check if lot fail
+												if(isset($lot['fail'])){
+													echo '
+													<div class="my-file-box">
+														<div class="file">
+															<a href="#" onclick="window.open(\'../../bac/forms/fail?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
+																<span class="corner"></span>
+																<div class="icon">
+																	<i class="fas fa-file-word"></i>
+																</div>
+																<div class="file-name" style="height: 150px;">
+																	<h4>BAC Resolution Failure of Bidding</h4>Lot '.$count.' - '.$lot['title'].'.docx
+																</div>
+															</a>
+														</div>
+													</div>';
+												}
+												
+												// count if award is zero
+												// then foreach
+												if(count($lot['noa']) !== 0){
+													foreach($lot['noa'] as $noa){
+														// bac resolution
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/resolution?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'&spid='.$noa->cvsp_id.'&m='.$pub['mode_index'].'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>BAC Resolution Declairing '.$noa->name.' as SCRB/LCRB</h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+	
+														// noa
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/noa?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>Notice of Award to '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+
+														$orderName = ($lot['type'] === "PR") ? "Purchase" : "Letter";
+
+														//PO / LO
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/order?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>'.$orderName.' Order to '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+													}
+												}
 											}
 										}
-
 									}
-
 								}
 							}
 							// echo "<pre>".print_r($documents)."</pre>";

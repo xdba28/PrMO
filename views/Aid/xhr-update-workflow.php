@@ -17,8 +17,42 @@ try
 		$user->startTrans();
 
 		$swal_remark = '';
-		
-		if($_POST['workflow'] === "5"){
+
+		// if workflow is 3
+			// then update project to finished
+			// notify the enduser that items are available in dbmps
+		if($_POST['workflow'] === "3"){
+			
+			// $user->update('projects', 'project_ref_no', $_POST['gds'], array(
+			// 	'accomplished' => '10',
+			// 	'workflow' => 'Project Finished',
+			// 	'project_status' => 'FINISHED'
+			// ));
+
+			// $end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
+			// foreach(json_decode($end_users->end_user, true) as $end_user){
+
+			// 	$user->register('notifications', array(
+			// 		'recipient' => $end_user,
+			// 		'message' => "",
+			// 		'datecreated' => Date::translate('test', 'now'),
+			// 		'seen' => 0,
+			// 		'href' => "project-details?refno=".base64_encode($_POST['gds'])
+			// 	));
+
+			// 	notif(json_encode(array(
+			// 		'receiver' => $end_user,
+			// 		'message' => "",
+			// 		'date' => Date::translate(Date::translate('test', 'now'), '1'),
+			// 		'href' => "project-details?refno=".base64_encode($_POST['gds'])
+			// 	)));
+
+			// 	// sms
+				
+			// }
+
+
+		}elseif($_POST['workflow'] === "5"){
 
 			$user->update('projects', 'project_ref_no', $_POST['gds'], array(
 				'accomplished' => '6',
@@ -46,21 +80,129 @@ try
 
 			if($project_outgoing){
 
-				$swal_remark = 'Project is status is already in for outgoing.';
+				$swal_remark = 'Project is already for outgoing.';
 
 			}else{
 
 				$user->register('outgoing', array(
 					'project' => $_POST['gds'],
-					'transmitting_to' => 'For signatories',
-					'specific_office' => 'For signatories',
-					'remarks' => 'For signatories',
+					'transmitting_to' => 'Respective Offices',
+					'specific_office' => 'Respective Offices',
+					'remarks' => 'Routing for signatories',
 					'transactions' => 'SIGNATURES',
 					'date_registered' => Date::translate('test', 'now')
 				));
 
 			}
 
+		}elseif($_POST['workflow'] === "7"){
+
+			// check in outgoing
+				// if not, register
+				// else alert user already in outgoing
+
+			$project_outgoing = $user->get('outgoing', array('project', '=', $_POST['gds']));
+
+			if($project_outgoing){
+
+				$swal_remark = 'Project is already for outgoing.';
+
+			}else{
+
+				$user->update('projects', 'project_ref_no', $_POST['gds'], array(
+					'accomplished' => '8',
+					'workflow' => 'For Conforme of Winning Bidder/s'
+				));
+
+				$user->register('outgoing', array(
+					'project' => $_POST['gds'],
+					'transmitting_to' => 'Respective Offices',
+					'specific_office' => 'Respective Offices',
+					'remarks' => 'Routing for signatories',
+					'transactions' => 'SIGNATURES',
+					'date_registered' => Date::translate('test', 'now')
+				));
+
+			}
+
+		}elseif($_POST['workflow'] === "8"){
+
+			// check in outgoing
+				// if not, register
+				// else alert user already in outgoing
+
+			$project_outgoing = $user->get('outgoing', array('project', '=', $_POST['gds']));
+
+			if($project_outgoing){
+
+				$swal_remark = 'Project is already for outgoing.';
+
+			}else{
+
+				$user->update('projects', 'project_ref_no', $_POST['gds'], array(
+					'accomplished' => '9',
+					'workflow' => 'For Conforme of Winning Bidder/s'
+				));
+
+				$user->register('outgoing', array(
+					'project' => $_POST['gds'],
+					'transmitting_to' => 'Winning Bidder/s',
+					'specific_office' => 'Respective Offices',
+					'remarks' => 'For Conforme of Winning Bidder/s',
+					'transactions' => 'SIGNATURES',
+					'date_registered' => Date::translate('test', 'now')
+				));
+
+				$end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
+
+				// Notice of award
+				// SMS award
+				foreach(json_decode($end_users->end_user, true) as $end_user){
+					// bac reso winning available
+					$user->register('notifications', array(
+						'recipient' => $end_user,
+						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
+						'datecreated' => Date::translate('test', 'now'),
+						'seen' => 0,
+						'href' => "project-details?refno=".base64_encode($_POST['gds'])
+					));
+					notif(json_encode(array(
+						'receiver' => $end_user,
+						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
+						'date' => Date::translate(Date::translate('test', 'now'), '1'),
+						'href' => "project-details?refno=".base64_encode($_POST['gds'])
+					)));
+				}
+			}
+
+		}elseif($_POST['workflow'] === "9"){
+			
+			$user->update('projects', 'project_ref_no', $_POST['gds'], array(
+				'accomplished' => '10',
+				'workflow' => 'Project Finished',
+				'project_status' => 'FINISHED'
+			));
+
+			$end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
+				
+			// Notice of award
+			// SMS award
+			foreach(json_decode($end_users->end_user, true) as $end_user){
+				// bac reso winning available
+				$user->register('notifications', array(
+					'recipient' => $end_user,
+					'message' => "",
+					'datecreated' => Date::translate('test', 'now'),
+					'seen' => 0,
+					'href' => "project-details?refno=".base64_encode($_POST['gds'])
+				));
+				notif(json_encode(array(
+					'receiver' => $end_user,
+					'message' => "",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno=".base64_encode($_POST['gds'])
+				)));
+			}
 
 		}
 

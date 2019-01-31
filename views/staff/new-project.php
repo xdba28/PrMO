@@ -504,8 +504,7 @@
 		}
 
 		$('#popOver').on('click', function(){
-			// window.open(`view-proj?id=${$(this).attr("proj-comp")}`);
-			window.open(`../../bac/pdf/${$(this).attr("proj-comp")}.pdf`);
+			window.open(`../../bac/forms/project-request?id=${$(this).attr("proj-comp")}`);
 		});
 
 

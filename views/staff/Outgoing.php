@@ -180,7 +180,7 @@
 								
 								if($document->transactions == "SIGNATURES"){
 									$project = $user->get('projects', array('project_ref_no', '=', $document->project));
-									// $unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
+									$unit = $user->get('units', array('office_name', '=', $document->transmitting_to));
 						?>
 						<tr class="">
 							<td class="tdcheck"><input type="checkbox" data="out" class="i-checks" name="sign[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
@@ -315,8 +315,8 @@
 							DataTable_Twg.row.add([
 								`<input type="checkbox" data="twg" class="i-checks" name="twg[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
-								'TWG',
-								'TWG',
+								'Technical Working Group',
+								'Technical Working Group',
 								e.date_registered
 							]);
 						});
@@ -362,11 +362,12 @@
 					if(res.updateDoc !== null){
 						DataTables_DocUpdate.clear().draw();
 						res.updateDoc.forEach(function(e, i){
+							console.log(e);
 							DataTables_DocUpdate.row.add([
 								`<input type="checkbox" data="gen" class="i-checks" name="updOutLog[]" id="${e.project}"> <label for="${e.project}">${e.project}</label>`,
 								`<td class="td-project-title"><label for="${e.project}">${e.title}</label></td>`,
-								'TWG',
-								'TWG',
+								e.transmit,
+								e.specific,
 								e.date_registered
 							]);
 						});

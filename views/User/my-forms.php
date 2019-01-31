@@ -141,6 +141,7 @@
 									<?php 
 										$myRequests = $user->getAll('project_request_forms', array('requested_by', '=', Session::get(Config::get('session/session_name'))));
 										// echo "<pre>",print_r($myRequests),"</pre>";
+										if($myRequests){
 										foreach($myRequests as $request){
 											if(isset($count)){$count++;}else{$count=1;}
 												
@@ -185,6 +186,9 @@
 
 									<?php 
 										}
+									}else{
+										echo '<td colspan="7" style="text-align:center">No Data Available</td>';
+									}
 									?>
                 
                                     </tbody>
@@ -378,7 +382,7 @@
 									$accomplishment = number_format(($isProject->accomplished / $isProject->steps) * 100, 1);
 									$addionalContent = '
 										<h4 class="text-left" style="color: #F37123">Registered as a project</h4>
-											<p style="margin-left:20px"><u><b>'.$isProject->project_ref_no.' - '.$isProject->project_title.'</b></u></p>
+											<p style="margin-left:20px"><u><b><a href="project-details?refno='.base64_encode($isProject->project_ref_no).'">'.$isProject->project_ref_no.' - '.$isProject->project_title.'</a></b></u></p>
 										<h4 class="text-left" style="color: #F37123">Accomplishment</h4>
 											<small>'.$accomplishment.'%</small>
 											<div class="progress progress-mini">
@@ -860,7 +864,7 @@
 											}else{
 												swal({
 													title: "Success!",
-													text: "Successfully deleted.",
+													text: "Your Requests has been successfully submited we'll notify you if your request has been approved.",
 													type: "success"
 												});
 											}
