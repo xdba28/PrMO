@@ -153,7 +153,7 @@
 								
 								<div class="hr-line-dashed"></div>
 								<div class="search-result <?php echo $transition;?>">
-									<h3><a href="project-details?refno=<?php echo $project->project_ref_no;?>"><?php echo $project->project_title;?></a></h3>
+									<h3><a href="project-details?refno=<?php echo base64_encode($project->project_ref_no);?>"><?php echo $project->project_title;?></a></h3>
 									<a href="#" class="search-link"><?php echo$endusersDisplayName;?></a>
 									<p>
 										<?php echo $project->project_ref_no;?>

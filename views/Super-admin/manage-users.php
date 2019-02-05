@@ -23,76 +23,73 @@
             
 			try{
 
-              
-				$sa->update('prnl_account', 'account_id', $ID, array(
-                    
-                    'group_' => Input::get('group')
+				if((empty($_POST["extName"])) OR (is_numeric(Input::get('extName'))) OR (preg_match('/[\'^£$%&*()}{@#~?!><>,|=_+¬-]/', Input::get('extName'))) ){
+					$ext = "XXXXX";
+				}else{
+					$ext = Input::get('extName');
+				}
+			  
+				$sa->startTrans();
+					$sa->update('prnl_account', 'account_id', $ID, array(
+						'group_' => Input::get('group')
+					));
+					$sa->update('personnel', 'prnl_id', $ID, array(
+						
+						'prnl_fname' => Input::get('firstName'),
+						'prnl_mname' => Input::get('middleName'),
+						'prnl_lname' => Input::get('lastName'),
+						'prnl_ext_name' => $ext,
+						'prnl_designated_office' => Input::get('unit'),
+						'current_specific_office' => Input::get('specific-office'),
+						'prnl_job_title' => Input::get('jobTitle'),
+						'prnl_id' => Input::get('employeeId')
 
-                ));
-
-
-				//register updates
-				//$table, $particular, $identifier, $fields
-				$sa->update('personnel', 'prnl_id', $ID, array(
-                    
-                    'prnl_fname' => Input::get('firstName'),
-                    'prnl_mname' => Input::get('middleName'),
-                    'prnl_lname' => Input::get('lastName'),
-                    'prnl_ext_name' => Input::get('extName'),
-                    'prnl_job_title' => Input::get('jobTitle'),
-                    'prnl_id' => Input::get('employeeId')
-
-                ));
-
+					));
+				$sa->endTrans();
 
 				$special_notifs[] = "User information successfully updated.";
+				Syslog::put('Admin account update');
 				
 				
 			}catch(Exception $e){
-				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");				
+				Syslog::put($e,null,'error_log');
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
 			}
 			
-		}
-	}
+		}else if(Token::check('status-toggle-token', Input::get('status-toggle-token'))){
+			try{
 
-	if(Input::exists('GET')){
+				$parts = explode("+", Input::get('action-request'));
+				if($parts[0] === "deactivate"){
+					$user->startTrans();
+						$user->update("prnl_account", "account_id", $parts[1], array(
+							'status' => 'DEACTIVATED'
+						));
+					$user->endTrans();
+					$messageFiller = "deactivated";
+					Syslog::put('Deactivate admin account '.$parts[1]);
+				}else if($parts[0] === "activate"){
+					$user->startTrans();
+						$user->update("prnl_account", "account_id", $parts[1], array(
+							'status' => 'ACTIVATED'
+						));
+					$user->endTrans();
+					$messageFiller = "activated";
+					Syslog::put('Activate admin account '.$parts[1]);
+				}
 
-		$requested_action = base64_decode(Input::get('action'));
-		$action_receiver = base64_decode(Input::get('receiver'));
 
-		try{
+				
+				Session::flash("SA_SPECIAL_ACTION", "Account successfully {$messageFiller}.");
+				Redirect::To('manage-users');
 
-			if($requested_action === "activate"){
-				$user->startTrans();
-					$user->update("prnl_account", "account_id", $action_receiver, array(
-						'status' => 'ACTIVATED'
-					));
-				$user->endTrans();
-
-				$messageFiller = "activated";
-			}else if($requested_action === "deactivate"){
-				$user->startTrans();
-					$user->update("prnl_account", "account_id", $action_receiver, array(
-						'status' => 'DEACTIVATED'
-					));
-				$user->endTrans();
-
-				$messageFiller = "deactivated";
+			}catch(Exception $e){
+				Syslog::put($e,null,'error_log');
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
 			}
-
-
-
-			$special_notifs[] = "Account successfully {$messageFiller}.";
-
-		}catch(Exception $e){
-			Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");				
 		}
-
 	}
 
-
-
-   
 
 ?>
 <!DOCTYPE html>
@@ -103,11 +100,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | Admins</title>
+    <title>PrMO OPPTS | Admins</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php";?>
 	<script>
 		var PersUpdate = '<?php 
-		if(Session::exists("PersUpdate")) Session::flash("PersUpdate");
+		if(Session::exists("PersUpdate")) echo Session::flash("PersUpdate");
 		else echo "";
 		?>';
 	</script>
@@ -208,10 +206,36 @@
 											<div class="form-group"><label>First name</label> <input type="text" value="<?php echo $data->prnl_fname;?>" name="firstName" class="form-control"></div>
 											<div class="form-group"><label>Middle name</label> <input type="text" value="<?php echo $data->prnl_mname;?>" name="middleName" class="form-control"></div>
 											<div class="form-group"><label>Last name</label> <input type="text" value="<?php echo $data->prnl_lname;?>" name="lastName" class="form-control"></div>
-											<div class="form-group"><label>Extension name</label> <input type="text" value="<?php echo $data->prnl_ext_name;?>" name="extName" class="form-control"></div>
-											<div class="form-group"><label>Job Title</label> <input type="text" value="<?php echo $data->prnl_job_title;?>" name="jobTitle" class="form-control"></div>											
+											<div class="form-group"><label>Extension name</label> <input type="text" value="<?php 
+											
+												if($data->prnl_ext_name === "XXXXX"){
+													echo "";
+												}else{
+													echo $data->prnl_ext_name;
+												}?>" name="extName" class="form-control"></div>
+											<div class="form-group">
+												<label>Designation / Unit</label>
+												<select class="form-control m-b required" id="unitselection" name="unit">
+													<option value="<?php echo $data->ID;?>"> <?php echo $data->office_name;?></option>
+													<?php
+													
+														$units = $personnel->selectAll('units');
+														foreach($units as $unit){
+															echo "<option value ='{$unit->ID}'>{$unit->office_name}</option>";
+														}
+													?>
+												</select>
+											</div>	
+											<div class="form-group">
+												<label>Specific Office</label>
+												<div class="input-group">
+													<input id="typeahead-specific-office" value="<?php echo $data->current_specific_office;?>" name="specific-office" type="text" class="form-control" required>
+												</div>												
+											</div>																							
+
 									</div>
 									<div class="col-sm-6">
+									<div class="form-group"><label>Job Title</label> <input type="text" value="<?php echo $data->prnl_job_title;?>" name="jobTitle" class="form-control"></div>
 											<div class="form-group"><label>Employee ID</label> <input type="text" value="<?php echo $data->prnl_id;?>" name="employeeId" class="form-control"></div>
 											<div class="form-group"><label>Account username</label> <input type="text" value="<?php echo $data->username;?>" disabled class="form-control"></div>
 											<div class="form-group"><label>Original Group</label> <input type="text" value="<?php echo $data->group_name;?>" disabled class="form-control"></div>
@@ -251,7 +275,9 @@
                     <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>Personnel Accounts</h5>
-
+							<form action="" id="status-toggler" method="POST" enctype="multipart/form-data">
+								<input type="text" name="status-toggle-token" value="<?php echo Token::generate("status-toggle-token");?>" hidden>
+							</form>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -266,14 +292,17 @@
 									<tr>
 
 										<th data-toggle="true">Name</th>
-										<th>Office</th>
-										<th>Position</th>
-										<th data-hide="all">Employee ID</th>
-										<th data-hide="all">Email</th>
-										<th data-hide="all">Phone</th>
-										
-										<th data-hide="all">Account Status</th>
+										<th>Username</th>
 										<th>Account Type</th>
+										
+											<th data-hide="all">Employee ID</th>
+											<th data-hide="all">Email</th>
+											<th data-hide="all">Phone</th>
+											<th data-hide="all">Designation</th>
+											<th data-hide="all">Specific Office</th>
+											<th data-hide="all">Position</th>
+
+										<th>Account Status</th>
 										<th>Action</th>
 									</tr>
                                 </thead>
@@ -303,17 +332,21 @@
                                         }
                                        
 
-                                        echo '                                        
+										if($data->prnl_id != "163-141"){
+											echo '
                                             <tr>
                                                 <td>'.$fullname.'</td>
-                                                <td>'.$data->office_name.'</td>
-                                                <td>'.$data->prnl_job_title.'</td>
-                                                <td>'.$data->prnl_id.'</td>
-                                                <td>'.$data->prnl_email.'</td>
-                                                <td>'.$data->phone.'</td>
-                                                
-                                                <td><b><a  class="'.$color.'">'.$data->status.'</a></b></td>
-												<td>'.$data->name.'</td>
+												<td>'.$data->username.'</td>
+												<td>'.$data->name.'</td>                                                
+
+													<td>'.$data->prnl_id.'</td>
+													<td>'.$data->prnl_email.'</td>
+													<td>'.$data->phone.'</td>
+													<td>'.$data->office_name.'</td>
+													<td>current office</td>
+													<td>'.$data->prnl_job_title.'</td>
+
+												<td class="'.$color.'"><b><a>'.$data->status.'</a></b></td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>
@@ -321,13 +354,16 @@
                                                             <li><a class="dropdown-item" href="?q='.$data->prnl_id.'">Update Info</a></li>
                                                             <li><a class="dropdown-item" data-toggle="modal" data-name="'.$fullname.'" data-phone="'.$data->phone.'" data-target="#resetPassword" data-id="'.$data->prnl_id.'" data-office="'.$data->office_name.'">Reset Password</a></li>
                                                             <li class="dropdown-divider"></li>
-                                                            <li><a class="dropdown-item nicecolor" href="?action='.base64_encode($action).'&&receiver='.base64_encode($data->prnl_id).'">'.$option.'</a></li>
+                                                            <li><button type="submit" class="dropdown-item nicecolor" form="status-toggler" name="action-request" value="'.$action.'+'.$data->prnl_id.'" >'.$option.'</button></li>
+															<li class="dropdown-divider"></li>
                                                         </ul>
                                                     </div>									
                                                 </td>
                                             </tr>                                                                                
                                         
                                         ';
+										}
+
 
                                     }
                                 
@@ -423,6 +459,44 @@
 			});
 
 		});
+
+
 	</script>
+	<script>
+		$(document).ready(function(){
+			$("#typeahead-specific-office").typeahead({
+
+				<?php 
+					if($offices = $user->getAll("offices", array("unit", "=", $data->ID))){
+						foreach($offices as $office){
+							$available_offices[] = $office->specific_office;
+						}
+
+						$finalSuggestions = '"'.implode('", "',$available_offices).'"';
+					}else{
+						$finalSuggestions = "";
+					}
+				
+				?>
+
+				source: [<?php echo $finalSuggestions;?>]
+			});	
+
+			$('[name="unit"]').on('change', function(){
+				SendDoSomething("POST", "xhr-get-offices.php", {
+					id: this.value
+				}, {
+					do: function(r){
+						$('#typeahead-specific-office').typeahead('destroy');
+						$("#typeahead-specific-office").typeahead({
+							source: r.offices
+						});
+					}
+				});
+			});
+
+		});
+	</script>
+
 
 </html>

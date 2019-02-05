@@ -159,10 +159,30 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>MOP:</dt>
+                                            <dt>Mode of Procurement:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php echo $project->MOP;?></dd>
+											<dd class="mb-1">
+												<?php
+													switch($project->MOP){
+														case "PB":
+															echo "Public Bidding";
+															break;
+														case "SVP":
+															echo "Small Value Procurement";
+															break;
+														case "DC":
+															echo "Direct Contracting";
+															break;
+														case "TBE":
+															echo "To be evaluated";
+															break;
+														default:
+															echo $project->MOP;
+															break;
+													}
+												?>
+											</dd>
                                         </div>
                                     </dl>									
                                     <dl class="row mb-0">
@@ -210,9 +230,9 @@
 												//echo $test;
 												$comaCounter = 1;
 												foreach($forms as $individualOrigin => $value){
-													echo $value;
+													echo '<a href="my-forms?q='.base64_encode($value).'">'.$value.'</a>';
 													if($comaCounter < (count($forms))){
-														echo ' / ';
+														echo '<a style="font-size:16px; color:red"> / </a>';
 													}
 													$comaCounter++;
 												}
@@ -680,6 +700,21 @@
 												</div>
 											</div>';
 
+											echo '									
+											<div class="my-file-box">
+												<div class="file">
+													<a href="#" onclick="window.open(\'../../bac/forms/mode?rq='.base64_encode($refno).'&f='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
+														<span class="corner"></span>
+														<div class="icon">
+															<i class="fas fa-file-word"></i>
+														</div>
+														<div class="file-name" style="height: 150px;">
+															<h4>Recommending Mode of Procurement</h4>Lot '.$count.' Resolution MOP - '.$pub['mode'].'.docx
+														</div>
+													</a>
+												</div>
+											</div>';
+
 											// check abstract of bid
 											if(isset($lot['abstract'])){
 												echo '
@@ -768,6 +803,24 @@
 																</a>
 															</div>
 														</div>';
+
+														// OS
+														if(isset($lot['os'])){
+															echo '
+															<div class="my-file-box">
+																<div class="file">
+																	<a href="#" onclick="window.open(\'../../bac/forms/os?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																		<span class="corner"></span>
+																		<div class="icon">
+																			<i class="fas fa-file-word"></i>
+																		</div>
+																		<div class="file-name" style="height: 150px;">
+																			<h4>Obligation Slip of '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																		</div>
+																	</a>
+																</div>
+															</div>';
+														}
 													}
 												}
 											}

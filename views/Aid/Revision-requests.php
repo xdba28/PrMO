@@ -19,13 +19,20 @@
 
 			$user->startTrans();
 
-				$user->delete("form_update_requests", array("ID", "=", $reference));
+				if($user->delete("form_update_requests", array("ID", "=", $reference))){
+					Syslog::put('Delete form update request');
+				}else{
+					Syslog::put('Delete form update request',null,"failed");
+				}
 
 			$user->endTrans();
+
+			!
 
 			$success_notifs[] = "Revision request deleted.";
 
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
 			Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
 		}
 		
@@ -45,7 +52,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Revision Requests</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>

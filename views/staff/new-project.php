@@ -162,7 +162,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Single Project</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 	<script>
@@ -595,7 +595,7 @@
 				var xhrData = JSON.stringify(OBJ.find(function(el){
 					return el.id === SendBtn.attr("proj");
 				}));
-
+				console.log(xhrData);
 				SendDoSomething("POST", "xhr-receive-proj.php", {
 					obj: xhrData
 				}, {

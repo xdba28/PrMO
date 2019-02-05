@@ -7,7 +7,23 @@
        Redirect::To('../../index');
         die();
 	}
-	// echo "<pre>".print_r($_SESSION)."</pre>";
+
+	if(Input::exists()){
+		if(Token::check('to-delete-token', Input::get('to-delete-token'))){
+			try{
+				$user->startTrans();
+					if($user->delete("project_request_forms", array("form_ref_no", "=", Input::get('form-to-delete')))){
+						$success_notifs[] = "Request form successfully deleted.";
+					}
+				$user->endTrans();
+				Syslog::put('Delete unreceived PR/JO form');
+				
+			}catch(Exception $e){
+				Syslog::put($e,null,"error_log");
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
+			}
+		}
+	}
 	    
 ?>
 
@@ -100,12 +116,14 @@
 							 </ul>											
 						</div>
 					</div>
-				</div>	
+				</div>
                 <div class="col-lg-12 animated fadeInLeft">
                     <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>All Forms Created</h5>
-
+							<form id="delete-form" action="" method="POST" enctype="multipart/form-data">
+								<input type="text" name="to-delete-token" value="<?php echo Token::generate('to-delete-token');?>" hidden>
+							</form>
                         </div>
                         <div class="ibox-content">
                             <div class="row">
@@ -130,7 +148,7 @@
 
                                         <th>no. </th>
                                         <th>Reference </th>
-										<th>Related to </th>
+										<th>Linked to </th>
                                         <th>Title </th>
 										<th class="center">Status </th>
                                         <th>Date Created</th>
@@ -149,7 +167,7 @@
 												$displayStatus = '<span class="status-text status-green">Unreceived</span>';
 												$actionButton  = '<div class="btn-group">
 																	 <a href="my-forms?q='.base64_encode($request->form_ref_no).'" class="btn btn-info btn-sm btn-rounded btn-outline" style="color:black">Details</a>
-																	 <a class="btn btn-warning btn-sm btn-rounded btn-outline">Delete</a>                             
+																	 <button name="form-to-delete" value="'.$request->form_ref_no.'" form="delete-form" class="btn btn-warning btn-sm btn-rounded btn-outline" style="color:black">Delete</button>
 																 </div>';
 
 											}else{
@@ -244,9 +262,18 @@
 											<div class="progress progress-mini">
 												<div style="width:'.$accomplishment.'%;" class="progress-bar"></div>
 											</div><p><b>'.$isProject->workflow.'</b></p>
+											<br>
+											<button onclick="window.open(\'../../bac/forms/project-request?id='.$refno.'\');" type="button" class="btn btn-primary btn-rounded btn-sm">
+												<i class="fa fa-download"></i> Download Form
+											</button>
+
 									';
 								}else{
-									$addionalContent = '';
+									$addionalContent = '
+									<br>
+									<button onclick="window.open(\'../../bac/forms/project-request?id='.$refno.'\');" type="button" class="btn btn-primary btn-rounded btn-sm">
+										<i class="fa fa-download"></i> Download Form
+									</button>';
 								}
 								
 								$lotCosts = $user->getAll('lots', array('request_origin', '=', $refno));
@@ -388,9 +415,18 @@
 											<div class="progress progress-mini">
 												<div style="width:'.$accomplishment.'%;" class="progress-bar"></div>
 											</div><p><b>'.$isProject->workflow.'</b></p>
+											<br>
+											<button onclick="window.open(\'../../bac/forms/project-request?id='.$refno.'\');" type="button" class="btn btn-primary btn-rounded btn-sm">
+												<i class="fa fa-download"></i> Download Form
+											</button>
+
 									';
 								}else{
-									$addionalContent = '';
+									$addionalContent = '
+									<br>
+									<button onclick="window.open(\'../../bac/forms/project-request?id='.$refno.'\');" type="button" class="btn btn-primary btn-rounded btn-sm">
+										<i class="fa fa-download"></i> Download Form
+									</button>';
 								}
 								
 								$lotCosts = $user->getAll('lots', array('request_origin', '=', $refno));
@@ -560,9 +596,6 @@
 	
 	document.addEventListener('DOMContentLoaded', function(){
 		<?php
-			// if(Session::exists("Request")){
-			// echo "window.open('../../bac/forms/pr-jo-doc');";
-			// }
 			if(Session::exists("Request")){
 			$request = explode(":", Session::flash('Request')); 
 			echo "window.open('../../bac/forms/project-request?id=".$request[0]."&type=".$request[1]."');";

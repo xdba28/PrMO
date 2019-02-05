@@ -38,22 +38,26 @@
             if($validation->passed()){
                 try{
 					$sa->startTrans();
-
-					$sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
+						
+						$sa->update_request(Input::get('rq-rsn'), Input::get('rq-hid'));
 					
 					$sa->endTrans();
-                    
-                    Session::flash('toust', 'Request for Account Denied');
-                    //Redirect::To('account-request');
+					
+					$success_notifs[] = "Account request declined.";
+
+					#send sms to enduser "issue resolved and process may continue"
+					$customMessage = 'Your account request was declined by the super admin with the following reason: "'.Input::get("rq-rsn").'".';
+					sms(Input::get('rq-num'), "System", $customMessage);					
+	
 
                 }catch(Exception $e){
-                    die($e->getMessage());
+					// die($e->getMessage());
+					Syslog::put($e,null,'error_log');
+					Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
                 }
 
-            }else{        
-              foreach($validation->errors() as $error){
-                  $e .= $error;
-              }
+            }else{
+				Syslog::put('Approve end user account request',null,'failed');
         
             }
         }
@@ -70,14 +74,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Account Requests</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
 		var error = '<?php echo $e; ?>';
 
-		function ps_mdl_d(name, id){
+		function ps_mdl_d(name, id, contact){
 			document.getElementById('rq-mdl-name').value = name;
 			document.getElementById('rq-hid').value = id;	
+			document.getElementById('rq-num').value = contact;
 		}
 
 		function approve(id)
@@ -90,12 +96,85 @@
 				timeout: 5000,
 				success: function(data)
 				{
-					swal({
-						title: data,
-						text: "Account Request Approved!",
-						timer: 13000,
-						type: "success"
-					});
+					if(data.success)
+					{
+						swal({
+							title: "Success!",
+							text: "Account Request Approved!",
+							timer: 13000,
+							type: "success"
+						});
+
+						if(data.request.length !== 0){
+							document.getElementById('registered').innerText = data.registered;
+							document.getElementById('request-count').innerText = data.request.length;
+
+							document.getElementById('request-table-div').innerHTML = `
+							<table class="footable table table-stripped toggle-arrow-tiny">
+                                <thead>
+                                <tr>
+
+                                    <th data-toggle="true">Requestor</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                    <th data-hide="all">Phone</th>
+                                    <th data-hide="all">Email</th>                                                        
+                                    <th data-hide="all">Requested</th>
+                                    <th data-hide="all">Employee Id</th>
+                                    <th data-hide="all">Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="request-table">
+								</tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        <ul class="pagination float-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+								`;
+
+							data.request.forEach(function(e, i){
+								let fullname = '', color, color1;
+								if(e.ext_name === 'none'){
+									fullname = `${e.fname} ${e.last_name}`;
+								}else{
+									fullname = `${e.fname} ${e.last_name} ${e.ext_name}`;
+								}
+
+								color = (e.status == "pending") ? "text-navy" : "text-danger";
+								color1 = (e.remarks == "none") ? "" : "text-danger";
+
+								
+								document.getElementById('request-table').innerHTML = `
+								<tr>
+									<td>${fullname}</td>
+									<td>${e.office_name}</td>
+									<td><a class="${color}">${e.status}</a></td>
+									<td>${e.contact}</td>
+									<td>${e.email}</td>
+									<td>${e.submitted}</td>
+									<td><b>${e.employee_id}</b></td>
+									<td><a class="${color1}">${e.remarks}</a></td>
+									<td>
+									<a onclick="approve('${e.ID}')"><i class="fa fa-check text-navy"></i></a> 
+										
+										<a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d('${fullname}', '${e.ID}', '${e.contact}')">
+											<i class="fa fa-close text-danger" style="margin-left:20px"></i>
+										</a>
+									</td>
+								</tr>
+								`;
+							});
+							$('.footable').footable();
+							
+						}else{
+							document.getElementById('request-table').innerHTML = `<td colspan="9" style="text-align:center">No Data Available</td>`;
+						}
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown)
 				{
@@ -161,7 +240,7 @@
                                 <span class="label label-info float-right pull-right">Today</span>
                             </div>
                             <div class="ibox-content">
-                                <h1 class="no-margins"><?php echo count($registered);?></h1>                               
+                                <h1 class="no-margins" id="registered"><?php echo count($registered);?></h1>                               
                                 <small>Active</small>
                             </div>
                         </div>
@@ -173,7 +252,7 @@
                                 <span class="label label-info float-right pull-right">Today</span>           
                             </div>
                             <div class="ibox-content">
-                                <h1 class="no-margins"><?php echo count($requests);?></h1>
+                                <h1 class="no-margins" id="request-count"><?php echo count($requests);?></h1>
                                 <small>Issues may be incorrect data</small>
                             </div>
                         </div>
@@ -211,10 +290,10 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="request-table">
                                 
                                 <?php														
-                                    if($requests){
+                                if($requests){
                                     foreach($requests as $request){
                                         if($request->ext_name == "none"){
                                             $fullname = $request->fname." ".$request->last_name;
@@ -227,7 +306,7 @@
                                         
                                         
                                         $time = strtotime($request->submitted);
-                                        $final = date("l F j, Y g:i:sa", $time); 
+                                        $final = date("l F j, Y g:i:sa", $time);
                                         
                                     //<td><span class="pie">90/100</span></td>	
                                         echo '
@@ -243,7 +322,7 @@
                                                 <td>
                                                 <a onclick="approve(\''.$request->ID.'\')"><i class="fa fa-check text-navy"></i></a> 
                                                     
-                                                    <a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d(\''.$fullname.'\', \''.$request->ID.'\')">
+                                                    <a data-toggle="modal" data-target="#decline_modal" onclick="ps_mdl_d(\''.$fullname.'\', \''.$request->ID.'\', \''.$request->contact.'\')">
                                                         <i class="fa fa-close text-danger" style="margin-left:20px"></i>
                                                     </a>
                                                 </td>

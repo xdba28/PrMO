@@ -55,12 +55,14 @@
                         ))){
                         Session::delete("accounttype");
                         Session::put("accounttype", 0);
-                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Syslog::put('Account setup');
                         $user->logout();
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
-                    die($e->getMessage());
+					Syslog::put($e,null,'error_log');
+					Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
                 }
                 
             }
@@ -81,7 +83,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Staff</title>
-
+     <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>

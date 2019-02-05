@@ -23,7 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Evaluation</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">s
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 	<script>
 		// this is a boolean variable
@@ -263,6 +263,8 @@
 														<p style="margin-left:20px;"><b><?php echo $form." - ".$formDetails->title;?></b></p>
 													<h4 class="text-left" style="color: #F37123">Purpose</h4>
 														<p style="margin-left:20px"><b><?php echo $formDetails->purpose;?></b></p>
+													<h4 class="text-left" style="color: #F37123">ABC</h4>
+														<h3 style="margin-left:20px"><i>&#x20b1; <?php echo number_format($project->ABC, 2);?></i></h3>		
 													<h4 class="text-left" style="color: #F37123">Total Request Cost</h4>
 														<h3 style="margin-left:20px"><i>&#x20b1; <?php echo number_format($lotCost, 2);?></i></h3>		
 												</div>
@@ -276,7 +278,7 @@
 																if(($lot->lot_no == 101) && ($lot->lot_title)){
 																	$displayLot = "Static lot - No lot setted";
 																}else{
-																	$displayLot = "Lot ".$lot->lot_no;
+																	$displayLot = "Lot ".$lot->lot_no." - ".$lot->lot_title;
 																}
 																$parameter = "'#".$lot->request_origin."-".$lot->lot_no."'";
 																echo '

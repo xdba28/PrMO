@@ -71,7 +71,7 @@
 		
 							));
 						}
-						
+						Syslog::put("create pr form");
 						//proceed to printing the actual form
 						Session::flash('Request', $form_ref_no.":PR");
 						Redirect::To('my-forms');
@@ -80,7 +80,8 @@
 						//pop sweet alert "Your request has been registered and ready to download";
 						//after some seconds? redirect to pr/jo created
 					}catch(Exception $e){
-						die($e->getMessage());
+						Syslog::put($e,null,"error_log");
+						Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
 					}
 			}else{
 					
@@ -157,6 +158,8 @@
 							));
 						}	
 					}
+
+					Syslog::put("create pr form");
 		
 					//proceed to printing the actual form
 					Session::flash('Request', $form_ref_no.":PR");
@@ -165,7 +168,8 @@
 					exit();
 				
 				}catch(Exception $e){
-					die($e->getMessage());
+					Syslog::put($e,null,"error_log");
+					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
 				}				
 			}
 	  	}
@@ -284,7 +288,7 @@
 															<div class="form-group"id="popOver" data-trigger="hover" title="Reminder" data-placement="right" data-content="If you wish to have an uncategorized item list, you can leave this field blank and immediately proceed to step 2 `Particulars`  ">
 																<label class="font-normal">Category(-ies)</label>
 																<div>
-																	<select data-placeholder="Choose Category or Lots needed" class="select2_demo_1" multiple style="width:350px;overflow: scroll" tabindex="4" name="category" form="pr_form">															
+																	<select data-placeholder="Choose Category or Lots needed" class="select2_demo_1" multiple style="width:350px;y-index: 100" tabindex="4" name="category" form="pr_form">															
 																		<option value="Common Office Supplies">Common Office Supplies</option>
 																		<option value="Paper Materials & Products">Paper Materials & Products</option>          
 																		<option value="Hardware Supplies">Hardware Supplies</option>
@@ -490,7 +494,6 @@
 <script>
 	$(function()
 	{
-		$(".select2_demo_1").select2();
 
 		$('[data="tab"]').on('click', function(){
 			var tab = $(this).attr("id").split("-");
@@ -633,7 +636,6 @@
 		});
 
 		var arry = [];
-		// $('.chosen-select').chosen({width: "100%"}).on('change', function()
 		$(".select2_demo_1").select2().on('change', function()
 		{
 			var TC = 0;

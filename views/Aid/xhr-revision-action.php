@@ -11,8 +11,6 @@ if($admin->isLoggedIn()){
 	die();
 }
 
-// echo "<pre>".print_r($_POST)."</pre>";
-// die();
 
 if(!empty($_POST))
 {
@@ -95,6 +93,8 @@ if(!empty($_POST))
 					#we still have errors to resolve here from the enduser side, incorrect reason input
 				}
 
+
+				Syslog::put('Grant form delete revision');
 
 
 
@@ -242,10 +242,7 @@ if(!empty($_POST))
 					
 				}
 				
-
-
-				
-
+				Syslog::put('Grant form update revision');
 
 				
 			}
@@ -295,11 +292,16 @@ if(!empty($_POST))
 				$requestor = $admin->get("enduser", array("edr_id", "=", $request->requested_by));
 				sms($requestor->phone, "System", "Your revision request on {$request->form_origin} was declined.");
 
+				Syslog::put('Decline form Delete/Update revision');
+
 
 		}
 
 
 	}catch(Exception $e){
+
+		Syslog::put($e,null,'error_log');
+		Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 		$e->getMessage()."A Fatal Error Occured";
 		$data = ['success' => 'error', 'codeError' => $e];
 		echo json_encode($data);

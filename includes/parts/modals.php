@@ -33,6 +33,7 @@
 								<label>Account request of</label>
 								<input type="text" id="rq-mdl-name" disabled class="form-control">
 								<input type="hidden" id="rq-hid" name="rq-hid">
+								<input type="hidden" id="rq-num" name="rq-num">
 							</div>
                             <div class="form-group">
 								<label>Reason</label>
@@ -62,7 +63,7 @@
                             <form id="newAccount" action="" method="POST" role="form">
                                 <div class="row" id="pwd-container">
                                     <div class="col-sm-12">
-                                        <div class="form-group">
+                                        <div id="username-div" class="form-group">
                                             <label for="new_username" class="form-label">New Username</label>
                                             <input type="text" class="form-input" id="new_username" name="new_username" required autocomplte="off">
                                         </div>
@@ -146,8 +147,8 @@
 							<tr class="">
 								<td class="tdcheck"><input data="upLog" type="checkbox" class="i-checks" name="updOutLog[]" id="<?php echo $document->project;?>"> <label for="<?php echo $document->project;?>"><?php echo $document->project;?></label></td>
 								<td class="td-project-title"><label for="<?php echo $document->project;?>"><?php echo $project->project_title;?></label></td>
-								<td class="center">TWG</td>
-								<td class="center">TWG</td>
+								<td class="center"><?php echo $document->transmitting_to;?></td>
+								<td class="center"><?php echo $document->specific_office;?></td>
 								<td class="center"><?php echo Date::translate($document->date_registered, 1);?></td>
 							</tr>
 							<?php
@@ -417,7 +418,7 @@
 								   <option value="PB">Public Bidding</option>
 								   <option value="SVP">Small Value Procurement</option>
 								   <option value="DC">Direct Contracting</option>
-								   <!-- <option value="NEGO">Negociated Procurement</option> -->
+								   <option value="NEGO">Negociated Procurement</option>
 								   <option value="Shopping">Shopping</option>
 								   <option value="RO">Repeat Order</option>
 								   <option value="LSB">Limited Source Bidding</option>

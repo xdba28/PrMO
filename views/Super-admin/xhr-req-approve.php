@@ -1,6 +1,7 @@
 <?php
-
 require_once('../../core/init.php');
+header("Content-type:application/json");
+
 
 $admin = new Admin(); 
 
@@ -55,18 +56,34 @@ try
 	
 	$sa->endTrans();
 
-
+	Syslog::put('Approve end user account request');
 	//send sms to enduser that his/her account is already created with the One-time password
 	// $customMessage = 'Hello '.$r->fname.'! Welcome to PrMO OPPTS. Your account request has been successfully verified, you may now login to '.Config::get('links/standarduser').' with your one-time password "'.$OTP.'".';
 	$customMessage = 'Welcome to PrMO OPPTS! You may now login with your one-time password: "'.$OTP.'".';
 	sms($r->contact, "System", $customMessage);
+
+	$requests = $sa->requests();
+	foreach($requests as $key => $request){
+		$time = strtotime($request->submitted);
+		$final = date("l F j, Y g:i:sa", $time);
+		$requests[$key]->submitted = $final;
+	}
+
+
+	echo json_encode([
+		'success' => true,
+		'request' => $requests,
+		'registered' => count($sa->registered_users())
+	]);
 }
 catch(Exception $e)
 {
+
+	Syslog::put($e,null,'error_log');
+	Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 	$data = [
 		'success' => false
 	];
-	header("Content-type:application/json");
 	echo json_encode($data);
 }
 ?>

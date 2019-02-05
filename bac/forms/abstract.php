@@ -229,7 +229,7 @@ if($canvass->CanvassDetails->type === "PR"){
 			$table->addCell()
 				->addText($key + 1, null, $c);
 			$table->addCell()
-				->addText("lot", null, $c);
+				->addText($item->unit, null, $c);
 			$table->addCell()
 				->addText($item->item_description, null, $c);
 

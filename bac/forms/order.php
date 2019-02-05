@@ -244,7 +244,7 @@ if($canvass->type === "PR"){
 		}
 
 		$textrun->addTextBreak(1);
-		$textrun->addText($jo->notes);
+		$textrun->addText("***Note: ".$jo->notes);
 
 		$table->addCell(null, $gs2)
 			->addText(Date::translate($jo->cost, 'php'), $fb, $c);

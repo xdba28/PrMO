@@ -320,11 +320,17 @@ else{
 										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved",
 										'date' => Date::translate(Date::translate('test', 'now'), '1'),
 										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
-									)));								
+									)));
+
+									$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+									
+									#send sms to enduser "issue resolved and process may continue"
+									$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project evaluation issue with '.$projectDetails->project_ref_no.' has been resolved.';
+									sms($currentEnduser->phone, "System", $customMessage);							
 								}
 							$user->endTrans();
 								
-								#send sms to enduser "issue resolved and process may continue"
+							
 
 							}else if(Input::get('mopOption') === "muptiple"){
 								//mop classification shifted to overall(single) to multiple; conclusion:"it is shifted because in the first place if the classification is multiple already it wont we appearing here.
@@ -361,7 +367,13 @@ else{
 										'message' => "Issue regarding to pre-procurement evaluation of {$projectDetails->project_ref_no} was successfully solved.",
 										'date' => Date::translate(Date::translate('test', 'now'), '1'),
 										'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
-									)));								
+									)));	
+									
+									$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+									
+									#send sms to enduser "issue resolved and process may continue"
+									$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project evaluation issue with '.$projectDetails->project_ref_no.' has been resolved.';
+									sms($currentEnduser->phone, "System", $customMessage);									
 								}								
 							  $user->endTrans();
 
@@ -412,11 +424,16 @@ else{
 									'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
 									'date' => Date::translate(Date::translate('test', 'now'), '1'),
 									'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
-								)));								
+								)));
+								
+								$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+									
+								#send sms to enduser "issue again"
+								$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project '.$projectDetails->project_ref_no.' encountered an pre-procurement evaluation issue again';
+								sms($currentEnduser->phone, "System", $customMessage);								
 							}							
 
 
-							#send sms to enduser about this issue "issue again"
 
 						  $user->endTrans();
 
@@ -472,10 +489,15 @@ else{
 											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
 											'date' => Date::translate(Date::translate('test', 'now'), '1'),
 											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
-										)));								
+										)));
+										
+										$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+									
+										#send sms to enduser "issue again"
+										$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project '.$projectDetails->project_ref_no.' encountered a pre-procurement evaluation issue.';
+										sms($currentEnduser->phone, "System", $customMessage);	
 									}										
 
-									#send sms to enduser about this issue
 			
 									//check if the project has multiple enduser
 									if($noOfEndusers > 1){
@@ -513,17 +535,47 @@ else{
 										'logdate' => Date::translate('now', 'now'),
 										'type' => 'IN'
 									));
+
+									//send dashboard notifs "pre-porcurement success"
+									foreach ($enduserList as $endusers){
+										$user->register('notifications', array(
+											'recipient' => $endusers,
+											'message' => 'Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.',
+											'datecreated' => Date::translate('test', 'now'),
+											'seen' => 0,
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										));
+										notif(json_encode(array(
+											'receiver' => $endusers,
+											'message' => 'Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.',
+											'date' => Date::translate(Date::translate('test', 'now'), '1'),
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										)));
+										
+										$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+											
+										#send sms to enduser "issue again"
+										$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.';
+										sms($currentEnduser->phone, "System", $customMessage);								
+									}	
 	
 									//notify procurement aid that this project has been successfully evaluated
 									// *******do refer to group classification "procurement aid in sending this notif
 	
-									// $user->register('notifications', array(
-									// 	'recipient' => "admins aid",
-									// 	'message' => "Project request {$projectDetails->project_ref_no} just finished pre-procurement evaluation.",
-									// 	'datecreated' => Date::translate('test', 'now'),
-									// 	'seen' => 0,
-									// 	'href' => "Ongoing-projects"
-									// ));								
+									$user->register('notifications', array(
+										'recipient' => "group5",
+										'message' => "Project request {$projectDetails->project_ref_no} just finished pre-procurement evaluation.",
+										'datecreated' => Date::translate('test', 'now'),
+										'seen' => 0,
+										'href' => "Ongoing-projects"
+									));
+									
+									notif(json_encode(array(
+										'receiver' => "group5",
+										'message' => "Project request {$projectDetails->project_ref_no} just finished pre-procurement evaluation.",
+										'date' => Date::translate(Date::translate('test', 'now'), '1'),
+										'href' => "Ongoing-projects"
+									)), true);
 							}
 						$user->endTrans();
 	
@@ -570,7 +622,13 @@ else{
 											'message' => "Pre-procurement evaluation issue encountered regarding to {$projectDetails->project_ref_no}, Click here for details.",
 											'date' => Date::translate(Date::translate('test', 'now'), '1'),
 											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
-										)));								
+										)));
+
+										$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+									
+										#send sms to enduser "issue again"
+										$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project '.$projectDetails->project_ref_no.' encountered a pre-procurement evaluation issue.';
+										sms($currentEnduser->phone, "System", $customMessage);											
 									}	
 
 									#send sms to enduser about this issue
@@ -596,14 +654,37 @@ else{
 										'date_registered' => Date::translate('now', 'now')
 									));
 							}else{
-								//let the aid finish this step
+									//send dashboard notifs "pre-porcurement success"
+									foreach ($enduserList as $endusers){
+										$user->register('notifications', array(
+											'recipient' => $endusers,
+											'message' => 'Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.',
+											'datecreated' => Date::translate('test', 'now'),
+											'seen' => 0,
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										));
+										notif(json_encode(array(
+											'receiver' => $endusers,
+											'message' => 'Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.',
+											'date' => Date::translate(Date::translate('test', 'now'), '1'),
+											'href' => "project-details?refno=".base64_encode($projectDetails->project_ref_no)
+										)));
+										
+										$currentEnduser = $user->get("enduser", array("edr_id", "=", $endusers));
+											
+										#send sms to enduser "issue again"
+										$customMessage = 'Hello '.$currentEnduser->edr_fname.' Your project '.$projectDetails->project_ref_no.' passed the pre-procurement evaluation.';
+										sms($currentEnduser->phone, "System", $customMessage);								
+									}
 							}						
 					
 						$user->endTrans();
 
 						}	
 
-					}					
+					}
+					
+					Syslog::put('pre-procurement evaluation update');
 
 				break;
 
@@ -614,6 +695,8 @@ else{
 			}
 
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			echo json_encode($data);

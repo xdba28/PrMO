@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Procurement Aid</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>
@@ -102,7 +102,7 @@
 								<tr>
 									<th>#</th>
 									<th>Log ID</th>
-									<th>Refering to</th>
+									<th>GDS Reference</th>
 									<th>Log Remark</th>
 									<th>Type</th>
 									<th>Log Date</th>

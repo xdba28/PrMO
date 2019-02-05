@@ -82,6 +82,7 @@
 						if($user->data()->status == "DEACTIVATED"){
 							Session::flash('deactivated', 'Sorry, but your account was deactivated.');
 						}else{
+							Syslog::put("Login", "../data/logfiles/","failed",$user->data()->account_id,$user->data()->username);
 							Session::flash('incorrect', 'Incorrect Username or Password');
 						}
 					}
@@ -107,6 +108,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Admin Login</title>
+    <link rel="shortcut icon" href="../assets/pics/flaticons/men.png" type="image/x-icon">
 
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/font-awesome/css/font-awesome.css" rel="stylesheet">

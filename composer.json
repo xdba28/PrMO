@@ -6,6 +6,7 @@
         "phpoffice/phpword": "*",
         "phpoffice/phpspreadsheet": "*",
 		"pusher/pusher-php-server": "*",
-		"tecnickcom/tcpdf": "*"
+		"tecnickcom/tcpdf": "*",
+		"nexmo/client": "*"
     }
 }

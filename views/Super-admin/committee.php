@@ -12,19 +12,30 @@
 	}
 
 	if(!empty($_POST)){
-		$user->startTrans();
+		try {
+			$user->startTrans();
 
-		$user->register('commitee', array(
-			'name' => Input::get('full'),
-			'position' => Input::get('position'),
-			'type' => Input::get('type'),
-			'unit_office' => Input::get('office')
-		));
+				if($user->register('commitee', array(
+					'name' => Input::get('full'),
+					'position' => Input::get('position'),
+					'type' => Input::get('type'),
+					'unit_office' => Input::get('office')
+				))){
+					Syslog::put('System commitee update');
+				}else{
+					Syslog::put('System commitee update', null, 'failed');
+				}
 
-		$user->endTrans();
+			$user->endTrans();
 
-		$responce = "Succesfully added commitee member.";
-		unset($_POST);
+		Session::flash('committee', 'Succesfully added commitee member.');
+		Redirect::to('committee');
+		die();
+		} catch (Exception $e) {
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
+		}
+
 	}
 
 
@@ -38,11 +49,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Overview</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php"?>
 	<script>
 		var responce = '<?php 
-			if(isset($responce)){
-				echo $responce;
+			if(Session::exists("committee")){
+				echo Session::flash('committee');
 			}else{
 				echo "";
 			}
@@ -168,6 +180,13 @@
                                 <tbody id="t-data">
 
                                 </tbody>
+								<tfoot>
+								<tr>
+									<td colspan="5">
+										<ul class="pagination float-right"></ul>
+									</td>
+								</tr>
+								</tfoot>
                             </table>
 						<button class="btn btn-outline btn-success btn-rounded" id="btnAdd">Add Commitee</button>
 						<button class="btn btn-outline btn-primary btn-rounded pull-right" id="save">Save Changes</button><br><br><br>

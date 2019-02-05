@@ -56,12 +56,13 @@
                         ))){
                         Session::delete("accounttype");
                         Session::put("accounttype", 0);
-                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Syslog::put('Account setup');
                         $user->logout();
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
-					// die($e->getMessage());
+					Syslog::put($e,null,'error_log');
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
@@ -96,8 +97,11 @@
 					'message' => "project ".Input::get('to-prioritize')." was set to high-priority project by the director.",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "Ongoing-projects"
-				)), true);				
+				)), true);
+				
+				Syslog::put('Updated project '.Input::get('to-prioritize').' to high priority');
 			}catch(Exception $e){
+				Syslog::put($e,null,'error_log');
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
 			}
 
@@ -118,7 +122,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Director</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon"> 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 	
 	
@@ -458,7 +462,7 @@
 												<div class="col-8 text-right" style="height:90px">
 													<span>'.$project->project_title.'</span>
 												</div>
-												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' day/s</h2></div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' days</h2></div>
 											</div>
 										</div>
 										</a>

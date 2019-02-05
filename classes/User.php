@@ -79,8 +79,11 @@
                 if($user){
 
                     if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
-                        Session::put($this->sessionName, $this->data()->account_id);
-                        $_SESSION['accounttype'] = $this->data()->newAccount;
+						Session::put($this->sessionName, $this->data()->account_id);
+						Session::put('username', $this->data()->username);
+						Session::put('accounttype', $this->data()->newAccount);
+
+						Syslog::put("Login","./data/logfiles/");
 
                         if($remember){
                             
@@ -115,7 +118,8 @@
         public function register($table, $fields = array()){
             if(!$this->db->insert($table, $fields)){
                 throw new Exception('There was a problem registering fields');
-           }       
+		   }
+		   return true;
         
         }
         
@@ -611,7 +615,8 @@
             $this->db->delete('users_session', array('user_id', '=', $this->data()->account_id));
 
             Session::delete($this->sessionName);
-            Session::delete("accounttype");
+			Session::delete("accounttype");
+			Session::delete("username");
             Cookie::delete($this->cookieName);
             
         }

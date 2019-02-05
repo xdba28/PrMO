@@ -148,7 +148,7 @@
 														case 'declined':
 															$response = '<span class="label label-danger">DECLINED</span>';
 															break;
-														case 'approved':
+														case 'granted':
 															$response = '<span class="label label-primary">Approved</span>';
 															break;
 														case 'none':

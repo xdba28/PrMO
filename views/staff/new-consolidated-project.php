@@ -88,16 +88,16 @@
 					$formCount++;
 				}
 
-				$staff->register('outgoing', array(
+				// $staff->register('outgoing', array(
 
-					'project' =>  $project_ref_no,
-					'transmitting_to' => 'TWG',
-					'specific_office' => 'TWG',
-					'remarks' => 'none',
-					'transactions' => 'EVALUATION',
-					'date_registered' => Date::translate('test', 'now')
+				// 	'project' =>  $project_ref_no,
+				// 	'transmitting_to' => 'TWG',
+				// 	'specific_office' => 'TWG',
+				// 	'remarks' => 'none',
+				// 	'transactions' => 'EVALUATION',
+				// 	'date_registered' => Date::translate('test', 'now')
 
-				));
+				// ));
 
 				$staff->register('project_logs', array(
 					'referencing_to' => $project_ref_no,
@@ -121,7 +121,8 @@
 				exit();
 
 			}catch(Execption $e){
-				die($e->getMessage());
+				Syslog::put($e,null,'error_log');
+				Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			}
 
 
@@ -141,9 +142,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
-
-	<?php include_once'../../includes/parts/admin_styles.php'; ?>
+    <title>PrMO OPPTS | Consolidated Project</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
+    <?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 	<script>
 		var OBJ = 

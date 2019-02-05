@@ -26,9 +26,7 @@ else{
 
 		try{
 
-			$user->startTrans();
-
-				switch ($action) {
+				switch ($action){
 					case '1': //succesfully received
 
 						foreach ($outgoing as $reference){
@@ -51,15 +49,19 @@ else{
 									break;
 							}
 
-							$user->register('project_logs', array(
+							$user->startTrans();
+								$user->register('project_logs', array(
 
-								'referencing_to' => $reference,
-								'remarks' => $remarks,
-								'logdate' => Date::translate('test', 'now'),
-								'type' => 'OUT'
-							));
+									'referencing_to' => $reference,
+									'remarks' => $remarks,
+									'logdate' => Date::translate('test', 'now'),
+									'type' => 'OUT'
+								));
 
-							$user->delete('outgoing_register', array('project', '=', $reference));
+								$user->delete('outgoing_register', array('project', '=', $reference));
+							$user->endTrans();
+
+							Syslog::put('Update '.$reference.' from released documents. transaction:'.$project->transactions);
 							
 						}
 						break;
@@ -88,15 +90,19 @@ else{
 									break;
 							}
 
-							$user->register('project_logs', array(
+							$user->startTrans();
+								$user->register('project_logs', array(
 
-								'referencing_to' => $reference,
-								'remarks' => $remarks,
-								'logdate' => Date::translate('test', 'now'),
-								'type' => 'IN'
-							));
+									'referencing_to' => $reference,
+									'remarks' => $remarks,
+									'logdate' => Date::translate('test', 'now'),
+									'type' => 'IN'
+								));
 
-							$user->delete('outgoing_register', array('project', '=', $reference));
+								$user->delete('outgoing_register', array('project', '=', $reference));
+							$user->endTrans();
+
+							Syslog::put('Update '.$reference.' from released documents. transaction:'.$project->transactions);
 							
 						}					
 						break;
@@ -118,15 +124,20 @@ else{
 								'date_registered' => Date::translate('test', 'now')
 							));
 
-							$user->delete('outgoing_register', array('project', '=', $reference));
 
-							$user->register('project_logs', array(
+							$user->startTrans();
+								$user->delete('outgoing_register', array('project', '=', $reference));
 
-								'referencing_to' => $reference,
-								'remarks' => "Project Documents returned to outgoing files queue, previous transaction canceled.",
-								'logdate' => Date::translate('test', 'now'),
-								'type' => 'IN'
-							));
+								$user->register('project_logs', array(
+
+									'referencing_to' => $reference,
+									'remarks' => "Project Documents returned to outgoing files queue, previous transaction canceled.",
+									'logdate' => Date::translate('test', 'now'),
+									'type' => 'IN'
+								));
+							$user->endTrans();
+
+							Syslog::put('Update '.$reference.' from released documents. transaction:'.$project->transactions);
 
 							
 							
@@ -140,26 +151,30 @@ else{
 								
 							$project = $user->get('outgoing_register', array('project', '=', $reference));
 
-							//transfer from register to outgoing
-							$user->register('outgoing', array(
-								'project' => $project->project,
-								'transmitting_to' => $project->transmitting_to,
-								'specific_office' => $project->specific_office,
-								'remarks' => $project->remarks,
-								'transactions' => $project->transactions,
-								'date_registered' => Date::translate('test', 'now')
-							));
+							$user->startTrans();
+								//transfer from register to outgoing
+								$user->register('outgoing', array(
+									'project' => $project->project,
+									'transmitting_to' => $project->transmitting_to,
+									'specific_office' => $project->specific_office,
+									'remarks' => $project->remarks,
+									'transactions' => $project->transactions,
+									'date_registered' => Date::translate('test', 'now')
+								));
 
-							$user->delete('outgoing_register', array('project', '=', $reference));
+								$user->delete('outgoing_register', array('project', '=', $reference));
 
-							$user->register('project_logs', array(
+								$user->register('project_logs', array(
 
-								'referencing_to' => $reference,
-								'remarks' => "Delivery Failure due to {$updateRemark}.",
-								'logdate' => Date::translate('test', 'now'),
-								'type' => 'IN'
-							));
-							
+									'referencing_to' => $reference,
+									'remarks' => "Delivery Failure due to {$updateRemark}.",
+									'logdate' => Date::translate('test', 'now'),
+									'type' => 'IN'
+								));
+							$user->endTrans();
+
+							Syslog::put('Update '.$reference.' from released documents.');
+								
 						}					
 						break;
 					default: 
@@ -167,9 +182,12 @@ else{
 						break;
 				}
 
-			$user->endTrans();
+				// Syslog::put('Update released documents');
+
 
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			echo json_encode($data);

@@ -18,7 +18,6 @@
 
     if(Input::exists()){
         if(Token::check("newUserToken", Input::get('newUserToken'))){
-            //allow to submit the form
 
             $validate = new Validate();
             $validation =  $validate->check($_POST, array(
@@ -112,7 +111,8 @@
                         'phone' => "+63".Input::get('phone'),
                         'prnl_designated_office' => Input::get('office'),
 						'prnl_job_title' => Input::get('jobtitle'),
-						'prnl_profile_photo' => $finalPhoto
+						'prnl_profile_photo' => $finalPhoto,
+						'date_joined' => Date::translate("now", "now")
                     )); 
 
                     $sa->register('prnl_account', array(
@@ -126,13 +126,15 @@
 
 					// Session::flash('new_user', 'User Successfuly registered in the System.'); /* DISPLAY THIS TO TOUST */
 					$success_notifs[] = "User successfully registered in the system";
+					Syslog::put('Admin accouunt registration');
 
-                }catch(Exception $e){					
+                }catch(Exception $e){
+					Syslog::put($e,null,'error_log');
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
 
             }else{
-
+				Syslog::put('Admin account registration', null, 'failed');
             }
 
 
@@ -154,6 +156,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Admin Registration</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
@@ -268,7 +271,7 @@
 											</div>	
 										
 											<div class="form-group">
-												<label class="col-form-label" for="typeahead">Job Title</label>												
+												<label class="col-form-label" for="typeahead">Job Title</label>
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-briefcase my-blue"></i></span><input id="typeahead" name="jobtitle" type="text" class="form-control" required>
 												</div>												

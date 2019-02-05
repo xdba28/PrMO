@@ -3,20 +3,16 @@ require_once "../../core/init.php";
 $admin = new Admin();
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-$gds = base64_decode($_GET['q']);
-$lot = $_GET['l'];
-$title = base64_decode($_GET['t']);
-$sp_id = $_GET['spid'];
+
+$gds = base64_decode($_GET['rq']);
+// canvass_forms id
+$form_id = $_GET['f'];
+// mop_index
 $mop_index = $_GET['m'];
 
-$file = $gds." - BAC Resolition Declaration.docx";
+$file = $gds." - Resolution Mode of Procurement.docx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 header('Content-Disposition: attachment; filename="'.$file.'"');
-
-// $documentProtection = $phpWord->getSettings()->getDocumentProtection();
-// $documentProtection->setEditing(\PhpOffice\PhpWord\SimpleType\DocProtect::READ_ONLY);
-// $documentProtection->setPassword('PrMO');
-
 
 $phpWord->addNumberingStyle("mult", [
 	'type'   => 'multilevel',
@@ -68,31 +64,50 @@ $cc = ['valign' => 'center'];
 $gs2 = ['gridSpan' => 2];
 $fb = ['bold' => true];
 $b = ['alignment' => 'both'];
-// $cStyle = ['indentation' => ['left' => 200, 'right' => 300]];
+
 
 // project details
 $project = $admin->get('projects', array('project_ref_no', '=', $gds));
-// canvass details
-$canvass = $admin->selectCanvassForm($gds, $title, $lot);
-// suppliers that bid on this project
-$suppliers = $admin->abstractSuppliers($gds, $lot);
-// awarded supplier
-$supplier = $admin->awardSupplier($sp_id);
+$canvass = $admin->get('canvass_forms', array('gds_reference', '=', $gds));
+$prop = $admin->getPublication($gds, $form_id);
+
+
+
+$mop = json_decode($prop->mop, true);
+
+switch($mop[$mop_index]['mode']){
+	case "SVP":
+		$mop_name = "Small Value Procurement";
+		break;
+	case "PB":
+		$mop_name = "Public Bidding";
+		break;
+	case "DC":
+		$mop_name = "Direct Contracting";
+		break;
+	default:
+		$mop_name = $mop[$mop_index]['mode'];
+}
 
 
 $textrun = $section->addTextRun(['alignment' => 'center', 'lineHeight' => 1, 'space' => ['before' => 0, 'after' => 72]]);
-$textrun->addText("BAC RESOLUTION DECLARING ", $fb);
-$textrun->addText(strtoupper($supplier->name), $fb);
-$textrun->addText(" AS THE BIDDER WITH THE SINGLE/LOWEST CALCULATED AND RESPONSIDE BID (SCRB/LCRB) FOR THE CONTRACT: ", $fb);
+$textrun->addText("BAC RESOLUTION RECOMMENDING ", $fb);
+
+if($mop[$mop_index]['mode'] === "SVP"){
+	$textrun->addText("NEGOTIATED PROCUREMENT (".strtoupper($mop_name).")", $fb);
+}else{
+	$textrun->addText(strtoupper($mop_name), $fb);
+}
+
+$textrun->addText(" AS AN ALTERNATIVE MODE OF PROCUREMENT OF THE CONTRACT: ", $fb);
 $textrun->addText(strtoupper($project->project_title), $fb);
-$section->addText("Resolution No. LCRB-{$gds}", ['size' => 10], $c);
+$section->addText("Resolution No. AMP-{$gds}", ['size' => 10], $c);
 $section->addTextBreak(1);
 
 $textrun = $section->addTextRun(['alignment' => 'both']);
 $textrun->addText("WHEREAS, the BICOL UNIVERSITY requested for the project: ");
-$textrun->addText($project->project_title, ['italic' => true]);
+$textrun->addText($project->project_title, ['italic' => true, 'bold' => true]);
 $textrun->addText(" with an Approved Budget for the Contract (ABC): ");
-$section->addTextBreak(1);
 
 $ABC = $project->ABC;
 $ex = explode('.', $ABC);
@@ -115,66 +130,47 @@ elseif($countABC === 2)
 $format = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 $whole = $format->format($whole);
 
-if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).");", ['italic' => true]);
-elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).");", ['italic' => true]);
+if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).");", ['italic' => true, 'bold' => true]);
+elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).");", ['italic' => true, 'bold' => true]);
 
+$section->addTextBreak(1);
+$section->addText("WHEREAS, the item to be procured is needed in the performance of the requesting office, duly approved by the University President as reflected in the Annual Procurement Program for ".date('Y')." and the amount does not exceed the threshold set forth for the alternative mode of procurement;", null, $b);
+$section->addTextBreak(1);
 
-$mop = json_decode($canvass->CanvassDetails->mop, true);
+// check if pr or jo
 
-switch($mop[$mop_index]['mode']){
-	case "SVP":
-		$mop_name = "Small Value Procurement";
-		break;
-	default:
-		$mop_name = $mop[$mop_index]['mode'];
+if($mop[$mop_index]['mode'] === "SVP"){
+	if($canvass->type === "PR"){
+		$section->addText("WHEREAS, the procurement shall be in accordance with the conditions set forth in Section ".$mop[$mop_index]['no']." Negotiated Procurement (".$mop_name.") of the Revised IRR of R.A. 9184 and each item shall be evaluated separately for the purpose of bidding, evaluation, and contract award;", null, $b);
+	}else{
+		$section->addText("WHEREAS, the procurement shall be in accordance with the conditions set forth in Section ".$mop[$mop_index]['no']." Negotiated Procurement (".$mop_name.") of the Revised IRR of R.A. 9184;", null, $b);
+	}
+}else{
+	if($canvass->type === "PR"){
+		$section->addText("WHEREAS, the procurement shall be in accordance with the conditions set forth in Section ".$mop[$mop_index]['no']." ".$mop_name." of the Revised IRR of R.A. 9184 and each item shall be evaluated separately for the purpose of bidding, evaluation, and contract award;", null, $b);
+	}else{
+		$section->addText("WHEREAS, the procurement shall be in accordance with the conditions set forth in Section ".$mop[$mop_index]['no']." ".$mop_name." of the Revised IRR of R.A. 9184;", null, $b);
+	}
 }
-
-$section->addText("WHEREAS, the BAC resorted to Negotiated Procurement under ".$mop_name." (Section ".$mop[$mop_index]['no'].") as an alternative mode and posted the project in the Bulletin Board for the period ".date('F')." ".date('d')."-".date('d', strtotime('+7 days')).", ".date('Y').";", null, $b);
 $section->addTextBreak(1);
 
-$section->addText("WHEREAS, the committee waived the formalities of competitive bidding procedures and issued Request for Quotation from supplies providers of known qualifications;", null, $b);
+$section->addText("WHEREAS, the technical member evaluated the requirement for each item and found it to be in order and sufficient;", null, $b);
 $section->addTextBreak(1);
 
-
-$bidders = $admin->getSupplierTotal($gds, $lot);
-
-
-$section->addText("WHEREAS, ".$format->format(count($bidders))." (".count($bidders).") supplies providers provided quotation with the following results");
+$section->addText("WHEREAS, the BAC ensures that the most advantageous price for the government shall be obtained wherein a minimum of three (3) previously qualified suppliers shall be requested to submit quotations, duly signed and sealed, on the dates as specified in the publications;", null, $b);
 $section->addTextBreak(1);
 
-$table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'left', 'cellMarginLeft'  => 115.2, 'cellMarginRight' => 115.2]);
-$table->addRow(43.2);
-$table->addCell(5000, $cc)->addText("Bidders", $fb, $c);
-$table->addCell(2000, $cc)->addText("Bid Amount", $fb, $c);
-$table->addCell(4000, $cc)->addText("Remarks", $fb, $c);
-
-foreach($bidders as $bidder){
-	$table->addRow(43.2);
-	$table->addCell(null, $cc)->addText($bidder->name);
-	$table->addCell(null, $cc)->addText(Date::translate($bidder->total, 'php'), null, $c);
-	$table->addCell(null, $cc)->addText($bidder->remark, null, $c);
-}
-
+$section->addText("\tNOW THEREFORE, We, the members of the Bids and Awards Committee, hereby RESOLVE as it hereby resolved:");
 $section->addTextBreak(1);
-$textrun = $section->addTextRun(['alignment' => 'both', 'lineHeight' => 1, 'space' => ['before' => 0, 'after' => 72]]);
-$textrun->addText("WHEREAS, upon examination, validation, and verification of all the eligibility, technical and financial requirements submitted by the ");
-$textrun->addText(strtoupper($supplier->name), null, $fb);
-$textrun->addText(", its bids was found to be responsive;");
-
-$section->addTextBreak(1);
-$section->addText("\tNOW, THEREFORE, We, the Members of the Bids and Awards Committee, hereby RESOLVE as it is hereby RESOLVED:");
-$section->addTextBreak(1);
-
 
 $listrun = $section->addListItemRun(0, 'mult', $b);
-$listrun->addText("To declare ");
-$listrun->addText(strtoupper($supplier->name), $fb);
-$listrun->addText(" as the bidder with the single/lowest calculated and responsive bid for the contract: ");
+$listrun->addText("To recommend ");
+if($mop[$mop_index]['mode'] === "SVP"){
+	$listrun->addText("Negotiated Procurement (".$mop_name.") under Section ".$mop[$mop_index]['no']." as an alternative mode of procurement for the contract: ");
+}else{
+	$listrun->addText($mop_name." under Section ".$mop[$mop_index]['no']." as an alternative mode of procurement for the contract: ");
+}
 $listrun->addText($project->project_title, ['bold' => true, 'italic' => true]);
-$listrun->addText(" in the amount equivalent to ");
-
-if($countABC === 1) $listrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).");", ['italic' => true, 'bold' => true]);
-elseif($countABC === 2) $listrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).");", ['italic' => true, 'bold' => true]);
 
 foreach(json_decode($project->end_user, true) as $end_user){
 	$end_users[] = $admin->get('enduser', array('edr_id', '=', $end_user)); 
@@ -189,10 +185,9 @@ if($end_users[0]->edr_ext_name !== "XXXXX"){
 
 $designation = $admin->get('units', array('ID', '=', $end_users[0]->edr_designated_office));
 
-$section->addTextBreak(1);
-
 $listrun = $section->addListItemRun(0, 'mult', $b);
-$listrun->addText("To recommend for approval by the ".$designation->approving_position." the foregoing findings.");
+$listrun->addText("To recommend for approval by the ".$designation->approving_position);
+
 
 
 $section->addTextBreak(1);
@@ -263,12 +258,6 @@ $table->addCell();
 
 
 
-
-
-
-
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-// $objWriter->save('C:/Users/Denver/Desktop/PROP.docx');
 $objWriter->save("php://output");
-
 ?>

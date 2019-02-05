@@ -43,11 +43,12 @@
 				
 				//Session::flash("nameupdate", "You successfully updated your personal information.");
 				$success_notifs[] = "You successfully updated your personal information.";
+				Syslog::put("fulname update");
 
 				
 			}catch(Exception $e){
 				//create system logs
-				
+				Syslog::put($e,null,"error_log");
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");				
 			}
 
@@ -84,11 +85,12 @@
 					
 					//Session::flash("emailupdate", "You successfully updated your Email Address.");
 					$success_notifs[] = "You successfully updated your Email Address.";
+					Syslog::put("email address update");
 				
 				
 				}catch(Exception $e){
 					//create system logs
-					
+					Syslog::put($e,null,"error_log");
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
 				}
 			}
@@ -113,11 +115,12 @@
 				
 				//Session::flash("phoneupdate", "You successfully updated your Email Address.");
 				$success_notifs[] = "You successfully updated your Phone number.";
+				Syslog::put("phone number update");
 			
 			
 			}catch(Exception $e){
 				//create system logs
-				
+				Syslog::put($e,null,"error_log");
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0003");
 			}
 			
@@ -141,11 +144,12 @@
 				
 				//Session::flash("phoneupdate", "You successfully updated your Email Address.");
 				$success_notifs[] = "You successfully updated your Designation/Unit.";
+				Syslog::put("designation update");
 			
 			
 			}catch(Exception $e){
 				//create system logs
-				
+				Syslog::put($e,null,"error_log");
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0004");
 			}
 		 }else if (Token::check("specificofficetoken", Input::get('specificofficetoken'))) {
@@ -168,11 +172,12 @@
 				
 				//Session::flash("phoneupdate", "You successfully updated your Email Address.");
 				$success_notifs[] = "You successfully updated your Specific Office.";
+				Syslog::put("specific office update");
 			
 			
 			}catch(Exception $e){
 				//create system logs
-				
+				Syslog::put($e,null,"error_log");
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0005");
 			}			
 		 }else if (Token::check("usernametoken", Input::get('usernametoken'))) {
@@ -205,10 +210,12 @@
 					$user->endTrans();
 										
 					$success_notifs[] = "You successfully updated your Username.";
+					Syslog::put("username update");
 				
 				
 				}catch(Exception $e){
 					//create system logs
+					Syslog::put($e,null,"error_log");
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0006");
 				}
 
@@ -255,10 +262,12 @@
 					$user->endTrans();
 										
 					$success_notifs[] = "You successfully updated your Password.";
+					Syslog::put("password update");
 				
 				
 				}catch(Exception $e){
 					//create system logs
+					Syslog::put($e,null,"error_log");
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0006");
 				}
 
@@ -319,6 +328,7 @@
 								$user->endTrans();
 								
 								$success_notifs[] = "You successfully updated your profile photo.";
+								Syslog::put("profile photo update");
 								
 							}else{
 								Session::flash("FATAL_ERROR", "There was an error uploading your file. ERRORCODE:0007s1");
@@ -330,6 +340,7 @@
 				 
 			}catch(Exception $e){
 				//create system logs
+				Syslog::put($e,null,"error_log");
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0007");
 			}
 			 
@@ -429,7 +440,7 @@
 								</h2>
 								<h4><?php echo $currentUser[1];?></h4>
 								<small>
-										<b>date joined:</b> <a style="font-size:12px; color:blue"><?php echo Date::translate($userData->date_joined, 2); ?></a>
+										<b>date joined:</b> <a style="font-size:12px;" class="text-navy"><?php echo Date::translate($userData->date_joined, 2); ?></a>
 								</small>
 							</div>
 						</div>

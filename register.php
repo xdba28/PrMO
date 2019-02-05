@@ -222,8 +222,9 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label>Designation office / Unit *</label>
+                                                <label>Designation Office / Unit *</label>
                                                 <select class="form-control m-b required" name="unit">
+													<option>Select Office/College</option>
                                                     <?php
                                                         foreach($units as $unit){
                                                             $name = $unit->office_name;
@@ -399,7 +400,8 @@
     <script src="assets/js/popper.min.js"></script>
     <script src="assets/js/bootstrap.js"></script>
     <script src="assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="assets/sweetalert2/dist/sweetalert2.all.min.js"></script>	
 
 	<!-- Input Mask-->
     <script src="assets/js/plugins/jasny/jasny-bootstrap.min.js"></script>
@@ -416,11 +418,17 @@
 	
     <!-- Password meter -->
     <script src="assets/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
-    <script src="assets/js/plugins/pwstrength/zxcvbn.js"></script>
+	<script src="assets/js/plugins/pwstrength/zxcvbn.js"></script>
+
+	<script src="includes/js/custom.js"></script>
+	<script src="assets/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+
+
 
     <script>
 	
         $(document).ready(function(){
+
 
 
 
@@ -536,6 +544,19 @@
 			$('#popOver1').popover();
 			$('#popOver2').popover();
 			$('#popOver3').popover();
+
+			$('[name="unit"]').on('change', function(){
+				SendDoSomething("POST", "views/Super-admin/xhr-get-offices.php", {
+					id: this.value
+				}, {
+					do: function(r){
+						$('#specific_office').typeahead('destroy');
+						$("#specific_office").typeahead({
+							source: r.offices
+						});
+					}
+				});
+			});
 
 			<?php
 			

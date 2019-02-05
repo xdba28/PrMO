@@ -286,7 +286,27 @@
 															}
 														?>
 													</td>
-													<td><?php echo $itemSpecificMode;?></td>
+													<td>
+														<?php
+															switch($itemSpecificMode){
+																case "PB":
+																	echo "Public Bidding";
+																	break;
+																case "SVP":
+																	echo "Small Value Procurement";
+																	break;
+																case "DC":
+																	echo "Direct Contracting";
+																	break;
+																case "TBE":
+																	echo "To be evaluated";
+																	break;
+																default:
+																	echo $itemSpecificMode;
+																	break;
+															}
+														?>
+													</td>
 													<td><?php echo $lotContent['stock_no'];?></td>
 													<td><?php echo $lotContent['unit'];?></td>
 													<td class="tddescription"><?php echo $lotContent['desc'];?></td>
@@ -359,7 +379,27 @@
 																</td>
 																<th><?php echo $itemCount;?></th>
 																<th><?php echo $lotCount;?> - <?php echo $lot['l_title'];?></th>
-																<td><?php echo $itemSpecificMode ?></td>
+																<td>
+																	<?php
+																		switch($itemSpecificMode){
+																			case "PB":
+																				echo "Public Bidding";
+																				break;
+																			case "SVP":
+																				echo "Small Value Procurement";
+																				break;
+																			case "DC":
+																				echo "Direct Contracting";
+																				break;
+																			case "TBE":
+																				echo "To be evaluated";
+																				break;
+																			default:
+																				echo $itemSpecificMode;
+																				break;
+																		}
+																	?>
+																</td>
 																<td><?php echo $lotContent['header'];?></td>
 																<td><?php echo $lotContent['tags'];?></td>
 																<td><?php echo Date::translate($lot['l_cost'], 'php');?></td>
@@ -577,6 +617,22 @@
 					let rDetails = atob(e.dataset.item).split('{|}');
 					let rSpec = JSON.parse(rDetails[2]);
 
+					let disMOP = '';
+					switch (atob(e.dataset.mop)){
+						case "PB":
+							disMOP = 'Public Bidding';
+							break;
+						case "DC":
+							disMOP = 'Direct Contracting';
+							break;
+						case "SVP":
+							disMOP = 'Small Value Procurement';
+							break;
+						default:
+							disMop = atob(e.dataset.mop);
+							break;
+					}
+
 					switch(rDetails[0]){
 						case "PR":
 							if(!prT_header){
@@ -587,9 +643,11 @@
 								prT_header = true;
 							}
 
+
+
 							$('#pr-detail').append(`<tr>
 								<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}"  class="i-checks"></td>
-								<td>${atob(e.dataset.mop)}</td>
+								<td>${disMOP}</td>
 								<td>${rDetails[1]}</td>
 								<td>${rSpec.stock_no}</td>
 								<td>${rSpec.unit}</td><td>${rSpec.desc}</td><td>${rSpec.qty}</td>
@@ -613,7 +671,7 @@
 							}
 							
 							$(`#jo-detail`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${e.dataset.mop}" data-ref="${e.dataset.ref}" data-details="${btoa(rDetails[2])}" data-lot="${e.dataset.item}" data-notes="${e.dataset.notes}" data-lot-cost="${btoa(rDetails[3])}" class="i-checks"></td>
-								<td>${atob(e.dataset.mop)}</td>
+								<td>${disMOP}</td>
 								<th>${rDetails[1]}</th>
 								<td>${rSpec.header}</td>
 								<td>${rSpec.tags}</td>
@@ -919,9 +977,26 @@
 	
 							canvassObject[item_index].items.forEach(function(e, i){
 								let canvassModalReference = btoa(e.ref);
+
+								let disMOP = '';
+								switch (e.mode){
+									case "PB":
+										disMOP = 'Public Bidding';
+										break;
+									case "DC":
+										disMOP = 'Direct Contracting';
+										break;
+									case "SVP":
+										disMOP = 'Small Value Procurement';
+										break;
+									default:
+										disMop = e.mode;
+										break;
+								}
+
 								$('#showCanvassItems').append(`
 									<tr>
-										<td>${e.mode}</td>
+										<td>${disMOP}</td>
 										<td>${e.details.stock_no}</td>
 										<td>${e.details.unit}</td>
 										<td>${e.details.desc}</td>
@@ -950,9 +1025,25 @@
 									let item_details = item_return.item.split("{|}");
 									let item_spec = JSON.parse(item_details[2]);
 
+									let returnMop = '';
+									switch (item_return.mop){
+										case "PB":
+											returnMop = 'Public Bidding';
+											break;
+										case "DC":
+											returnMop = 'Direct Contracting';
+											break;
+										case "SVP":
+											returnMop = 'Small Value Procurement';
+											break;
+										default:
+											returnMop = item_return.mop;
+											break;
+									}
+
 									$('#pr-detail').append(`<tr>
 										<td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${btoa(item_return.mop)}" data-ref="${btoa(item_return.ref)}" data-details="${btoa(item_details[2])}" data-lot="${btoa(item_return.item)}"  class="i-checks"></td>
-										<td>${item_return.mop}</td>
+										<td>${returnMop}</td>
 										<td>${item_details[1]}</td>
 										<td>${item_spec.stock_no}</td>
 										<td>${item_spec.unit}</td><td>${item_spec.desc}</td><td>${item_spec.qty}</td>
@@ -991,9 +1082,26 @@
 	
 							canvassObject[item_index].items.forEach(function(e, i){
 								let canvassModalReference = btoa(e.ref);
+
+								let disMOP = '';
+								switch (e.mode){
+									case "PB":
+										disMOP = 'Public Bidding';
+										break;
+									case "DC":
+										disMOP = 'Direct Contracting';
+										break;
+									case "SVP":
+										disMOP = 'Small Value Procurement';
+										break;
+									default:
+										disMop = e.mode;
+										break;
+								}
+
 								$('#showCanvassItems').append(`
 									<tr>
-										<td>${e.mode}</td>
+										<td>${disMOP}</td>
 										<td>${e.details.header}</td>
 										<td>${e.details.tags}</td>
 										<td>${e.notes}</td>
@@ -1020,8 +1128,24 @@
 									let item_details = item_return.item.split("{|}");
 									let item_spec = JSON.parse(item_details[2]);
 
+									let returnMop = '';
+									switch (item_return.mop){
+										case "PB":
+											returnMop = 'Public Bidding';
+											break;
+										case "DC":
+											returnMop = 'Direct Contracting';
+											break;
+										case "SVP":
+											returnMop = 'Small Value Procurement';
+												break;
+										default:
+											returnMop = item_return.mop;
+											break;
+									}
+
 									$(`#jo-detail`).append(`<tr><td style="text-align:center;"><input type="checkbox" data-cvn="step2" data-mop="${btoa(item_return.mop)}" data-ref="${btoa(item_return.ref)}" data-details="${btoa(item_details[2])}" data-lot="${btoa(item_return.item)}" data-notes="${btoa(item_return.notes)}" data-lot-cost="${btoa(item_details[3])}" class="i-checks"></td>
-										<td>${item_return.mop}</td>
+										<td>${returnMop}</td>
 										<td>${item_details[1]}</td>
 										<td>${item_spec.header}</td>
 										<td>${item_spec.tags}</td>
@@ -1105,8 +1229,24 @@
 				`);
 
 				e.publication.mode.forEach(function(e2, i2){
+					let sectionMop = '';
+					switch (e2.mode){
+						case "PB":
+							sectionMop = 'Public Bidding';
+							break;
+						case "DC":
+							sectionMop = 'Direct Contracting';
+							break;
+						case "SVP":
+							sectionMop = 'Small Value Procurement';
+								break;
+						default:
+							sectionMop = e2.mode;
+							break;
+					}
+
 					$(`[data-lot="${i}"]`).append(`<tr>
-						<td>${e2.mode}</td>
+						<td>${sectionMop}</td>
 						<td><input type="text" data-canvass-no="${i}"  class="form-control"></td>
 					</tr>`);
 				});

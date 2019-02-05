@@ -20,6 +20,9 @@
 
 		$gds = htmlspecialchars($_POST['gds']);
 
+		$item_fail_count = 0;
+		$lot_fail_count = 0;
+
 		foreach($_POST['lot'] as $lot){
 
 			if($lot['per_item']){
@@ -46,6 +49,9 @@
 					for($i = 0; $i < $lot['item_count']; $i++){
 
 						$item_fail = (isset($lot['fail'][$i])) ? true : false;
+						if($item_fail){
+							$item_fail_count++;
+						}
 
 						if($lot['type'] === "PR"){
 							// update canvass_items_pr
@@ -67,9 +73,13 @@
 							'remark' => htmlspecialchars($lot['remark'][$i][$supp_count]),
 							'award_selected' => NULL
 						));
+
+						// count items failed
 					}
 					$supp_count++;
 				}
+
+				// notif if fail
 
 			}else{
 
@@ -79,6 +89,10 @@
 				$user->update('canvass_forms', 'id', $lot['lot_id'], array(
 					'lot_fail_option' => $lot_fail,
 				));
+
+				if($lot_fail === "1"){
+					$lot_fail_count++;
+				}
 
 				$supp_count = 0;
 				foreach($lot['supplier'] as $supplier){
@@ -115,30 +129,71 @@
 			'accomplished' => '5',
 			'workflow' => 'Release of Abstract of Bid and BAC Resolution'
 		));
+
+		if($item_fail_count > 0){
+			$user->register('project_logs',  array(
+				'referencing_to' => $gds,
+				'remarks' => $item_fail_count." item/s in the project has been declaired as failed.",
+				'logdate' => Date::translate('now', 'now'),
+				'type' => 'IN'
+			));
+		}
+
+		if($lot_fail_count > 0){
+			$user->register('project_logs',  array(
+				'referencing_to' => $gds,
+				'remarks' => $lot_fail_count." lot/s in the project has been declaired as failed.",
+				'logdate' => Date::translate('now', 'now'),
+				'type' => 'IN'
+			));
+		}
 		
 		// important update abstract & reso created
 		$user->register('project_logs',  array(
 			'referencing_to' => $gds,
-			'remarks' => "AWARD^Abstract^Abstract of Bids available",
+			'remarks' => "AWARD^Abstract^Abstract of Bids is now available",
 			'logdate' => Date::translate('now', 'now'),
 			'type' => 'IN'
 		));
 
 		$end_users = $user->get('projects', array('project_ref_no', '=', $gds));
 		foreach(json_decode($end_users, true) as $end_user){
+			
 			$user->register('notifications', array(
 				'recipient' => $end_user,
 				'message' => "Abstract of Bids of project ".$gds." is now available",
 				'datecreated' => Date::translate('test', 'now'),
 				'seen' => 0,
-				'href' => "project-details?refno=".base64_encode($project_ref_no)
+				'href' => "project-details?refno=".base64_encode($gds)
 			));
 			notif(json_encode(array(
 				'receiver' => $end_user,
 				'message' => "Abstract of Bids of project ".$gds." is now available",
 				'date' => Date::translate(Date::translate('test', 'now'), '1'),
-				'href' => "project-details?refno=".base64_encode($project_ref_no)
+				'href' => "project-details?refno=".base64_encode($gds)
 			)));
+			
+
+			if($item_fail_count > 0){
+				notif(json_encode(array(
+					'receiver' => $end_user,
+					'message' => $item_fail_count." item/s in the project has been declaired as failed.",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno=".base64_encode($gds)
+				)));
+				// sms
+			}
+
+			if($lot_fail_count > 0){
+				notif(json_encode(array(
+					'receiver' => $end_user,
+					'message' => $lot_fail_count." lot/s in the project has been declaired as failed.",
+					'date' => Date::translate(Date::translate('test', 'now'), '1'),
+					'href' => "project-details?refno=".base64_encode($gds)
+				)));
+				// sms
+			}
+		
 		}
 
 		// NOTIFICATION OF AWARD TO END USER
@@ -491,14 +546,6 @@
 				<button class="btn btn-rounded btn-primary">Submit</button>
 			</div>
 			</form>
-			<!-- <datalist id="list-remark">
-				<option value="Rank 1">Rank 1</option>
-				<option value="Rank 2">Rank 2</option>
-				<option value="Rank 3">Rank 3</option>
-				<option value="DQ: Exceeded ABC">DQ: Exceeded ABC</option>
-				<option value="DQ: Incomplete Bid">DQ: Incomplete Bid</option>
-				<option value="DQ: No Bid"></option>
-			</datalist> -->
 			</div>
 			<button class="back-to-top" type="button"></button>
 			<div class="footer">
@@ -518,7 +565,7 @@
 		}, 1000);
 
 		$('[list="list-remark"]').typeahead({
-			source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+			source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid", "DQ: Non-compliant"]
 		});
 
 		$('[data-type]').on('click', function(){
@@ -552,7 +599,7 @@
 						}
 					});
 					$('[list="list-remark"]').typeahead({
-						source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+						source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid", "DQ: Non-compliant"]
 					});
 				}else{
 					this.dataset.fcount = parseInt(this.dataset.fcount) + 1;
@@ -582,7 +629,7 @@
 						});
 
 						$('[list="list-remark"]').typeahead({
-							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid", "DQ: Non-compliant"]
 						});
 
 					}else{
@@ -610,7 +657,7 @@
 						});
 
 						$('[list="list-remark"]').typeahead({
-							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid"]
+							source: ["Rank 1","Rank 2","Rank 3","DQ: Exceeded ABC","DQ: Incomplete Bid","DQ: No Bid", "DQ: Non-compliant"]
 						});
 
 

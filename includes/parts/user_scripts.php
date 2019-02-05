@@ -482,7 +482,7 @@ require_once "../../functions/account-verifier.php";
 				}
 
 						
-			});				
+			});
 
 
 	});
@@ -499,7 +499,7 @@ require_once "../../functions/account-verifier.php";
 			var higherLevelpages = [
 				{pages: ['project-details'], link: 'current-projects'}
 			];
-			// toggleGreetings();
+			
 			var highlevelpage = higherLevelpages.find(function(e1){
 				return e1.pages.find(function(e2){
 					return e2 === path[path.length - 1]

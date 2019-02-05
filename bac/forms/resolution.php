@@ -125,12 +125,24 @@ switch($mop[$mop_index]['mode']){
 	case "SVP":
 		$mop_name = "Small Value Procurement";
 		break;
+	case "PB":
+		$mop_name = "Public Bidding";
+		break;
+	case "DC":
+		$mop_name = "Direct Contracting";
+		break;
 	default:
 		$mop_name = $mop[$mop_index]['mode'];
 }
 
-$section->addText("WHEREAS, the BAC resorted to Negotiated Procurement under ".$mop_name." (Section ".$mop[$mop_index]['no'].") as an alternative mode and posted the project in the Bulletin Board for the period ".date('F')." ".date('d')."-".date('d', strtotime('+7 days')).", ".date('Y').";", null, $b);
-$section->addTextBreak(1);
+if($mop[$mop_index]['mode'] === "SVP"){
+	$section->addText("WHEREAS, the BAC resorted to Negotiated Procurement under ".$mop_name." (Section ".$mop[$mop_index]['no'].") as an alternative mode and posted the project in the Bulletin Board for the period ".date('F')." ".date('d')."-".date('d', strtotime('+7 days')).", ".date('Y').";", null, $b);
+	$section->addTextBreak(1);
+}else{
+	$section->addText("WHEREAS, the BAC resorted to ".$mop_name." (Section ".$mop[$mop_index]['no'].") as an alternative mode and posted the project in the Bulletin Board for the period ".date('F')." ".date('d')."-".date('d', strtotime('+7 days')).", ".date('Y').";", null, $b);
+	$section->addTextBreak(1);
+}
+
 
 $section->addText("WHEREAS, the committee waived the formalities of competitive bidding procedures and issued Request for Quotation from supplies providers of known qualifications;", null, $b);
 $section->addTextBreak(1);
@@ -152,7 +164,25 @@ foreach($bidders as $bidder){
 	$table->addRow(43.2);
 	$table->addCell(null, $cc)->addText($bidder->name);
 	$table->addCell(null, $cc)->addText(Date::translate($bidder->total, 'php'), null, $c);
-	$table->addCell(null, $cc)->addText($bidder->remark, null, $c);
+	if($canvass->CanvassDetails->per_item){
+		
+		$textrun = $table->addCell(null, $cc)->addTextRun($c);
+		// get each item and their remarks
+		$remarks = $admin->getPerItemRemark($gds, $canvass_id, $bidder->s_id);
+		$remarks_count = count($remarks);
+
+		foreach($remarks as $key => $remark){
+			$count = $key + 1;
+			if($count < $remarks_count){
+				$textrun->addText("Item # ".$count." ".$remark->q_remark.", ", ['size' => 9]);
+			}else{
+				$textrun->addText(htmlspecialchars("& Item #. ".$count." ".$remark->q_remark), ['size' => 9]);
+			}
+		}
+
+	}else{
+		$table->addCell(null, $cc)->addText($bidder->remark, null, $c);
+	}
 }
 
 $section->addTextBreak(1);

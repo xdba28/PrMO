@@ -66,12 +66,18 @@ else{
 
 				));				
 
+				Syslog::put('Release '.$reference.' from outgoing with transaction:'.$project->transactions);
 				
 			}
 
 			$user->endTrans();
 
+
+			
+
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			header("Content-type:application/json");

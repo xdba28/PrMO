@@ -13,8 +13,6 @@ $sp_id = $_GET['spid'];
 
 $project = $admin->get('projects', array('project_ref_no', '=', $gds));
 $canvass = $admin->get('canvass_forms', array('id', '=', $cv_id));
-
-
 $supplier = $admin->awardSupplier($sp_id);
 
 
@@ -108,8 +106,8 @@ elseif($countABC === 2)
 $format = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 $whole = $format->format($whole);
 
-if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".$ABC.")", ['bold' => true, 'italic' => true]);
-elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".$ABC.")", ['bold' => true, 'italic' => true]);
+if($countABC === 1) $textrun->addText(ucwords($whole)." Pesos Only (Php".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
+elseif($countABC === 2) $textrun->addText(ucwords($whole)." and ".$decimal."/100 Pesos (Php ".number_format($ABC, 2).")", ['bold' => true, 'italic' => true]);
 
 if($canvass->type === "PR"){
 	$section->addTextBreak(1);

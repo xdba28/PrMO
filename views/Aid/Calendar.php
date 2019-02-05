@@ -25,6 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Procurement Aide</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>

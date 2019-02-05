@@ -43,8 +43,10 @@ if($admin->isLoggedIn()){
 			}
 
 			$admin->endTrans();
-
+			Syslog::put('System Signatories Update');
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			echo json_encode($data);

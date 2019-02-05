@@ -32,22 +32,26 @@
 				"6":"Routing for signatories",
 				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
 				"8":"For Conforme of Winning Bidder/s",
-				"9":"Transmittal to COA and University Supply Office for Audit"
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}
 		},
 		"PB":{
 			"name":"Public Bidding",
-			"noofsteps":"8",
+			"noofsteps":"10",
 			"description":"50K above ABCs",
 			"steps":{
-				"0":"tes0t",
-				"1":"test1",
-				"2":"test2",
-				"3":"test3",
-				"4":"test4",
-				"5":"test5",
-				"6":"test6",
-				"7":"test7"
+				"0":"Waiting for Technical member to review pre-procurement evaluation requests",
+				"1":"Technical Member Evaluation",
+				"2":"Finalization of Technical Member's determination of Mode of Procurement and Comments",
+				"3":"DBMPS Checking, Finalization of BAC Resolution Recomending Mode of Procurement, Publication, and canvass form",
+				"4":"Canvassing",
+				"5":"Release of Abstract of Bid and BAC Resolution",
+				"6":"Routing for signatories",
+				"7":"Finalization of Notice of Award, Purchase Order/Letter Order",
+				"8":"For Conforme of Winning Bidder/s",
+				"9":"Transmittal to COA and University Supply Office for Audit",
+				"10":"Project finished"
 			}			
 		},
 		"RO":{
@@ -202,6 +206,50 @@
 		},
 
 		"SVP":{
+			"0":{
+				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
+				"1":"Return to Enduser due to incompliance"
+			},
+			"1":{
+				"0":"No Actions Available"
+			},
+			"2":{
+				"0":"Register Pre-procurement Evaluation result"
+			},
+			"3":{
+				"0":"Proceed to resorting unavailable items from DBMPS for canvass",
+				"1":"Dismiss Project for all items are available in DBM"
+			},
+			"4":{
+				"0":"Print Publication and Canvass form",
+				"1":"Register Canvass returns"
+			},
+			"5":{
+				"0":"Print Abstract of Bid",
+				"1":"Print BAC Resolution",
+				"2":"Queue documents to outgoing for signatories"
+			},
+			"6":{
+				"0":"Queue documents to outgoing for signatories",
+				"1":"Proceed to NOA, PO/LO Creation"
+			},
+			"7":{
+				"0":"Print NOA, PO/LO",
+				"1":"Queue documents to outgoing for signatories"
+			},
+			"8":{
+				"0":"Queue Document to outgoing documents for Conforme"
+			},
+			"9":{
+				"0":"Print Obligation Slip",
+				"1":"Finish project"
+			},
+			"10":{
+				"0":"No Actions Available"
+			}
+		},
+
+		"PB":{
 			"0":{
 				"0":"Queue Document to outgoing documents for Pre-procurement evaluation",
 				"1":"Return to Enduser due to incompliance"

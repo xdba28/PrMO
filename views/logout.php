@@ -23,7 +23,8 @@
         require_once "../classes/{$class}.php";
     });
 
-    $user = new Admin();
+	$user = new Admin();
+	Syslog::put("Logout","../data/logfiles/");
     $user->logout();
     Session::flash('Loggedout', 'You logged out successfuly.');
     Redirect::To('../blyte/acc3ss');
