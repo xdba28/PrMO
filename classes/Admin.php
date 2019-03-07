@@ -71,22 +71,20 @@
                 
                 if($user){
 
-
 						if($this->data()->userpassword === Hash::make($password, $this->data()->salt)){
 
 							if($this->data()->status == "DEACTIVATED"){
 								return false;
 							}else{
 								Session::put($this->sessionName, $this->data()->account_id);
-								$_SESSION['accounttype'] = $this->data()->newAccount;
+								Session::put('username', $this->data()->username);
+								Session::put('accounttype', $this->data()->newAccount);
+								Syslog::put("Login","../data/logfiles/");
 
 								return true;
 							}
 
 						}
-					
-                    
-
                 }				
 
             return false;
@@ -131,7 +129,19 @@
 				
 			}
 			
-		}	
+		}
+
+		public function importantUpdates2($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%' OR remarks LIKE 'DECLARATION%' OR remarks LIKE '%is being evaluated.') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}
 		
 		public function projectHistory($originRefno, $currentRefno){
 
@@ -558,11 +568,13 @@
 		}
 
 		public function checkProjectAward($gds){
-			$award = true;
+			$award_array = [];
 			$this->db->query_builder("SELECT * FROM `canvass_forms` WHERE gds_reference = '{$gds}'");
 			$lots = $this->db->results();
-			$lot_details = NULL;
-			foreach($lots as $lot){
+
+			foreach($lots as $key => $lot){
+				$award_array[$key] = false;
+
 				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`
 					WHERE canvass_forms.id = canvass_supplier.form_id
 					AND form_id = '{$lot->id}'");
@@ -574,7 +586,7 @@
 					if($supplier->per_item == "0"){
 						// per lot
 						if($supplier->award == "1"){
-							$award = true;
+							$award_array[$key] = true;
 							break;
 						}
 					}else{
@@ -587,7 +599,7 @@
 								// echo "<---------------- Item ------------------>";
 								// echo "<pre>".print_r($item)."</pre>";
 								if($item->awarded == "0"){
-									$award = false;
+									$award_array[$key] = false;
 								}
 							}
 						}else{
@@ -599,29 +611,17 @@
 								// echo "<---------------- Item ------------------>";
 								// echo "<pre>".print_r($item)."</pre>";
 								if($item->awarded == "0"){
-									$award = false;
+									$award_array[$key] = false;
 								}
 							}
 						}
-						// $this->db->query_builder("SELECT * FROM `canvass_supplier`, `canvass_quotation`
-						// 	WHERE canvass_supplier.cvsp_id = canvass_quotation.supplier_id
-						// 	AND form_id = '{$supplier->form_id}'
-						// 	AND supplier_id = '{$supplier->cvsp_id}'");
-						// $items = $this->db->results();
-						// foreach($items as $item){
-						// 	echo "<---------------- Item ------------------>";
-						// 	echo "<pre>".print_r($item)."</pre>";
-						// 	if($item->award_selected == NULL || $item->award_selected == "0"){
-						// 		$award = false;
-						// 	}
-						// }
 					}
 				}
 			}
 			// echo "<------------ Result ----------->".PHP_EOL;
 			// echo "<------------ Result ----------->".PHP_EOL;
 			// echo "???? : ".$award;
-			return $award;
+			return $award_array;
 		}
 
 		public function abstract($gds, $id){
@@ -712,7 +712,8 @@
 					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
 					AND gds_reference = '{$gds}'
 					AND cvsp_id = '{$supplier_id}'
-					AND awarded = '1'");
+					AND awarded = '1'
+					GROUP BY canvass_items_pr.id");
 				return $this->db->results();
 			}else{
 				// per lot
@@ -721,13 +722,36 @@
 					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
 					AND gds_reference = '{$gds}'
 					AND cvsp_id = '{$supplier_id}'
-					AND award = '1'");
+					AND award = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}
+		}
+
+		public function getawardedJO($gds, $supplier_id, $perItem){
+			if($perItem){
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_jo`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_jo.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND awarded = '1'
+					GROUP BY canvass_items_jo.id");
+				return $this->db-results();
+			}else{
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `canvass_items_jo`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_forms.id = canvass_items_jo.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND award = '1'
+					GROUP BY canvass_items_jo.id");
 				return $this->db->results();
 			}
 		}
 
 		public function getSupplierTotal($gds, $lot){
-			$this->db->query_builder("SELECT SUM(price) as total, name, canvass_supplier.remark as remark FROM `canvass_forms`, `canvass_supplier`, `canvass_quotation`, `supplier`
+			$this->db->query_builder("SELECT SUM(price) as total, name, canvass_supplier.remark as remark, s_id FROM `canvass_forms`, `canvass_supplier`, `canvass_quotation`, `supplier`
 				WHERE canvass_forms.id = canvass_supplier.form_id
 				AND canvass_supplier.cvsp_id = canvass_quotation.supplier_id
 				AND canvass_supplier.supplier = supplier.s_id
@@ -775,6 +799,7 @@
 						array_push($documents['canvass_forms'], [
 							'canvass_id' => $canvass->id,
 							'title' => $canvass->title,
+							'type' => $canvass->type,
 							'publication' => []
 						]);
 
@@ -794,9 +819,47 @@
 
 							// bac reso on award and failure
 							// check if all items fail or lot fail
-							if($canvass->lot_fail_option === "1"){
-								$documents['canvass_forms'][$key]['fail'] = true;
+							// echo "<pre>".print_r($canvass)."</pre>";
+							
+							if($canvass->per_item){
+								// per item
+								if($canvass->lot_fail_option === "By Item"){
+									// find items that failed
+									// query failed items
+									if($canvass->type === "PR"){
+										$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_items_pr` 
+											WHERE canvass_forms.id = canvass_items_pr.canvass_forms_id 
+											AND gds_reference = '{$gds}'
+											AND item_fail = '1'");
+										$pr_items_failed = $this->db->results();
+										foreach($pr_items_failed as $item){
+											if($item->item_fail){
+												$documents['canvass_forms'][$key]['fail'] = 'item';
+												break;
+											}
+										}
+									}else{
+										$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_items_jo` 
+											WHERE canvass_forms.id = canvass_items_jo.canvass_forms_id 
+											AND gds_reference = '{$gds}'
+											AND item_fail = '1'");
+										$jo_items_failed = $this->db->results();
+										foreach($jo_items_failed as $item){
+											if($item->item_fail){
+												$documents['canvass_forms'][$key]['fail'] = 'item';
+												break;
+											}
+										}
+
+									}
+								}
+							}else{
+								// per lot
+								if($canvass->lot_fail_option === "1"){
+									$documents['canvass_forms'][$key]['fail'] = 'lot';
+								}
 							}
+							
 
 							// find an awarded supplier
 							$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`
@@ -807,10 +870,10 @@
 								AND award = '1'");
 							$documents['canvass_forms'][$key]['noa'] = $this->db->results();
 							
+							if($request->accomplished >= 9){
+								$documents['canvass_forms'][$key]['os'] = true;
+							}
 							
-
-							
-
 							// check if NOA available
 								// print NOA
 								// print LO / PO
@@ -821,6 +884,77 @@
 				}
 			}
 			return $documents;
+		}
+
+		public function findAwardedSuppliers($gds, $canvass_id){
+			$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`
+				WHERE canvass_forms.id = canvass_supplier.form_id
+				AND canvass_supplier.supplier = supplier.s_id
+				AND gds_reference = '{$gds}'
+				AND canvass_forms.id = '{$canvass_id}'
+				AND award = '1'");
+			return $this->db->results();
+		}
+
+		public function getPerItemRemark($gds, $canvass_id, $supplier_id){
+			$this->db->query_builder("SELECT canvass_quotation.remark as q_remark FROM `canvass_forms`, `canvass_items_pr`, `canvass_supplier`, `canvass_quotation`, `supplier`
+				WHERE canvass_forms.id = canvass_items_pr.canvass_forms_id
+				AND canvass_forms.id = canvass_supplier.form_id
+				AND canvass_supplier.cvsp_id = canvass_quotation.supplier_id
+				AND canvass_supplier.supplier = supplier.s_id
+				AND gds_reference = '{$gds}'
+				AND canvass_forms.id = '{$canvass_id}'
+				AND item_fail = '1'
+				AND canvass_supplier.supplier = '{$supplier_id}'");
+			return $this->db->results();
+		}
+
+		public function docOrderItems($gds, $supplier_id, $per_item){
+			if($per_item){
+				// per item
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`, `canvass_items_pr`, `canvass_quotation`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_supplier.supplier = supplier.s_id
+					AND canvass_quotation.supplier_id = canvass_supplier.cvsp_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$gds}'
+					AND awarded = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}else{
+				// lot
+				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `supplier`, `canvass_items_pr`, `canvass_quotation`
+					WHERE canvass_forms.id = canvass_supplier.form_id
+					AND canvass_supplier.supplier = supplier.s_id
+					AND canvass_quotation.supplier_id = canvass_supplier.cvsp_id
+					AND canvass_forms.id = canvass_items_pr.canvass_forms_id
+					AND gds_reference = '{$gds}'
+					AND cvsp_id = '{$supplier_id}'
+					AND award = '1'
+					GROUP BY canvass_items_pr.id");
+				return $this->db->results();
+			}
+		}
+
+		public function getDeliveryDetails($gds, $supplier_id){
+			$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`, `award`
+				WHERE canvass_forms.id = canvass_supplier.form_id
+				AND canvass_forms.id = award.canvass_form_id
+				AND gds_reference = '{$gds}'
+				AND cvsp_id = '{$supplier_id}'");
+			return $this->db->first();
+		}
+
+		public function monthlyReport($month){
+			$currentMonth = date("F", mktime(0, 0, 0, $month, 10));
+			$start_of_the_month = new DateTime('first day of '.$currentMonth.' this year');
+			$start_of_the_month->modify('-1 day');
+			$end_of_the_month = new DateTime('last day of '.$currentMonth.' this year');
+			$end_of_the_month->modify('+1 day');
+
+			$this->db->query_builder("SELECT * FROM `projects` WHERE date_registered BETWEEN '{$start_of_the_month->format('Y-m-d')}' AND '{$end_of_the_month->format('Y-m-d')}'");
+			return $this->db->results();
 		}
 		
 		// request-gen.php PRINTING OF REQUEST FORM
@@ -919,15 +1053,146 @@
 			return false;
 		}
 
+		// used for recomputing PR lots costs
+		public function recompute($origin, $lot){
+			if($this->db->query_builder("SELECT 
+			SUM(total_cost) as 'recomputed_total'
+			
+			FROM 
+			`lots`, `lot_content_for_pr`
+			WHERE lot_content_for_pr.lot_id_origin = lots.lot_id AND
+			lot_no = '{$lot}' AND request_origin = '{$origin}'")){
+				return $this->db->first()->recomputed_total;
+			}
+			return false;
+		}
+
+		public function success_ratio(){			
+
+			for($c=1; $c<=12; $c++){
+				$currentMonth = date("F", mktime(0, 0, 0, $c, 10));
+
+					$start_of_the_month = new DateTime('first day of '.$currentMonth.' this year');
+					$start_of_the_month->modify('-1 day');
+
+					$end_of_the_month = new DateTime('last day of '.$currentMonth.' this year');
+					$end_of_the_month->modify('+1 day');
+
+
+				// number of entries this month
+				if($this->db->query_builder("SELECT COUNT(*) as 'total' FROM `projects` WHERE date_registered BETWEEN '{$start_of_the_month->format('Y-m-d')}' AND '{$end_of_the_month->format('Y-m-d')}'")){
+					if($this->db->count()){
+						$entries[$currentMonth]["registered"] = $this->db->first()->total;
+					}
+				}
+
+				// number of projects finished this month
+				if($this->db->query_builder("SELECT COUNT(*) as 'total' 
+				FROM `projects`, `project_logs`
+				WHERE 
+				
+				projects.project_ref_no = project_logs.referencing_to AND
+				remarks LIKE 'DECLARATION^FINISH%' AND
+				logdate BETWEEN '{$start_of_the_month->format('Y-m-d')}' AND '{$end_of_the_month->format('Y-m-d')}'")){
+					if($this->db->count()){
+						$entries[$currentMonth]["finished"] = $this->db->first()->total;
+					}
+				}
+				
+				// number of projects finished this month
+				if($this->db->query_builder("SELECT COUNT(*) as 'total' 
+				FROM `projects`, `project_logs`
+				WHERE 
+				
+				projects.project_ref_no = project_logs.referencing_to AND
+				remarks LIKE 'DECLARATION^FAILURE%' AND
+				logdate BETWEEN '{$start_of_the_month->format('Y-m-d')}' AND '{$end_of_the_month->format('Y-m-d')}'")){
+					if($this->db->count()){
+						$entries[$currentMonth]["failed"] = $this->db->first()->total;
+					}
+				}					
+			}
+
+			if(!empty($entries)){
+				return (object)$entries;
+			}
+
+		}
+
 		public function dashboardReports($ID = null){
 			$reports = [];
+			$year = date('Y');
 
-			// List of current projects (processing and paused)
+			// List of current projects (processing and paused ) 
 			if($this->db->query_builder("SELECT * FROM `projects` WHERE project_status = 'PROCESSING' OR project_status = 'PAUSED'")){
 				if($this->db->count()){
-					$reports["current_projects"] = $this->db->results();
+					$reports["current_projects"] = $this->db->results();			
 				}
 			}
+
+			// List of current projects (processing and paused ) THIS YEAR
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED') AND (`date_registered` LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["current_projects_thisyear"] = $this->db->results();				
+				}
+			}			
+
+			// all procjects (this year)
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED' OR project_status = 'FINISHED' OR project_status = 'FAILED') AND (date_registered LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["all_projects_thisyear"] = $this->db->results();	
+				}
+			}
+			
+			// all procjects
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED' OR project_status = 'FINISHED' OR project_status = 'FAILED') AND (date_registered LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["all_projects"] = $this->db->results();
+
+
+							// breakdown for mini doughnuts
+							foreach($reports["all_projects"] as $project){
+								$origin = json_decode($project->request_origin, true);
+
+								$prCounter = 0;
+								$joCounter = 0;
+								$mixedCounter = 0;
+
+
+								switch ($project->type) {
+									case 'single':
+										if(substr($origin[0], 0, 2) === "PR"){
+											$prCounter++;
+											$prArray[] = $project;
+										}else{
+											$joCounter++;
+											$joArray[] = $project;
+										}
+										break;
+									
+									case 'consolidated':
+										$mixedCounter ++;
+										$mixedArray[] = $project;
+										break;
+								}
+
+
+							}
+
+							if(isset($prArray) AND (!empty($prArray))){
+								$reports["current_projects_breakdown"]["PR"] = $prArray;
+							}
+							if(isset($joArray) AND (!empty($joArray))){
+								$reports["current_projects_breakdown"]["JO"] = $joArray;
+							}
+							if(isset($mixedArray) AND (!empty($mixedArray))){
+								$reports["current_projects_breakdown"]["MIXED"] = $mixedArray;
+							}						
+				}
+			}			
+
+
+
 
 			//all revision requests of revision requests
 			if($this->selectAll("form_update_requests")){
@@ -992,6 +1257,26 @@
 			}else{
 				return false;
 			}
+		}
+
+		public function activity_frequency($ID){
+			$days[] = date('Y-m-d',strtotime('monday this week'));
+			$days[] = date('Y-m-d',strtotime('tuesday this week'));
+			$days[] = date('Y-m-d',strtotime('wednesday this week'));
+			$days[] = date('Y-m-d',strtotime('thursday this week'));
+			$days[] = date('Y-m-d',strtotime('friday this week'));
+			$days[] = date('Y-m-d',strtotime('saturday this week'));
+			$days[] = date('Y-m-d',strtotime('sunday this week'));
+
+			foreach ($days as $day){
+				if($this->db->query_builder("SELECT COUNT(*) as 'activities' FROM `activity_log` WHERE date_log LIKE '{$day}%' AND made_by = '{$ID}'")){
+						if($this->db->count()){
+							$activities[] = $this->db->first()->activities;
+						}
+				}
+			}
+
+			return $activities;
 		}
 
 		public function getContent($refno, $type, $lot){
@@ -1110,7 +1395,8 @@
         public function logout(){
 
             Session::delete($this->sessionName);
-            Session::delete("accounttype");
+			Session::delete("accounttype");
+			Session::delete("username");
             Cookie::delete($this->cookieName);
         }
         

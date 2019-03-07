@@ -13,23 +13,32 @@
 
 
 	if(Input::exists()){
+
+		// echo "<pre>",print_r($_POST),"</pre>";
+		// $test = json_decode($_POST['endusers'], true);
+
+		// echo "<pre>",print_r($test),"</pre>";
+		
+		// die();		
 		if(Token::check("newConsolidatedProject", Input::get('newConsolidatedProject'))){
-				
-	
+
 			$staff = new Staff();
 			$form_ref_no = Input::get('q');
 	
 			$origins = json_decode($_POST['origins'], true);
 			$originsEncoded = json_encode($origins, JSON_FORCE_OBJECT);
-			//echo "<pre>",print_r($test),"</pre>";
-			// foreach ($origins as $value) {
-			// 	echo $value;
-			// }
-			// echo "<pre>",print_r($originsEncoded),"</pre>";
-			// echo "<pre>",print_r($_POST),"</pre>";
-			// die('yourehre');
+			$implementing = json_encode($_POST['implementing_office'], JSON_FORCE_OBJECT);
 
 
+			//get the json file for step details
+			$json = file_get_contents('../xhr-files/jsonsteps.json');
+			//Decode JSON
+			$stepsStructure = json_decode($json,true);
+
+			//default steps
+			$newSteps = json_encode($stepsStructure['modeOfProcurement']['TBE']['steps'], JSON_FORCE_OBJECT);
+			//default no. of steps
+			$noOfSteps = $stepsStructure['modeOfProcurement']['TBE']['noofsteps'];
 
 			try{
 
@@ -44,18 +53,25 @@
 					'project_ref_no' => $project_ref_no,
 					'project_title' => Input::get('title'),
 					'ABC' => Input::get('ABC'),
+					'fund_source' => Input::get('fund_source'),
 					'MOP' => 'TBE',
 					'type' => 'consolidated',
+					'stepdetails' => $newSteps,
+					'steps' => $noOfSteps,					
 					'end_user' => $_POST['endusers'],
 					'project_status' => 'PROCESSING',
+					'proposed_evaluator' => Input::get('proposed_evaluator'),
 					'workflow'	=> 'For evaluation of technical working group',
 					'date_registered' => Date::translate('test', 'now'),
-					'implementation_date' => $finalDate
+					'implementation_date' => $finalDate,
+					'implementing_office' => $implementing
 				));
 
 				$formCount = 1;
 				$formlimit = count($origins);
-				foreach ($origins as $form) {
+				// $endusersDecoded =  json_decode($_POST['endusers'], true);
+
+				foreach ($origins as $form){
 
 					$staff->register('project_logs', array(
 						'referencing_to' => $form,
@@ -64,21 +80,24 @@
 						'type' =>  'IN'
 					));
 
+					$form_details = $staff->get('project_request_forms', array('form_ref_no',  '=', $form));
+					//live notif to enduser
 					$staff->register('notifications', array(
-						'recipient' => $_POST['endusers'],
+						'recipient' => $form_details->requested_by,
 						'message' => "Project request form {$form} was linked to a newly registered consolidated project with the project reference {$project_ref_no}.",
 						'datecreated' => Date::translate('test', 'now'),
 						'seen' => 0,
 						'href' => "project-details?refno=".base64_encode($project_ref_no)
 					));
-
 					notif(json_encode(array(
-						'receiver' => $_POST['enduser'],
+						'receiver' => $form_details->requested_by,
 						'message' => "Project request form {$form} was linked to a newly registered consolidated project with the project reference {$project_ref_no}.",
 						'date' => Date::translate(Date::translate('test', 'now'), '1'),
 						'href' => "project-details?refno=".base64_encode($project_ref_no)
 					)));
 					
+
+
 					if($formlimit === $formCount){
 						$MessageText .= $form." ";
 					}else{
@@ -88,16 +107,21 @@
 					$formCount++;
 				}
 
-				$staff->register('outgoing', array(
+					// live notif to technical member
+					$staff->register('notifications', array(
+						'recipient' => Input::get('proposed_evaluator'),
+						'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
+						'datecreated' => Date::translate('test', 'now'),
+						'seen' => 0,
+						'href' => "#evaluation-list"
+					));
+					notif(json_encode(array(
+						'receiver' => Input::get('proposed_evaluator'),
+						'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
+						'date' => Date::translate(Date::translate('test', 'now'), '1'),
+						'href' => "#evaluation-list"
+					)), true);				
 
-					'project' =>  $project_ref_no,
-					'transmitting_to' => 'TWG',
-					'specific_office' => 'TWG',
-					'remarks' => 'none',
-					'transactions' => 'EVALUATION',
-					'date_registered' => Date::translate('test', 'now')
-
-				));
 
 				$staff->register('project_logs', array(
 					'referencing_to' => $project_ref_no,
@@ -105,8 +129,6 @@
 					'logdate' => date('Y-m-d H:i:s', strtotime('+1 second')),
 					'type' =>  'IN'
 				));
-
-
 
 				$staff->endTrans(); //commit 
 
@@ -121,7 +143,8 @@
 				exit();
 
 			}catch(Execption $e){
-				die($e->getMessage());
+				Syslog::put($e,null,'error_log');
+				Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			}
 
 
@@ -141,9 +164,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Empty Page</title>
-
-	<?php include_once'../../includes/parts/admin_styles.php'; ?>
+    <title>PrMO OPPTS | Consolidated Project</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
+    <?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 	<script>
 		var OBJ = 
@@ -181,7 +204,7 @@
 			
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
+                <div class="col-sm-8">
                     <h2>Consolidated Project Registration</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
@@ -192,7 +215,7 @@
                         </li>
                     </ol>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-4">
                     <div class="title-action">
                     <a href="Dashboard" class="btn btn-primary"><i class="ti-angle-double-left"></i> Back to Dashboard</a>
                     </div>
@@ -215,7 +238,7 @@
 						
             <div class="row">
                 <div class="col-md-4">
-                    <div class="ibox ">
+                    <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>Forms Details</h5>
                         </div>
@@ -233,7 +256,7 @@
 										$overallCost = 0;
 										$enduserNames = [];
 
-											foreach ($_POST['forms'] as $form) {
+											foreach ($_POST['forms'] as $form){
 												$popOver = "popOver".$counter;
 												$formInfo =  $user->get('project_request_forms', array('form_ref_no', '=', $form));
 												$formLots = $user->getAll('lots', array('request_origin', '=', $form));
@@ -244,7 +267,9 @@
 													}
 
 												$overallCost += $totalCost;
-												$enduserNames = array_merge($enduserNames, array($formInfo->requested_by => $user->fullnameOfEnduser($formInfo->requested_by)));
+												// $enduserNames = array_merge($enduserNames, array($formInfo->requested_by => $user->fullnameOfEnduser($formInfo->requested_by)));
+												$enduserNames[$formInfo->requested_by] = $user->fullnameOfEnduser($formInfo->requested_by);
+												
 									?>
 									<ul>
 
@@ -270,46 +295,20 @@
                                 </h5>
 
 								<div class="">
-										<p class="inline"><i class="fas fa-hand-holding-usd" style="font-size:18px;"></i> Total Cost <i class="fas fa-caret-right"></i> <b class="text-danger">&#x20b1;<?php echo number_format($overallCost, 2);?></b></p>
+										<p class="inline"><i class="fa" style="font-size:18px;">&#8369;</i> Total Cost <i class="fas fa-caret-right"></i> <b class="text-danger">&#x20b1;<?php echo number_format($overallCost, 2);?></b></p>
 										<br>
 										<p class="inline"><i class="fas fa-users" style="font-size:18px;">
 											</i> Enduser/s <i class="fas fa-caret-down"></i> 
 											<?php echo '<ul><li style="margin-left:50px">'.implode('</li> <li style="margin-left:50px">', $enduserNames).'</li></ul>';?>
 										</p>
 										<br>																									
-								</div>								
-								<!-- <h5 class="text-navy">
-                                    About the Enduser
-                                </h5>
-
-								
-								
-                                <h5 class="text-navy">
-                                    something
-                                </h5>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat.
-                                </p>
-                                <div class="row m-t-lg">
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>10</strong> Requests</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="line">5,3,9,6,5,9,7,3,5,2</span>
-                                        <h5><strong>8</strong> Success</h5>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
-                                        <h5><strong>2</strong> Failure</h5>
-                                    </div>
-                                </div> -->
+								</div>
                             </div>
 						</div>
 					</div>
                 </div>
                 <div class="col-md-8">
-                    <div class="ibox ">
+                    <div class="ibox myShadow">
                         <div class="ibox-title">
                             <h5>New Consolidated Project</h5>
                         </div>
@@ -343,12 +342,18 @@
                                             </label>
                                         </div>
 										<div class="form-group mt-20">
-											<label for="ABC" class="form-label">ABC</label> <input type="number" min="<?php echo $overallCost;?>" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
-										</div>				
+											<label for="ABC" class="form-label my-blue"><b>ABC</b></label> <input type="number" min="<?php echo $overallCost;?>" step="0.01" id="ABC" name="ABC" class="form-control form-input" required oninvalid="this.setCustomValidity('State the Approved Budget for this project based on the CAF')"oninput="this.setCustomValidity('')">
+										</div>
+										<div class="form-group">
+											<label class="col-form-label my-blue" for="typeahead_FS"><b>Fund Source</b></label>
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fas fa-hand-holding-usd" style="font-size:18px;"></i></span><input id="typeahead_FS" name="fund_source" type="text" class="form-control" required>
+											</div>												
+										</div>  										
 										<div class="form-group" id="data_2" >
-											<label class="font-normal">Implementation date</label>
+											<label class="font-normal my-blue"><b>Implementation date</b></label>
 											<div class="input-group date" id="popOver0" data-trigger="hover" title="Instructions" data-placement="top" data-content="If the project has multiple implementation date, register closest date.">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implementation" class="form-control" value="" required>
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implementation" class="form-control" value="" required oninvalid="this.setCustomValidity('Nearest Implementation date required')"oninput="this.setCustomValidity('')">
 											</div>
 										</div>
 
@@ -356,7 +361,59 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="title" class="my-blue">Project title</label> <textarea name="title" id="title" placeholder="New Project Title" class="form-control" rows="10" required></textarea>
+
+										<?php
+											// echo "<pre>",print_r($enduserNames),"</pre>";
+
+											foreach ($enduserNames as $id => $name){
+												$enduser = $admin->get('enduser', array('edr_id', '=', $id));
+												$office = $admin->get('units', array('ID', '=', $enduser->edr_designated_office));
+
+												$suggestive_offices[] = $enduser->current_specific_office;
+												$suggestive_offices[] = $office->office_name;
+												
+											}
+
+											$final_suggestions = array_unique($suggestive_offices);
+										?>
+											<label class="font-normal my-blue"><b>Implementing Office/s</b></label>
+											<div>
+												<select data-placeholder="Choose" name="implementing_office[]" class="chosen-select" required multiple style="width:350px;" tabindex="4">
+													<?php
+
+														foreach ($final_suggestions as $suggestion){
+															echo '
+																<option value="'.$suggestion.'">'.$suggestion.'</option>
+															';
+														}
+													
+													
+													?>
+													
+													
+												</select>
+											</div>
+										</div>									
+										<div class="form-group">
+											<label class="font-normal my-blue"><b>Choose Evaluator</b></label>
+											<div>
+												<select data-placeholder="Choose..." name="proposed_evaluator" class="chosen-select"  style="display:none;" tabindex="2" required>
+													
+													<option value=""></option>
+													<?php
+														$technicalMembers = $user->getAll('prnl_account', array('group_', '=', 7));
+															foreach($technicalMembers as $member){
+																echo '<option value="'.$member->account_id.'">'.$user->fullnameOf($member->account_id).'</option>';
+															}
+														
+														
+														
+													?>
+												</select>
+											</div>
+										</div>										
+										<div class="form-group">
+											<label for="title" class="my-blue"><b>Project title</b></label> <textarea name="title" id="title" placeholder="New Project Title" class="form-control" rows="10" required></textarea>
 										</div>	
 											<input type="text" name="newConsolidatedProject" value="<?php echo Token::generate('newConsolidatedProject');?>" hidden readonly>
 											<?php
@@ -388,7 +445,7 @@
 						<!-- content of all project to be consilidate like in the new project -->
 			<div class="row">
 				<div class="col-sm-8">
-					<div class="ibox">
+					<div class="ibox myShadow">
 						<div class="ibox-content">
 							<!-- <span class="text-muted small float-right">
 									Last Refresh: <i class="fa fa-clock"></i>
@@ -434,7 +491,7 @@
 					</div>
 				</div>
 				<div class="col-sm-4">
-					<div class="ibox selected">
+					<div class="ibox selected myShadow">
 
 						<div class="ibox-content">
 							<div class="tab-content">
@@ -444,7 +501,7 @@
 									</div>
 									<div class="client-detail middle-box text-center animated fadeInUp">
 											<h2><i class="fa fa-info-circle"></i> Click on the Reference No. to view request details.</h2>
-									</div><br><br><br>
+									</div><br>
 								</div>
 								
 								

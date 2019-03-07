@@ -66,12 +66,14 @@ try
 				
 			}
 
-
-
 			$user->endTrans();
 
+			Syslog::put('Release documents from outgoing');
+
 		}catch(Exception $e){
-			die($e->getMessage()."A Fatal Error Occured");
+			// die($e->getMessage()."A Fatal Error Occured");
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 		}
 
 
@@ -89,6 +91,8 @@ try
 }
 catch(Exception $e)
 {
+	Syslog::put($e,null,'error_log');
+	Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0002');
 	$data = ['success' => false];
 	header("Content-type:application/json");
 	echo json_encode($data);

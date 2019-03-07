@@ -1,0 +1,1736 @@
+User:192.168.137.101 - February 4, 2019, 3:30 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:30 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 4, 2019, 3:31 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:35 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:36 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:41 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.101 - February 4, 2019, 10:41 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 4, 2019, 10:43 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:43 pm
+Action:Login
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:45 pm
+Action:Logout
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.101 - February 4, 2019, 10:46 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 4, 2019, 10:54 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 4, 2019, 3:56 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 4, 2019, 5:35 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 4, 2019, 6:24 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 5, 2019, 2:44 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 2:45 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:56 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:57 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:57 am
+Action:Login
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:58 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 3:55 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 3:55 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 3:56 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:29 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:35 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:37 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:37 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:41 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:44 am
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:44 am
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:45 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:45 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:46 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:46 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:47 am
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:47 am
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:48 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:49 am
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:49 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:49 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:50 am
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:56 am
+Action:System Units update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:57 am
+Action:System Units update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:57 am
+Action:System Units update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:02 pm
+Action:System Units update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:09 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:10 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:10 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 5:11 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 12:11 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - February 5, 2019, 12:12 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:13 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 12:14 pm
+Action:Login
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:192.168.137.103 - February 5, 2019, 12:15 pm
+Action:Login
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:::1 - February 5, 2019, 12:16 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 12:16 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.100 - February 5, 2019, 5:16 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:19 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:30 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:34 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:35 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:35 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:35 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 12:37 pm
+Action:create jo form
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:192.168.137.101 - February 5, 2019, 5:38 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 5:38 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.103 - February 5, 2019, 12:46 pm
+Action:Logout
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:::1 - February 5, 2019, 12:47 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 12:47 pm
+Action:System Offices Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 12:50 pm
+Action:Login
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:192.168.137.103 - February 5, 2019, 1:23 pm
+Action:Logout
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:192.168.137.103 - February 5, 2019, 6:25 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.103 - February 5, 2019, 6:26 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 5, 2019, 6:59 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 7:06 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 2:27 pm
+Action:System Units update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:34 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 2:38 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 2:38 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:39 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:40 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 7:41 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 7:41 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:43 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:45 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:48 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:53 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:54 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:54 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:54 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 2:55 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 3:00 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:14 pm
+Action:Superadmin password reset
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:15 pm
+Action:Login
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:15 pm
+Action:Login
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:24 pm
+Action:create jo form
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:28 pm
+Action:Logout
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:29 pm
+Action:Login
+Attempt:failed
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:29 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:29 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:32 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:32 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:45 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:45 pm
+Action:Login
+Attempt:success
+Username:20091289:corazon
+-------------------------
+User:192.168.137.103 - February 5, 2019, 3:46 pm
+Action:Login
+Attempt:success
+Username:20091289:corazon
+-------------------------
+User:::1 - February 5, 2019, 4:02 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.103 - February 5, 2019, 4:24 pm
+Action:create jo form
+Attempt:success
+Username:20091289:corazon
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:35 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:35 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:35 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:37 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:38 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:38 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:40 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:40 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:40 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:40 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:41 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 4:42 pm
+Action:System offices update
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 4:52 pm
+Action:Logout
+Attempt:success
+Username:20091289:corazon
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:54 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.103 - February 5, 2019, 9:54 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 5:19 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 5:20 pm
+Action:Login
+Attempt:success
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.103 - February 5, 2019, 5:21 pm
+Action:Login
+Attempt:success
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.103 - February 5, 2019, 5:28 pm
+Action:create pr form
+Attempt:success
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.103 - February 5, 2019, 11:14 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 11:14 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.100 - February 5, 2019, 11:25 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 6:26 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 5, 2019, 12:54 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 12:58 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:16 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:16 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.103 - February 5, 2019, 8:20 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 5, 2019, 1:42 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 8:54 pm
+Action:Nexmo\Client\Exception\Request: Quota Exceeded - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\account-request.php(50): sms('+639477647191', 'System', 'Your account re...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 2:01 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 5, 2019, 9:03 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.100 - February 5, 2019, 9:05 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.100 - February 5, 2019, 9:05 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - February 5, 2019, 9:06 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 5, 2019, 9:06 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 5, 2019, 9:08 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 5, 2019, 9:08 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:08 pm
+Action:Nexmo\Client\Exception\Request: Quota Exceeded - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\account-request.php(50): sms('+639477647191', 'System', 'Your account re...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:10 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:10 pm
+Action:Nexmo\Client\Exception\Request: Quota Exceeded - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-req-approve.php(63): sms('+639477647191', 'System', 'Welcome to PrMO...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:10 pm
+Action:PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'edr_id' cannot be null in C:\xampp\htdocs\PrMO\classes\DB.php:53
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\classes\DB.php(53): PDOStatement->execute()
+#1 C:\xampp\htdocs\PrMO\classes\DB.php(117): DB->query_builder('INSERT INTO end...', Array)
+#2 C:\xampp\htdocs\PrMO\classes\Super_admin.php(66): DB->insert('enduser', Array)
+#3 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-req-approve.php(44): Super_admin->register('enduser', Array)
+#4 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:10 pm
+Action:PDOException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'edr_id' cannot be null in C:\xampp\htdocs\PrMO\classes\DB.php:53
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\classes\DB.php(53): PDOStatement->execute()
+#1 C:\xampp\htdocs\PrMO\classes\DB.php(117): DB->query_builder('INSERT INTO end...', Array)
+#2 C:\xampp\htdocs\PrMO\classes\Super_admin.php(66): DB->insert('enduser', Array)
+#3 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-req-approve.php(44): Super_admin->register('enduser', Array)
+#4 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 9:10 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 5, 2019, 9:10 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.100 - February 5, 2019, 9:15 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 5, 2019, 2:15 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:15 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 9:15 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.101 - February 5, 2019, 2:15 pm
+Action:Login
+Attempt:failed
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:15 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 2:15 pm
+Action:Login
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.101 - February 5, 2019, 2:16 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 5, 2019, 9:17 pm
+Action:create pr form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 5, 2019, 9:21 pm
+Action:create pr form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:31 pm
+Action:Receive PR2019-1IFFGA request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:35 pm
+Action:Receive PR2019-988I56 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.101 - February 5, 2019, 9:46 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 2:50 pm
+Action:Login
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 9:55 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:00 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:00 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:08 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:08 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:08 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:08 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:11 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:11 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:11 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:11 pm
+Action:Delete form update request
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:14 pm
+Action:Grant form update revision
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:16 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 3:22 pm
+Action:Login
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.100 - February 5, 2019, 10:22 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.101 - February 5, 2019, 3:54 pm
+Action:Logout
+Attempt:success
+Username::
+-------------------------
+User:192.168.137.101 - February 5, 2019, 4:00 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.101 - February 5, 2019, 4:01 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 4:02 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:02 pm
+Action:Login
+Attempt:failed
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:03 pm
+Action:Login
+Attempt:failed
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.101 - February 5, 2019, 4:03 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 5, 2019, 11:04 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:07 pm
+Action:Superadmin password reset
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:17 pm
+Action:Approve end user account request
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:18 pm
+Action:Login
+Attempt:failed
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:19 pm
+Action:Login
+Attempt:success
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:19 pm
+Action:Login
+Attempt:failed
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:19 pm
+Action:Login
+Attempt:failed
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:20 pm
+Action:Login
+Attempt:success
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:36 pm
+Action:create jo form
+Attempt:success
+Username:20139357:sonnieramos
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:42 pm
+Action:System Signatories Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.100 - February 5, 2019, 11:47 pm
+Action:Release GDS2019-8 from outgoing with transaction:EVALUATION ISSUE
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.100 - February 5, 2019, 11:48 pm
+Action:Update GDS2019-8 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:50 pm
+Action:System Signatories Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.101 - February 5, 2019, 11:53 pm
+Action:System Signatories Update
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:192.168.137.110 - February 6, 2019, 12:29 am
+Action:Release GDS2019-8 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 12:29 am
+Action:Update GDS2019-8 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 12:50 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:04 am
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:08 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:08 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:08 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:09 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:12 am
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:12 am
+Action:Login
+Attempt:success
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:13 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:13 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:15 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:15 pm
+Action:Login
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:42 am
+Action:InvalidArgumentException: missing expected key `to` in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:278
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php(34): Nexmo\Message\Client->createMessageFromArray(Array)
+#1 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Array)
+#2 C:\xampp\htdocs\PrMO\views\xhr-files\xhr-modal-actions.php(559): sms(NULL, 'System', 'Hello  Your pro...')
+#3 {main}
+Attempt:error_log
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:44 am
+Action:InvalidArgumentException: missing expected key `to` in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:278
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php(34): Nexmo\Message\Client->createMessageFromArray(Array)
+#1 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Array)
+#2 C:\xampp\htdocs\PrMO\views\xhr-files\xhr-modal-actions.php(559): sms(NULL, 'System', 'Hello  Your pro...')
+#3 {main}
+Attempt:error_log
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:53 am
+Action:Logout
+Attempt:success
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:54 am
+Action:Login
+Attempt:success
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.110 - February 6, 2019, 1:54 am
+Action:Logout
+Attempt:success
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:54 pm
+Action:Login
+Attempt:failed
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 5, 2019, 6:54 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:04 am
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2013-024-189:myra
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:05 am
+Action:Receive PR2019-IED84C request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 5, 2019, 7:41 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:42 am
+Action:Login
+Attempt:failed
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:42 am
+Action:Login
+Attempt:failed
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:42 am
+Action:Login
+Attempt:failed
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:43 am
+Action:Login
+Attempt:success
+Username:20122315:bbnebres
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:44 am
+Action:Release GDS2019-9 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:44 am
+Action:Update GDS2019-9 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 2:45 am
+Action:Login
+Attempt:success
+Username:12345:amanoviola
+-------------------------
+User:192.168.137.110 - February 6, 2019, 3:10 am
+Action:Release GDS2019-8 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 3:10 am
+Action:Release GDS2019-9 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 3:10 am
+Action:Update GDS2019-8 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 6, 2019, 3:10 am
+Action:Update GDS2019-9 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 5, 2019, 8:19 pm
+Action:Logout
+Attempt:success
+Username::
+-------------------------
+User:::1 - February 5, 2019, 8:42 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 6, 2019, 3:49 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 6, 2019, 3:49 am
+Action:Logout
+Attempt:success
+Username::
+-------------------------
+User:::1 - February 5, 2019, 8:49 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.110 - February 5, 2019, 11:55 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.110 - February 5, 2019, 11:55 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 6, 2019, 12:50 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 6, 2019, 12:51 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 6, 2019, 2:31 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 6, 2019, 2:31 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 6, 2019, 2:31 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 6, 2019, 2:31 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 6, 2019, 2:35 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 6, 2019, 2:35 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - February 6, 2019, 2:35 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - February 6, 2019, 2:49 am
+Action:Logout
+Attempt:success
+Username::
+-------------------------
+User:::1 - February 10, 2019, 4:49 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 10, 2019, 4:56 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 11, 2019, 6:34 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 11, 2019, 7:33 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 11, 2019, 7:34 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 11, 2019, 7:35 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 11, 2019, 11:40 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 11, 2019, 11:40 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 21, 2019, 6:55 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 23, 2019, 3:40 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 23, 2019, 3:52 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 23, 2019, 10:52 am
+Action:Receive JO2019-CD0E01 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 23, 2019, 4:07 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 23, 2019, 4:07 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 23, 2019, 6:56 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 23, 2019, 6:56 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 24, 2019, 3:56 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 24, 2019, 11:12 pm
+Action:Login
+Attempt:failed
+Username:20091289:corazon
+-------------------------
+User:::1 - February 24, 2019, 11:12 pm
+Action:Login
+Attempt:failed
+Username:20091289:corazon
+-------------------------
+User:::1 - February 24, 2019, 4:12 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 24, 2019, 4:13 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 24, 2019, 11:13 pm
+Action:Nexmo\Client\Exception\Request: Non White-listed Destination - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-reset.php(33): sms('+639124409471', 'Super Admin', 'Hello Marcia Co...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 24, 2019, 11:14 pm
+Action:Login
+Attempt:success
+Username:20091289:corazon
+-------------------------
+User:::1 - February 24, 2019, 4:35 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 24, 2019, 4:35 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 24, 2019, 4:36 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 24, 2019, 4:37 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 24, 2019, 11:37 pm
+Action:Receive JO2019-CAJ6B8 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 24, 2019, 11:37 pm
+Action:Receive JO2019-776ACJ request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 11:29 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 11:40 pm
+Action:Login
+Attempt:failed
+Username:20104523:glenton
+-------------------------
+User:::1 - February 25, 2019, 4:40 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 4:40 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 25, 2019, 11:41 pm
+Action:Nexmo\Client\Exception\Request: Non White-listed Destination - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-reset.php(33): sms('+639124409471', 'Super Admin', 'Hello Glenton Y...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 25, 2019, 11:41 pm
+Action:Nexmo\Client\Exception\Request: Non White-listed Destination - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\Super-admin\xhr-reset.php(33): sms('+639124409471', 'Super Admin', 'Hello Michelle ...')
+#2 {main}
+Attempt:error_log
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 25, 2019, 11:41 pm
+Action:Login
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:::1 - February 25, 2019, 4:42 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 25, 2019, 4:42 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 4:42 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 4:42 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 11:51 pm
+Action:Receive JO2019-CAJ6B8 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 11:51 pm
+Action:Receive JO2019-776ACJ request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 26, 2019, 12:16 am
+Action:Logout
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:::1 - February 26, 2019, 12:16 am
+Action:Login
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:::1 - February 26, 2019, 12:17 am
+Action:Logout
+Attempt:success
+Username:2011543:michandes
+-------------------------
+User:::1 - February 26, 2019, 12:17 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 26, 2019, 12:18 am
+Action:create pr form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 26, 2019, 12:19 am
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 26, 2019, 12:19 am
+Action:Receive PR2019-3A9I98 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 26, 2019, 12:19 am
+Action:Receive JO2019-256JD3 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 5:22 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - February 25, 2019, 5:22 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 25, 2019, 5:42 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 26, 2019, 2:44 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 26, 2019, 9:44 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 26, 2019, 11:25 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 26, 2019, 4:25 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 26, 2019, 5:25 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 26, 2019, 5:32 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 27, 2019, 7:40 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 27, 2019, 7:40 am
+Action:Login
+Attempt:failed
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 27, 2019, 7:40 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 27, 2019, 2:53 pm
+Action:Updated project GDS2019-5 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 27, 2019, 2:55 pm
+Action:Updated project GDS2019-10 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 27, 2019, 3:10 pm
+Action:Updated project GDS2019-4 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 27, 2019, 8:28 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 28, 2019, 3:47 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 28, 2019, 3:49 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 28, 2019, 3:49 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 28, 2019, 3:50 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 28, 2019, 10:51 pm
+Action:Login
+Attempt:failed
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 10:51 pm
+Action:Login
+Attempt:failed
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 10:51 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 11:02 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 4:03 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - February 28, 2019, 4:03 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 28, 2019, 4:03 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - February 28, 2019, 11:03 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 11:04 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - February 28, 2019, 11:04 pm
+Action:Login
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:::1 - February 28, 2019, 11:08 pm
+Action:Logout
+Attempt:success
+Username:20104523:glenton
+-------------------------
+User:::1 - February 28, 2019, 4:45 pm
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - February 28, 2019, 5:46 pm
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------

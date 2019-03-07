@@ -138,7 +138,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 			$table->addCell(475, $sC)
 				->addText($key + 1, null, $c);
 			$table->addCell(null, $sC)
-				->addText($item->total_cost, null, $c);
+				->addText(number_format($item->total_cost, 2), null, $c);
 
 			$table->addCell(null, $sC)
 				->addText($item->unit, null, $c);
@@ -178,7 +178,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText($gds, ['bold' => true]);
 		$textrun->addTextBreak(1);
-		$textrun->addText("Php {$canvassForm->CanvassDetails->cost}", ['bold' => true]);
+		$textrun->addText("Php ".number_format($canvassForm->CanvassDetails->cost, 2), ['bold' => true]);
 
 		$table->addCell(518.4, $sC)->addText("Unit", null, $c);
 		$table->addCell(720, $sC)->addText("Qty", null, $c);
@@ -243,7 +243,7 @@ if($canvassForm->CanvassDetails->type === "PR"){
 		$textrun->addTextBreak(1);
 		$textrun->addText($gds, ['bold' => true]);
 		$textrun->addTextBreak(1);
-		$textrun->addText("Php {$canvassForm->CanvassDetails->cost}", ['bold' => true]);
+		$textrun->addText("Php ".number_format($canvassForm->CanvassDetails->cost, 2), ['bold' => true]);
 
 		$table->addCell(518.4, $sC)->addText("Unit", null, $c);
 		// $table->addCell(720, $sC)->addText("Qty", null, $c);

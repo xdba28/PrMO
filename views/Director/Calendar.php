@@ -27,6 +27,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Procurement Calendar</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
     <link href="../../assets/css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
@@ -173,7 +174,7 @@
 								title: '{$d->project_title}',
 								start: new Date({$date[0]}, {$date[1]}-1, {$date[2]}),
 								refno: '{$d->project_ref_no}',
-								url: 'project-details?refno={$d->project_ref_no}',
+								url: 'project-details?refno=".base64_encode($d->project_ref_no)."',
 								allDay: true
 							},";
 						}

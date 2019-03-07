@@ -104,7 +104,7 @@
 		}
 
         public function personnels(){
-            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, group_id, name, permission, status
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, current_specific_office, prnl_job_title, prnl_assigned_phase, group_id, username, name, permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`
             
             WHERE
@@ -117,7 +117,7 @@
         }
 		
 		public function standardUsers(){
-            if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, edr_ext_name, edr_email, phone, office_name, edr_job_title, group_id, name, permission
+            if ($this->db->query_builder("SELECT edr_id, edr_fname, edr_mname, edr_lname, edr_ext_name, edr_email, phone, office_name, current_specific_office, edr_job_title, group_id, username, name, permission
 			FROM `enduser`, `units`, `edr_account`, `group`
 
             WHERE
@@ -130,7 +130,7 @@
 		}
 
         public function personnelData($ID){
-            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, office_name, prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status
+            if ($this->db->query_builder("SELECT prnl_id, prnl_fname, prnl_mname, prnl_lname, prnl_ext_name, prnl_email, phone, ID,office_name, current_specific_office,  prnl_job_title, prnl_assigned_phase, username, group_id, name as 'group_name', permission, status
             FROM `personnel`, `units`, `prnl_account`, `group`
 
             WHERE

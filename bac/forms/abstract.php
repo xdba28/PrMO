@@ -229,7 +229,7 @@ if($canvass->CanvassDetails->type === "PR"){
 			$table->addCell()
 				->addText($key + 1, null, $c);
 			$table->addCell()
-				->addText("lot", null, $c);
+				->addText($item->unit, null, $c);
 			$table->addCell()
 				->addText($item->item_description, null, $c);
 
@@ -436,6 +436,8 @@ if($canvass->CanvassDetails->type === "PR"){
 				->addText("lot", null, $c);
 			$textrun = $table->addCell()->addTextRun($cStyle);
 			$textrun->addText($item->header, ['bold' => true], $c);
+
+			// add tags and note
 	
 			foreach($admin->getOffered($gds, $lot, $item->item_id) as $key => $offer){
 				if($offer->price === "0.00"){

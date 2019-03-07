@@ -159,10 +159,30 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>MOP:</dt>
+                                            <dt>Mode of Procurement:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php echo $project->MOP;?></dd>
+											<dd class="mb-1">
+												<?php
+													switch($project->MOP){
+														case "PB":
+															echo "Public Bidding";
+															break;
+														case "SVP":
+															echo "Small Value Procurement";
+															break;
+														case "DC":
+															echo "Direct Contracting";
+															break;
+														case "TBE":
+															echo "To be evaluated";
+															break;
+														default:
+															echo $project->MOP;
+															break;
+													}
+												?>
+											</dd>
                                         </div>
                                     </dl>									
                                     <dl class="row mb-0">
@@ -438,10 +458,63 @@
 								if($Updates =  $user->importantUpdates2($refno)){
 
 									// echo "<pre>",print_r($Updates),"</pre>";
+								
 									
 									if(($upd_count = count($Updates)) > 5){
 
+										// echo "<pre>",print_r($Updates),"</pre>";
+										$activityLogs = $Updates;
+										// echo "<pre>",print_r($activityLogs),"</pre>";
 										for($x = 1; $x<6; $x++){
+
+											$identifier = explode("^", $activityLogs[$upd_count-$x]->remarks);
+											switch ($identifier[0]) {
+												case "AWARD":
+													$timelineIcon = "fas fa-award";
+													$bg = "lazur-bg";
+													$displayMessage = $identifier[2];
+													break;
+												case "SOLVE":
+													$timelineIcon = "fas fa-thumbs-up";
+													$bg = "bg-success";
+													$displayMessage = "Pre-procurement evaluation issue resolved";
+
+													break;
+												case "ISSUE":
+													$timelineIcon = "fas fa-exclamation-triangle";
+													$bg = "yellow-bg";
+													switch ($identifier[1]) {
+														case 'pre-procurement':
+															$displayMessage = "Pre-procurement evaluation issue encountered";
+															break;
+														
+														default:
+															# code...
+															break;
+													}
+													break;
+												case "DECLARATION":
+													if($identifier[1]=="FINISH"){
+														$timelineIcon = "far fa-flag";
+														$bg = "bg-info";
+														$displayMessage = "This project has completed all required processes and transactions in the system";
+
+													}elseif($identifier[1] == "FAILURE"){
+														$timelineIcon = "ti-face-sad";
+														$bg = "bg-danger";
+														$displayMessage = "Project was declared as a failed project";
+
+													}
+													
+													break;
+												default:
+
+													$identifier[1] = "TECHNICAL MEMBER EVALUATION";
+													$timelineIcon = "fas fa-users";
+													$bg = "bg-primary";
+													$displayMessage = "Project documents are being evaluated by respective Technical member.";
+													break;
+											}											
 
 							?>
 							
@@ -451,23 +524,23 @@
                             </div>
 
                             <div class="vertical-timeline-content" style="margin-left:45px">
-                                <h2><?php echo strtoupper($activityLogs[$activity_count-$x]->type);?></h2>
+                                <h2><?php echo strtoupper($identifier[1]);?></h2>
                                 <p>	
 
 									<?php 
-									echo $activityLogs[$activity_count-$x]->activity;
+									echo $displayMessage;
 									
 									?>
                                 </p>
                                 
                                     <span class="vertical-date">										
-										<?php echo Date::translate($activityLogs[$activity_count-$x]->date_log, 1);?>
+										<?php echo Date::translate($activityLogs[$upd_count-$x]->logdate, 1);?>
 										<br>
                                         <small>
                                         <?php
 											$datetime_today = Date::translate('now', 'now');
-											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->date_log));
-											echo $interval->format("%a days %h hours ago");										
+											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$upd_count-$x]->logdate));
+											echo $interval->format("%a days ago");										
 										?>										
 										</small>
                                     </span>
@@ -607,7 +680,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<?php
+					<?php
 							$admin = new Admin();
 							$documents = $admin->checkDocuments($refno);
 	
@@ -615,18 +688,17 @@
 								echo '									
 								<div class="my-file-box">
 									<div class="file">
-										<a href="#" onclick="window.open(\'../../bac/forms/project-request?id='.$request['ref_no'].'&type='.$request['type'].'\');">
+										<a href="#" onclick="window.open(\'../../bac/forms/project-request?id='.$request['ref_no'].'\');">
 											<span class="corner"></span>
 											<div class="icon">
 												<i class="fas fa-file-word"></i>
 											</div>
-											<div class="file-name">
+											<div class="file-name" style="height: 150px;">
 												<h4>Project Request Form</h4>'.$request['title'].'.docx
 											</div>
 										</a>
 									</div>
-								</div>
-								';
+								</div>';
 							}
 	
 							if(isset($documents['technical'])){
@@ -638,13 +710,12 @@
 											<div class="icon">
 												<i class="fas fa-file-word"></i>
 											</div>
-											<div class="file-name">
+											<div class="file-name" style="height: 150px;">
 												<h4>Pre-evaluation Form</h4> Technical Working Group.docx
 											</div>
 										</a>
 									</div>
-								</div>
-								';
+								</div>';
 
 								if(isset($documents['canvass_forms'])){
 									foreach($documents['canvass_forms'] as $key => $lot){
@@ -658,13 +729,12 @@
 													<div class="icon">
 														<i class="fas fa-file-word"></i>
 													</div>
-													<div class="file-name">
+													<div class="file-name" style="height: 150px;">
 														<h4>Canvass Form</h4>Lot '.$count.' - '.$lot['title'].'.docx
 													</div>
 												</a>
 											</div>
-										</div>
-										';
+										</div>';
 
 										foreach($lot['publication'] as $key2 => $pub){
 											$pub_quo = ($project->type === "PR") ? "Quotation" : "Proposal";
@@ -676,41 +746,143 @@
 														<div class="icon">
 															<i class="fas fa-file-word"></i>
 														</div>
-														<div class="file-name">
+														<div class="file-name" style="height: 150px;">
 															<h4>Request for '.$pub_quo.'</h4>Lot '.$count.' - '.$pub['mode'].'.docx
 														</div>
 													</a>
 												</div>
-											</div>
-											';
-										}
+											</div>';
 
-										// check abstract of bid
-										if(isset($lot['abstract'])){
-											echo '
+											echo '									
 											<div class="my-file-box">
 												<div class="file">
-													<a href="#" onclick="window.open(\'../../bac/forms/abstract?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'\');">
+													<a href="#" onclick="window.open(\'../../bac/forms/mode?rq='.base64_encode($refno).'&f='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
 														<span class="corner"></span>
 														<div class="icon">
 															<i class="fas fa-file-word"></i>
 														</div>
-														<div class="file-name">
-															<h4>Abstract of Bids</h4>Lot '.$count.' - '.$lot['title'].'.docx
+														<div class="file-name" style="height: 150px;">
+															<h4>Recommending Mode of Procurement</h4>Lot '.$count.' Resolution MOP - '.$pub['mode'].'.docx
 														</div>
 													</a>
 												</div>
-											</div>
-											';
+											</div>';
+
+											// check abstract of bid
+											if(isset($lot['abstract'])){
+												echo '
+												<div class="my-file-box">
+													<div class="file">
+														<a href="#" onclick="window.open(\'../../bac/forms/abstract?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'\');">
+															<span class="corner"></span>
+															<div class="icon">
+																<i class="fas fa-file-word"></i>
+															</div>
+															<div class="file-name" style="height: 150px;">
+																<h4>Abstract of Bids</h4>Lot '.$count.' - '.$lot['title'].'.docx
+															</div>
+														</a>
+													</div>
+												</div>';
+	
+												// check if lot fail
+												if(isset($lot['fail'])){
+													echo '
+													<div class="my-file-box">
+														<div class="file">
+															<a href="#" onclick="window.open(\'../../bac/forms/fail?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
+																<span class="corner"></span>
+																<div class="icon">
+																	<i class="fas fa-file-word"></i>
+																</div>
+																<div class="file-name" style="height: 150px;">
+																	<h4>BAC Resolution Failure of Bidding</h4>Lot '.$count.' - '.$lot['title'].'.docx
+																</div>
+															</a>
+														</div>
+													</div>';
+												}
+												
+												// count if award is zero
+												// then foreach
+												if(count($lot['noa']) !== 0){
+													foreach($lot['noa'] as $noa){
+														// bac resolution
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/resolution?q='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&l='.$lot['canvass_id'].'&spid='.$noa->cvsp_id.'&m='.$pub['mode_index'].'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>BAC Resolution Declairing '.$noa->name.' as SCRB/LCRB</h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+	
+														// noa
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/noa?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>Notice of Award to '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+
+														$orderName = ($lot['type'] === "PR") ? "Purchase" : "Letter";
+
+														//PO / LO
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/order?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>'.$orderName.' Order to '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+
+														// OS
+														if(isset($lot['os'])){
+															echo '
+															<div class="my-file-box">
+																<div class="file">
+																	<a href="#" onclick="window.open(\'../../bac/forms/os?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																		<span class="corner"></span>
+																		<div class="icon">
+																			<i class="fas fa-file-word"></i>
+																		</div>
+																		<div class="file-name" style="height: 150px;">
+																			<h4>Obligation Slip of '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																		</div>
+																	</a>
+																</div>
+															</div>';
+														}
+													}
+												}
+											}
 										}
-
 									}
-
 								}
 							}
 							// echo "<pre>".print_r($documents)."</pre>";
 						?>
-	
 					</div>
 				</div>
 			</div>

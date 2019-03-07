@@ -227,8 +227,8 @@ if($project['type'] === "PR"){
 	$table->addCell(1800)
 		->addText("COST", $bText, $cPragr);
 
+	$lot_count = 1;
 	foreach($project['lots'] as $lot){
-		$lot_count = 1;
 
 		$table->addRow(43.2)
 			->addCell(null, $tsAlignCenter)
@@ -292,10 +292,10 @@ if($project['type'] === "PR"){
 	$table->addRow(43.2)
 		->addCell();
 	$table->addCell()
-		->addText($userFullName , ['underline' => 'single', 'bold' => true, 'size' => 11]);
+		->addText(strtoupper($userFullName), ['underline' => 'single', 'bold' => true, 'size' => 11]);
 	$table->addCell();
 	$table->addCell()
-		->addText($project['end_user']['signatories']['note'], ['underline' => 'single', 'bold' => true, 'size' => 11]);	
+		->addText(strtoupper($project['end_user']['signatories']['note']), ['underline' => 'single', 'bold' => true, 'size' => 11]);	
 
 
 	$table->addRow()
@@ -323,10 +323,10 @@ if($project['type'] === "PR"){
 	$table->addRow()
 		->addCell();
 	$table->addCell()
-		->addText($project['end_user']['signatories']['verifier'], ['underline' => 'single', 'bold' => true, 'size' => 11]);
+		->addText(strtoupper($project['end_user']['signatories']['verifier']), ['underline' => 'single', 'bold' => true, 'size' => 11]);
 	$table->addCell();
 	$table->addCell()
-		->addText($project['end_user']['signatories']['approving'], ['underline' => 'single', 'bold' => true, 'size' => 11]);
+		->addText(strtoupper($project['end_user']['signatories']['approving']), ['underline' => 'single', 'bold' => true, 'size' => 11]);
 
 	$table->addRow()
 		->addCell();

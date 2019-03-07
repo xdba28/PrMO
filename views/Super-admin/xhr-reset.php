@@ -14,10 +14,7 @@ if($sa->isLoggedIn()){
 if(!empty($_POST))
 {
 
-	// echo "<pre>",print_r($_POST),"</pre>";
-	// die();
 	try{
-				
 
 		$salt = Hash::salt(32);
 		$newPass = htmlspecialchars($_POST['newPass']);
@@ -49,9 +46,13 @@ if(!empty($_POST))
 				sms($user->phone, "Super Admin", $customMessage);
 			}
 		}
+
+		Syslog::put('Superadmin password reset');
 		
 
 	}catch(Exception $e){
+		Syslog::put($e,null,'error_log');
+		Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 		$e->getMessage()."A Fatal Error Occured";
 		$data = ['success' => 'error', 'codeError' => $e];
 		echo json_encode($data);

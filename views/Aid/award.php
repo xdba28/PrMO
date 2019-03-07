@@ -76,7 +76,7 @@
 					<div class="col-lg-12">
 						<div class="ibox">
 							<div class="ibox-title">
-								<?php echo '<h5>Select Lot from '.$id.'</h5>';?>
+								<?php echo '<h5>Select Lot from '.$id.' --- '.$project->project_title.'</h5>';?>
 							</div>
 							<div class="ibox-content">
 								<div class="row">
@@ -396,6 +396,11 @@
 												date.val('');
 												term.val('');
 												pay.val('');
+												if(result.finish){
+													setTimeout(function(){
+														window.location = 'project-details?refno=<?php echo $_GET['q']?>';
+													}, 2000);
+												}
 											}
 										}
 									});
@@ -437,6 +442,11 @@
 												date.val('');
 												term.val('');
 												pay.val('');
+												if(result.finish){
+													setTimeout(function(){
+														window.location = 'project-details?refno=<?php echo $_GET['q']?>';
+													}, 2000);
+												}
 											}
 										}
 									});

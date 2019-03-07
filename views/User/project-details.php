@@ -132,15 +132,32 @@
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
 										<div class="col-sm-8 text-sm-left"><dd class="mb-1"><?php 
 										
-										foreach ($endusers as $enduser) {
-											echo $user->fullnameOfEnduser($enduser), "<br>";
+										foreach ($endusers as $enduser) {									
+											$transferedNames[] = $user->fullnameOfEnduser($enduser);
 										}
+
+										echo implode(", ",$transferedNames);
 										
 										?></dd> </div>
                                     </dl>
                                     <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 
+											
+												// echo $project->implementing_office;
+												foreach (json_decode($project->implementing_office, true) as $office){
+													$offices[] = $office;
+												}
+
+												echo implode(", ", $offices);
+											?>
+											</dd>
+										</div>
+                                    </dl>									
+                                    <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Type of project:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo $project->type;?></dd></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo strtoupper($project->type);?></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Current activity:</dt> </div>
@@ -151,7 +168,7 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>ABC:</dt>
+                                            <dt>Approved Budget:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
@@ -159,10 +176,38 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>MOP:</dt>
+                                            <dt>Fund Source:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php echo $project->MOP;?></dd>
+											<dd class="mb-1"><?php echo $project->fund_source;?></dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Mode of Procurement:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1">
+												<?php
+													switch($project->MOP){
+														case "PB":
+															echo "Public Bidding";
+															break;
+														case "SVP":
+															echo "Small Value Procurement";
+															break;
+														case "DC":
+															echo "Direct Contracting";
+															break;
+														case "TBE":
+															echo "To be evaluated";
+															break;
+														default:
+															echo $project->MOP;
+															break;
+													}
+												?>
+											</dd>
                                         </div>
                                     </dl>									
                                     <dl class="row mb-0">
@@ -177,6 +222,18 @@
 											?></dd>
                                         </div>
                                     </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Implementing Date:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php
+
+											echo Date::translate($project->implementation_date, '1');
+											
+											?></dd>
+                                        </div>
+                                    </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
                                             <dt>Last Updated:</dt>
@@ -276,7 +333,7 @@
 													switch($identifier){
 														case "AWARD":
 															$icon = 'ti-medall text-info';
-															$message ='<strong>Congratulation! </strong>'. $remarksParts[1] .' has been successfuly finalized';
+															$message ='<strong>Big step! </strong>'. $remarksParts[1] .' has been successfuly finalized';
 															break;
 														case "SOLVE":
 															$icon = 'far fa-thumbs-up text-success';
@@ -562,7 +619,7 @@
 										}
 									}
 									
-									$noUpdates = false;
+									$noUpdates = "false";
 								}else{
 									
 									$noUpdates = true;
@@ -594,104 +651,6 @@
         </div>
     </div>
 
-	<div class="modal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-			
-				<div class="modal-header">
-					<h3 class="modal-title">Available Documents</h3>		
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<?php
-							$admin = new Admin();
-							$documents = $admin->checkDocuments($refno);
-	
-							foreach($documents['request'] as $request){
-								echo '									
-								<div class="my-file-box">
-									<div class="file">
-										<a href="#" onclick="window.open(\'../../bac/forms/pr-jo-doc?id='.$request['ref_no'].'&type='.$request['type'].'\');">
-											<span class="corner"></span>
-											<div class="icon">
-												<i class="fas fa-file-word"></i>
-											</div>
-											<div class="file-name">
-												'.$request['title'].'.docx
-											</div>
-										</a>
-									</div>
-								</div>
-								';
-							}
-	
-							if($documents['technical']){
-								echo '									
-								<div class="my-file-box">
-									<div class="file">
-										<a href="#" onclick="window.open(\'../../bac/forms/pre-eval-form?g='.$refno.'\');">
-											<span class="corner"></span>
-											<div class="icon">
-												<i class="fas fa-file-word"></i>
-											</div>
-											<div class="file-name">
-												Technical Working Group Pre-evaluation.docx
-											</div>
-										</a>
-									</div>
-								</div>
-								';
-
-								if(isset($documents['canvass_forms'])){
-									foreach($documents['canvass_forms'] as $lot){
-										echo '									
-										<div class="my-file-box">
-											<div class="file">
-												<a href="#" onclick="window.open(\'../../bac/forms/canv-prop?rq='.base64_encode($refno).'&t='.base64_encode($lot['title']).'&i='.$lot['canvass_id'].'\');">
-													<span class="corner"></span>
-													<div class="icon">
-														<i class="fas fa-file-word"></i>
-													</div>
-													<div class="file-name">
-														'.$lot['title'].'.docx
-													</div>
-												</a>
-											</div>
-										</div>
-										';
-
-										foreach($lot['publication'] as $key => $pub){
-											$pub_quo = ($project->type === "PR") ? "Quotation" : "Proposal";
-											echo '
-											<div class="my-file-box">
-												<div class="file">
-													<a href="#" onclick="window.open(\'../../bac/forms/reso-prop?rq='.base64_encode($refno).'&f='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
-														<span class="corner"></span>
-														<div class="icon">
-															<i class="fas fa-file-word"></i>
-														</div>
-														<div class="file-name">
-															Request for '.$pub_quo.' - '.$pub['mode'].'.docx
-														</div>
-													</a>
-												</div>
-											</div>
-											';
-										}
-									}
-								}
-							}
-							// echo "<pre>".print_r($documents)."</pre>";
-						?>
-	
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<?php include_once'../../includes/parts/user_scripts.php'; ?>
 	

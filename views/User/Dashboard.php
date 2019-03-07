@@ -9,7 +9,10 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
+
+	
+	
     
         /* This is for the validator modal standard user */
         $user = new User();
@@ -27,11 +30,6 @@
             $validate = new Validate();
 
             $validation = $validate->check($_POST, array(
-                    'new_username' => [
-                        'required' => true,
-                        'unique' => 'edr_account',
-                        'unique' => 'prnl_account'
-                    ],
                     'new_password' => [
                         'required' => true
                     ],
@@ -48,7 +46,6 @@
                 try{
                     if($user->update('edr_account', 'account_id', $ID, array(
                         'newAccount' => 0,
-                        'username' => Input::get('new_username'),
                         'salt' => $salt,
                         'userpassword' => Hash::make(Input::get('new_password'), $salt)
                         
@@ -60,13 +57,11 @@
                         Redirect::To('../../index');
                     }
                 }catch(Exception $e){
-                    die($e->getMessage());
+					// die($e->getMessage());
+					Syslog::put($e,null,"error_log");
+					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
-            }else{
-                foreach($validation->errors() as $error){
-                    echo $error,"<br>";
-                }
             }
         }
     }
@@ -129,7 +124,31 @@
             <div class="wrapper wrapper-content">
 				<div class="row">
 					<?php
-						
+
+						// get user id
+						$current_user = Session::get(Config::get('session/session_name'));
+						$myRequests = $user->like('projects', 'end_user', "%{$current_user}%");
+
+						// select all projects
+						// foreach count noa bac reso evaluation issue
+						$reso_count = 0;
+						$noa_count = 0;
+						$eval_count = 0;
+
+						$form_revision = $user->getAll('form_update_requests', array('requested_by', '=', $user->data()->account_id));
+
+						if($myRequests){
+							foreach($myRequests as $project){
+								$logs = $user->getAll('project_logs', array('referencing_to', '=', $project->project_ref_no));
+								foreach($logs as $log){
+									$ex_detail = explode("^", $log->remarks);
+									$identifier = substr($log->remarks, 0, 5);
+									if($identifier === 'AWARD' && $ex_detail[1] === 'BAC Resolution') $reso_count++;
+									if($identifier === 'AWARD' && $ex_detail[1] === 'Notice of Award') $noa_count++;
+									if($identifier === 'ISSUE' && $ex_detail[1] === 'pre-procurement') $eval_count++;
+								}
+							}
+						}
 					
 						if(Session::exists('greet')){
 							//Session::flash('greet');
@@ -227,6 +246,8 @@
 										</div>									
 									</div>
 								</div>
+
+							
 								
 								<div class="forum-item">
 									<div class="row">
@@ -239,7 +260,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $reso_count;?>
 											</span>
 											<div>
 												<small>BAC Reso</small>
@@ -247,7 +268,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $noa_count;?>
 											</span>
 											<div>
 												<small>NOA</small>
@@ -255,7 +276,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $eval_count;?>
 											</span>
 											<div>
 												<small>Evaluation Issue/s</small>
@@ -526,7 +547,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $reso_count;?>
 											</span>
 											<div>
 												<small>BAC Reso</small>
@@ -534,7 +555,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $noa_count;?>
 											</span>
 											<div>
 												<small>NOA</small>
@@ -542,7 +563,7 @@
 										</div>
 										<div class="col-md-1 forum-info">
 											<span class="views-number">
-												0
+												<?php echo $eval_count;?>
 											</span>
 											<div>
 												<small>Evaluation Issue/s</small>
@@ -749,6 +770,8 @@
 
         </div>
     </div>
+
+	<?php include_once'../../includes/parts/user_scripts.php'; ?>
 	<script>
 		function toggleGreetings(){
 			setTimeout(function(){
@@ -756,8 +779,16 @@
 			}, 300);			
 		}
 		
-	
 	</script>
+
+	<script>
+		$(document).ready(function () {
+			toggleGreetings();
+			$('#username-div').remove();
+		});
+	</script>
+
+
 
 	<script>
 		$(window).scroll(function() {
@@ -802,7 +833,7 @@
 		GetClock();
 		setInterval(GetClock,1000);
 	</script>
-	<?php include_once'../../includes/parts/user_scripts.php'; ?>
+
 
 </body>
 

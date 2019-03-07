@@ -15,6 +15,7 @@ try
 	if(!empty($_POST)){
 
 		$user->startTrans();
+		$redirect = false;
 
 		if($_POST['lot_type'] === "1"){
 			// update this supplier that they have been awarded
@@ -47,31 +48,14 @@ try
 					'workflow' => 'Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS'
 				));
 		
+				// bac reso
 				$user->register('project_logs',  array(
 					'referencing_to' => $_POST['gds'],
-					'remarks' => "AWARD^Notice of Award^Notice of Award to Suppliers is now available.",
+					'remarks' => "AWARD^BAC Resolution^BAC Resolution declairing winning bidder is now available",
 					'logdate' => Date::translate('now', 'now'),
 					'type' => 'IN'
 				));
 
-				$end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
-				foreach(json_decode($end_users, true) as $end_user){
-					$user->register('notifications', array(
-						'recipient' => $end_user,
-						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
-						'datecreated' => Date::translate('test', 'now'),
-						'seen' => 0,
-						'href' => "project-details?refno=".base64_encode($project_ref_no)
-					));
-					notif(json_encode(array(
-						'receiver' => $end_user,
-						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
-						'date' => Date::translate(Date::translate('test', 'now'), '1'),
-						'href' => "project-details?refno=".base64_encode($project_ref_no)
-					)));
-				}
-
-				// notif
 			}
 
 		}else{
@@ -94,47 +78,42 @@ try
 			// By lot award doesn't need to update each item
 	
 			// update project
-			// notif users
+			$award = true;	
+			foreach($user->checkProjectAward($_POST['gds']) as $check){
+				if($check === false){
+					$award = false;
+				}
+			}
 		
-			if($user->checkProjectAward($_POST['gds'])){
+			if($award){
 				$user->update('projects', 'project_ref_no', $_POST['gds'], array(
 					'accomplished' => '7',
 					'workflow' => 'Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS'
 				));
-		
+				
+				// bac reso log
 				$user->register('project_logs',  array(
 					'referencing_to' => $_POST['gds'],
-					'remarks' => "AWARD^Notice of Award^Notice of Award to Suppliers is now available.",
+					'remarks' => "AWARD^BAC Resolution^BAC Resolution declairing winning bidder is now available",
 					'logdate' => Date::translate('now', 'now'),
 					'type' => 'IN'
 				));
 
+				
 
-				$end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
-				foreach(json_decode($end_users->end_user, true) as $end_user){
-					$user->register('notifications', array(
-						'recipient' => $end_user,
-						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
-						'datecreated' => Date::translate('test', 'now'),
-						'seen' => 0,
-						'href' => "project-details?refno=".base64_encode($_POST['gds'])
-					));
-					notif(json_encode(array(
-						'receiver' => $end_user,
-						'message' => "Notice of Award of project ".$_POST['gds']." is now available",
-						'date' => Date::translate(Date::translate('test', 'now'), '1'),
-						'href' => "project-details?refno=".base64_encode($_POST['gds'])
-					)));
-				}
+				// notif to be moved in step 8
 
-				// notif
+				// if all lots awarded redirect
+				$redirect = true;
+				Session::flash('update', 'Successfully awarded supplier.');
+
 
 			}
 		}
 		
 		$user->endTrans();
 		
-		echo json_encode(['success' => 'true']);
+		echo json_encode(['success' => 'true', 'finish' => $redirect]);
 	}else{
 		echo json_encode(['success' => 'error']);
 	}

@@ -82,6 +82,8 @@
 							));
 						}	
 					}
+
+					Syslog::put("create jo form");
 		
 					//proceed to printing the actual form						
 					Session::flash('Request', $form_ref_no.":JO");
@@ -90,7 +92,8 @@
 					exit();
 		
 			}catch(Exception $e){
-				die($e->getMessage());
+				Syslog::put($e,null,"error_log");
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
 			}
 		}
 	}

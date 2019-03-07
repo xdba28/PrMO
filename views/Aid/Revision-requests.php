@@ -12,6 +12,48 @@
         die();
 	}
 
+	if(isset($_GET["delete"])){
+		$reference = base64_decode(Input::get('delete'));
+
+		try{
+
+			$user->startTrans();
+
+			$form_data = $user->get("form_update_requests", array("ID", "=", $reference));
+
+				if($user->delete("form_update_requests", array("ID", "=", $reference))){
+					Syslog::put('Delete form update request');
+				}else{
+					Syslog::put('Delete form update request',null,"failed");
+				}
+
+			$user->endTrans();
+
+			$success_notifs[] = "Revision request deleted.";
+
+			$user->register('project_logs',  array(
+				'referencing_to' => $reference,
+				'remarks' => "Revision request for ".$reference." has been declined.",
+				'logdate' => Date::translate('now', 'now'), 
+				'type' => 'IN'
+			));
+
+			notif(json_encode(array(
+				'receiver' => $form_data->requested_by,
+				'message' => "Revision request for ".$reference." has been declined.",
+				'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				'href' => "project-details?refno=".base64_encode($reference)
+			)));
+	
+
+
+		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
+		}
+		
+	}
+
 
 
 ?>
@@ -26,7 +68,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Revision Requests</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>
@@ -196,8 +238,6 @@
 					$request = $user->get('form_update_requests', array('ID', '=', $reference));
 					//check if this is a project already
 					$project = $user->like("projects", "request_origin", $request->form_origin);
-					
-
 					if($project){
 						if(empty($project->evaluators_comment)){
 							$ec = "N/A";
@@ -445,7 +485,7 @@
 										</tbody>
 									</table><br>
 									
-									<h4 style="color: #F37123">Update Data foreach affected lot/s</h4>
+									<h4 style="color: #F37123">Update Data for each affected lot/s</h4>
 									<div id="updateCards" class="row">
 										<?php
 											$affectedLots = $updateData->affectedLots;
@@ -506,7 +546,7 @@
 								<h4 style="color: #F37123">Purpose of this request</h4>
 								<input type="text" disabled="" placeholder="<?php echo $request->purpose;?>" class="form-control"><br>
 								<h4 style="color: #F37123">Evaluator's Comment</h4>
-								<input type="text" disabled="" placeholder="<?php echo $ec?>" class="form-control"><br><br>
+								<input type="text" disabled="" placeholder="<?php echo $ec;?>" class="form-control"><br><br>
 								<?php
 									if(!($request->response_date == "0000-00-00 00:00:00") AND ($request->response == "declined")){
 										echo '
@@ -669,7 +709,7 @@
 				}, {
 					do: function(res){
 						swal({
-							title: `Successfully ${innertext}`,
+							title: `Successfully ${innertext}ed`,
 							text: "",
 							type: "success"
 						});
@@ -703,7 +743,7 @@
 							}, {
 								do: function(d){
 									swal({
-										title: `Successfully ${innertext}`,
+										title: `Successfully ${innertext}d`,
 										text: "",
 										type: "success"
 									});

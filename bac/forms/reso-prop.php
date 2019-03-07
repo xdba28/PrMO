@@ -60,8 +60,6 @@ $table->addCell(null, ['vMerge' => 'continue']);
 $section->addTextBreak(1);
 
 
-// $Project = "Provide Catering Services, Printing Services of Streamers and Printing Service of Polo Shirts to be used during the College Foundation Day Celebration 2018 of BUCN";
-
 $section->addText("REQUEST FOR PROPOSAL", ['bold' => true], ['alignment' => 'center', 'lineHeight' => 1, 'space' => ['before' => 0, 'after' => 72]]);
 $section->addText($prop->project_title, ['bold' => true], ['alignment' => 'center']);
 $section->addTextBreak(1);
@@ -115,14 +113,28 @@ switch($mop[$mop_index]['mode']){
 	case "SVP":
 		$mop_name = "Small Value Procurement";
 		break;
+	case "PB":
+		$mop_name = "Public Bidding";
+		break;
+	case "DC":
+		$mop_name = "Direct Contracting";
+		break;
 	default:
 		$mop_name = $mop[$mop_index]['mode'];
 }
 
-$textrun = $section->addTextRun(['alignment' => 'both']);
-$textrun->addText("Procurement will be conducted through ");
-$textrun->addText("Negotiated Procurement", ['italic' => true]);
-$textrun->addText(" - an alternative method of procurement specified and prescribed under rule XVI - Alternative Modes of Procurement, Section ".$mop[$mop_index]['no']." - Negotiated Procurement (".$mop_name."), of the Implementing Rules and Regulations Part-A (IRR-A) of Republic Act No. 9184, otherwise known as Government Procurement Reform Act.");
+if($mop[$mop_index]['mode'] === "SVP"){
+	$textrun = $section->addTextRun(['alignment' => 'both']);
+	$textrun->addText("Procurement will be conducted through ");
+	$textrun->addText("Negotiated Procurement", ['italic' => true]);
+	$textrun->addText(" - an alternative method of procurement specified and prescribed under rule XVI - Alternative Modes of Procurement, Section ".$mop[$mop_index]['no']." - Negotiated Procurement (".$mop_name."), of the Implementing Rules and Regulations Part-A (IRR-A) of Republic Act No. 9184, otherwise known as Government Procurement Reform Act.");	
+}else{
+	$textrun = $section->addTextRun(['alignment' => 'both']);
+	$textrun->addText("Procurement will be conducted through ");
+	$textrun->addText($mop[$mop_index]['mode']."(".$mop[$mop_index]['no'].")", ['italic' => true]);
+	$textrun->addText(" - an alternative method of procurement specified and prescribed under rule XVI - Alternative Modes of Procurement, Section ".$mop[$mop_index]['no']." - ".$mop_name." of the Implementing Rules and Regulations Part-A (IRR-A) of Republic Act No. 9184, otherwise known as Government Procurement Reform Act.");	
+}
+
 
 $section->addTextBreak(1);
 

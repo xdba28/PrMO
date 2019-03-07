@@ -10,7 +10,7 @@
     }else{
        Redirect::To('../../blyte/acc3ss');
         die();
-    }
+	}
 
         /* This is for the validator modal admin level */
         $user = new Admin();
@@ -56,11 +56,13 @@
                         ))){
                         Session::delete("accounttype");
                         Session::put("accounttype", 0);
-                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Syslog::put('Account setup');
                         $user->logout();
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
+					Syslog::put($e,null,'error_log');
                     Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
@@ -81,8 +83,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>PrMO OPPTS | Procurement Aid</title>
-
+    <title>PrMO OPPTS | Procurement Aide</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>
@@ -110,7 +112,7 @@
 			</div>
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-6">
-                    <h2>Procurement Aid Dashboard</h2>
+                    <h2>Procurement Aide Dashboard</h2>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="#">This is</a>
@@ -130,9 +132,9 @@
 					<div class="ibox-content m-b-sm border-bottom">
 						<div class="p-xs">
 							<div class="float-left m-r-md">
-								<i class="fas fa-users-cog text-navy mid-icon"></i>
+								<i class="fas fa-user-tie text-navy mid-icon"></i>
 							</div>
-							<h2>Welcome back <?php											
+							<h2>Welcome back <?php						
 								$hold = $user->fullname();
 								$currentUser = json_decode($hold,true);	
 								
@@ -140,7 +142,7 @@
 								echo $currentUser[0];				
 							
 							?>!</h2>
-							<span>Procurement Aid</span>
+							<span>Procurement Aide</span>
 						</div>
 					</div>
 				</div>

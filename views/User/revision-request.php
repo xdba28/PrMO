@@ -118,7 +118,7 @@
 											
 											<?php
 											if($myRequests){
-												echo count($myRequests);
+												
 											
 												foreach($myRequests as $request){
 													
@@ -148,7 +148,7 @@
 														case 'declined':
 															$response = '<span class="label label-danger">DECLINED</span>';
 															break;
-														case 'approved':
+														case 'granted':
 															$response = '<span class="label label-primary">Approved</span>';
 															break;
 														case 'none':
@@ -170,7 +170,7 @@
 															<td><?php echo $request->purpose;?></td>
 															<td><b><?php echo $displayProject;?></b></td>
 														<td style="text-align:center">
-															<a href="?q=<?php echo $request->ID;?>" class="btn btn-info btn-outline btn-sm" style="color:black"><i class="ti-layers-alt"></i> view changes </a>
+															<a href="?q=<?php echo base64_encode($request->ID);?>" class="btn btn-info btn-outline btn-sm" style="color:black"><i class="ti-layers-alt"></i> view changes </a>
 															<a class="btn btn-danger btn-sm btn-outline" href="#" >Delete</a>
 														</td>
 													</tr>
@@ -206,9 +206,18 @@
 				</div>
 				<?php
 					}else{
-					$reference =  $_GET['q'];
+					$reference =  base64_decode($_GET['q']);
 
 					$request = $user->get('form_update_requests', array('ID', '=', $reference));
+					//check if this is a project already
+					$project = $user->like("projects", "request_origin", $request->form_origin);
+					if($project){
+						if(empty($project->evaluators_comment)){
+							$ec = "N/A";
+						}else{
+							$ec = $project->evaluators_comment;
+						}
+					}
 
 					if($request){
 						//echo "<pre>",print_r($request),"</pre>";
@@ -262,8 +271,21 @@
 							</div>
 							<div class="ibox-content">
 								<h2><?php echo $heading;?></h2>
+								<h4 style="color: #F37123">Purpose of this request</h4>
 								<input type="text" disabled="" placeholder="<?php echo $request->purpose;?>" class="form-control"><br>
+								<h4 style="color: #F37123">Evaluator's Comment</h4>
+								<input type="text" disabled="" placeholder="<?php echo $ec?>" class="form-control"><br>	
+								<?php
+									if(!($request->response_date == "0000-00-00 00:00:00") AND ($request->response == "declined")){
+										echo '
+											<h4 style="color: #c21749">Reason for declination</h4>
+											<div class="has-error">
+												<input type="text" readonly placeholder="'.$request->response_message.'" class="form-control"><br>
+											</div>
+										';
+									}
 								
+								?>															
 								<?php
 									$type = substr($request->form_origin, 0,2);
 									
@@ -493,8 +515,21 @@
 							</div>
 							<div class="ibox-content">
 								<h2><?php echo $heading;?></h2>
+								<h4 style="color: #F37123">Purpose of this request</h4>
 								<input type="text" disabled="" placeholder="<?php echo $request->purpose;?>" class="form-control"><br>
+								<h4 style="color: #F37123">Evaluator's Comment</h4>
+								<input type="text" disabled="" placeholder="<?php echo $ec?>" class="form-control"><br>	
+								<?php
+									if(!($request->response_date == "0000-00-00 00:00:00") AND ($request->response == "declined")){
+										echo '
+											<h4 style="color: #c21749">Reason for declination</h4>
+											<div class="has-error">
+												<input type="text" readonly placeholder="'.$request->response_message.'" class="form-control"><br>
+											</div>
+										';
+									}
 								
+								?>		
 								<?php
 									if($updateData->type === "PR"){
 									

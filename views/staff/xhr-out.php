@@ -26,6 +26,7 @@ try
 
 				$project = $user->get('outgoing', array('project', '=', $reference));
 
+
 				/*Transfer the outgoing data to outgoing register*/
 				$user->transfer($reference, $releasedBy);
 
@@ -61,17 +62,20 @@ try
 					'logdate' => Date::translate('test','now'),
 					'type' => 'OUT'
 
-				));				
+				));
+
+				Syslog::put('Release '.$reference.' from outgoing');
 
 				
 			}
-
-
-
 			$user->endTrans();
 
+			
+
 		}catch(Exception $e){
-			die($e->getMessage()."A Fatal Error Occured");
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
+			// die($e->getMessage()."A Fatal Error Occured");
 		}
 
 
@@ -89,6 +93,8 @@ try
 }
 catch(Exception $e)
 {
+	Syslog::put($e,null,'error_log');
+	Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0002');
 	$data = ['success' => false];
 	header("Content-type:application/json");
 	echo json_encode($data);

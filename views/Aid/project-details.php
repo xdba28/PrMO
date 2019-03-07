@@ -9,9 +9,53 @@
     }else{
        Redirect::To('../../index');
         die();
-    }
+	}
     
+	if(Input::exists()){
+		if(Token::check("sdToken", Input::get("sdToken"))){
+		
+			try{
 
+				if($_FILES["toupload"]["name"]){
+					$new_filename = StringGen::sfilename().".".pathinfo($_FILES["toupload"]["name"], PATHINFO_EXTENSION);
+					$target_dir = "../../data/signed_documents/";
+					$target_file = $target_dir . basename($new_filename);
+					$uploadOk = 1;
+					$imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+					$hold = $user->fullname();
+					$currentUser = json_decode($hold,true);
+
+					
+					
+
+					if(move_uploaded_file($_FILES["toupload"]["tmp_name"], $target_file)){					
+						
+						$user->startTrans();
+							$user->register('signed_documents', array(
+								'project_origin' => base64_decode( Input::get('refno')),
+								'file_name' => $new_filename,
+								'display_name' => Input::get('file_name'),
+								'uploader' => $currentUser[0],
+								'upload_date' => Date::translate('now', 'now')
+							));
+						$user->endTrans();
+						
+						$success_notifs[] = "File Upload Success";
+						Syslog::put("Signed document upload");
+						
+					}else{
+						Session::flash("FATAL_ERROR", "There was an error uploading your file. ERRORCODE:0001");
+					}
+						
+				}
+
+			}catch(Exception $e){
+				Syslog::put($e,null,'error_log');
+				Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0002');
+			}
+
+		}
+	}
 
 ?>
 
@@ -27,7 +71,6 @@
     <title>PrMO OPPTS | Projects Details</title>
 
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
-
 </head>
 
 <body class="">
@@ -129,6 +172,31 @@
                                         <div class="col-sm-8 text-sm-left"><dd class="mb-1"><span id="status-span" class="label label-primary"><?php echo $project->project_status;?></span></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Origin Forms:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+                                            <dd class="project-people mb-1">
+											<?php 
+												
+												$forms = json_decode($project->request_origin, true);
+												
+												//$test = '<a value="something" href="my-forms?q='.implode('"></a>, <a href="my-forms?q=', $forms).'"></a>';
+												//echo $test;
+												$comaCounter = 1;
+												foreach($forms as $individualOrigin => $value){
+													echo '<a href="my-forms?q='.base64_encode($value).'">'.$value.'</a>';
+													if($comaCounter < (count($forms))){
+														echo '<a style="font-size:16px; color:red"> / </a>';
+													}
+													$comaCounter++;
+												}
+											
+											?>
+											</dd>		
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
 										<div class="col-sm-8 text-sm-left"><dd class="mb-1"><?php 
 										
@@ -151,7 +219,7 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>ABC:</dt>
+                                            <dt>Approved Budget:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
@@ -159,10 +227,38 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>MOP:</dt>
+                                            <dt>Fund Source:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php echo $project->MOP;?></dd>
+											<dd class="mb-1">test source</dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Mode of Procurement:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1">
+												<?php
+													switch($project->MOP){
+														case "PB":
+															echo "Public Bidding";
+															break;
+														case "SVP":
+															echo "Small Value Procurement";
+															break;
+														case "DC":
+															echo "Direct Contracting";
+															break;
+														case "TBE":
+															echo "To be evaluated";
+															break;
+														default:
+															echo $project->MOP;
+															break;
+													}
+												?>
+											</dd>
                                         </div>
                                     </dl>									
                                     <dl class="row mb-0">
@@ -179,6 +275,16 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
+                                            <dt>Implementing Date:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1">
+													test date
+											</dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
                                             <dt>Last Updated:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
@@ -192,37 +298,17 @@
 												echo "No update yet";
 											}
 
-
 											?></dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
-                                        <div class="col-sm-4 text-sm-right">
-                                            <dt>Origin Forms:</dt>
+                                        <div class="col-sm-6 text-sm-left" style="padding-right:2px">
+											<button type="button" id="showdoc" style="margin-bottom:10px; background:#8CC63E" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#documents">Show Documents</button>
                                         </div>
-                                        <div class="col-sm-8 text-sm-left">
-                                            <dd class="project-people mb-1">
-											<?php 
-												
-												$forms = json_decode($project->request_origin, true);
-												
-												//$test = '<a value="something" href="my-forms?q='.implode('"></a>, <a href="my-forms?q=', $forms).'"></a>';
-												//echo $test;
-												$comaCounter = 1;
-												foreach($forms as $individualOrigin => $value){
-													echo $value;
-													if($comaCounter < (count($forms))){
-														echo ' / ';
-													}
-													$comaCounter++;
-												}
-												
-											
-											?>
-											</dd>
-											<button type="button" id="showdoc" style="margin-bottom:10px;" class="btn btn-primary btn-rounded btn-sm" data-toggle="modal" data-target="#documents">Show Documents</button>
+										<div class="col-sm-6 text-sm-right" style="padding-left:2px">
+											<button type="button" id="signeddoc" style="margin-bottom:10px; background:#F99324; border-color:#d37208" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#signedDocuments">Signed Documents</button>
                                         </div>
-                                    </dl>
+                                    </dl>									
 									
                                 </div>
                             </div>
@@ -438,10 +524,63 @@
 								if($Updates =  $user->importantUpdates2($refno)){
 
 									// echo "<pre>",print_r($Updates),"</pre>";
+								
 									
 									if(($upd_count = count($Updates)) > 5){
 
+										// echo "<pre>",print_r($Updates),"</pre>";
+										$activityLogs = $Updates;
+										// echo "<pre>",print_r($activityLogs),"</pre>";
 										for($x = 1; $x<6; $x++){
+
+											$identifier = explode("^", $activityLogs[$upd_count-$x]->remarks);
+											switch ($identifier[0]) {
+												case "AWARD":
+													$timelineIcon = "fas fa-award";
+													$bg = "lazur-bg";
+													$displayMessage = $identifier[2];
+													break;
+												case "SOLVE":
+													$timelineIcon = "fas fa-thumbs-up";
+													$bg = "bg-success";
+													$displayMessage = "Pre-procurement evaluation issue resolved";
+
+													break;
+												case "ISSUE":
+													$timelineIcon = "fas fa-exclamation-triangle";
+													$bg = "yellow-bg";
+													switch ($identifier[1]) {
+														case 'pre-procurement':
+															$displayMessage = "Pre-procurement evaluation issue encountered";
+															break;
+														
+														default:
+															# code...
+															break;
+													}
+													break;
+												case "DECLARATION":
+													if($identifier[1]=="FINISH"){
+														$timelineIcon = "far fa-flag";
+														$bg = "bg-info";
+														$displayMessage = "This project has completed all required processes and transactions in the system";
+
+													}elseif($identifier[1] == "FAILURE"){
+														$timelineIcon = "ti-face-sad";
+														$bg = "bg-danger";
+														$displayMessage = "Project was declared as a failed project";
+
+													}
+													
+													break;
+												default:
+
+													$identifier[1] = "TECHNICAL MEMBER EVALUATION";
+													$timelineIcon = "fas fa-users";
+													$bg = "bg-primary";
+													$displayMessage = "Project documents are being evaluated by respective Technical member.";
+													break;
+											}											
 
 							?>
 							
@@ -451,23 +590,23 @@
                             </div>
 
                             <div class="vertical-timeline-content" style="margin-left:45px">
-                                <h2><?php echo strtoupper($activityLogs[$activity_count-$x]->type);?></h2>
+                                <h2><?php echo strtoupper($identifier[1]);?></h2>
                                 <p>	
 
 									<?php 
-									echo $activityLogs[$activity_count-$x]->activity;
+									echo $displayMessage;
 									
 									?>
                                 </p>
                                 
                                     <span class="vertical-date">										
-										<?php echo Date::translate($activityLogs[$activity_count-$x]->date_log, 1);?>
+										<?php echo Date::translate($activityLogs[$upd_count-$x]->logdate, 1);?>
 										<br>
                                         <small>
                                         <?php
 											$datetime_today = Date::translate('now', 'now');
-											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->date_log));
-											echo $interval->format("%a days %h hours ago");										
+											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$upd_count-$x]->logdate));
+											echo $interval->format("%a days ago");										
 										?>										
 										</small>
                                     </span>
@@ -561,6 +700,7 @@
 
 							<?php
 										}
+										echo "<br>";
 									}
 									
 									$noUpdates = "false";
@@ -570,7 +710,7 @@
 									
 							?>
 							
-									<h1>no updates</h1>
+									
 							
 							<?php
 								}
@@ -595,16 +735,16 @@
         </div>
     </div>
 
-	<div class="modal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal inmodal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
+			<div class="modal-content animated bounceIn">
 			
 				<div class="modal-header">
-					<h3 class="modal-title">Available Documents</h3>		
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
+					<i class="far fa-file-word modal-icon" style="color:#2a5699"></i>
+					<h4 class="modal-title">Available Documents</h4>
+					<small class="font-bold">Click on the file you wish to download.</small>
+				</div>				
+				
 				<div class="modal-body">
 					<div class="row">
 						<?php
@@ -680,6 +820,21 @@
 												</div>
 											</div>';
 
+											echo '									
+											<div class="my-file-box">
+												<div class="file">
+													<a href="#" onclick="window.open(\'../../bac/forms/mode?rq='.base64_encode($refno).'&f='.$lot['canvass_id'].'&m='.$pub['mode_index'].'\');">
+														<span class="corner"></span>
+														<div class="icon">
+															<i class="fas fa-file-word"></i>
+														</div>
+														<div class="file-name" style="height: 150px;">
+															<h4>Recommending Mode of Procurement</h4>Lot '.$count.' Resolution MOP - '.$pub['mode'].'.docx
+														</div>
+													</a>
+												</div>
+											</div>';
+
 											// check abstract of bid
 											if(isset($lot['abstract'])){
 												echo '
@@ -715,6 +870,8 @@
 													</div>';
 												}
 												
+												// count if award is zero
+												// then foreach
 												if(count($lot['noa']) !== 0){
 													foreach($lot['noa'] as $noa){
 														// bac resolution
@@ -748,25 +905,146 @@
 																</a>
 															</div>
 														</div>';
-	
-														// echo here PO / LO
+
+														$orderName = ($lot['type'] === "PR") ? "Purchase" : "Letter";
+
+														//PO / LO
+														echo '
+														<div class="my-file-box">
+															<div class="file">
+																<a href="#" onclick="window.open(\'../../bac/forms/order?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																	<span class="corner"></span>
+																	<div class="icon">
+																		<i class="fas fa-file-word"></i>
+																	</div>
+																	<div class="file-name" style="height: 150px;">
+																		<h4>'.$orderName.' Order to '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																	</div>
+																</a>
+															</div>
+														</div>';
+
+														// OS
+														if(isset($lot['os'])){
+															echo '
+															<div class="my-file-box">
+																<div class="file">
+																	<a href="#" onclick="window.open(\'../../bac/forms/os?q='.base64_encode($refno).'&id='.$noa->id.'&spid='.$noa->cvsp_id.'&l='.$lot['title'].'\');">
+																		<span class="corner"></span>
+																		<div class="icon">
+																			<i class="fas fa-file-word"></i>
+																		</div>
+																		<div class="file-name" style="height: 150px;">
+																			<h4>Obligation Slip of '.$noa->name.' </h4>Lot '.$count.' - '.$lot['title'].'.docx
+																		</div>
+																	</a>
+																</div>
+															</div>';
+														}
 													}
 												}
 											}
-
-
-											// count if award is zero
-												// then foreach
 										}
-
 									}
-
 								}
 							}
 							// echo "<pre>".print_r($documents)."</pre>";
 						?>
 	
 					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+	<div class="modal inmodal fade" id="signedDocuments" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-expanded">
+			<div class="modal-content animated bounceIn">
+				<div class="modal-header">
+					<i class="fas fa-file-contract modal-icon" style="color:#F99324"></i>
+					<h4 class="modal-title">Signed Documents</h4>
+					<small class="font-bold">You can upload, delete, or download uploaded signed documents.</small>
+				</div>
+				<div class="modal-body" style="overflow: hidden;">
+
+					<div class="ibox myShadow">
+						<div class="ibox-content">
+
+							<table class="table">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th>File name</th>
+									<th>Uploaded by</th>
+									<th>Upload date</th>
+									<th style="text-align:center">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+
+								<?php
+									if($signedDocs = $user->getAll('signed_documents', array('project_origin', '=', $refno))){
+
+										foreach($signedDocs as $document){
+											if(isset($counter)){$counter++;}else{$count=1;}
+											echo '
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$document->display_name.'</td>
+													<td>'.$document->uploader.'</td>
+													<td>'.Date::translate($document->upload_date, 1).'</td>
+													<td style="text-align:center">
+														<button class="btn btn-outline btn-primary btn-xs">Download</button>
+														<button class="btn btn-outline btn-danger btn-xs">Delete</button>
+													</td>
+												</tr>											
+											';
+										}
+
+									}else{
+										echo '<tr><td colspan="5" style="text-align:center;">No files uploaded</td></tr>';
+									}
+								?>					
+
+								</tbody>
+							</table>
+
+						</div>
+					<div class="ibox-content animated fadeInDown none" id="upload_signed_document">
+						<div class="row">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-6">
+								<form id="signed_form" role="form" action="" method="POST" enctype="multipart/form-data">
+									<div class="form-group mt-20">
+										<label class="form-label" for="file_name">File Name</label>
+										<input id="file_name" name="file_name" class="form-input" type="text" required>
+									</div>
+									<div class="form-group mt-20">
+									<div class="input-group" style="margin-top:5px">
+									  <div class="custom-file">
+										<input type="file" class="custom-file-input" name="toupload" id="toupload" aria-describedby="" accept="image/*,application/pdf" required>
+										<label id="signeddoclabel" class="custom-file-label" for="toupload">Choose file</label>
+									  </div>
+									</div>
+									<input type="text" name="sdToken" value="<?php echo Token::generate('sdToken');?>" required hidden>			
+								</div>								
+									<button class="btn btn-success btn-rounded btn-outline pull-right" type="submit">Upload</button>
+								</form>								
+							</div>
+							<div class="col-sm-3"></div>						
+						</div>
+					</div>					
+					</div>
+					
+				
+				</div>
+
+				<div class="modal-footer">
+					<button id="upload_signed_document_toggler" class="btn btn-primary btn-outline">Upload a File</button>
+					<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -783,6 +1061,19 @@
 				if(isset($_GET['m'])){
 					echo "$('#showdoc').trigger('click');";
 				}
+	
+				if(Session::exists('update')){
+					$text = Session::flash('update');
+					echo '
+					swal({
+						title: "Success!",
+						text: "'.$text.'",
+						type: "success"
+					});
+					';
+				}
+		
+		
 
 
 				if($updates = $user->importantUpdates($refno)){
@@ -815,6 +1106,12 @@
 								echo "$('.progress-bar').addClass('bg-danger');";
 								break;						
 						}
+						echo "
+						setTimeout(function(){
+							$('#minimizer').trigger('click');
+						}, 1000);
+						
+						";						
 				}else{
 					echo "$('#status-div').removeClass().addClass('ibox myShadow');";
 				}
@@ -864,6 +1161,15 @@
 				$('#timeline-div').remove();
 				$('#details-div').removeClass('col-lg-9').addClass('col-lg-12');
 			}
+			
+			$('#upload_signed_document_toggler').on('click', function(){
+				$('#upload_signed_document').toggleClass('none');
+			});
+			
+			$('#toupload').on('change', function() {
+			   let fileName = $(this).val().split('\\').pop();
+			   $(this).next('#signeddoclabel').addClass("selected").html(fileName);
+			}); 					
 			 
 		 });
 		

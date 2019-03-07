@@ -26,6 +26,10 @@
 					 Session::flash('greet', 'this is my greetings');
                      Redirect::To('views/User/Dashboard');
                  }else{
+
+					if($user->data()){
+						Syslog::put("Login", "./data/logfiles/","failed",$user->data()->account_id,$user->data()->username);
+					}
                      Session::flash('incorrect', 'Incorrect Username or Password');
                  }
 
@@ -161,8 +165,10 @@
             </div>
             <div class="col-md-6 text-right">
                <small>© 2018-2019</small>
+			   
             </div>
         </div>
+
     </div>
 	
     <!-- Mainly scripts -->

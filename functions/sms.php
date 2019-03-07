@@ -1,6 +1,8 @@
 <?php
 function sms($to, $from, $message){
-	$basic  = new \Nexmo\Client\Credentials\Basic('616ad05e', 'N0tmWLWROKJLG5Lu');
+	// $basic  = new \Nexmo\Client\Credentials\Basic('616ad05e', 'N0tmWLWROKJLG5Lu');
+	// $client = new \Nexmo\Client($basic);
+	$basic  = new \Nexmo\Client\Credentials\Basic('69bee64b', 'VhgBVqz641LCygAJ');
 	$client = new \Nexmo\Client($basic);
 
 	$message = $client->message()->send([
@@ -8,10 +10,5 @@ function sms($to, $from, $message){
 		'from' => $from,
 		'text' => $message
 	]);
-	// $message = $client->message()->send([
-	// 	'to' => '639981964334',
-	// 	'from' => 'Nexmo',
-	// 	'text' => 'Hello Nico of PrMO from Nexmo'
-	// ]);
 }
 ?>

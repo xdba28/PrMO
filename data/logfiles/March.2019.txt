@@ -1,0 +1,326 @@
+User:::1 - March 1, 2019, 11:57 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 1, 2019, 11:58 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 1, 2019, 4:58 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 12:00 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:04 am
+Action:Login
+Attempt:failed
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:04 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 12:16 pm
+Action:create pr form
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:16 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:17 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 1, 2019, 5:19 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.1 - March 1, 2019, 12:22 pm
+Action:Receive PR2019-IG96FA request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:27 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:28 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:31 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 12:34 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:35 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:35 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 5:35 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 1:03 pm
+Action:Release GDS2019-14 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 1:18 pm
+Action:Release GDS2019-14 from outgoing with transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 1:18 pm
+Action:Update GDS2019-14 from released documents. transaction:SIGNATURES
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 1:18 pm
+Action:Update GDS2019-14 from released documents. transaction:
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 1, 2019, 1:18 pm
+Action:Update GDS2019-14 from released documents. transaction:
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 1, 2019, 1:05 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 1, 2019, 1:06 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 1, 2019, 10:54 pm
+Action:PDOException: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`bubac_prmo`.`signed_documents`, CONSTRAINT `signed_documents_ibfk_1` FOREIGN KEY (`project_origin`) REFERENCES `projects` (`project_ref_no`) ON DELETE CASCADE ON UPDATE CASCADE) in C:\xampp\htdocs\PrMO\classes\DB.php:53
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\classes\DB.php(53): PDOStatement->execute()
+#1 C:\xampp\htdocs\PrMO\classes\DB.php(117): DB->query_builder('INSERT INTO sig...', Array)
+#2 C:\xampp\htdocs\PrMO\classes\Admin.php(1320): DB->insert('signed_document...', Array)
+#3 C:\xampp\htdocs\PrMO\views\Aid\project-details.php(42): Admin->register('signed_document...', Array)
+#4 {main}
+Attempt:error_log
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 1, 2019, 11:35 pm
+Action:Signed document upload
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 1, 2019, 11:45 pm
+Action:Signed document upload
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 1, 2019, 4:45 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 2, 2019, 12:09 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 3, 2019, 5:31 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 3, 2019, 2:22 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 3, 2019, 3:59 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 3, 2019, 8:59 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 3, 2019, 3:59 pm
+Action:Receive JO2019-38IB2J request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 3, 2019, 9:00 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 3, 2019, 9:00 am
+Action:Login
+Attempt:failed
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - March 3, 2019, 9:01 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - March 3, 2019, 9:07 am
+Action:Logout
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - March 3, 2019, 9:07 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 3, 2019, 12:27 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 3, 2019, 12:44 pm
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 3, 2019, 4:02 pm
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 3, 2019, 4:02 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 3, 2019, 4:14 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 3, 2019, 4:14 pm
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 3, 2019, 4:50 pm
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 3, 2019, 4:50 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 3, 2019, 6:15 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 4, 2019, 4:15 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.1 - March 4, 2019, 4:26 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:192.168.137.1 - March 4, 2019, 4:27 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.1 - March 4, 2019, 11:31 am
+Action:Updated project GDS2019-6 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.1 - March 4, 2019, 11:38 am
+Action:Updated project GDS2019-10 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.1 - March 4, 2019, 11:42 am
+Action:Updated project GDS2019-10 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:192.168.137.1 - March 4, 2019, 11:55 am
+Action:Updated project GDS2019-10 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 4, 2019, 3:30 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 4, 2019, 10:30 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 4, 2019, 10:31 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 4, 2019, 3:31 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 7, 2019, 8:45 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 7, 2019, 3:56 pm
+Action:Signed document upload
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 7, 2019, 3:56 pm
+Action:Signed document upload
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 7, 2019, 8:57 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------

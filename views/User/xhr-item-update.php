@@ -130,7 +130,7 @@ if($user->isLoggedIn()){
 		
 								));
 
-							$user->endTrans();	
+							$user->endTrans();
 
 								# send notif to aids
 								$user->register('notifications', array(
@@ -336,6 +336,8 @@ if($user->isLoggedIn()){
 
 
 		}catch(Exception $e){
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
 			$e->getMessage()."A Fatal Error Occured";
 			$data = ['success' => 'error', 'codeError' => $e];
 			header("Content-type:application/json");

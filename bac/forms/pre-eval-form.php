@@ -115,11 +115,11 @@ $table->addRow(700);
 
 if(!$data->mop_peritem){
 
-	if($data->MOP == "Public Bidding"){
+	if($data->MOP == "PB"){
 		$table->addCell(null, ['vMerge' => 'continue']);
 		$table->addCell();
 		$table->addCell();
-		$table->addCell(850)->addText("&#10004;");
+		$table->addCell(850)->addText("&#10003;");
 		$table->addCell()->addText("Public Bidding");
 		$table->addCell(null, ['vMerge' => 'continue', 'gridSpan' => 2]);
 	
@@ -150,7 +150,7 @@ if(!$data->mop_peritem){
 		$textrun = $ProjName->addTextRun();
 		$textrun->addText("ABC: ", ['bold' => true]);
 		$textrun->addText(Date::translate($data->ABC, 'php'));
-		$table->addCell()->addText("&#10004;");;
+		$table->addCell()->addText("&#10003;");;
 		$textrun = $table->addCell();
 		$textrun->addText("Alternative Mode, specify:");
 		$textrun->addText($data->MOP);

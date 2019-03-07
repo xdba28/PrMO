@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Finished Projects</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>
@@ -71,10 +71,140 @@
             </div>
 			
 			<!-- Main Content -->
-            <div class="wrapper wrapper-content animated fadeInRight">
+		<div class="wrapper wrapper-content animated fadeInUp">
+			<div class="row">
+				<div class="col-lg-12 animated fadeInRight">
 
+						<div class="ibox myShadow">
+							<div class="ibox-title">
+								<h5>All Finished / Failed projects entitled to this account</h5>
+							</div>
+							<div class="ibox-content">
+								<div class="row m-b-sm m-t-sm">
+									<div class="col-md-1">
+										<button type="button" id="loading-example-btn" class="btn btn-white btn-sm" onclick="window.location.href='current-projects'"><i class="fa fa-refresh"></i> Refresh</button>
+									</div>
+									<div class="col-md-11">
+										<div class="input-group"><input type="text" placeholder="Search" class="form-control-sm form-control" id="filter"> <span class="input-group-btn">
+											<button type="button" class="btn btn-sm btn-primary"> Go!</button> </span></div>
+									</div>
+								</div>
 
-            </div>
+								<div class="project-list">
+
+									<table class="table footable table-hover" data-filter=#filter>
+										<thead>
+											<tr>
+												<th>Reference</th>
+												<th>Title</th>
+												<th>Status</th>
+												<th>Declaration</th>
+												<th>Progress</th>
+												<th style="text-align:center">Actions</th>
+											</tr>
+										</thead>										
+										<tbody>
+										<?php
+											$user = new User();
+											$current_user = Session::get(Config::get('session/session_name'));
+											$projects = $user->selectAll('projects');
+											
+											if($projects){
+												
+											
+
+											foreach($projects as $request){
+
+												if(($request->project_status == "FINISHED") OR ($request->project_status == "FAILED")){
+
+														$logs = $user->getAll("project_logs", array("referencing_to", "=", $request->project_ref_no));
+														// echo "<pre>",print_r($logs),"</pre>";
+								
+
+														if($request->project_status == "FINISHED"){
+
+															foreach ($logs as $log) {
+																$parts = explode("^", $log->remarks);
+																if(($parts[0]=="DECLARATION") AND ($parts[1] == "FINISH")){
+																	$declarationDate = $log->logdate;
+																}
+															}
+															
+															$bg = "label-info";
+															$progress = "lazur-bg";
+
+														}else{
+
+															foreach ($logs as $log) {
+																$parts = explode("^", $log->remarks);
+																if(($parts[0]=="DECLARATION") AND ($parts[1] == "FAILURE")){
+																	$declarationDate = $log->logdate;
+																}
+															}
+
+															$bg = "label-danger";
+															$progress = "red-bg";														
+														}
+
+														
+													$accomplishment = number_format(($request->accomplished / $request->steps) * 100, 1);
+
+											?>
+												<tr>
+													<td class="project-title">
+														<a><?php echo $request->project_ref_no;?></a>
+														<br/>
+														<small>Registered <?php echo $request->date_registered;?></small>
+													</td>
+
+													<td style="max-width: 220px"><?php echo $request->project_title;?></td>
+
+													<td class="project-status">
+														<span class="label <?php echo $bg;?>"><?php echo $request->project_status;?></span>
+														<br/>
+														<small><?php echo $request->type;?> project</small>
+													</td>
+
+													<td class="">
+														<?php echo Date::translate($declarationDate, 1);?>
+													</td>												
+
+													<td class="project-completion">
+														<small>Completion with: <?php echo $accomplishment;?>%</small>
+														<div class="progress progress-mini" style="background-color:#b7bfc7">
+															<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar <?php echo $progress;?>"></div>
+														</div>
+													</td>
+
+													<td class="project-actions" >
+														<a href="project-details?refno=<?php echo base64_encode($request->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>
+														<a href="project-details?refno=<?php echo base64_encode($request->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a>
+													</td>
+												</tr>
+
+											<?php
+												}
+											}
+										
+
+											}else{
+												
+												echo '
+													<tr>
+														<td colspan="5" style="text-align:center">No Data Available</td>
+													</tr>
+												';
+												
+											}
+										?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<!-- Main Content End -->
 			
             <div class="footer">

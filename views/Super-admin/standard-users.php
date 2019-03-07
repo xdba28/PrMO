@@ -30,11 +30,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>INSPINIA | End Users</title>
+    <title>PrMO OPPTS | End Users</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php";?>
 	<script>
 		var PersUpdate = '<?php 
-		if(Session::exists("PersUpdate")) Session::flash("PersUpdate");
+		if(Session::exists("PersUpdate")) echo Session::flash("PersUpdate");
 		else echo "";
 		?>';
 	</script>
@@ -102,11 +103,16 @@
 									<tr>
 
 										<th data-toggle="true">Name</th>
-										<th>Office</th>
-										<th>Position</th>
-										<th data-hide="all">Employee ID</th>
-										<th data-hide="all">Email</th>
-										<th data-hide="all">Phone</th>
+										<th>Username</th>
+										<th>Account Type</th>
+
+
+											<th data-hide="all">Employee ID</th>
+											<th data-hide="all">Email</th>
+											<th data-hide="all">Phone</th>
+											<th data-hide="all">Designation</th>
+											<th data-hide="all">Specific Office</th>
+											<th data-hide="all">Position</th>
 										
 										<th>Action</th>
 									</tr>
@@ -114,7 +120,7 @@
 								
                                 <tbody>
                                 <?php
-
+									// echo "<pre>",print_r($EnduserInfo),"</pre>";
                                     foreach($EnduserInfo as $data){
                                         if($data->edr_ext_name == 'XXXXX'){
                                             $fullname = $data->edr_fname." ".$data->edr_mname." ".$data->edr_lname;
@@ -127,11 +133,14 @@
                                         echo '                                        
                                             <tr>
                                                 <td>'.$fullname.'</td>
-                                                <td>'.$data->office_name.'</td>
-                                                <td>'.$data->edr_job_title.'</td>
+												<td>'.$data->username.'</td>
+												<td>'.$data->name.'</td>
                                                 <td>'.$data->edr_id.'</td>
                                                 <td>'.$data->edr_email.'</td>
                                                 <td>'.$data->phone.'</td>
+												<td>'.$data->office_name.'</td>
+												<td>'.$data->current_specific_office.'</td>
+                                                <td>'.$data->edr_job_title.'</td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <button data-toggle="dropdown" class="btn btn-warning btn-xs dropdown-toggle">Options </button>

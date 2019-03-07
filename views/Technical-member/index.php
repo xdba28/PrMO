@@ -80,7 +80,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Dashboard</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 
 </head>
@@ -91,17 +91,13 @@
         <div id="page-wrapper" class="gray-bg">
         <div class="row border-bottom white-bg">
         <nav class="navbar navbar-expand-lg navbar-static-top" role="navigation">
-            <!--<div class="navbar-header">-->
-                <!--<button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">-->
-                    <!--<i class="fa fa-reorder"></i>-->
-                <!--</button>-->
+
 
                 <a href="#" class="navbar-brand">PrMO OPPTS</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-reorder"></i>
                 </button>
 
-            <!--</div>-->
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="active">
@@ -110,33 +106,6 @@
                     <li class="dropdown">
                         <a  role="button" href="#evaluation-list"> Evaluation</a>
                     </li>
-                    <!-- <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item</a>
-                        <ul role="menu" class="dropdown-menu">
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                            <li><a href="">Menu item</a></li>
-                        </ul>
-                    </li> -->
 
                 </ul>
 				
@@ -530,40 +499,63 @@
                 <div class="row" id="evaluation-list">
 
                     <div class="col-lg-12">
-                        <div class="ibox ">
+                        <div class="ibox myShadow">
                             <div class="ibox-title">
                                 <h5>Evaluation List</h5>
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
-                                    <div class="col-sm-5 m-b-xs">
-                                        <div class="alert alert-success">
-											<i class="fas fa-info"></i>	Listed below are evaluation requests entitled to you, please do observe the Remaining days Legend.
-                                        </div>
-									</div>
-                                    <div class="col-sm-4 m-b-xs">
-										<div class="panel panel-info">
+                                    <div class="col-sm-6 m-b-xs">
+
+										<div class="panel panel-info" style="height:137px">
 											<div class="panel-heading">
 												<i class="fas fa-info"></i> Remaining days Legend
 											</div>
 											<div class="panel-body">
-												<span class="label label-success" style="border-radius:6.25em; background-color:#02a2f8">8</span> days and up
-												<span class="label label-success" style="border-radius:6.25em; background-color:#f98111">1</span> less than a week
-												<span class="label label-success" style="border-radius:6.25em; background-color:#de1010">1</span> 1-3 days
-												<br>
-												<p>before Project's Required Implemetation date</p>
+												<i class="fas fa-info"></i>	Listed below are evaluation requests entitled to you, please do observe the Remaining days Legend.
+											</div>
+										</div>										
+									</div>
+                                    <div class="col-sm-6 m-b-xs">
+										<div class="panel panel-info" style="height:137px">
+											<div class="panel-heading">
+												<i class="fas fa-info"></i> Remaining days Legend
+											</div>
+											<div class="panel-body">
+												<div style="margin-bottom:4px">
+													<span class="label label-success" style="border-radius:6.25em; background-color:#02a2f8;">
+														<a style="color:#02a2f8">o</a>
+													</span>&nbsp <b>8</b> days and up before implementing date.<br>
+												</div>
+												
+												<div style="margin-bottom:4px">
+													<span class="label label-success" style="border-radius:6.25em; background-color:#f98111">
+														<a style="color:#f98111">o</a>
+													</span>
+													&nbsp <b>4 - 7</b> days and up before implementing date.</b><br>
+												</div>
+												
+												<div>
+													<span class="label label-success" style="border-radius:6.25em; background-color:#de1010">
+														<a style="color:#de1010">o</a>
+													</span>
+													&nbsp <b>1 - 3</b> days and up before implementing date.</b>
+												</div>
 											</div>
 										</div>
                                     </div>									
-                                    <div class="col-sm-3">
+
+                                </div>
+								<div class="row">
+                                    <div class="col-sm-12">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control form-control-sm" id="filter" placeholder="Search">
                                             <div class="input-group-append">
                                                 <button class="btn btn-sm btn-primary" type="button">Go!</button>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </div>								
+								</div>
                                 <div class="table-responsive">
 								
                                     <table class="table footable table-striped" data-filter="#filter">
@@ -598,22 +590,26 @@
 
 													$counter = (isset($counter) ? $counter++ : $counter = 1);
 
-													switch (true) {
-														case ($diff->format("%a") <= 3):
+													switch (true){
+														case ($diff->format("%R%a") <= 3):
 															$class = "dangerGradient";
 															break;
 														
-														case ($diff->format("%a") <= 7):
+														case ($diff->format("%R%a") <= 7):
 															$class = "warningGradient";
 															break;
 														default:
 															$class = "greenGradient";
 															break;															
 													}
+													
+													if(!($diff->format("%R%a") <= 0)){
+														
+													
 											?>
 										
 											<tr>
-												<td><?php echo $counter = (isset($counter) ? $counter++ : $counter = 1);?></td>
+												<td><?php echo (isset($counter)) ? $counter++ : $counter = 1;?></td>
 												<td style="width: 150px">
 													<?php
 														$endusers = json_decode($request->end_user);
@@ -640,6 +636,7 @@
 										
 											
 											<?php
+													}
 												}
 											}else{
 												echo '<tr>

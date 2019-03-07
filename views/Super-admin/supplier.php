@@ -13,21 +13,33 @@
 
 	if(!empty($_POST)){
 
-		$user->startTrans();
+		try {
+			$user->startTrans();
+
+				if($user->register('Supplier', array(
+					'name' => htmlspecialchars($_POST['supplier']),
+					'address' => htmlspecialchars($_POST['address']),
+					'type' => htmlspecialchars($_POST['type']),
+					'tin' => htmlspecialchars($_POST['tin'])
+				))){
+					Syslog::put('Register new supplier');
+					$responce = "Succesfully added supplier.";
+					unset($_POST);					
+				}else{
+					Syslog::put('Register new supplier',null,"failed");
+				}
+
+			$user->endTrans();
 
 
-		$user->register('Supplier', array(
-			'name' => htmlspecialchars($_POST['supplier']),
-			'address' => htmlspecialchars($_POST['address']),
-			'type' => htmlspecialchars($_POST['type']),
-			'tin' => htmlspecialchars($_POST['tin'])
-		));
+		} catch (Exception $e) {
+			Syslog::put($e,null,'error_log');
+			Session::flash('FATAL_ERROR', 'Processed transactions are automatically canceled. ERRORCODE:0001');
+		}
 
 
-		$user->endTrans();
 
-		$responce = "Succesfully added supplier.";
-		unset($_POST);
+
 	}
 
 
@@ -41,6 +53,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Overview</title>
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 	<script>
@@ -156,6 +169,13 @@
 									<tbody id="t-data">
 
 									</tbody>
+									<tfoot>
+									<tr>
+										<td colspan="5">
+											<ul class="pagination float-right"></ul>
+										</td>
+									</tr>
+									</tfoot>
 								</table>
 							</div>
 							<button class="btn btn-outline btn-success btn-rounded" id="btnAdd">Add Supplier</button>
@@ -240,22 +260,22 @@ $(document).ready(function () {
 
 	var Edit = [];
 
-	const categories = [
+	// const categories = [
 	<?php
-		foreach($user->selectAll('project_category') as $category){
-			echo '{value: '.$category->pc_id.', text: "'.$category->category.'"},';
-		}
+		// foreach($user->selectAll('project_category') as $category){
+		// 	echo '{value: '.$category->pc_id.', text: "'.$category->category.'"},';
+		// }
 	?>
-	];
+	// ];
 
 	$.fn.editable.defaults.mode = 'inline';
 
 	
 
 	SampleData.forEach(function(e, i){
-		var cat = categories.find(function(el){
-			return el.value === e.category
-		});
+		// var cat = categories.find(function(el){
+		// 	return el.value === e.category
+		// });
 
 		let temp = `
 		<tr>

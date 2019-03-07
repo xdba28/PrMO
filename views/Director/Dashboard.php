@@ -20,7 +20,10 @@
             array_push($myArray, $val);
         }
     
-        $commonFields =  "'". implode("', '", $myArray) ."'";
+		$commonFields =  "'". implode("', '", $myArray) ."'";
+
+
+		
 
     if(Input::exists()){
         if(Token::check("passwordToken", Input::get('passwordToken'))){
@@ -56,12 +59,13 @@
                         ))){
                         Session::delete("accounttype");
                         Session::put("accounttype", 0);
-                        Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Session::flash('accountUpdated', 'Your Account has been succesfuly updated, Please Re-Login');
+						Syslog::put('Account setup');
                         $user->logout();
                         Redirect::To('../../blyte/acc3ss');
                     }
                 }catch(Exception $e){
-					// die($e->getMessage());
+					Syslog::put($e,null,'error_log');
 					Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
                 }
                 
@@ -96,8 +100,11 @@
 					'message' => "project ".Input::get('to-prioritize')." was set to high-priority project by the director.",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "Ongoing-projects"
-				)), true);				
+				)), true);
+				
+				Syslog::put('Updated project '.Input::get('to-prioritize').' to high priority');
 			}catch(Exception $e){
+				Syslog::put($e,null,'error_log');
 				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0002");
 			}
 
@@ -118,7 +125,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Director</title>
-
+    <link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon"> 
 	<?php include_once'../../includes/parts/admin_styles.php'; ?>
 	
 	
@@ -362,13 +369,19 @@
 						if($reports["current_projects"]){
 						foreach ($reports["current_projects"] as $project) {
 
+							
 							if($project->priority_level !== "HIGH"){
+
+								
 								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
-								if($diff->format("%a") <= 10){
+								$sign = ( $diff->format("%R%a") > 0 ) ? 1 : ( ( $diff->format("%R%a") < 0 ) ? -1 : 0 ); 
+
+
+								if(($diff->format("%a") <= 10) AND ($sign == 1)){
 									$urgentPriority[] = $project;
-								}else if($diff->format("%a") <= 29){
+								}else if(($diff->format("%a") <= 29) AND ($sign == 1)){
 									$highPriority[] = $project;
-								}else if(($diff->format("%a") >= 30) AND ($diff->format("%a") <= 200)){
+								}else if(($diff->format("%a") >= 30) AND ($diff->format("%a") <= 200) AND ($sign == 1)){
 									$lowPriority[] = $project;
 								}
 							}
@@ -398,7 +411,12 @@
 
 						if(!empty($urgentPriority)){
 							foreach ($urgentPriority as $project) {
-								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));								
+								if(strlen($project->project_title) > 90){
+									$title =  substr($project->project_title, 0, 87) . "...";
+								}else{
+									$title = $project->project_title;
+								}
 								echo'
 									<div class="col-lg-3 animated fadeInRight">
 										<a data-toggle="modal" data-target="#nearing-projects" data-priority="urgent" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
@@ -408,9 +426,9 @@
 													<i class="ti-alarm-clock fa-4x"></i>
 												</div>
 												<div class="col-8 text-right" style="height:90px">
-													<span>'.$project->project_title.'</span>
+													<span>'.$title.'</span>
 												</div>
-												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' day/s</h2></div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%R%a").' day/s</h2></div>
 											</div>
 										</div>
 										</a>
@@ -422,7 +440,12 @@
 
 						if(!empty($highPriority)){
 							foreach ($highPriority as $project) {
-								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));					
+								if(strlen($project->project_title) > 90){
+									$title =  substr($project->project_title, 0, 87) . "...";
+								}else{
+									$title = $project->project_title;
+								}								
 								echo'
 									<div class="col-lg-3 animated fadeInRight">
 										<a data-toggle="modal" data-target="#nearing-projects" data-priority="high" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
@@ -432,9 +455,9 @@
 													<i class="ti-alert fa-4x"></i>
 												</div>
 												<div class="col-8 text-right" style="height:90px">
-													<span>'.$project->project_title.'</span>
+													<span>'.$title.'</span>
 												</div>
-												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' days</h2></div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%R%a").' days</h2></div>
 											</div>
 										</div>
 										</a>
@@ -447,6 +470,11 @@
 						if(!empty($lowPriority)){
 							foreach ($lowPriority as $project) {
 								$diff = date_diff(date_create(Date::translate('now', 'now')),date_create($project->implementation_date));
+								if(strlen($project->project_title) > 90){
+									$title =  substr($project->project_title, 0, 87) . "...";
+								}else{
+									$title = $project->project_title;
+								}
 								echo'
 									<div class="col-lg-3 animated fadeInRight">
 									<a data-toggle="modal" data-target="#nearing-projects" data-priority="low" data-project="'.$project->project_ref_no.'" data-title="'.$project->project_title.'">
@@ -456,9 +484,9 @@
 													<i class="ti-calendar fa-4x"></i>
 												</div>
 												<div class="col-8 text-right" style="height:90px">
-													<span>'.$project->project_title.'</span>
+													<span>'.$title.'</span>
 												</div>
-												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%a").' day/s</h2></div>
+												<div class="col-lg-12 text-right"><h2 class="font-bold">'.$diff->format("%R%a").' days</h2></div>
 											</div>
 										</div>
 										</a>
