@@ -101,12 +101,17 @@
 											<th style="color:white">Title </th>
 												
 												<th data-hide="all">Enduser/s</th>
+												<th data-hide="all">Implementing Office</th>
 												<th data-hide="all">Current Work</th>
+												<th data-hide="all"></th>
+												<th data-hide="all">Project Type</th>
+												<th data-hide="all">Breakdown</th>
 											
-											<th style="color:white">Implementation in</th>
+											<th style="color:white">ABC</th>
 											<th style="color:white">Status</th>
 											<th style="color:white">Progress </th>
 											<th style="color:white">Actions </th>
+
 										</tr>
 										</thead>
 										<tbody>
@@ -140,27 +145,51 @@
 														$progress = "lazur-bg";
 													}
 
+												//decode request form origins
+												$origins = json_decode($project->request_origin, true);
+												$prCounter = 0;
+												$joCounter = 0;
+												foreach ($origins as $origin) {
+													$prefix = substr($origin, 0,2);
+													if($prefix === "PR"){
+														$prCounter++;
+													}else if($prefix === "JO"){
+														$joCounter++;
+													}
+												}														
+
+
+
 
 										?>
 										<tr class="<?php echo $leftBorder;?>">
 											<td><?php echo $count;?></td>
 											<td><?php echo $project->project_ref_no;?></td>
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
-											<td>
-											<?php 
+												
+												<td>
+												<?php 
 
-												$decodedEndusers = json_decode($project->end_user, true);
-												$namesArray = array();
+													$decodedEndusers = json_decode($project->end_user, true);
+													$namesArray = array();
 
-													foreach ($decodedEndusers as $empID) {
-														array_push($namesArray, $user->fullnameOfEnduser($empID));
+														foreach ($decodedEndusers as $empID) {
+															array_push($namesArray, $user->fullnameOfEnduser($empID));
+															
+														}
+													$enduserNames =  implode(", ", $namesArray);
+													echo $enduserNames;
 														
-													}
-												$enduserNames =  implode(", ", $namesArray);
-												echo $enduserNames;
-													
-											?></td>
-											<td><?php echo $currentWork;?></td>
+												?></td>
+												<td><?php echo $implentingOffices = implode(", ",json_decode($project->implementing_office, true));?></td>
+												<td><?php echo $currentWork;?></td>
+												<td><p style="color:">----------------------------------------------------------------------------------</p></td>
+												<td><b style="color:#009bdf"><?php echo strtoupper($project->type);?></b></td>
+												<td>
+													number of Purchase Request Form:&nbsp&nbsp <b style="color:red"><?php echo $prCounter;?></b><br>
+													number of Job Order Form:&nbsp&nbsp <b style="color:red"><?php echo $joCounter;?></b>
+												</td>
+
 											<td><?php echo Date::translate($project->ABC, 'php');?></td>
 											<td>
 												<span class="label <?php echo $bg;?>"><?php echo $project->project_status;?></span>
@@ -234,12 +263,17 @@
 											<th>Title </th>
 												
 												<th data-hide="all">Enduser/s</th>
+												<th data-hide="all">Implementing Office</th>
 												<th data-hide="all">Current Work</th>
+												<th data-hide="all"></th>
+												<th data-hide="all">Project Type</th>
+												<th data-hide="all">Breakdown</th>
 											
 											<th>ABC</th>
 											<th>Status</th>
 											<th>Progress </th>
 											<th>Actions </th>
+
 										</tr>
 										</thead>
 										<tbody>
@@ -267,27 +301,49 @@
 														$progress = "lazur-bg";
 													}
 
+												//decode request form origins
+												$origins = json_decode($project->request_origin, true);
+												$prCounter = 0;
+												$joCounter = 0;
+												foreach ($origins as $origin) {
+													$prefix = substr($origin, 0,2);
+													if($prefix === "PR"){
+														$prCounter++;
+													}else if($prefix === "JO"){
+														$joCounter++;
+													}
+												}													
+
 
 										?>
 										<tr>
 											<td><?php echo $count;?></td>
 											<td><?php echo $project->project_ref_no;?></td>
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
-											<td>
-											<?php 
+											
+												<td>
+												<?php 
 
-												$decodedEndusers = json_decode($project->end_user, true);
-												$namesArray = array();
+													$decodedEndusers = json_decode($project->end_user, true);
+													$namesArray = array();
 
-													foreach ($decodedEndusers as $empID) {
-														array_push($namesArray, $user->fullnameOfEnduser($empID));
+														foreach ($decodedEndusers as $empID) {
+															array_push($namesArray, $user->fullnameOfEnduser($empID));
+															
+														}
+													$enduserNames =  implode(", ", $namesArray);
+													echo $enduserNames;
 														
-													}
-												$enduserNames =  implode(", ", $namesArray);
-												echo $enduserNames;
-													
-											?></td>
-											<td><?php echo $currentWork;?></td>
+												?></td>
+												<td><?php echo $implentingOffices = implode(", ",json_decode($project->implementing_office, true));?></td>
+												<td><?php echo $currentWork;?></td>
+												<td><p style="color:">----------------------------------------------------------------------------------</p></td>
+												<td><b style="color:#009bdf"><?php echo strtoupper($project->type);?></b></td>
+												<td>
+													number of Purchase Request Form:&nbsp&nbsp <b style="color:red"><?php echo $prCounter;?></b><br>
+													number of Job Order Form:&nbsp&nbsp <b style="color:red"><?php echo $joCounter;?></b>
+												</td>
+
 											<td><?php echo Date::translate($project->ABC, 'php');?></td>
 											<td>
 												<span class="label <?php echo $bg;?>"><?php echo $project->project_status;?></span>

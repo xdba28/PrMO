@@ -11,6 +11,11 @@
 				});
 				setTimeout(function(){
 					window.open(`../../bac/forms/pre-eval-form?g=${res.projectreference}`);
+					if($('meta[name="group"]').attr('content') === 'group7'){
+						setTimeout(function(){
+							window.location = 'index';
+						}, 2000);
+					}	
 				}, 2000);
 			}
 		});
@@ -743,3 +748,6 @@
 		</div>
 	</div>
 </div>
+
+
+

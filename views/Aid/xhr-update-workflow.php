@@ -32,7 +32,7 @@ try
 			// project logs
 			$user->register('project_logs',  array(
 				'referencing_to' => $_POST['gds'],
-				'remarks' => "DECLARATION^FINISH^Project request ".$_POST['gds']." is dismissed for all items are available in DMB upon checking.",
+				'remarks' => "DECLARATION^FINISH^Project request ".$_POST['gds']." is dismissed for all items are available in DBM upon checking.",
 				'logdate' => Date::translate('now', 'now'), 
 				'type' => 'IN'
 			));
@@ -42,7 +42,7 @@ try
 
 				$user->register('notifications', array(
 					'recipient' => $end_user,
-					'message' => "Project request ".$_POST['gds']." is dismissed for all items are available in DMB upon checking.",
+					'message' => "Project request ".$_POST['gds']." has been dismissed for all items are available in DBM upon checking.",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
 					'href' => "project-details?refno=".base64_encode($_POST['gds'])
@@ -56,7 +56,7 @@ try
 				)));
 
 				$enduserData = $user->get("enduser", array("edr_id", "=", $end_user));
-				sms($enduserData->phone, "System", "Project ".$_POST['gds']." is request dismissed for all items are available in DMB upon checking.");
+				sms($enduserData->phone, "System", "Project request ".$_POST['gds']." has been dismissed for all items are available in DMB upon checking.");
 				
 			}
 
@@ -244,19 +244,17 @@ try
 			));
 
 			$end_users = $user->get('projects', array('project_ref_no', '=', $_POST['gds']));
-				
-
 			foreach(json_decode($end_users->end_user, true) as $end_user){
 				$user->register('notifications', array(
 					'recipient' => $end_user,
-					'message' => "",
+					'message' => "Project ".$_POST['gds']." is finally finished and completed all required processes and transactions in PrMO.",
 					'datecreated' => Date::translate('test', 'now'),
 					'seen' => 0,
 					'href' => "project-details?refno=".base64_encode($_POST['gds'])
 				));
 				notif(json_encode(array(
 					'receiver' => $end_user,
-					'message' => "",
+					'message' => "Project ".$_POST['gds']." is finally finished and completed all required processes and transactions in PrMO.",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($_POST['gds'])
 				)));

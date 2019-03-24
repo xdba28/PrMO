@@ -131,9 +131,10 @@
 																$declarationDate = $log->logdate;
 															}
 														}
+														
+														$bg = "label-info";
+														$progress = "lazur-bg";
 
-														$bg = "label-warning";
-														$progress = "yellow-bg";
 													}else{
 
 														foreach ($logs as $log) {
@@ -143,8 +144,8 @@
 															}
 														}
 
-														$bg = "label-info";
-														$progress = "lazur-bg";
+														$bg = "label-danger";
+														$progress = "red-bg";														
 													}
 
 													

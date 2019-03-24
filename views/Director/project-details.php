@@ -138,9 +138,24 @@
 										
 										?></dd> </div>
                                     </dl>
+									<dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 
+											
+												// echo $project->implementing_office;
+												foreach (json_decode($project->implementing_office, true) as $office){
+													$offices[] = $office;
+												}
+
+												echo implode(", ", $offices);
+											?>
+											</dd>
+										</div>
+                                    </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Type of project:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo $project->type;?></dd></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo strtoupper($project->type);?></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Current activity:</dt> </div>
@@ -151,10 +166,18 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>ABC:</dt>
+                                            <dt>Approved Budget for the Contract:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
+                                        </div>
+                                    </dl>
+									<dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Fund Source:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php echo $project->fund_source;?></dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
@@ -240,9 +263,18 @@
 											
 											?>
 											</dd>
-											<button type="button" id="showdoc" style="margin-bottom:10px;" class="btn btn-primary btn-rounded btn-sm" data-toggle="modal" data-target="#documents">Show Documents</button>
+											<!-- <button type="button" id="showdoc" style="margin-bottom:10px;" class="btn btn-primary btn-rounded btn-sm" data-toggle="modal" data-target="#documents">Show Documents</button> -->
+											
                                         </div>
                                     </dl>
+									<dl class="row mb-0">
+                                        <div class="col-sm-6 text-sm-left" style="padding-right:2px">
+											<button type="button" id="showdoc" style="margin-bottom:10px; background:#8CC63E" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#documents">Show Documents</button>
+                                        </div>
+										<div class="col-sm-6 text-sm-right" style="padding-left:2px">
+											<button type="button" id="signeddoc" style="margin-bottom:10px; background:#F99324; border-color:#d37208" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#signedDocuments">Signed Documents</button>
+                                        </div>
+                                    </dl>	
 									
                                 </div>
                             </div>
@@ -458,10 +490,63 @@
 								if($Updates =  $user->importantUpdates2($refno)){
 
 									// echo "<pre>",print_r($Updates),"</pre>";
+								
 									
 									if(($upd_count = count($Updates)) > 5){
 
+										// echo "<pre>",print_r($Updates),"</pre>";
+										$activityLogs = $Updates;
+										// echo "<pre>",print_r($activityLogs),"</pre>";
 										for($x = 1; $x<6; $x++){
+
+											$identifier = explode("^", $activityLogs[$upd_count-$x]->remarks);
+											switch ($identifier[0]) {
+												case "AWARD":
+													$timelineIcon = "fas fa-award";
+													$bg = "lazur-bg";
+													$displayMessage = $identifier[2];
+													break;
+												case "SOLVE":
+													$timelineIcon = "fas fa-thumbs-up";
+													$bg = "bg-success";
+													$displayMessage = "Pre-procurement evaluation issue resolved";
+
+													break;
+												case "ISSUE":
+													$timelineIcon = "fas fa-exclamation-triangle";
+													$bg = "yellow-bg";
+													switch ($identifier[1]) {
+														case 'pre-procurement':
+															$displayMessage = "Pre-procurement evaluation issue encountered";
+															break;
+														
+														default:
+															# code...
+															break;
+													}
+													break;
+												case "DECLARATION":
+													if($identifier[1]=="FINISH"){
+														$timelineIcon = "far fa-flag";
+														$bg = "bg-info";
+														$displayMessage = "This project has completed all required processes and transactions in the system";
+
+													}elseif($identifier[1] == "FAILURE"){
+														$timelineIcon = "ti-face-sad";
+														$bg = "bg-danger";
+														$displayMessage = "Project was declared as a failed project";
+
+													}
+													
+													break;
+												default:
+
+													$identifier[1] = "TECHNICAL MEMBER EVALUATION";
+													$timelineIcon = "fas fa-users";
+													$bg = "bg-primary";
+													$displayMessage = "Project documents are being evaluated by respective Technical member.";
+													break;
+											}											
 
 							?>
 							
@@ -471,23 +556,23 @@
                             </div>
 
                             <div class="vertical-timeline-content" style="margin-left:45px">
-                                <h2><?php echo strtoupper($activityLogs[$activity_count-$x]->type);?></h2>
+                                <h2><?php echo strtoupper($identifier[1]);?></h2>
                                 <p>	
 
 									<?php 
-									echo $activityLogs[$activity_count-$x]->activity;
+									echo $displayMessage;
 									
 									?>
                                 </p>
                                 
                                     <span class="vertical-date">										
-										<?php echo Date::translate($activityLogs[$activity_count-$x]->date_log, 1);?>
+										<?php echo Date::translate($activityLogs[$upd_count-$x]->logdate, 1);?>
 										<br>
                                         <small>
                                         <?php
 											$datetime_today = Date::translate('now', 'now');
-											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->date_log));
-											echo $interval->format("%a days %h hours ago");										
+											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$upd_count-$x]->logdate));
+											echo $interval->format("%a days ago");										
 										?>										
 										</small>
                                     </span>
@@ -615,16 +700,16 @@
         </div>
     </div>
 
-	<div class="modal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal inmodal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
+			<div class="modal-content animated bounceIn">
 			
 				<div class="modal-header">
-					<h3 class="modal-title">Available Documents</h3>		
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+					<i class="far fa-file-word modal-icon" style="color:#2a5699"></i>
+					<h4 class="modal-title">Available Documents</h4>
+					<small class="font-bold">Click on the file you wish to download.</small>
 				</div>
+				
 				<div class="modal-body">
 					<div class="row">
 					<?php
@@ -836,6 +921,97 @@
 		</div>
 	</div>
 
+		<div class="modal inmodal fade" id="signedDocuments" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-expanded">
+			<div class="modal-content animated bounceIn">
+				<div class="modal-header">
+					<i class="fas fa-file-contract modal-icon" style="color:#F99324"></i>
+					<h4 class="modal-title">Signed Documents</h4>
+					<small class="font-bold">You can upload, delete, or download uploaded signed documents.</small>
+				</div>
+				<div class="modal-body" style="overflow: hidden;">
+
+					<div class="ibox myShadow">
+						<div class="ibox-content">
+
+							<table class="table">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th>File name</th>
+									<th>Uploaded by</th>
+									<th>Upload date</th>
+									<th style="text-align:center">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+
+								<?php
+									if($signedDocs = $user->getAll('signed_documents', array('project_origin', '=', $refno))){
+
+										foreach($signedDocs as $document){
+											if(isset($counter)){$counter++;}else{$count=1;}
+											echo '
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$document->display_name.'</td>
+													<td>'.$document->uploader.'</td>
+													<td>'.Date::translate($document->upload_date, 1).'</td>
+													<td style="text-align:center">
+														<button class="btn btn-outline btn-primary btn-xs">Download</button>
+														<button class="btn btn-outline btn-danger btn-xs">Delete</button>
+													</td>
+												</tr>											
+											';
+										}
+
+									}else{
+										echo '<tr><td colspan="5" style="text-align:center;">No files uploaded</td></tr>';
+									}
+								?>					
+
+								</tbody>
+							</table>
+
+						</div>
+					<div class="ibox-content animated fadeInDown none" id="upload_signed_document">
+						<div class="row">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-6">
+								<form id="signed_form" role="form" action="" method="POST" enctype="multipart/form-data">
+									<div class="form-group mt-20">
+										<label class="form-label" for="file_name">File Name</label>
+										<input id="file_name" name="file_name" class="form-input" type="text" required>
+									</div>
+									<div class="form-group mt-20">
+									<div class="input-group" style="margin-top:5px">
+									  <div class="custom-file">
+										<input type="file" class="custom-file-input" name="toupload" id="toupload" aria-describedby="" accept="image/*,application/pdf" required>
+										<label id="signeddoclabel" class="custom-file-label" for="toupload">Choose file</label>
+									  </div>
+									</div>
+									<input type="text" name="sdToken" value="<?php echo Token::generate('sdToken');?>" required hidden>			
+								</div>								
+									<button class="btn btn-success btn-rounded btn-outline pull-right" type="submit">Upload</button>
+								</form>								
+							</div>
+							<div class="col-sm-3"></div>						
+						</div>
+					</div>					
+					</div>
+					
+				
+				</div>
+
+				<div class="modal-footer">
+					<button id="upload_signed_document_toggler" class="btn btn-primary btn-outline">Upload a File</button>
+					<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<?php include_once'../../includes/parts/admin_scripts.php'; ?>
 	
 	<script>
@@ -928,6 +1104,15 @@
 				$('#timeline-div').remove();
 				$('#details-div').removeClass('col-lg-9').addClass('col-lg-12');
 			}
+
+			$('#upload_signed_document_toggler').on('click', function(){
+				$('#upload_signed_document').toggleClass('none');
+			});
+			
+			$('#toupload').on('change', function() {
+			   let fileName = $(this).val().split('\\').pop();
+			   $(this).next('#signeddoclabel').addClass("selected").html(fileName);
+			}); 
 			 
 		 });
 		

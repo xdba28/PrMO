@@ -8,7 +8,7 @@
     <a href="#"><img src="../../assets/pics/flaticons/internet-security/030-file-1.png" alt="" height="22" width="22"> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level collapse">
         <li><a href="Ongoing-projects">Ongoing Projects</a></li>
-        <li><a href="#">Finished / Failed Projects</a></li>				
+        <li><a href="finished">Finished / Failed Projects</a></li>				
     </ul>
 </li>
 

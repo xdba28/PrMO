@@ -198,7 +198,7 @@ button.back-to-top.show:active {
 	background-image: url(pics/test1.jpg);
 	
     background-color: hsla(0, 0%, 6%,0.3);
-    background-blend-mode:multiply;
+    background-blend-mode:overlay;
 }
 
 .rem{
@@ -1809,4 +1809,10 @@ button:focus {
 	border-left: 3px solid #52d29a;
 }
 
+.none{
+	display:none;
+}
 
+#office_names{
+	color:#009bdf;
+}

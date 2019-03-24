@@ -7,7 +7,7 @@
                         <li><a href="college-units">College / Units</a></li>
 						<li><a href="committee">Committee</a></li>
 						<li><a href="supplier">Supplier</a></li>
-						<li><a href="system-logs">Sytem Logs</a></li>
+						<li><a href="system-logs">System Logs</a></li>
                     </ul>
                 </li>	
                 <li>

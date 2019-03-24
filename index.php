@@ -165,8 +165,10 @@
             </div>
             <div class="col-md-6 text-right">
                <small>© 2018-2019</small>
+			   
             </div>
         </div>
+
     </div>
 	
     <!-- Mainly scripts -->

@@ -89,7 +89,7 @@ $textrun = $section->addTextRun(['alignment' => 'center', 'lineHeight' => 1, 'sp
 $textrun->addText("BAC RESOLUTION DECLAIRING FAILURE OF BIDDING FOR THE PROJECT: ", $fb);
 $textrun->addText(strtoupper($project->project_title), $fb);
 
-
+$fail_item_length = 0;
 if($canvass->CanvassDetails->per_item){
 
 	$fail_item_no = [];

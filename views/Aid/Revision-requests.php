@@ -19,6 +19,8 @@
 
 			$user->startTrans();
 
+			$form_data = $user->get("form_update_requests", array("ID", "=", $reference));
+
 				if($user->delete("form_update_requests", array("ID", "=", $reference))){
 					Syslog::put('Delete form update request');
 				}else{
@@ -27,9 +29,23 @@
 
 			$user->endTrans();
 
-			!
-
 			$success_notifs[] = "Revision request deleted.";
+
+			$user->register('project_logs',  array(
+				'referencing_to' => $reference,
+				'remarks' => "Revision request for ".$reference." has been declined.",
+				'logdate' => Date::translate('now', 'now'), 
+				'type' => 'IN'
+			));
+
+			notif(json_encode(array(
+				'receiver' => $form_data->requested_by,
+				'message' => "Revision request for ".$reference." has been declined.",
+				'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				'href' => "project-details?refno=".base64_encode($reference)
+			)));
+	
+
 
 		}catch(Exception $e){
 			Syslog::put($e,null,'error_log');

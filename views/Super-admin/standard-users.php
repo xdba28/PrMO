@@ -120,7 +120,7 @@
 								
                                 <tbody>
                                 <?php
-
+									// echo "<pre>",print_r($EnduserInfo),"</pre>";
                                     foreach($EnduserInfo as $data){
                                         if($data->edr_ext_name == 'XXXXX'){
                                             $fullname = $data->edr_fname." ".$data->edr_mname." ".$data->edr_lname;
@@ -133,7 +133,7 @@
                                         echo '                                        
                                             <tr>
                                                 <td>'.$fullname.'</td>
-												<td>username</td>
+												<td>'.$data->username.'</td>
 												<td>'.$data->name.'</td>
                                                 <td>'.$data->edr_id.'</td>
                                                 <td>'.$data->edr_email.'</td>

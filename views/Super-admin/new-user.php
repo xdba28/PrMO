@@ -275,7 +275,8 @@
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-briefcase my-blue"></i></span><input id="typeahead" name="jobtitle" type="text" class="form-control" required>
 												</div>												
-											</div>                                          
+											</div>
+											
 											<div class="form-group">
 												<label class="col-form-label" for="date_added">Profile Photo</label>
 												<div class="alert alert-success">Only JPEG file format is accepted in this form.</div>	

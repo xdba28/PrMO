@@ -75,20 +75,14 @@
 				<div class="row">
 
 					<div class="col-lg-12 animated fadeInRight">
-						<div class="ibox ">
+						<div class="ibox myShadow">
 							<div class="ibox-title">
 								<h5>Complete Ongoing Projects</h5>
 							</div>
 							<div class="ibox-content">
 								<div class="row">
-									<div class="col-sm-9 m-b-xs">
-										<div data-toggle="buttons" class="btn-group btn-group-toggle">
-											<label class="btn btn-sm btn-white"> <input type="radio" id="option1" name="options"> Day </label>
-											<label class="btn btn-sm btn-white"> <input type="radio" id="option2" name="options"> Week </label>
-											<label class="btn btn-sm btn-white"> <input type="radio" id="option3" name="options"> Month </label>
-										</div>
-									</div>
-									<div class="col-sm-3">
+
+									<div class="col-sm-12">
 										<div class="input-group mb-3">
 											<input type="text" class="form-control form-control-sm" placeholder="Search" id="filter">
 											<div class="input-group-append">
@@ -107,9 +101,15 @@
 											<th>Title </th>
 												
 												<th data-hide="all">Enduser/s</th>
+												<th data-hide="all">Implementing Office</th>
 												<th data-hide="all">Current Work</th>
+												<th data-hide="all"></th>
+												<th data-hide="all">Project Type</th>
+												<th data-hide="all">Breakdown</th>
 											
 											<th>ABC</th>
+											<th  style="text-align:center">Priority Level</th>
+											<th>Status</th>
 											<th>Progress </th>
 											<th>Actions </th>
 										</tr>
@@ -118,7 +118,9 @@
 										<?php
 											$user = new Admin();
 											
-											$projects = $user->getAll('projects', array('project_status', '=', 'processing'));
+											
+											$projects = $user->ongoing_projects();
+											
 											if($projects){
 											foreach($projects as $project){
 												
@@ -129,6 +131,31 @@
 												$stepDetails = json_decode($project->stepdetails, true);
 												$currentWork = $stepDetails[$project->accomplished];
 
+												//change the color of status display
+												switch ($project->project_status){
+													case 'PROCESSING':
+														$status_style = "text-navy";
+														$progress_style = "";
+														break;
+													case 'PAUSED':
+														$status_style = "text-warning";
+														$progress_style = "yellow-bg";
+														break;
+												}
+
+												//decode request form origins
+												$origins = json_decode($project->request_origin, true);
+												$prCounter = 0;
+												$joCounter = 0;
+												foreach ($origins as $origin){
+													$prefix = substr($origin, 0,2);
+													if($prefix === "PR"){
+														$prCounter++;
+													}else if($prefix === "JO"){
+														$joCounter++;
+													}
+												}
+
 
 										?>
 										<tr>
@@ -137,28 +164,33 @@
 											<td class="td-project-title"><?php echo $project->project_title;?></td>
 												<td>
 													<?php
-													
-													// echo $project->end_user;
-													$displayEndusers = array();
+														$displayEndusers = array();
 
-													$endusersDecoded = json_decode($project->end_user);
-														foreach($endusersDecoded as $singleUser){
-															$enduserFullname = $user->fullnameOfEnduser($singleUser);
-															array_push($displayEndusers, $enduserFullname);
-														}
+														$endusersDecoded = json_decode($project->end_user);
+															foreach($endusersDecoded as $singleUser){
+																$enduserFullname = $user->fullnameOfEnduser($singleUser);
+																array_push($displayEndusers, $enduserFullname);
+															}
 
-													$finalUsers =  implode(", ", $displayEndusers);
-													echo $finalUsers;
+														$finalUsers =  implode(", ", $displayEndusers);
+														echo $finalUsers;
 													?>
-
-													
 												</td>
+												<td><?php echo $implentingOffices = implode(", ",json_decode($project->implementing_office, true));?></td>
 												<td><?php echo $currentWork;?></td>
+												<td><p style="color:">----------------------------------------------------------------------------------</p></td>
+												<td><b style="color:#009bdf"><?php echo strtoupper($project->type);?></b></td>
+												<td>
+													number of Purchase Request Form:&nbsp&nbsp <b style="color:red"><?php echo $prCounter;?></b><br>
+													number of Job Order Form:&nbsp&nbsp <b style="color:red"><?php echo $joCounter;?></b>
+												</td>
 											<td><?php echo Date::translate($project->ABC, 'php');?></td>
+											<td style="text-align:center">HIGH</td>
+											<td class="<?php echo $status_style;?>"><b><?php echo $project->project_status;?></b></td>
 											<td class="project-completion">
 												<small>Completion with: <?php echo $accomplishment;?>%</small>
-												<div class="progress progress-mini">
-													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar"></div>
+												<div class="progress progress-mini" style="background-color:#b7bfc7">
+													<div style="width: <?php echo $accomplishment;?>%;" class="progress-bar  <?php echo $progress_style;?>"></div>
 												</div>
 											</td>
 											<td><a href="project-details?refno=<?php echo base64_encode($project->project_ref_no);?>" class="btn btn-white btn-sm"><i class="ti-layers-alt"></i> details </a></td>

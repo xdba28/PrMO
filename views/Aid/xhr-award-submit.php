@@ -78,8 +78,14 @@ try
 			// By lot award doesn't need to update each item
 	
 			// update project
+			$award = true;	
+			foreach($user->checkProjectAward($_POST['gds']) as $check){
+				if($check === false){
+					$award = false;
+				}
+			}
 		
-			if($user->checkProjectAward($_POST['gds'])){
+			if($award){
 				$user->update('projects', 'project_ref_no', $_POST['gds'], array(
 					'accomplished' => '7',
 					'workflow' => 'Finalization of Notice of Award, Purchase Order/Letter Order, and Request for OS'
@@ -99,6 +105,7 @@ try
 
 				// if all lots awarded redirect
 				$redirect = true;
+				Session::flash('update', 'Successfully awarded supplier.');
 
 
 			}

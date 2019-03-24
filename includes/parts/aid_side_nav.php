@@ -17,7 +17,7 @@
         <li><a href="Ongoing-projects">Ongoing Projects</a></li>
         <li><a href="Finished">Finished / Failed Projects</a></li>
 		<li>
-			<a href="Revision-requests">Revision Requests 
+			<a href="revision-requests">Revision Requests 
 				<span class="label label-info float-right" style="color:black; font-weight:200px">
 				<?php
 					$REVISION_OBJ = new Admin();

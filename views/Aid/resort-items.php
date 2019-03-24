@@ -110,6 +110,7 @@
 		
 		$user->endTrans();
 
+		Session::flash('update', 'Canvass form(s) successfully created.');
 		Redirect::To('project-details?refno='.base64_encode($canvass['gds']));
 		die();
 
@@ -131,7 +132,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Resorting Items</title>
-
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once '../../includes/parts/admin_styles.php'; ?>
 
 </head>

@@ -329,7 +329,7 @@
 								Syslog::put("profile photo update");
 								
 							}else{
-								Session::flash("FATAL_ERROR", "There was an error uploading your file. ERRORCODE:0007s1");
+								Session::flash("FATAL_ERROR", "There was an error uploading your file. ERRORCODE:0007");
 							}
 						}
 				}
@@ -339,7 +339,7 @@
 			}catch(Exception $e){
 				//create system logs
 				Syslog::put($e,null,"error_log");
-				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0007");
+				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0008");
 			}
 			 
 			 

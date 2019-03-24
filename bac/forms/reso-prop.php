@@ -113,6 +113,12 @@ switch($mop[$mop_index]['mode']){
 	case "SVP":
 		$mop_name = "Small Value Procurement";
 		break;
+	case "PB":
+		$mop_name = "Public Bidding";
+		break;
+	case "DC":
+		$mop_name = "Direct Contracting";
+		break;
 	default:
 		$mop_name = $mop[$mop_index]['mode'];
 }

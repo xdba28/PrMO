@@ -129,7 +129,19 @@
 				
 			}
 			
-		}	
+		}
+
+		public function importantUpdates2($ID){ 
+			if($this->db->query_builder("SELECT * FROM `project_logs` WHERE (remarks LIKE 'ISSUE%' OR remarks LIKE 'AWARD%' OR remarks LIKE 'SOLVE%' OR remarks LIKE 'DECLARATION%' OR remarks LIKE '%is being evaluated.') AND referencing_to ='{$ID}' ORDER BY logdate DESC")){
+				if($this->db->count()){
+					return $this->db->results();
+				}else{
+					return false;
+				}
+				
+			}
+			
+		}
 		
 		public function projectHistory($originRefno, $currentRefno){
 
@@ -556,11 +568,13 @@
 		}
 
 		public function checkProjectAward($gds){
-			$award = true;
+			$award_array = [];
 			$this->db->query_builder("SELECT * FROM `canvass_forms` WHERE gds_reference = '{$gds}'");
 			$lots = $this->db->results();
-			$lot_details = NULL;
-			foreach($lots as $lot){
+
+			foreach($lots as $key => $lot){
+				$award_array[$key] = false;
+
 				$this->db->query_builder("SELECT * FROM `canvass_forms`, `canvass_supplier`
 					WHERE canvass_forms.id = canvass_supplier.form_id
 					AND form_id = '{$lot->id}'");
@@ -572,7 +586,7 @@
 					if($supplier->per_item == "0"){
 						// per lot
 						if($supplier->award == "1"){
-							$award = true;
+							$award_array[$key] = true;
 							break;
 						}
 					}else{
@@ -585,7 +599,7 @@
 								// echo "<---------------- Item ------------------>";
 								// echo "<pre>".print_r($item)."</pre>";
 								if($item->awarded == "0"){
-									$award = false;
+									$award_array[$key] = false;
 								}
 							}
 						}else{
@@ -597,7 +611,7 @@
 								// echo "<---------------- Item ------------------>";
 								// echo "<pre>".print_r($item)."</pre>";
 								if($item->awarded == "0"){
-									$award = false;
+									$award_array[$key] = false;
 								}
 							}
 						}
@@ -607,7 +621,7 @@
 			// echo "<------------ Result ----------->".PHP_EOL;
 			// echo "<------------ Result ----------->".PHP_EOL;
 			// echo "???? : ".$award;
-			return $award;
+			return $award_array;
 		}
 
 		public function abstract($gds, $id){
@@ -931,6 +945,17 @@
 				AND cvsp_id = '{$supplier_id}'");
 			return $this->db->first();
 		}
+
+		public function monthlyReport($month){
+			$currentMonth = date("F", mktime(0, 0, 0, $month, 10));
+			$start_of_the_month = new DateTime('first day of '.$currentMonth.' this year');
+			$start_of_the_month->modify('-1 day');
+			$end_of_the_month = new DateTime('last day of '.$currentMonth.' this year');
+			$end_of_the_month->modify('+1 day');
+
+			$this->db->query_builder("SELECT * FROM `projects` WHERE date_registered BETWEEN '{$start_of_the_month->format('Y-m-d')}' AND '{$end_of_the_month->format('Y-m-d')}'");
+			return $this->db->results();
+		}
 		
 		// request-gen.php PRINTING OF REQUEST FORM
 		public function requestDetails($id){
@@ -1098,63 +1123,75 @@
 			$reports = [];
 			$year = date('Y');
 
-			// List of current projects (processing and paused)
-			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED') AND (date_registered LIKE '{$year}%')")){
+			// List of current projects (processing and paused ) 
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE project_status = 'PROCESSING' OR project_status = 'PAUSED'")){
 				if($this->db->count()){
-					$reports["current_projects"] = $this->db->results();
-
-
-
-					// breakdown of current projects
-					foreach($reports["current_projects"] as $project){
-						$origin = json_decode($project->request_origin, true);
-
-						$prCounter = 0;
-						$joCounter = 0;
-
-						foreach($origin as $list){
-							$identifier = substr($list, 0, 2);
-
-							switch ($identifier) {
-								case "PR":
-									$prCounter++;
-									break;
-							
-								case "JO":
-									$joCounter++;
-									break;
-							}
-
-						}
-
-						if(($prCounter > 0) AND ($joCounter == 0)){
-							#pure pr
-							$prArray[] = $project;
-						}else if(($joCounter > 0) AND ($prCounter == 0)){
-							#pure jo
-							$joArray[] = $project;
-						}else{
-							#mixed
-							$mixedArray[] = $project;
-						}
-
-
-					}
-
-					if(isset($prArray) AND (!empty($prArray))){
-						$reports["current_projects_breakdown"]["PR"] = $prArray;
-					}
-					if(isset($joArray) AND (!empty($joArray))){
-						$reports["current_projects_breakdown"]["JO"] = $joArray;
-					}
-					if(isset($mixedArray) AND (!empty($mixedArray))){
-						$reports["current_projects_breakdown"]["MIXED"] = $mixedArray;
-					}
-					
-					
-
+					$reports["current_projects"] = $this->db->results();			
 				}
 			}
+
+			// List of current projects (processing and paused ) THIS YEAR
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED') AND (`date_registered` LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["current_projects_thisyear"] = $this->db->results();				
+				}
+			}			
+
+			// all procjects (this year)
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED' OR project_status = 'FINISHED' OR project_status = 'FAILED') AND (date_registered LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["all_projects_thisyear"] = $this->db->results();	
+				}
+			}
+			
+			// all procjects
+			if($this->db->query_builder("SELECT * FROM `projects` WHERE (project_status = 'PROCESSING' OR project_status = 'PAUSED' OR project_status = 'FINISHED' OR project_status = 'FAILED') AND (date_registered LIKE '{$year}%')")){
+				if($this->db->count()){
+					$reports["all_projects"] = $this->db->results();
+
+
+							// breakdown for mini doughnuts
+							foreach($reports["all_projects"] as $project){
+								$origin = json_decode($project->request_origin, true);
+
+								$prCounter = 0;
+								$joCounter = 0;
+								$mixedCounter = 0;
+
+
+								switch ($project->type) {
+									case 'single':
+										if(substr($origin[0], 0, 2) === "PR"){
+											$prCounter++;
+											$prArray[] = $project;
+										}else{
+											$joCounter++;
+											$joArray[] = $project;
+										}
+										break;
+									
+									case 'consolidated':
+										$mixedCounter ++;
+										$mixedArray[] = $project;
+										break;
+								}
+
+
+							}
+
+							if(isset($prArray) AND (!empty($prArray))){
+								$reports["current_projects_breakdown"]["PR"] = $prArray;
+							}
+							if(isset($joArray) AND (!empty($joArray))){
+								$reports["current_projects_breakdown"]["JO"] = $joArray;
+							}
+							if(isset($mixedArray) AND (!empty($mixedArray))){
+								$reports["current_projects_breakdown"]["MIXED"] = $mixedArray;
+							}						
+				}
+			}			
+
+
 
 
 			//all revision requests of revision requests

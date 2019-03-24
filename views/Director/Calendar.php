@@ -174,7 +174,7 @@
 								title: '{$d->project_title}',
 								start: new Date({$date[0]}, {$date[1]}-1, {$date[2]}),
 								refno: '{$d->project_ref_no}',
-								url: 'project-details?refno={$d->project_ref_no}',
+								url: 'project-details?refno=".base64_encode($d->project_ref_no)."',
 								allDay: true
 							},";
 						}

@@ -1545,6 +1545,9 @@ require_once "../../functions/account-verifier.php";
 			$("#typeahead").typeahead({
 				source: ["Job Order","Procurement Aide","Head Secretariat", "Director", "Staff", "Technical Member"]
 			});
+			$("#typeahead_FS").typeahead({
+				source: ["Fund 01", "Fund 101", "C.O. Fund 164", "Fund 164", "Fund 05"]
+			});
 
 		
 		

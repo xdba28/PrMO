@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Projects Details</title>
-
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 
 </head>
@@ -132,15 +132,32 @@
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
 										<div class="col-sm-8 text-sm-left"><dd class="mb-1"><?php 
 										
-										foreach ($endusers as $enduser) {
-											echo $user->fullnameOfEnduser($enduser), "<br>";
+										foreach ($endusers as $enduser) {									
+											$transferedNames[] = $user->fullnameOfEnduser($enduser);
 										}
+
+										echo implode(", ",$transferedNames);
 										
 										?></dd> </div>
                                     </dl>
                                     <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 
+											
+												// echo $project->implementing_office;
+												foreach (json_decode($project->implementing_office, true) as $office){
+													$offices[] = $office;
+												}
+
+												echo implode(", ", $offices);
+											?>
+											</dd>
+										</div>
+                                    </dl>									
+                                    <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Type of project:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo $project->type;?></dd></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo strtoupper($project->type);?></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Current activity:</dt> </div>
@@ -151,12 +168,20 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>ABC:</dt>
+                                            <dt>Approved Budget for the Contract:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
                                         </div>
                                     </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Fund Source:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php echo $project->fund_source;?></dd>
+                                        </div>
+                                    </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
                                             <dt>Mode of Procurement:</dt>
@@ -197,6 +222,18 @@
 											?></dd>
                                         </div>
                                     </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Implementing Date:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php
+
+											echo Date::translate($project->implementation_date, '1');
+											
+											?></dd>
+                                        </div>
+                                    </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
                                             <dt>Last Updated:</dt>
@@ -582,7 +619,7 @@
 										}
 									}
 									
-									$noUpdates = false;
+									$noUpdates = "false";
 								}else{
 									
 									$noUpdates = true;

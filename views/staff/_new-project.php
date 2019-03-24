@@ -12,8 +12,11 @@
 	}
 
 
-	if(Input::exists()){
+				
 
+
+
+	if(Input::exists()){
 
 		if(Token::check("newProject", Input::get('newProject'))){
 				
@@ -25,8 +28,6 @@
 			$enduser_encoded = json_encode($enduser, JSON_FORCE_OBJECT);
 			$form = ["0" => $form_ref_no];
 			$requestOrigin_encoded = json_encode($form, JSON_FORCE_OBJECT);
-			$implementing = json_encode($_POST['implementing_office'], JSON_FORCE_OBJECT);
-
 
 			//get the json file for step details
 			$json = file_get_contents('../xhr-files/jsonsteps.json');
@@ -53,18 +54,16 @@
 					'project_ref_no' => $project_ref_no,
 					'project_title' => Input::get('title'),
 					'ABC' => Input::get('ABC'),
-					'fund_source' => Input::get('fund_source'),
 					'MOP' => 'TBE',
-					'type' => 'single',
 					'stepdetails' => $newSteps,
 					'steps' => $noOfSteps,
+					'type' => 'single',
 					'end_user' => $enduser_encoded,
 					'project_status' => 'PROCESSING',
 					'workflow'	=> 'For evaluation of technical member',
 					'proposed_evaluator' => Input::get('proposed_evaluator'),
 					'date_registered' => Date::translate('test', 'now'),
-					'implementation_date' => $finalDate,
-					'implementing_office' => $implementing
+					'implementation_date' => $finalDate
 				));
 
 				$staff->register('project_logs', array(
@@ -73,6 +72,18 @@
 					'logdate' => Date::translate('test', 'now'),
 					'type' =>  'IN'
 				));
+				
+				//remove this
+				/*$staff->register('outgoing', array(
+
+					'project' =>  $project_ref_no,
+					'transmitting_to' => 'TWG',
+					'specific_office' => 'TWG',
+					'remarks' => 'none',
+					'transactions' => 'EVALUATION',
+					'date_registered' => Date::translate('test', 'now')
+
+				));*/
 
 				$staff->register('project_logs', array(
 					'referencing_to' => $project_ref_no,
@@ -88,13 +99,13 @@
 					'seen' => 0,
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
 				));
-
 				notif(json_encode(array(
 					'receiver' => $_POST['enduser'],
 					'message' => "Project request form {$form_ref_no} is now registered as a single project with the reference no of {$project_ref_no}",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($project_ref_no)
-				)));
+				)));				
+
 				
 				$staff->register('notifications', array(
 					'recipient' => Input::get('proposed_evaluator'),
@@ -103,7 +114,6 @@
 					'seen' => 0,
 					'href' => "#evaluation-list"
 				));
-
 				notif(json_encode(array(
 					'receiver' => Input::get('proposed_evaluator'),
 					'message' => "You are listed as an encharged technical member to evaluate the project with the reference no of: {$project_ref_no}",
@@ -115,12 +125,24 @@
 				$staff->endTrans(); //commit
 
 				Session::flash("ProjReg", "Project successfully registered!|".$project_ref_no.":".$form_ref_no);
+				// notif(json_encode(array(
+				// 	'receiver' => $_POST['enduser'],
+				// 	'message' => "Project Ref: {$form_ref_no} is now registered as {$project_ref_no}",
+				// 	'date' => Date::translate(Date::translate('test', 'now'), '1'),
+				// 	'href' => "project-details?refno=".base64_encode($project_ref_no)
+				// )));
+
+				
+				//disable the "register" now button in the new-project page to prevent any data discrepancy
+				//pop some sweet alert after project registration NOTE: Pop the sweet alert in the "localhost/prmo/views/staff/new-project" NOT in the "localhost/prmo/views/staff/new-project?q='form_ref_no' "
+				//send SMS notifications
+
+
 				Redirect::To('new-project');
 				exit();
 
 			}catch(Execption $e){
-				Syslog::put($e,null,'error_log');
-				Session::flash("FATAL_ERROR", "Processed transactions are automatically canceled. ERRORCODE:0001");
+				die($e->getMessage());
 			}
 
 
@@ -223,12 +245,11 @@
 					$request = $admin->get('project_request_forms', array('form_ref_no', '=', $_GET['q']));
 					$enduser = $admin->get('enduser', array('edr_id', '=', $request->requested_by));
 					$office = $admin->get('units', array('ID', '=', $enduser->edr_designated_office));
-
 			?>
 			
             <div class="row">
                 <div class="col-md-4">
-                    <div class="ibox myShadow">
+                    <div class="ibox ">
                         <div class="ibox-title">
                             <h5>Request</h5> <h5 class="text-danger"><?php echo $request->form_ref_no; ?></h5>
                         </div>
@@ -265,7 +286,7 @@
 					</div>
                 </div>
                 <div class="col-md-8">
-                    <div class="ibox myShadow">
+                    <div class="ibox ">
                         <div class="ibox-title">
                             <h5>New Single Project</h5>
                         </div>
@@ -297,17 +318,10 @@
                                             </label>
                                         </div>
 										<div class="form-group mt-20">
-											<label for="ABC" class="form-label"><b>ABC</b></label>
-											<input type="number" min="0.01" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
-										</div>
-										<div class="form-group">
-											<label class="col-form-label my-blue" for="typeahead_FS"><b>Fund Source</b></label>
-											<div class="input-group">
-												<span class="input-group-addon"><i class="fa">&#8369;</i></span><input id="typeahead_FS" name="fund_source" type="text" class="form-control" required>
-											</div>												
-										</div>   										
+											<label for="ABC" class="form-label">ABC</label> <input type="number" min="0.01" step="0.01" id="ABC" name="ABC" class="form-control form-input" required>
+										</div>				
 										<div class="form-group" id="data_2" >
-											<label class="font-normal my-blue"><b>Implementation date</b></label>
+											<label class="font-normal">Implementation date</label>
 											<div class="input-group date" id="popOver0" data-trigger="hover" title="Instructions" data-placement="top" data-content="If the project has multiple implementation date, register closest date.">
 												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" name="implementation" class="form-control" value="" required>
 											</div>
@@ -317,16 +331,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label class="font-normal my-blue"><b>Implementing Office/s</b></label>
-											<div>
-												<select data-placeholder="Choose" name="implementing_office[]" class="chosen-select" required multiple style="width:350px;" tabindex="4">
-													<option value="<?php echo $office->office_name;?>"><?php echo $office->office_name;?></option>
-													<option value="<?php echo $enduser->current_specific_office;?>"><?php echo $enduser->current_specific_office;?></option>
-												</select>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="font-normal my-blue"><b>Choose Evaluator</b></label>
+											<label class="font-normal">Choose Evaluator</label>
 											<div>
 												<select data-placeholder="Choose..." name="proposed_evaluator" class="chosen-select"  style="display:none;" tabindex="2" required>
 													
@@ -335,16 +340,18 @@
 														$technicalMembers = $user->getAll('prnl_account', array('group_', '=', 7));
 															foreach($technicalMembers as $member){
 																echo '<option value="'.$member->account_id.'">'.$user->fullnameOf($member->account_id).'</option>';
-															}														
+															}
+														
+														
+														
 													?>
 												</select>
 											</div>
-										</div>										
+										</div>											
 										<div class="form-group">
-											<label for="title" class="my-blue"><b>Project Title</b></label>
+											<label for="title" class="my-blue">Project title</label>
 											<textarea name="title" id="title" class="form-control" rows="10" required><?php echo $request->title;?></textarea>
-										</div>
-										
+										</div>								
 											<input type="text" name="newProject" value="<?php echo Token::generate('newProject');?>" hidden readonly>
 											<input type="text" name="enduser" value="<?php echo $request->requested_by;?>" hidden readonly>
 										
@@ -369,7 +376,7 @@
 			
 			<div class="row">
 				<div class="col-sm-8">
-					<div class="ibox myShadow">
+					<div class="ibox">
 						<div class="ibox-content">
 							<!-- <span class="text-muted small float-right">
 									Last Refresh: <i class="fa fa-clock"></i>
@@ -413,7 +420,7 @@
 					</div>
 				</div>
 				<div class="col-sm-4">
-					<div class="ibox selected myShadow">
+					<div class="ibox selected">
 
 						<div class="ibox-content">
 							<div class="tab-content">

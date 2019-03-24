@@ -134,7 +134,7 @@
 							<div class="float-left m-r-md">
 								<i class="fas fa-user-tie text-navy mid-icon"></i>
 							</div>
-							<h2>Welcome back <?php											
+							<h2>Welcome back <?php						
 								$hold = $user->fullname();
 								$currentUser = json_decode($hold,true);	
 								

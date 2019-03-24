@@ -3,7 +3,11 @@ require_once '../../core/init.php';
 $admin = new Admin();
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-$file = "Report.docx";
+$date = explode("/", $_GET['m']);
+$projects = $admin->monthlyReport($date[0]);
+$currentMonth = date("F", mktime(0, 0, 0, $date[0], 10));
+
+$file = $currentMonth." Procurement Report.docx";
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
@@ -53,7 +57,7 @@ $gs2 = ['gridSpan' => 2];
 $fb = ['bold' => true];
 $b = ['alignment' => 'both'];
 
-$section->addText("Monthly Procurement Report", ['size' => 14, 'bold' => true], $c);
+$section->addText($currentMonth." Procurement Report", ['size' => 14, 'bold' => true], $c);
 $section->addTextBreak(1);
 
 $table = $section->addTable(['borderColor' => '#000000', 'borderSize' => 6, 'alignment' => 'center', 'cellMarginLeft'  => 115.2, 'cellMarginRight' => 115.2]);
@@ -68,7 +72,9 @@ $table->addCell(null, $cc)->addText("Project Registration Date", null, $c);
 $table->addCell(null, $cc)->addText("Contract Period Requirement", null, $c);
 $table->addCell(null, $cc)->addText("Mode of Procurement", null, $c);
 
-$projects = $admin->selectAll('projects');
+
+
+// $projects = $admin->selectAll('projects');
 // $projects = $admin->getAll('projects', array('accomplished', '=', '10'));
 foreach($projects as $key => $project){
 	$count = $key + 1;

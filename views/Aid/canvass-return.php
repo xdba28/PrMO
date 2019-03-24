@@ -90,7 +90,7 @@
 					'lot_fail_option' => $lot_fail,
 				));
 
-				if($lot_fail === "1"){
+				if($lot_fail == "1"){
 					$lot_fail_count++;
 				}
 
@@ -133,7 +133,7 @@
 		if($item_fail_count > 0){
 			$user->register('project_logs',  array(
 				'referencing_to' => $gds,
-				'remarks' => $item_fail_count." item/s in the project has been declaired as failed.",
+				'remarks' => "Project ".$gds." has declaired ".$item_fail_count." item/s as failed.",
 				'logdate' => Date::translate('now', 'now'),
 				'type' => 'IN'
 			));
@@ -142,7 +142,7 @@
 		if($lot_fail_count > 0){
 			$user->register('project_logs',  array(
 				'referencing_to' => $gds,
-				'remarks' => $lot_fail_count." lot/s in the project has been declaired as failed.",
+				'remarks' => "Project ".$gds." has declaired ".$lot_fail_count." lot/s as failed.",
 				'logdate' => Date::translate('now', 'now'),
 				'type' => 'IN'
 			));
@@ -156,8 +156,9 @@
 			'type' => 'IN'
 		));
 
-		$end_users = $user->get('projects', array('project_ref_no', '=', $gds));
-		foreach(json_decode($end_users, true) as $end_user){
+		$end_user = $user->get('projects', array('project_ref_no', '=', $gds));
+		foreach(json_decode($end_user->end_user, true) as $end_user){
+			$user_details = $user->get('enduser', array('edr_id', '=', $end_user));
 			
 			$user->register('notifications', array(
 				'recipient' => $end_user,
@@ -177,21 +178,23 @@
 			if($item_fail_count > 0){
 				notif(json_encode(array(
 					'receiver' => $end_user,
-					'message' => $item_fail_count." item/s in the project has been declaired as failed.",
+					'message' => "Project ".$gds." has declaired ".$item_fail_count." item/s as failed.",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($gds)
 				)));
 				// sms
+				sms($user_details->phone, 'System', "Project ".$gds." has declaired ".$item_fail_count." item/s as failed.");
 			}
 
 			if($lot_fail_count > 0){
 				notif(json_encode(array(
 					'receiver' => $end_user,
-					'message' => $lot_fail_count." lot/s in the project has been declaired as failed.",
+					'message' => "Project ".$gds." has declaired ".$lot_fail_count." lot/s as failed.",
 					'date' => Date::translate(Date::translate('test', 'now'), '1'),
 					'href' => "project-details?refno=".base64_encode($gds)
 				)));
 				// sms
+				sms($user_details->phone, 'System', "Project ".$gds." has declaired ".$lot_fail_count." lot/s as failed.");
 			}
 		
 		}
@@ -202,6 +205,7 @@
 
 		$user->endTrans();
 
+		Session::flash('update', 'Abstract of Bids successfully created.');
 		Redirect::To('project-details?refno='.base64_encode($gds));
 		die();
 
@@ -217,6 +221,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Canvass Result</title>
+	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
 	<?php include "../../includes/parts/admin_styles.php"?>
 
 </head>

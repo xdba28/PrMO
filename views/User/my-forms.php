@@ -1,5 +1,7 @@
 <?php 
-    require_once('../../core/init.php');
+	require_once '../../core/init.php';
+	require_once '../../functions/loadUnits.php';
+
     $user = new User(); 
     if($user->isLoggedIn()){
      //do nothing
@@ -681,12 +683,49 @@
 									<input type="text" name="lot-${i}" value="${obj.lot_id}" hidden>
 									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
 								</td>
-								<td><input type="text" name="unit-${i}" class="form-control form-control-sm" value="${obj.unit}"></td>
+								<td>
+									<select name="unit-${i}" class="form-control form-control-sm">
+										<option></option>
+										<?php
+											$separator = false;
+											$option_1 = '';
+											$option_2 = '';
+											foreach($availableUnits as $key => $unit){
+												if($key === 14){
+													$separator = true;
+												}else{
+													if(!$separator){
+														$option_1 .= '<option value="'.$unit.'">'.$unit.'</option>';
+													}else{
+														$option_2 .= '<option value="'.$unit.'">'.$unit.'</option>';
+													}
+												}
+											}
+											echo '<optgroup>'.$option_1.'</optgroup>
+												<optgroup label="________">'.$option_2.'</optgroup>';
+										?>
+									</select>
+								</td>
 								<td><textarea name="description-${i}" cols="30" rows="1" maxlength="1000" class="form-control form-control-sm">${obj.desc}</textarea></td>
 								<td><input type="number" name="quantity-${i}" data="qty" class="form-control form-control-sm" min="1" value="${obj.qty}"></td>
 								<td><input type="number" name="unitCost-${i}" data="unit" class="form-control form-control-sm" step=".01" min="0.01" value="${obj.uCost}"></td>
 								<td><input type="number" name="totalCost-${i}" class="form-control form-control-sm" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
 							</tr>`);
+
+							let select_obj = document.querySelector(`[name="unit-${i}"]`);
+							let obj_ex = obj.unit.split('\r');
+							let check = obj_ex[0]+obj_ex[1];
+
+							for (const key in select_obj) {
+								if (select_obj.hasOwnProperty(key)) {
+									const element = select_obj[key];
+									console.log({value: element.value});
+									if(element.value === check){
+										element.selected = true;
+										break;
+									}
+								}
+							}
 					});
 					OriginalData.items = array;
 					OriginalData.lotref = lot;
