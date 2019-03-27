@@ -129,15 +129,56 @@
                                         <div class="col-sm-8 text-sm-left"><dd class="mb-1"><span id="status-span" class="label label-primary"><?php echo $project->project_status;?></span></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>Origin Forms:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+                                            <dd class="project-people mb-1">
+											<?php 
+												
+												$forms = json_decode($project->request_origin, true);
+												
+												//$test = '<a value="something" href="my-forms?q='.implode('"></a>, <a href="my-forms?q=', $forms).'"></a>';
+												//echo $test;
+												$comaCounter = 1;
+												foreach($forms as $individualOrigin => $value){
+													echo '<a href="my-forms?q='.base64_encode($value).'">'.$value.'</a>';
+													if($comaCounter < (count($forms))){
+														echo '<a style="font-size:16px; color:red"> / </a>';
+													}
+													$comaCounter++;
+												}
+											
+											?>
+											</dd>		
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
-										<div class="col-sm-8 text-sm-left"><dd class="mb-1"><?php 
-										
-										foreach ($endusers as $enduser) {
-											echo $user->fullnameOfEnduser($enduser), "<br>";
-										}
-										
-										?></dd> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 
+											
+												foreach ($endusers as $enduser) {
+													echo $user->fullnameOfEnduser($enduser), "<br>";
+												}
+											
+											?></dd>
+										</div>
                                     </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 											
+												// foreach (json_decode($project->implementing_office, true) as $office){
+													// $offices[] = $office;
+												// }
+
+												// echo implode(", ", $offices);
+												echo "test office";
+											?>
+											</dd>
+										</div>
+                                    </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Type of project:</dt> </div>
                                         <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo $project->type;?></dd></div>
@@ -151,7 +192,7 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>ABC:</dt>
+                                            <dt>Approved Budget:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
@@ -159,7 +200,15 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Mode of Procurement:</dt>
+                                            <dt>Fund Source:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php echo $project->fund_source;?></dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>MOP:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1">
@@ -199,6 +248,18 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
+                                            <dt>Implementing Date:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+											<dd class="mb-1">
+											<?php
+												echo Date::translate($project->implementation_date, '1');
+											?>
+											</dd>
+                                        </div>
+                                    </dl>									
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
                                             <dt>Last Updated:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
@@ -212,37 +273,17 @@
 												echo "No update yet";
 											}
 
-
 											?></dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
-                                        <div class="col-sm-4 text-sm-right">
-                                            <dt>Origin Forms:</dt>
+                                        <div class="col-sm-6 text-sm-left" style="padding-right:2px">
+											<button type="button" id="showdoc" style="margin-bottom:10px; background:#8CC63E" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#documents">Show Documents</button>
                                         </div>
-                                        <div class="col-sm-8 text-sm-left">
-                                            <dd class="project-people mb-1">
-											<?php 
-												
-												$forms = json_decode($project->request_origin, true);
-												
-												//$test = '<a value="something" href="my-forms?q='.implode('"></a>, <a href="my-forms?q=', $forms).'"></a>';
-												//echo $test;
-												$comaCounter = 1;
-												foreach($forms as $individualOrigin => $value){
-													echo $value;
-													if($comaCounter < (count($forms))){
-														echo ' / ';
-													}
-													$comaCounter++;
-												}
-												
-											
-											?>
-											</dd>
-											<button type="button" id="showdoc" style="margin-bottom:10px;" class="btn btn-primary btn-rounded btn-sm" data-toggle="modal" data-target="#documents">Show Documents</button>
+										<div class="col-sm-6 text-sm-right" style="padding-left:2px">
+											<button type="button" id="signeddoc" style="margin-bottom:10px; background:#F99324; border-color:#d37208" class="btn btn-primary btn-rounded btn-sm btn-block" data-toggle="modal" data-target="#signedDocuments">Signed Documents</button>
                                         </div>
-                                    </dl>
+                                    </dl>									
 									
                                 </div>
                             </div>
@@ -456,15 +497,11 @@
 							<?php
 								
 								if($Updates =  $user->importantUpdates2($refno)){
-
-									// echo "<pre>",print_r($Updates),"</pre>";
 								
 									
 									if(($upd_count = count($Updates)) > 5){
 
-										// echo "<pre>",print_r($Updates),"</pre>";
 										$activityLogs = $Updates;
-										// echo "<pre>",print_r($activityLogs),"</pre>";
 										for($x = 1; $x<6; $x++){
 
 											$identifier = explode("^", $activityLogs[$upd_count-$x]->remarks);
@@ -528,8 +565,7 @@
                                 <p>	
 
 									<?php 
-									echo $displayMessage;
-									
+										echo $displayMessage;
 									?>
                                 </p>
                                 
@@ -548,7 +584,7 @@
                         </div>							
 											
 							<?php
-										}
+										}echo "<br><br><br>";
 
 									}else{
 										// echo "<pre>",print_r($Updates),"</pre>";
@@ -634,6 +670,7 @@
 
 							<?php
 										}
+										echo "<br>";
 									}
 									
 									$noUpdates = "false";
@@ -643,7 +680,7 @@
 									
 							?>
 							
-									<h1>no updates</h1>
+									
 							
 							<?php
 								}
@@ -657,7 +694,7 @@
 				}
 			?>			
 
-        </div>
+        </div>			
 			<!-- Main Content End -->
 			
             <div class="footer">
@@ -668,19 +705,19 @@
         </div>
     </div>
 
-	<div class="modal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal inmodal fade" id="documents" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
+			<div class="modal-content animated bounceIn">
 			
 				<div class="modal-header">
-					<h3 class="modal-title">Available Documents</h3>		
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
+					<i class="far fa-file-word modal-icon" style="color:#2a5699"></i>
+					<h4 class="modal-title">Available Documents</h4>
+					<small class="font-bold">Click on the file you wish to download.</small>
+				</div>				
+				
 				<div class="modal-body">
 					<div class="row">
-					<?php
+						<?php
 							$admin = new Admin();
 							$documents = $admin->checkDocuments($refno);
 	
@@ -883,11 +920,80 @@
 							}
 							// echo "<pre>".print_r($documents)."</pre>";
 						?>
+	
 					</div>
 				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
+				</div>				
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal inmodal fade" id="signedDocuments" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-expanded">
+			<div class="modal-content animated bounceIn">
+				<div class="modal-header">
+					<i class="fas fa-file-contract modal-icon" style="color:#F99324"></i>
+					<h4 class="modal-title">Signed Documents</h4>
+					<small class="font-bold">You can upload, delete, or download uploaded signed documents.</small>
+				</div>
+				<div class="modal-body" style="overflow: hidden;">
+
+					<div class="ibox myShadow">
+						<div class="ibox-content">
+
+							<table class="table">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th>File name</th>
+									<th>Uploaded by</th>
+									<th>Upload date</th>
+									<th style="text-align:center">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+
+								<?php
+									if($signedDocs = $user->getAll('signed_documents', array('project_origin', '=', $refno))){
+
+										foreach($signedDocs as $document){
+											if(isset($counter)){$counter++;}else{$count=1;}
+											echo '
+												<tr>
+													<td>'.$count.'</td>
+													<td>'.$document->display_name.'</td>
+													<td>'.$document->uploader.'</td>
+													<td>'.Date::translate($document->upload_date, 1).'</td>
+													<td style="text-align:center">
+														<button class="btn btn-outline btn-primary btn-xs">Download</button>
+													</td>
+												</tr>											
+											';
+										}
+
+									}else{
+										echo '<tr><td colspan="5" style="text-align:center;">No files uploaded</td></tr>';
+									}
+								?>					
+
+								</tbody>
+							</table>
+
+						</div>
+				
+					</div>
+					
+				
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-outline" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>	
 
 	<?php include_once'../../includes/parts/admin_scripts.php'; ?>
 	
@@ -966,10 +1072,6 @@
 
 					}
 
-
-
-					
-					// echo "<pre>",print_r($status),"</pre>";
 
 				}
 			

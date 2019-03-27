@@ -143,14 +143,13 @@
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
 										<div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php 
-											
-												// echo $project->implementing_office;
-												foreach (json_decode($project->implementing_office, true) as $office){
-													$offices[] = $office;
-												}
+											<dd class="mb-1"><?php 											
+												// foreach (json_decode($project->implementing_office, true) as $office){
+													// $offices[] = $office;
+												// }
 
-												echo implode(", ", $offices);
+												// echo implode(", ", $offices);
+												echo "test office";
 											?>
 											</dd>
 										</div>
@@ -184,7 +183,7 @@
                                     </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Mode of Procurement:</dt>
+                                            <dt>MOP:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1">
@@ -227,11 +226,11 @@
                                             <dt>Implementing Date:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-											<dd class="mb-1"><?php
-
-											echo Date::translate($project->implementation_date, '1');
-											
-											?></dd>
+											<dd class="mb-1">
+											<?php
+												echo Date::translate($project->implementation_date, '1');
+											?>
+											</dd>
                                         </div>
                                     </dl>									
                                     <dl class="row mb-0">
@@ -495,9 +494,57 @@
 								if($Updates = $user->importantUpdates2($refno)){
 
 									
-									if(($upd_count = count($Updates)) > 5){
-
+									if(($activity_count = count($Updates)) > 5){
+										$activityLogs = $Updates;
 										for($x = 1; $x<6; $x++){
+											$identifier = explode("^", $activityLogs[$activity_count-$x]->remarks);
+											switch ($identifier[0]) {
+												case "AWARD":
+													$timelineIcon = "fas fa-award";
+													$bg = "lazur-bg";
+													$displayMessage = $identifier[2];
+													break;
+												case "SOLVE":
+													$timelineIcon = "fas fa-thumbs-up";
+													$bg = "bg-success";
+													$displayMessage = "Pre-procurement evaluation issue resolved";
+
+													break;
+												case "ISSUE":
+													$timelineIcon = "fas fa-exclamation-triangle";
+													$bg = "yellow-bg";
+													switch ($identifier[1]) {
+														case 'pre-procurement':
+															$displayMessage = "Pre-procurement evaluation issue encountered";
+															break;
+														
+														default:
+															# code...
+															break;
+													}
+													break;
+												case "DECLARATION":
+													if($identifier[1]=="FINISH"){
+														$timelineIcon = "far fa-flag";
+														$bg = "bg-info";
+														$displayMessage = "This project has completed all required processes and transactions in the system";
+
+													}elseif($identifier[1] == "FAILURE"){
+														$timelineIcon = "ti-face-sad";
+														$bg = "bg-danger";
+														$displayMessage = "Project was declared as a failed project";
+
+													}
+													
+													break;
+												default:
+
+													$identifier[1] = "TECHNICAL MEMBER EVALUATION";
+													$timelineIcon = "fas fa-users";
+													$bg = "bg-primary";
+													$displayMessage = "Project documents are being evaluated by respective Technical member.";
+													break;
+											}											
 
 							?>
 							
@@ -507,22 +554,22 @@
                             </div>
 
                             <div class="vertical-timeline-content" style="margin-left:45px">
-                                <h2><?php echo strtoupper($activityLogs[$activity_count-$x]->type);?></h2>
+                                <h2><?php echo strtoupper($identifier[1]);?></h2>
                                 <p>	
 
 									<?php 
-									echo $activityLogs[$activity_count-$x]->activity;
-									
+										// echo $activityLogs[$activity_count-$x]->activity;
+										echo $displayMessage;
 									?>
                                 </p>
                                 
                                     <span class="vertical-date">										
-										<?php echo Date::translate($activityLogs[$activity_count-$x]->date_log, 1);?>
+										<?php echo Date::translate($activityLogs[$activity_count-$x]->logdate, 1);?>
 										<br>
                                         <small>
                                         <?php
 											$datetime_today = Date::translate('now', 'now');
-											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->date_log));
+											$interval = date_diff(date_create($datetime_today), date_create($activityLogs[$activity_count-$x]->logdate));
 											echo $interval->format("%a days %h hours ago");										
 										?>										
 										</small>
@@ -531,7 +578,7 @@
                         </div>							
 											
 							<?php
-										}
+										}echo "<br><br><br>";
 
 									}else{
 										// echo "<pre>",print_r($Updates),"</pre>";
@@ -689,6 +736,12 @@
 								echo "$('.progress-bar').addClass('bg-danger');";
 								break;						
 						}
+						echo "
+						setTimeout(function(){
+							$('#minimizer').trigger('click');
+						}, 1000);
+						
+						";						
 				}else{
 					echo "$('#status-div').removeClass().addClass('ibox myShadow');";
 				}
@@ -724,9 +777,6 @@
 					}
 
 
-
-					
-					// echo "<pre>",print_r($status),"</pre>";
 
 				}
 			

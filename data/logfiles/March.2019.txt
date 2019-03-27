@@ -324,3 +324,277 @@ Action:Logout
 Attempt:success
 Username:2014-001-171:jane
 -------------------------
+User:::1 - March 11, 2019, 2:29 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 11, 2019, 2:30 pm
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 11, 2019, 2:44 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 11, 2019, 3:56 pm
+Action:create pr form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 12, 2019, 11:27 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 12, 2019, 11:39 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 12, 2019, 11:39 am
+Action:Login
+Attempt:success
+Username:163-141:giemorcozo
+-------------------------
+User:::1 - March 12, 2019, 6:52 pm
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 13, 2019, 1:52 am
+Action:Receive PR2019-88B5J3 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 12, 2019, 6:53 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 12, 2019, 7:02 pm
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 13, 2019, 2:03 am
+Action:Nexmo\Client\Exception\Request: Non White-listed Destination - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\xhr-files\xhr-modal-actions.php(559): sms('+639124409471', 'System', 'Hello Marcia Co...')
+#2 {main}
+Attempt:error_log
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 12, 2019, 7:07 pm
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 13, 2019, 2:47 pm
+Action:Login
+Attempt:failed
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 13, 2019, 2:47 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 13, 2019, 10:53 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 17, 2019, 9:13 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:03 pm
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:06 pm
+Action:Delete unreceived PR/JO form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:09 pm
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:09 pm
+Action:Delete unreceived PR/JO form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 5:39 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 18, 2019, 12:40 am
+Action:Updated project GDS2019-14 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 17, 2019, 5:41 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 17, 2019, 5:51 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 18, 2019, 2:22 am
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 18, 2019, 2:30 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 18, 2019, 2:36 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:20 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:44 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:44 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 25, 2019, 12:19 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 25, 2019, 5:19 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:33 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:33 am
+Action:Login
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 25, 2019, 5:43 am
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 25, 2019, 5:43 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:47 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:47 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 12:50 pm
+Action:pre-procurement evaluation update
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:50 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:50 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:57 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:57 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 6:02 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 6:02 am
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 25, 2019, 7:14 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 25, 2019, 7:14 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 3:18 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 10:22 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 27, 2019, 4:08 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 4:08 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 27, 2019, 11:11 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 27, 2019, 4:11 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
