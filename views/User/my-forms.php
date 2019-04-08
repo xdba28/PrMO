@@ -633,16 +633,16 @@
 					let array = [];
 					let lot = [];
 					let lot_counter = [];
+					let checked = $('.i-checks:checked');
 
-					$('.i-checks:checked').each(function(i){
+					checked.each(function(i){
 						obj = JSON.parse(atob($(this).attr('details')));
 						array.push(obj);
-
-						if(typeof lot_counter.find(function(el){
-							return el === obj.lot
-						}) === 'undefined'){
+						if(lot_counter.find((el) => el == obj.lot) == undefined){
+							// count the number of lots and create the table
 							lot.push(`${obj.lot}blyt322${obj.lot_id}`);
 							lot_counter.push(obj.lot);
+
 
 							$('#userEditContent').append(`
 								<div class="row">
@@ -668,15 +668,20 @@
 												<th>Total Cost</th>
 											</tr>
 										</thead>
-										<tbody dataFor="userEditAppend">
+										<tbody dataFor="userEditAppend-${obj.lot}">
 
 										</tbody>
 									</table>						
 								</div>`);
 
 						}
+					});
 
-						$('[dataFor="userEditAppend"]').append(`
+					checked.each(function(i){
+						obj = JSON.parse(atob($(this).attr('details')));
+						// print the data
+
+						$(`[dataFor="userEditAppend-${obj.lot}"]`).append(`
 							<tr>
 								<td>
 									<input type="text" name="stockNo-${i}" class="form-control form-control-sm" value="${obj.stock_no}">
@@ -712,21 +717,23 @@
 								<td><input type="number" name="totalCost-${i}" class="form-control form-control-sm" readonly step=".01" min="0.01" value="${obj.tCost}"></td>
 							</tr>`);
 
-							let select_obj = document.querySelector(`[name="unit-${i}"]`);
-							let obj_ex = obj.unit.split('\r');
-							let check = obj_ex[0]+obj_ex[1];
+						let select_obj = document.querySelector(`[name="unit-${i}"]`);
+						// let obj_ex = obj.unit.split('\n');
+						// console.log(obj_ex);
+						// let check = obj_ex[0]+obj_ex[1];
 
-							for (const key in select_obj) {
-								if (select_obj.hasOwnProperty(key)) {
-									const element = select_obj[key];
-									console.log({value: element.value});
-									if(element.value === check){
-										element.selected = true;
-										break;
-									}
+						for (const key in select_obj) {
+							if (select_obj.hasOwnProperty(key)) {
+								const element = select_obj[key];
+								if(element.value === obj.unit){
+									element.selected = true;
+									break;
 								}
 							}
+						}
+
 					});
+
 					OriginalData.items = array;
 					OriginalData.lotref = lot;
 					
@@ -746,15 +753,17 @@
 					let lot = [];
 					let lot_counter = [];
 					let newlotcounter = 0;
+					let checked = $('.i-checks:checked');
 
 					$('#userEditTable').html('');
-					$('.i-checks:checked').each(function(i){
+
+					checked.each(function(i){
 						obj = JSON.parse(atob($(this).attr('details')));
 						array.push(obj);
 						
-						if(typeof lot_counter.find(function(el){
+						if(lot_counter.find(function(el){
 							return el === obj.lot
-						}) === 'undefined'){
+						}) === undefined){
 							lot.push(`${obj.lot}blyt322${obj.lot_id}blyt322${obj.lot_cost}`);
 							lot_counter.push(obj.lot);
 
@@ -799,14 +808,19 @@
 							newlotcounter++;
 						}
 
+
+					});
+
+					checked.each(function(i){
+						obj = JSON.parse(atob($(this).attr('details')));
 						$(`[dataFor="userEditAppend-${obj.lot}"]`).append(`<tr>
-								<td>
-									<input type="text" name="list-${i}" class="form-control form-control-sm" value="${obj.header}">
-									<input type="text" name="lot-${i}" value="${obj.lot_id}" hidden>
-									<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
-								</td>
-								<td><input type="text" name="tags-${i}" dataFor="tags" class="form-control form-control-sm" data-role="tagsinput" value="${obj.tags}"></td>
-							</tr>`);
+							<td>
+								<input type="text" name="list-${i}" class="form-control form-control-sm" value="${obj.header}">
+								<input type="text" name="lot-${i}" value="${obj.lot_id}" hidden>
+								<input type="text" name="item_id-${i}" value="${obj.item_id}" hidden>
+							</td>
+							<td><input type="text" name="tags-${i}" dataFor="tags" class="form-control form-control-sm" data-role="tagsinput" value="${obj.tags}"></td>
+						</tr>`);
 
 					});
 					OriginalData.items = array;

@@ -69,7 +69,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PrMO OPPTS | Projects Details</title>
-	<link rel="shortcut icon" href="../../assets/pics/flaticons/men.png" type="image/x-icon">
+
 	<?php include_once'../../includes/parts/user_styles.php'; ?>
 </head>
 
@@ -198,32 +198,33 @@
                                     </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Requested by: </dt> </div>
-										<div class="col-sm-8 text-sm-left"><dd class="mb-1"><?php 
-										
-										foreach ($endusers as $enduser) {
-											echo $user->fullnameOfEnduser($enduser), "<br>";
-										}
-										
-										?></dd> </div>
-                                    </dl>
-									<dl class="row mb-0">
-                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
 										<div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php 
 											
-												// echo $project->implementing_office;
-												foreach (json_decode($project->implementing_office, true) as $office){
-													$offices[] = $office;
+												foreach ($endusers as $enduser) {
+													echo $user->fullnameOfEnduser($enduser), "<br>";
 												}
-
-												echo implode(", ", $offices);
-											?>
-											</dd>
+											
+											?></dd>
 										</div>
                                     </dl>
                                     <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"><dt>Implementing Office: </dt> </div>
+										<div class="col-sm-8 text-sm-left">
+											<dd class="mb-1"><?php 											
+												// foreach (json_decode($project->implementing_office, true) as $office){
+													// $offices[] = $office;
+												// }
+
+												// echo implode(", ", $offices);
+												echo "test office";
+											?>
+											</dd>
+										</div>
+                                    </dl>									
+                                    <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Type of project:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo strtoupper($project->type);?></dd></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1"><?php echo $project->type;?></dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>Current activity:</dt> </div>
@@ -234,7 +235,7 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Approved Budget for the Contract:</dt>
+                                            <dt>Approved Budget:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1"><?php echo "₱ ",number_format($project->ABC, 2);?></dd>
@@ -250,7 +251,7 @@
                                     </dl>									
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Mode of Procurement:</dt>
+                                            <dt>MOP:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1">
@@ -294,9 +295,9 @@
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
 											<dd class="mb-1">
-												<?php
-													echo Date::translate($project->implementation_date, '1');
-												?>
+											<?php
+												echo Date::translate($project->implementation_date, '1');
+											?>
 											</dd>
                                         </div>
                                     </dl>									
@@ -539,15 +540,11 @@
 							<?php
 								
 								if($Updates =  $user->importantUpdates2($refno)){
-
-									// echo "<pre>",print_r($Updates),"</pre>";
 								
 									
 									if(($upd_count = count($Updates)) > 5){
 
-										// echo "<pre>",print_r($Updates),"</pre>";
 										$activityLogs = $Updates;
-										// echo "<pre>",print_r($activityLogs),"</pre>";
 										for($x = 1; $x<6; $x++){
 
 											$identifier = explode("^", $activityLogs[$upd_count-$x]->remarks);
@@ -611,8 +608,7 @@
                                 <p>	
 
 									<?php 
-									echo $displayMessage;
-									
+										echo $displayMessage;
 									?>
                                 </p>
                                 
@@ -631,7 +627,7 @@
                         </div>							
 											
 							<?php
-										}
+										}echo "<br><br><br>";
 
 									}else{
 										// echo "<pre>",print_r($Updates),"</pre>";
@@ -1164,9 +1160,6 @@
 					}
 
 
-
-					
-					// echo "<pre>",print_r($status),"</pre>";
 
 				}
 			

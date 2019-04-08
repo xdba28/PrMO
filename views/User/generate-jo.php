@@ -200,15 +200,15 @@
 													<div class="col-lg-7">
 														<div class="form-group">
 															<label>Project title *</label>
-															<input id="title" name="title" type="text" class="form-control" form="jo_form">
+															<input id="title" name="title" type="text" class="form-control" form="jo_form" required>
 														</div>
 														<div class="form-group">
 															<label>Purpose *</label>
-															<input id="purpose" name="purpose" type="text" class="form-control" form="jo_form">
+															<input id="purpose" name="purpose" type="text" class="form-control" form="jo_form" required>
 														</div>
 														<div class="form-group">
 															<label>Number of Lots *</label>
-															<input id="lot" name="lot" type="number" min=1 class="form-control" form="jo_form">
+															<input id="lot" name="lot" type="number" min=1 class="form-control" form="jo_form" required>
 														</div>
 													</div>
 													<div class="col-lg-3">

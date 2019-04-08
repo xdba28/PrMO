@@ -1,0 +1,5 @@
+User:::1 - April 8, 2019, 9:18 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------

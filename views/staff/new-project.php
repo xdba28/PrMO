@@ -14,7 +14,9 @@
 
 	if(Input::exists()){
 
-
+		// echo "<pre>",print_r($_POST),"</pre>";
+		// echo json_encode($_POST['implementing_office'], JSON_FORCE_OBJECT);
+		// die();
 		if(Token::check("newProject", Input::get('newProject'))){
 				
 	

@@ -339,668 +339,267 @@ Action:Login
 Attempt:success
 Username:2015-15096:nico
 -------------------------
-User:::1 - March 11, 2019, 8:41 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 11, 2019, 8:42 am
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 11, 2019, 8:43 am
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 12, 2019, 8:21 am
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 12, 2019, 4:57 pm
-Action:Receive JO2019-38IB2J request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 14, 2019, 3:21 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 15, 2019, 3:40 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 15, 2019, 3:41 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 15, 2019, 8:41 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 15, 2019, 8:41 am
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 15, 2019, 3:41 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 15, 2019, 4:42 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 15, 2019, 9:42 am
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 9:55 am
-Action:Logout
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 9:57 am
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 2:15 pm
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 11:06 pm
-Action:Release GDS2019-7 from outgoing with transaction:EVALUATION ISSUE
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 5:24 pm
-Action:Logout
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 15, 2019, 5:24 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 3:45 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 6:47 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 8:22 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 3:39 pm
-Action:Release GDS2019-7 from outgoing with transaction:EVALUATION ISSUE
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 8:46 am
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 3:46 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 16, 2019, 3:47 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 16, 2019, 8:47 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 3:47 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 16, 2019, 1:32 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 8:32 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 16, 2019, 8:55 pm
-Action:create pr form
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 16, 2019, 1:56 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 1:56 pm
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 16, 2019, 8:56 pm
-Action:Receive PR2019-4CAI5A request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 16, 2019, 1:58 pm
-Action:Logout
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 16, 2019, 1:58 pm
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 16, 2019, 8:59 pm
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 16, 2019, 1:59 pm
-Action:Logout
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 16, 2019, 1:59 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 16, 2019, 4:34 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 17, 2019, 1:53 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 17, 2019, 1:11 pm
-Action:Login
-Attempt:success
-Username:2011-99999:lalacelis
--------------------------
-User:::1 - March 17, 2019, 1:19 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 17, 2019, 1:20 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 17, 2019, 1:20 pm
-Action:Login
-Attempt:success
-Username:2011-99999:lalacelis
--------------------------
-User:::1 - March 17, 2019, 1:59 pm
-Action:Logout
-Attempt:success
-Username:2011-99999:lalacelis
--------------------------
-User:::1 - March 17, 2019, 2:00 pm
-Action:Login
-Attempt:success
-Username:2000-98975:medelaligan
--------------------------
-User:::1 - March 17, 2019, 2:00 pm
-Action:Logout
-Attempt:success
-Username:2000-98975:medelaligan
--------------------------
-User:::1 - March 17, 2019, 2:00 pm
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 17, 2019, 2:00 pm
-Action:Logout
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 17, 2019, 2:00 pm
-Action:Login
-Attempt:success
-Username:2011-99999:lalacelis
--------------------------
-User:::1 - March 18, 2019, 1:04 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 18, 2019, 1:04 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 18, 2019, 1:04 pm
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 18, 2019, 2:15 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 18, 2019, 2:16 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 18, 2019, 9:16 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 18, 2019, 9:59 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 19, 2019, 1:15 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 19, 2019, 2:52 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 19, 2019, 9:53 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 19, 2019, 10:53 pm
-Action:create pr form
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 19, 2019, 10:56 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 19, 2019, 11:00 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 19, 2019, 4:01 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 19, 2019, 4:11 pm
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 19, 2019, 4:12 pm
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 19, 2019, 4:15 pm
-Action:Logout
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 19, 2019, 4:15 pm
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 19, 2019, 4:15 pm
-Action:Logout
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 19, 2019, 4:15 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 19, 2019, 11:15 pm
-Action:Receive PR2019-H15BJB request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 19, 2019, 11:21 pm
-Action:create pr form
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 1:45 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 8:46 am
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 1:47 am
-Action:Login
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 20, 2019, 1:47 am
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 8:47 am
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 2:12 am
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 10:22 am
-Action:Receive PR2019-JFEH67 request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 20, 2019, 10:24 am
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 1:44 pm
-Action:Grant form update revision
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 1:46 pm
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 2:43 pm
-Action:create jo form
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 7:44 am
-Action:Login
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 2:44 pm
-Action:Receive JO2019-9IJ005 request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 20, 2019, 2:55 pm
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 3:24 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 3:24 pm
-Action:Login
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 3:41 pm
+User:::1 - March 11, 2019, 3:56 pm
 Action:create pr form
 Attempt:success
 Username:2015-15096:nico
 -------------------------
-User:::1 - March 20, 2019, 3:49 pm
-Action:Receive PR2019-AIA33C request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 20, 2019, 8:52 am
+User:::1 - March 12, 2019, 11:27 am
 Action:Login
 Attempt:success
 Username:9999-99-9999:mjborres
 -------------------------
-User:::1 - March 20, 2019, 8:52 am
+User:::1 - March 12, 2019, 11:39 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 12, 2019, 11:39 am
 Action:Login
 Attempt:success
 Username:163-141:giemorcozo
 -------------------------
-User:::1 - March 20, 2019, 4:06 pm
-Action:Logout
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 4:06 pm
-Action:Login
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 4:07 pm
-Action:Updated project GDS2019-1 to high priority
-Attempt:success
-Username:9999-99-9999:mjborres
--------------------------
-User:::1 - March 20, 2019, 4:08 pm
-Action:Release GDS2019-1 from outgoing with transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:08 pm
-Action:Update GDS2019-1 from released documents. transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:09 pm
-Action:Release GDS2019-1 from outgoing with transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:09 pm
-Action:Update GDS2019-1 from released documents. transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:14 pm
-Action:Logout
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 4:14 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 4:14 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 4:15 pm
-Action:Login
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 4:16 pm
-Action:Release GDS2019-1 from outgoing with transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:16 pm
-Action:Update GDS2019-1 from released documents. transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Logout
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Login
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Release GDS2019-1 from outgoing with transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Update GDS2019-1 from released documents. transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Release GDS2019-1 from outgoing with transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:17 pm
-Action:Update GDS2019-1 from released documents. transaction:SIGNATURES
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 4:20 pm
-Action:pre-procurement evaluation update
-Attempt:success
-Username:2013-024-189:myra
--------------------------
-User:::1 - March 20, 2019, 4:21 pm
-Action:Logout
-Attempt:success
-Username:2015-11583:denver
--------------------------
-User:::1 - March 20, 2019, 4:21 pm
-Action:Login
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 2:41 pm
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 20, 2019, 9:41 pm
-Action:Login
-Attempt:success
-Username:2015-15096:nico
--------------------------
-User:::1 - March 20, 2019, 3:13 pm
+User:::1 - March 12, 2019, 6:52 pm
 Action:Login
 Attempt:success
 Username:9999-999-999:nick
 -------------------------
-User:::1 - March 20, 2019, 3:14 pm
+User:::1 - March 13, 2019, 1:52 am
+Action:Receive PR2019-88B5J3 request form
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 12, 2019, 6:53 pm
+Action:Logout
+Attempt:success
+Username:9999-999-999:nick
+-------------------------
+User:::1 - March 12, 2019, 7:02 pm
 Action:Login
 Attempt:success
-Username:2013-024-189:myra
+Username:2011-99999:lalacelis
 -------------------------
-User:::1 - March 20, 2019, 3:14 pm
-Action:Login
+User:::1 - March 13, 2019, 2:03 am
+Action:Nexmo\Client\Exception\Request: Non White-listed Destination - rejected in C:\xampp\htdocs\PrMO\vendor\nexmo\client\src\Message\Client.php:75
+Stack trace:
+#0 C:\xampp\htdocs\PrMO\functions\sms.php(11): Nexmo\Message\Client->send(Object(Nexmo\Message\Message))
+#1 C:\xampp\htdocs\PrMO\views\xhr-files\xhr-modal-actions.php(559): sms('+639124409471', 'System', 'Hello Marcia Co...')
+#2 {main}
+Attempt:error_log
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 12, 2019, 7:07 pm
+Action:Logout
 Attempt:success
-Username:163-141:giemorcozo
+Username:2011-99999:lalacelis
 -------------------------
-User:::1 - March 21, 2019, 1:53 am
+User:::1 - March 13, 2019, 2:47 pm
 Action:Login
 Attempt:failed
-Username:2014-001-171:jane
+Username:2015-11583:denver
 -------------------------
-User:::1 - March 21, 2019, 1:53 am
-Action:Login
-Attempt:success
-Username:2014-001-171:jane
--------------------------
-User:::1 - March 21, 2019, 8:54 am
+User:::1 - March 13, 2019, 2:47 pm
 Action:Login
 Attempt:success
 Username:2015-11583:denver
 -------------------------
-User:::1 - March 21, 2019, 9:04 am
-Action:create pr form
+User:::1 - March 13, 2019, 10:53 pm
+Action:Logout
 Attempt:success
 Username:2015-11583:denver
 -------------------------
-User:::1 - March 21, 2019, 2:07 am
+User:::1 - March 17, 2019, 9:13 pm
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:03 pm
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:06 pm
+Action:Delete unreceived PR/JO form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:09 pm
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 11:09 pm
+Action:Delete unreceived PR/JO form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 17, 2019, 5:39 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 18, 2019, 12:40 am
+Action:Updated project GDS2019-14 to high priority
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 17, 2019, 5:41 pm
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 17, 2019, 5:51 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 18, 2019, 2:22 am
+Action:create jo form
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 18, 2019, 2:30 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 18, 2019, 2:36 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:20 am
+Action:Login
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:44 am
+Action:Logout
+Attempt:success
+Username:2015-15096:nico
+-------------------------
+User:::1 - March 25, 2019, 11:44 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 25, 2019, 12:19 pm
+Action:Logout
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 25, 2019, 5:19 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:33 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:33 am
 Action:Login
 Attempt:success
 Username:9999-999-999:nick
 -------------------------
-User:::1 - March 21, 2019, 9:11 am
-Action:Receive PR2019-H5C699 request form
-Attempt:success
-Username:9999-999-999:nick
--------------------------
-User:::1 - March 21, 2019, 2:13 am
+User:::1 - March 25, 2019, 5:43 am
 Action:Logout
 Attempt:success
 Username:9999-999-999:nick
 -------------------------
-User:::1 - March 21, 2019, 2:13 am
+User:::1 - March 25, 2019, 5:43 am
 Action:Login
 Attempt:success
-Username:2013-024-189:myra
+Username:2014-001-171:jane
 -------------------------
-User:::1 - March 21, 2019, 9:13 am
+User:::1 - March 25, 2019, 5:47 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:47 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 12:50 pm
 Action:pre-procurement evaluation update
 Attempt:success
-Username:2013-024-189:myra
+Username:2011-99999:lalacelis
 -------------------------
-User:::1 - March 21, 2019, 10:48 am
+User:::1 - March 25, 2019, 5:50 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 5:50 am
 Action:Login
 Attempt:success
-Username:2015-11583:denver
+Username:2014-001-171:jane
 -------------------------
-User:::1 - March 21, 2019, 3:49 am
+User:::1 - March 25, 2019, 5:57 am
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 25, 2019, 5:57 am
+Action:Login
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 6:02 am
+Action:Logout
+Attempt:success
+Username:2011-99999:lalacelis
+-------------------------
+User:::1 - March 25, 2019, 6:02 am
 Action:Login
 Attempt:success
 Username:9999-99-9999:mjborres
 -------------------------
-User:::1 - March 21, 2019, 10:56 am
+User:::1 - March 25, 2019, 7:14 am
+Action:Logout
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 25, 2019, 7:14 am
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 3:18 pm
+Action:Login
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 10:22 pm
+Action:Login
+Attempt:success
+Username:2015-11583:denver
+-------------------------
+User:::1 - March 27, 2019, 4:08 pm
+Action:Logout
+Attempt:success
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 27, 2019, 4:08 pm
+Action:Login
+Attempt:success
+Username:9999-99-9999:mjborres
+-------------------------
+User:::1 - March 27, 2019, 11:11 pm
 Action:Logout
 Attempt:success
 Username:2015-11583:denver
 -------------------------
-User:::1 - March 21, 2019, 3:56 am
+User:::1 - March 27, 2019, 4:11 pm
 Action:Login
 Attempt:success
-Username:9999-99-9999:mjborres
+Username:2014-001-171:jane
+-------------------------
+User:::1 - March 28, 2019, 10:53 am
+Action:Login
+Attempt:success
+Username:2015-11583:denver
 -------------------------
